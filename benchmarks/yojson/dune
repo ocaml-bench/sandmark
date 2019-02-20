@@ -1,0 +1,13 @@
+;; Adapted from ocamlbench-repo by OCamlPro
+;; See https://github.com/OCamlPro/ocamlbench-repo
+
+(executable
+ (name ydump)
+ (libraries yojson))
+
+(rule
+ (targets yojson.bench)
+ (deps (:prog ydump.exe) (:in sample.json))
+ (action (ignore-stdout (run orun -o %{targets} -- %{prog} -c %{in}))))
+
+(alias (name bench) (deps yojson.bench))

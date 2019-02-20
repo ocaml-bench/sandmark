@@ -1,0 +1,20 @@
+;; Adapted from ocamlbench-repo by OCamlPro
+;; See https://github.com/OCamlPro/ocamlbench-repo
+
+(library
+ (name echo_common)
+ (wrapped false)
+ (libraries core async)
+ (modules echo_common echo_client echo_server))
+
+(executable
+ (name echo_merge)
+ (libraries core async echo_common)
+ (modules echo_merge))
+
+(rule
+ (targets async_echo.bench)
+ (deps (:prog echo_merge.exe))
+ (action (run orun -o %{targets} -- %{prog} -nbr 20000)))
+
+(alias (name bench) (deps async_echo.bench))

@@ -1,0 +1,9 @@
+(library
+ (name wait4)
+ (c_names wait4)
+ (modules ))
+
+(executable
+ (name orun)
+ (public_name orun)
+ (libraries cmdliner yojson unix wait4))

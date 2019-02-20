@@ -1,0 +1,10 @@
+;; Adapted from ocamlbench-repo by OCamlPro
+;; See https://github.com/OCamlPro/ocamlbench-repo
+
+(rule
+ (targets frama-c-deflate.bench)
+ (deps (:in t.c))
+ (action (ignore-stdout (run orun -o %{targets} --
+    frama-c -slevel 1000000000 -no-results -no-val-show-progress %{in} -val))))
+
+(alias (name bench) (deps frama-c-deflate.bench))
