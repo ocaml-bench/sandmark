@@ -28,8 +28,12 @@ conflicts: [
 synopsis:
   "OCamlbuild is a build system with builtin rules to easily build most OCaml projects."
 depends: [
-  "ocaml" {>= "4.03" & < "4.08.0"}
+  "ocaml" {>= "4.03"}
 ]
+extra-files: [
+  "format-dprintf.patch" "md5=95a4ee08aa1b35126e5917b4458a0622"
+]
+patches: [ "format-dprintf.patch" ]
 url {
   src: "https://github.com/ocaml/ocamlbuild/archive/0.12.0.tar.gz"
   checksum: "md5=442baa19470bd49150f153122e22907b"

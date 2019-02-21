@@ -10,17 +10,7 @@ depends: [
 conflict-class: "ocaml-core-compiler"
 flags: compiler
 build: [
-  ["./configure" "--prefix" prefix "--with-default-string=unsafe" ]
-    {_:version >= "4.08" }
-  ["./configure" "-prefix" prefix]
-    {os != "openbsd" & os != "freebsd" & os != "macos" & _:version < "4.06.0" }
-  ["./configure" "-prefix" prefix "-no-force-safe-string" "-default-unsafe-string"]
-    {os != "openbsd" & os != "freebsd" & os != "macos" & _:version >= "4.06.0" & _:version < "4.08" }
-  [ "./configure" "-prefix" prefix "-cc" "cc" "-aspp" "cc -c" ]
-    {(os = "openbsd" | os = "freebsd" | os = "macos") & _:version < "4.06.0" }
-  [ "./configure" "-prefix" prefix "-cc" "cc" "-aspp" "cc -c"
-    "-no-force-safe-string" "-default-unsafe-string" ]
-    {(os = "openbsd" | os = "freebsd" | os = "macos") & _:version >= "4.06.0" & _:version < "4.08" }
+  ["sh" "invoke-configure.sh" prefix os]
   [make "-j" jobs "world"]
   [make "world.opt"]
 ]

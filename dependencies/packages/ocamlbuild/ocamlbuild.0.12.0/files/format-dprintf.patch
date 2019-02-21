@@ -1,0 +1,43 @@
+diff -ru ocamlbuild.0.12.0/src/main.ml ocamlbuild.0.12.0-bak/src/main.ml
+--- ocamlbuild.0.12.0/src/main.ml
++++ ocamlbuild.0.12.0-bak/src/main.ml
+@@ -14,12 +14,12 @@
+ 
+ (* Original author: Berke Durak *)
+ open My_std
++open Format
+ open Log
+ open Pathname.Operators
+ open Command
+ open Tools
+ open Ocaml_specific
+-open Format
+ ;;
+ 
+ exception Exit_build_error of string
+diff -ru ocamlbuild.0.12.0/src/report.ml ocamlbuild.0.12.0-bak/src/report.ml
+--- ocamlbuild.0.12.0/src/report.ml
++++ ocamlbuild.0.12.0-bak/src/report.ml
+@@ -16,8 +16,8 @@
+ (* Report *)
+ 
+ open My_std
++open Format
+ open Log
+-open Format
+ open Solver
+ 
+ let sources_glob = Glob.parse "<*.ml> or <*.mli> or <*.c> or <*.h>";;
+diff -ru a/src/solver.ml ocamlbuild.0.12.0-bak/src/solver.ml
+--- ocamlbuild.0.12.0/src/solver.ml
++++ ocamlbuild.0.12.0-bak/src/solver.ml
+@@ -14,8 +14,8 @@
+ 
+ (* Original author: Nicolas Pouillard *)
+ open My_std
++open Format
+ open Log
+-open Format
+ open Outcome
+ 
+ type backtrace =

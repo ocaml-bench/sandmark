@@ -129,6 +129,10 @@ These plug-ins communicate between each other via the Frama-C API
 and via ACSL (ANSI/ISO C Specification Language) properties."""
 extra-files: [
   "run_autoconf_if_needed.sh" "md5=8896537e4468e4228e7b0112f1cfd0ed"
+  "dynlink_init.patch" "md5=9e2e49c043a3f8eb788ec40d736fafbc"
+]
+patches: [
+  "dynlink_init.patch"
 ]
 url {
   src: "http://frama-c.com/download/frama-c-Phosphorus-20170501.tar.gz"

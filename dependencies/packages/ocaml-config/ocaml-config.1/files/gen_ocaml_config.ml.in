@@ -3,10 +3,14 @@ let () =
     let v = Sys.ocaml_version in
     try String.sub v 0 (String.index v '+') with Not_found -> v
   in
-  if ocaml_version <> Sys.argv.(1) then
+  let target_version =
+    let v = Sys.argv.(1) in
+    try String.sub v 0 (String.index v '+') with Not_found -> v
+  in 
+  if ocaml_version <> target_version then
     (Printf.eprintf
        "OCaml version mismatch: %%s, expected %s"
-       ocaml_version Sys.argv.(1);
+       ocaml_version target_version;
      exit 1)
   else
   let oc = open_out (Sys.argv.(2) ^ ".config") in
