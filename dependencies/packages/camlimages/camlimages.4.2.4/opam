@@ -10,7 +10,20 @@ homepage: "http://cristal.inria.fr/camlimages/"
 bug-reports: "https://bitbucket.org/camlspotter/camlimages/issues?status=new&status=open"
 dev-repo: "hg+https://bitbucket.org/camlspotter/camlimages"
 build: [
-  [ "omake" "--configure" ]
+  [ "omake" "--configure"
+    "ARG_WANT_GIF=0"
+    "ARG_WANT_PNG=0"
+    "ARG_WANT_JPEG=0"
+    "ARG_WANT_EXIF=0"
+    "ARG_WANT_TIFF=0"
+    "ARG_WANT_XPM=0"
+    "ARG_WANT_GS=0"
+    "ARG_WANT_LABLGTK2=0"
+    "ARG_WANT_GRAPHICS=0"
+    "ARG_WANT_FREETYPE=0"
+    "PATH_FREETYPE_CONFIG=/bin/false"
+    "PATH_GS=/bin/false"
+  ]
 ]
 install: [
   [ "omake" "install" ]

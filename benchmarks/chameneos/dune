@@ -1,0 +1,12 @@
+;; Adapted from OCamlPro's ocamlbench-repo
+;; See https://github.com/OCamlPro/ocamlbench-repo
+(executable
+ (name chameneos_redux_lwt)
+ (libraries lwt.unix))
+
+(rule
+ (targets chameneos-lwt.bench)
+ (deps (:prog chameneos_redux_lwt.exe))
+ (action (ignore-stdout (run orun -o %{targets} -- %{prog} 300000))))
+
+(alias (name bench) (deps chameneos-lwt.bench))

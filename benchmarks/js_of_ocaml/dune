@@ -1,0 +1,9 @@
+;; Adapted from OCamlPro's ocamlbench-repo
+;; See https://github.com/OCamlPro/ocamlbench-repo
+(rule
+ (targets js-of-ocaml.bench)
+ (deps bytecode)
+ (action (ignore-stderr (run orun -o %{targets} --
+   js_of_ocaml bytecode))))
+
+(alias (name bench) (deps js-of-ocaml.bench))

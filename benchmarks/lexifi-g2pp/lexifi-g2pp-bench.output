@@ -1,0 +1,225 @@
+Calibrating
+Global Optimizer   Evals:     1   RMS:    519.96534%
+Global Optimizer   Evals:     2   RMS:    36.723323%
+Global Optimizer   Evals:    14   RMS:    25.374728%
+Global Optimizer   Evals:   214   RMS:    23.485376%
+Global Optimizer   Evals:   434   RMS:     21.99024%
+Global Optimizer   Evals:   476   RMS:    16.397644%
+Global Optimizer   Evals:   700   RMS:    15.111797%
+Global Optimizer   Evals:   738   RMS:    13.960938%
+Global Optimizer   Evals:   786   RMS:    13.604756%
+Global Optimizer   Evals:   846   RMS:    13.300724%
+Global Optimizer   Evals:   906   RMS:    12.722072%
+Global Optimizer   Evals:   909   RMS:    11.761371%
+Global Optimizer   Evals:   997   RMS:     11.59362%
+Global Optimizer   Evals:  1164   RMS:    11.483419%
+Global Optimizer   Evals:  1378   RMS:    11.426738%
+Global Optimizer   Evals:  1403   RMS:    11.377893%
+Global Optimizer   Evals:  1428   RMS:    11.370247%
+Global Optimizer   Evals:  1498   RMS:    11.322617%
+Global Optimizer   Evals:  1604   RMS:    11.320946%
+Global Optimizer   Evals:  1620   RMS:    11.302182%
+Global Optimizer   Evals:  1675   RMS:    11.286128%
+Global Optimizer   Evals:  1741   RMS:    11.266176%
+Global Optimizer   Evals:  1775   RMS:    11.252939%
+Global Optimizer   Evals:  1908   RMS:     11.23661%
+Global Optimizer   Evals:  1926   RMS:    11.217987%
+Global Optimizer   Evals:  1935   RMS:    11.213584%
+1Y1Y Swaption Calibrated Price: 132.02 Market Price: 115.32
+2Y1Y Swaption Calibrated Price: 138.16 Market Price: 162.95
+3Y1Y Swaption Calibrated Price: 147.93 Market Price: 174.30
+4Y1Y Swaption Calibrated Price: 159.71 Market Price: 171.63
+5Y1Y Swaption Calibrated Price: 169.68 Market Price: 168.41
+6Y1Y Swaption Calibrated Price: 177.96 Market Price: 168.31
+7Y1Y Swaption Calibrated Price: 184.33 Market Price: 169.88
+8Y1Y Swaption Calibrated Price: 189.50 Market Price: 172.51
+9Y1Y Swaption Calibrated Price: 192.45 Market Price: 172.82
+10Y1Y Swaption Calibrated Price: 194.69 Market Price: 172.56
+15Y1Y Swaption Calibrated Price: 194.35 Market Price: 177.28
+20Y1Y Swaption Calibrated Price: 183.74 Market Price: 161.93
+25Y1Y Swaption Calibrated Price: 167.73 Market Price: 139.43
+30Y1Y Swaption Calibrated Price: 150.74 Market Price: 120.03
+1Y2Y Swaption Calibrated Price: 161.89 Market Price: 136.74
+2Y2Y Swaption Calibrated Price: 190.23 Market Price: 228.60
+3Y2Y Swaption Calibrated Price: 226.76 Market Price: 275.87
+4Y2Y Swaption Calibrated Price: 260.33 Market Price: 293.30
+5Y2Y Swaption Calibrated Price: 287.27 Market Price: 305.66
+6Y2Y Swaption Calibrated Price: 308.39 Market Price: 313.90
+7Y2Y Swaption Calibrated Price: 324.95 Market Price: 323.48
+8Y2Y Swaption Calibrated Price: 337.17 Market Price: 330.05
+9Y2Y Swaption Calibrated Price: 345.80 Market Price: 335.26
+10Y2Y Swaption Calibrated Price: 352.21 Market Price: 335.77
+15Y2Y Swaption Calibrated Price: 358.92 Market Price: 354.32
+20Y2Y Swaption Calibrated Price: 341.51 Market Price: 318.37
+25Y2Y Swaption Calibrated Price: 313.66 Market Price: 274.71
+30Y2Y Swaption Calibrated Price: 282.72 Market Price: 236.23
+1Y3Y Swaption Calibrated Price: 176.26 Market Price: 192.20
+2Y3Y Swaption Calibrated Price: 242.48 Market Price: 306.75
+3Y3Y Swaption Calibrated Price: 309.31 Market Price: 377.68
+4Y3Y Swaption Calibrated Price: 364.29 Market Price: 412.85
+5Y3Y Swaption Calibrated Price: 406.71 Market Price: 436.79
+6Y3Y Swaption Calibrated Price: 439.66 Market Price: 457.42
+7Y3Y Swaption Calibrated Price: 464.44 Market Price: 472.05
+8Y3Y Swaption Calibrated Price: 483.10 Market Price: 483.26
+9Y3Y Swaption Calibrated Price: 496.50 Market Price: 491.98
+10Y3Y Swaption Calibrated Price: 506.75 Market Price: 496.02
+15Y3Y Swaption Calibrated Price: 517.28 Market Price: 526.39
+20Y3Y Swaption Calibrated Price: 492.66 Market Price: 470.27
+25Y3Y Swaption Calibrated Price: 452.87 Market Price: 406.01
+30Y3Y Swaption Calibrated Price: 408.66 Market Price: 349.52
+1Y4Y Swaption Calibrated Price: 204.40 Market Price: 234.96
+2Y4Y Swaption Calibrated Price: 310.19 Market Price: 380.00
+3Y4Y Swaption Calibrated Price: 402.91 Market Price: 470.34
+4Y4Y Swaption Calibrated Price: 475.45 Market Price: 525.54
+5Y4Y Swaption Calibrated Price: 530.82 Market Price: 566.16
+6Y4Y Swaption Calibrated Price: 572.65 Market Price: 592.60
+7Y4Y Swaption Calibrated Price: 604.27 Market Price: 612.90
+8Y4Y Swaption Calibrated Price: 627.95 Market Price: 631.05
+9Y4Y Swaption Calibrated Price: 645.40 Market Price: 645.43
+10Y4Y Swaption Calibrated Price: 657.77 Market Price: 654.14
+15Y4Y Swaption Calibrated Price: 670.25 Market Price: 694.84
+20Y4Y Swaption Calibrated Price: 638.05 Market Price: 617.78
+25Y4Y Swaption Calibrated Price: 587.02 Market Price: 533.76
+30Y4Y Swaption Calibrated Price: 529.38 Market Price: 459.11
+1Y5Y Swaption Calibrated Price: 246.96 Market Price: 276.59
+2Y5Y Swaption Calibrated Price: 387.10 Market Price: 452.56
+3Y5Y Swaption Calibrated Price: 501.08 Market Price: 563.07
+4Y5Y Swaption Calibrated Price: 588.35 Market Price: 634.73
+5Y5Y Swaption Calibrated Price: 653.78 Market Price: 685.83
+6Y5Y Swaption Calibrated Price: 703.24 Market Price: 722.89
+7Y5Y Swaption Calibrated Price: 740.53 Market Price: 749.63
+8Y5Y Swaption Calibrated Price: 768.81 Market Price: 777.72
+9Y5Y Swaption Calibrated Price: 788.97 Market Price: 793.74
+10Y5Y Swaption Calibrated Price: 803.50 Market Price: 814.27
+15Y5Y Swaption Calibrated Price: 817.68 Market Price: 858.50
+20Y5Y Swaption Calibrated Price: 778.89 Market Price: 761.32
+25Y5Y Swaption Calibrated Price: 716.60 Market Price: 657.58
+30Y5Y Swaption Calibrated Price: 646.55 Market Price: 565.40
+1Y6Y Swaption Calibrated Price: 297.37 Market Price: 302.88
+2Y6Y Swaption Calibrated Price: 466.76 Market Price: 507.00
+3Y6Y Swaption Calibrated Price: 598.96 Market Price: 646.01
+4Y6Y Swaption Calibrated Price: 698.29 Market Price: 732.52
+5Y6Y Swaption Calibrated Price: 772.80 Market Price: 799.35
+6Y6Y Swaption Calibrated Price: 829.09 Market Price: 846.85
+7Y6Y Swaption Calibrated Price: 871.98 Market Price: 886.81
+8Y6Y Swaption Calibrated Price: 903.90 Market Price: 919.81
+9Y6Y Swaption Calibrated Price: 927.09 Market Price: 947.71
+10Y6Y Swaption Calibrated Price: 943.80 Market Price: 973.54
+15Y6Y Swaption Calibrated Price: 960.68 Market Price: 1018.77
+20Y6Y Swaption Calibrated Price: 915.23 Market Price: 900.11
+25Y6Y Swaption Calibrated Price: 842.59 Market Price: 777.12
+30Y6Y Swaption Calibrated Price: 760.55 Market Price: 668.48
+1Y7Y Swaption Calibrated Price: 350.67 Market Price: 329.64
+2Y7Y Swaption Calibrated Price: 545.70 Market Price: 565.29
+3Y7Y Swaption Calibrated Price: 693.45 Market Price: 726.48
+4Y7Y Swaption Calibrated Price: 803.96 Market Price: 826.95
+5Y7Y Swaption Calibrated Price: 886.97 Market Price: 908.09
+6Y7Y Swaption Calibrated Price: 950.18 Market Price: 969.34
+7Y7Y Swaption Calibrated Price: 997.89 Market Price: 1020.25
+8Y7Y Swaption Calibrated Price: 1033.84 Market Price: 1064.02
+9Y7Y Swaption Calibrated Price: 1060.15 Market Price: 1100.81
+10Y7Y Swaption Calibrated Price: 1079.51 Market Price: 1133.43
+15Y7Y Swaption Calibrated Price: 1098.82 Market Price: 1173.90
+20Y7Y Swaption Calibrated Price: 1047.32 Market Price: 1034.95
+25Y7Y Swaption Calibrated Price: 964.44 Market Price: 893.36
+30Y7Y Swaption Calibrated Price: 870.83 Market Price: 768.77
+1Y8Y Swaption Calibrated Price: 404.25 Market Price: 356.83
+2Y8Y Swaption Calibrated Price: 621.77 Market Price: 617.53
+3Y8Y Swaption Calibrated Price: 783.95 Market Price: 799.86
+4Y8Y Swaption Calibrated Price: 905.08 Market Price: 925.12
+5Y8Y Swaption Calibrated Price: 996.66 Market Price: 1016.35
+6Y8Y Swaption Calibrated Price: 1066.09 Market Price: 1091.10
+7Y8Y Swaption Calibrated Price: 1118.99 Market Price: 1155.09
+8Y8Y Swaption Calibrated Price: 1159.02 Market Price: 1211.27
+9Y8Y Swaption Calibrated Price: 1188.82 Market Price: 1253.94
+10Y8Y Swaption Calibrated Price: 1210.14 Market Price: 1292.30
+15Y8Y Swaption Calibrated Price: 1232.07 Market Price: 1322.31
+20Y8Y Swaption Calibrated Price: 1174.15 Market Price: 1165.54
+25Y8Y Swaption Calibrated Price: 1081.13 Market Price: 1006.34
+30Y8Y Swaption Calibrated Price: 975.36 Market Price: 865.93
+1Y9Y Swaption Calibrated Price: 456.42 Market Price: 385.71
+2Y9Y Swaption Calibrated Price: 694.55 Market Price: 670.32
+3Y9Y Swaption Calibrated Price: 870.39 Market Price: 871.77
+4Y9Y Swaption Calibrated Price: 1002.09 Market Price: 1014.73
+5Y9Y Swaption Calibrated Price: 1101.56 Market Price: 1123.65
+6Y9Y Swaption Calibrated Price: 1177.47 Market Price: 1216.56
+7Y9Y Swaption Calibrated Price: 1235.52 Market Price: 1291.52
+8Y9Y Swaption Calibrated Price: 1279.88 Market Price: 1357.27
+9Y9Y Swaption Calibrated Price: 1312.40 Market Price: 1405.91
+10Y9Y Swaption Calibrated Price: 1335.91 Market Price: 1449.39
+15Y9Y Swaption Calibrated Price: 1359.56 Market Price: 1466.23
+20Y9Y Swaption Calibrated Price: 1294.81 Market Price: 1292.20
+25Y9Y Swaption Calibrated Price: 1190.77 Market Price: 1115.65
+30Y9Y Swaption Calibrated Price: 1073.32 Market Price: 960.93
+1Y10Y Swaption Calibrated Price: 506.62 Market Price: 417.34
+2Y10Y Swaption Calibrated Price: 763.95 Market Price: 725.58
+3Y10Y Swaption Calibrated Price: 953.17 Market Price: 944.79
+4Y10Y Swaption Calibrated Price: 1094.72 Market Price: 1104.82
+5Y10Y Swaption Calibrated Price: 1202.22 Market Price: 1233.38
+6Y10Y Swaption Calibrated Price: 1284.49 Market Price: 1339.93
+7Y10Y Swaption Calibrated Price: 1347.82 Market Price: 1430.42
+8Y10Y Swaption Calibrated Price: 1395.67 Market Price: 1504.13
+9Y10Y Swaption Calibrated Price: 1430.99 Market Price: 1558.79
+10Y10Y Swaption Calibrated Price: 1456.41 Market Price: 1603.72
+15Y10Y Swaption Calibrated Price: 1480.72 Market Price: 1617.47
+20Y10Y Swaption Calibrated Price: 1407.75 Market Price: 1414.74
+25Y10Y Swaption Calibrated Price: 1292.96 Market Price: 1221.58
+30Y10Y Swaption Calibrated Price: 1164.17 Market Price: 1052.55
+1Y15Y Swaption Calibrated Price: 724.33 Market Price: 530.23
+2Y15Y Swaption Calibrated Price: 1065.46 Market Price: 947.53
+3Y15Y Swaption Calibrated Price: 1314.51 Market Price: 1275.88
+4Y15Y Swaption Calibrated Price: 1501.90 Market Price: 1525.87
+5Y15Y Swaption Calibrated Price: 1644.46 Market Price: 1711.04
+6Y15Y Swaption Calibrated Price: 1752.87 Market Price: 1869.40
+7Y15Y Swaption Calibrated Price: 1834.40 Market Price: 1996.91
+8Y15Y Swaption Calibrated Price: 1894.68 Market Price: 2097.11
+9Y15Y Swaption Calibrated Price: 1937.67 Market Price: 2165.27
+10Y15Y Swaption Calibrated Price: 1967.00 Market Price: 2214.86
+15Y15Y Swaption Calibrated Price: 1974.04 Market Price: 2210.47
+20Y15Y Swaption Calibrated Price: 1857.59 Market Price: 1958.55
+25Y15Y Swaption Calibrated Price: 1692.86 Market Price: 1696.52
+30Y15Y Swaption Calibrated Price: 1515.16 Market Price: 1464.26
+1Y20Y Swaption Calibrated Price: 893.48 Market Price: 661.44
+2Y20Y Swaption Calibrated Price: 1303.08 Market Price: 1198.31
+3Y20Y Swaption Calibrated Price: 1599.97 Market Price: 1613.03
+4Y20Y Swaption Calibrated Price: 1820.13 Market Price: 1919.26
+5Y20Y Swaption Calibrated Price: 1984.29 Market Price: 2162.52
+6Y20Y Swaption Calibrated Price: 2105.46 Market Price: 2342.16
+7Y20Y Swaption Calibrated Price: 2194.00 Market Price: 2488.03
+8Y20Y Swaption Calibrated Price: 2257.01 Market Price: 2604.81
+9Y20Y Swaption Calibrated Price: 2299.84 Market Price: 2685.68
+10Y20Y Swaption Calibrated Price: 2326.24 Market Price: 2735.09
+15Y20Y Swaption Calibrated Price: 2301.42 Market Price: 2699.28
+20Y20Y Swaption Calibrated Price: 2143.14 Market Price: 2403.02
+25Y20Y Swaption Calibrated Price: 1938.05 Market Price: 2098.53
+30Y20Y Swaption Calibrated Price: 1724.07 Market Price: 1816.12
+1Y25Y Swaption Calibrated Price: 1024.90 Market Price: 776.28
+2Y25Y Swaption Calibrated Price: 1488.43 Market Price: 1409.44
+3Y25Y Swaption Calibrated Price: 1818.69 Market Price: 1904.19
+4Y25Y Swaption Calibrated Price: 2058.28 Market Price: 2251.76
+5Y25Y Swaption Calibrated Price: 2232.60 Market Price: 2542.94
+6Y25Y Swaption Calibrated Price: 2358.16 Market Price: 2745.63
+7Y25Y Swaption Calibrated Price: 2447.18 Market Price: 2901.37
+8Y25Y Swaption Calibrated Price: 2508.08 Market Price: 3027.49
+9Y25Y Swaption Calibrated Price: 2546.69 Market Price: 3100.61
+10Y25Y Swaption Calibrated Price: 2567.68 Market Price: 3157.78
+15Y25Y Swaption Calibrated Price: 2507.51 Market Price: 3097.91
+20Y25Y Swaption Calibrated Price: 2312.11 Market Price: 2785.98
+25Y25Y Swaption Calibrated Price: 2071.54 Market Price: 2435.76
+30Y25Y Swaption Calibrated Price: 1840.76 Market Price: 2120.33
+1Y30Y Swaption Calibrated Price: 1126.79 Market Price: 876.89
+2Y30Y Swaption Calibrated Price: 1630.46 Market Price: 1587.64
+3Y30Y Swaption Calibrated Price: 1982.17 Market Price: 2124.58
+4Y30Y Swaption Calibrated Price: 2231.96 Market Price: 2509.13
+5Y30Y Swaption Calibrated Price: 2410.13 Market Price: 2819.19
+6Y30Y Swaption Calibrated Price: 2535.48 Market Price: 3044.95
+7Y30Y Swaption Calibrated Price: 2621.76 Market Price: 3196.02
+8Y30Y Swaption Calibrated Price: 2678.06 Market Price: 3339.85
+9Y30Y Swaption Calibrated Price: 2711.13 Market Price: 3435.05
+10Y30Y Swaption Calibrated Price: 2725.91 Market Price: 3482.65
+15Y30Y Swaption Calibrated Price: 2629.79 Market Price: 3448.10
+20Y30Y Swaption Calibrated Price: 2390.20 Market Price: 3105.33
+25Y30Y Swaption Calibrated Price: 2156.83 Market Price: 2736.95
+30Y30Y Swaption Calibrated Price: 1902.88 Market Price: 2378.09
+a = 0.02453, b = 0.98376, sigma = 0.02398, nu = 0.11830, rho = -0.82400
+RMS = 11.21358%, re calculated RMS = 11.21358%

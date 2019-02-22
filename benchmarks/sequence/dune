@@ -1,0 +1,11 @@
+;; Adapted from OCamlPro's ocamlbench-repo
+;; See https://github.com/OCamlPro/ocamlbench-repo
+(executable
+ (name sequence_cps))
+
+(rule
+ (targets sequence-cps.bench)
+ (deps (:prog sequence_cps.exe))
+ (action (ignore-stdout (run orun -o %{targets} -- %{prog} 10000))))
+
+(alias (name bench) (deps sequence-cps.bench))

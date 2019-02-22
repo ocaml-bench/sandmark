@@ -1,0 +1,12 @@
+;; Adapted from OCamlPro's ocamlbench-repo
+;; See https://github.com/OCamlPro/ocamlbench-repo
+(executable
+ (name contrast)
+ (libraries camlimages.all_formats))
+
+(rule
+ (targets sauvola.bench)
+ (action (ignore-stdout (run orun -o %{targets} --
+   %{dep:contrast.exe} %{dep:example2_small.ppm} example2))))
+
+(alias (name bench) (deps sauvola.bench))

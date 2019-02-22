@@ -1,0 +1,48 @@
+;; Adapted from OCamlPro's ocamlbench-repo
+;; See https://github.com/OCamlPro/ocamlbench-repo
+(executable (name durand_kerner_aberth) (modules durand_kerner_aberth))
+(executable (name fft) (modules fft))
+(executable (name lu_decomposition) (modules lu_decomposition))
+(executable (name qr_decomposition) (modules qr_decomposition))
+
+(executable
+ (name levinson_durbin)
+ (modules levinson_durbin levinson_durbin_dataset))
+(executable
+ (name naive_multilayer)
+ (modules naive_multilayer naive_multilayer_dataset))
+
+
+(rule
+ (targets numal-durand-kerner-aberth.bench)
+ (deps durand_kerner_aberth.exe)
+ (action (run orun -o %{targets} -- %{deps})))
+(rule
+ (targets numal-fft.bench)
+ (deps fft.exe)
+ (action (run orun -o %{targets} -- %{deps})))
+(rule
+ (targets numal-levinson-durbin.bench)
+ (deps levinson_durbin.exe)
+ (action (run orun -o %{targets} -- %{deps})))
+(rule
+ (targets numal-lu-decomposition.bench)
+ (deps lu_decomposition.exe)
+ (action (run orun -o %{targets} -- %{deps})))
+(rule
+ (targets numal-naive-multilayer.bench)
+ (deps naive_multilayer.exe)
+ (action (run orun -o %{targets} -- %{deps})))
+(rule
+ (targets numal-qr-decomposition.bench)
+ (deps qr_decomposition.exe)
+ (action (run orun -o %{targets} -- %{deps})))
+
+(alias (name bench)
+ (deps
+   numal-durand-kerner-aberth.bench
+   numal-fft.bench
+   numal-levinson-durbin.bench
+   numal-lu-decomposition.bench
+   numal-naive-multilayer.bench
+   numal-qr-decomposition.bench))

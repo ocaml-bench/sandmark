@@ -1,0 +1,8 @@
+;; Adapted from OCamlPro's ocamlbench-repo
+;; See https://github.com/OCamlPro/ocamlbench-repo
+(rule
+ (targets nbcodec.bench)
+ (action (ignore-outputs (run orun -o %{targets} --
+   setrip -enc -rseed 1067894368))))
+
+(alias (name bench) (deps nbcodec.bench))

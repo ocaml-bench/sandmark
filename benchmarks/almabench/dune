@@ -1,0 +1,11 @@
+;; Adapted from OCamlPro's ocamlbench-repo
+;; See https://github.com/OCamlPro/ocamlbench-repo
+(executable
+ (name almabench))
+
+(rule
+ (targets almabench.bench)
+ (deps (:prog almabench.exe))
+ (action (run orun -o %{targets} -- %{prog})))
+
+(alias (name bench) (deps almabench.bench))

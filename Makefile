@@ -31,16 +31,20 @@ ocaml-versions/.packages.%: ocaml-versions/%.comp _opam/%
 	opam install --switch=$* --best-effort --yes $(PACKAGES)
 	touch $@
 
-ocaml-versions/%.bench: ocaml-versions/.packages.%
+.PHONY: .FORCE
+.FORCE:
+ocaml-versions/%.bench: ocaml-versions/.packages.% .FORCE
 	{ echo '(lang dune 1.0)'; echo '(context (opam (switch $*)))'; } > ocaml-versions/.workspace.%
-	opam exec --switch $* -- dune build -j 1 --workspace=ocaml-versions/.workspace.% @bench
-	find -name _build/$* -name '*.bench' > $@
+	opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.% @bench
+	find _build/$* -name '*.bench' | xargs cat > $@
 
 
 clean:
 	rm -rf dependencies/packages/ocaml/*
 	rm -rf dependencies/packages/ocaml-base-compiler/*
 	rm -rf ocaml-versions/.packages.*
+	rm -rf ocaml-versions/*.bench
+	rm -rf _build
 	rm -rf _opam
 
 

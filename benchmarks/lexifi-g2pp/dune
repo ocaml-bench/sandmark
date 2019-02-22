@@ -1,0 +1,13 @@
+;; Adapted from OCamlPro's ocamlbench-repo
+;; See https://github.com/OCamlPro/ocamlbench-repo
+(executable
+ (name main))
+
+(rule
+ (targets lexifi-g2pp.bench)
+ (deps (:prog main.exe))
+ (action (progn
+  (with-stdout-to output.txt (run orun -o %{targets} -- %{prog}))
+  (diff lexifi-g2pp-bench.output output.txt))))
+
+(alias (name bench) (deps lexifi-g2pp.bench))

@@ -1,0 +1,17 @@
+;; Adapted from OCamlPro's ocamlbench-repo
+;; See https://github.com/OCamlPro/ocamlbench-repo
+(executables
+ (names thread_ring_lwt_mvar thread_ring_lwt_stream)
+ (libraries lwt lwt.unix))
+
+(rule
+ (targets thread-lwt-mvar.bench)
+ (deps thread_ring_lwt_mvar.exe)
+ (action (run orun -o %{targets} -- %{deps})))
+
+(rule
+ (targets thread-lwt-stream.bench)
+ (deps thread_ring_lwt_stream.exe)
+ (action (run orun -o %{targets} -- %{deps})))
+
+(alias (name bench) (deps thread-lwt-mvar.bench thread-lwt-stream.bench))

@@ -1,0 +1,19 @@
+opam-version: "2.0"
+name: "nbcodec"
+version: "1.0"
+maintainer: "Vincent Bernardoff <vb@luminar.eu.org>"
+authors: "Daniel Bünzli <daniel.b uenlzi@erratique.ch>"
+homepage: "http://github.com/dbuenzli/nbcodec"
+dev-repo: "git://github.com/dbuenzli/nbcodec"
+bug-reports: "http://github.com/dbuenzli/nbcodec/issues"
+synopsis: "non-blocking IO interface design"
+license: "BSD3"
+build: [
+  [ "./build" "setrip.native" ]
+]
+depends: ["ocaml" "ocamlfind" "ocamlbuild"]
+flags: light-uninstall
+url {
+  src: "https://github.com/dbuenzli/nbcodec/archive/v0.0.4.tar.gz"
+  checksum: "md5=2984928304f110d290392cc40e742ebf"
+}

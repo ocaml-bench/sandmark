@@ -1,0 +1,16 @@
+;; Adapted from OCamlPro's ocamlbench-repo
+;; See https://github.com/OCamlPro/ocamlbench-repo
+(executables
+ (names kb kb_no_exc))
+
+(rule
+ (targets kb.bench)
+ (deps (:prog kb.exe))
+ (action (run orun -o %{targets} -- %{prog})))
+
+(rule
+ (targets kb-no-exc.bench)
+ (deps (:prog kb_no_exc.exe))
+ (action (run orun -o %{targets} -- %{prog})))
+
+(alias (name bench) (deps kb.bench kb-no-exc.bench))

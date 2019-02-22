@@ -1,10 +1,10 @@
 EXCLUDE_QUERY_DIR
-B /local/scratch/sd601/home/bench/newbench/_opam/4.05.0/lib/biniou
-B /local/scratch/sd601/home/bench/newbench/_opam/4.05.0/lib/easy-format
-B /local/scratch/sd601/home/bench/newbench/_opam/4.05.0/lib/yojson
+B /local/scratch/sd601/home/bench/newbench/_opam/4.06.1/lib/biniou
+B /local/scratch/sd601/home/bench/newbench/_opam/4.06.1/lib/easy-format
+B /local/scratch/sd601/home/bench/newbench/_opam/4.06.1/lib/yojson
 B ../../_build/default/benchmarks/yojson/.ydump.eobjs/byte
-S /local/scratch/sd601/home/bench/newbench/_opam/4.05.0/lib/biniou
-S /local/scratch/sd601/home/bench/newbench/_opam/4.05.0/lib/easy-format
-S /local/scratch/sd601/home/bench/newbench/_opam/4.05.0/lib/yojson
+S /local/scratch/sd601/home/bench/newbench/_opam/4.06.1/lib/biniou
+S /local/scratch/sd601/home/bench/newbench/_opam/4.06.1/lib/easy-format
+S /local/scratch/sd601/home/bench/newbench/_opam/4.06.1/lib/yojson
 S .
-FLG -w @a-4-29-40-41-42-44-45-48-58-59-60-40 -strict-sequence -strict-formats -short-paths -keep-locs
+FLG -w -40

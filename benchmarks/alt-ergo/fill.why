@@ -1,0 +1,2140 @@
+(**************************************************************************)
+(*                                                                        *)
+(*  The Why3 Verification Platform   /   The Why3 Development Team        *)
+(*  Copyright 2010-2013   --   INRIA - CNRS - Paris-Sud University        *)
+(*                                                                        *)
+(*  This software is distributed under the terms of the GNU Lesser        *)
+(*  General Public License version 2.1, with the special exception        *)
+(*  on linking described in file LICENSE.                                 *)
+(*                                                                        *)
+(*  File modified by CEA (Commissariat à l'énergie atomique et aux        *)
+(*                        énergies alternatives).                         *)
+(*                                                                        *)
+(**************************************************************************)
+
+(* this is a prelude for Alt-Ergo*)
+(* this is a prelude for Alt-Ergo integer arithmetic *)
+(** The theory BuiltIn_ must be appended to this file*)
+(** The theory Bool_ must be appended to this file*)
+(**************************************************************************)
+(*                                                                        *)
+(*  The Why3 Verification Platform   /   The Why3 Development Team        *)
+(*  Copyright 2010-2013   --   INRIA - CNRS - Paris-Sud University        *)
+(*                                                                        *)
+(*  This software is distributed under the terms of the GNU Lesser        *)
+(*  General Public License version 2.1, with the special exception        *)
+(*  on linking described in file LICENSE.                                 *)
+(*                                                                        *)
+(*  File modified by CEA (Commissariat à l'énergie atomique et aux        *)
+(*                        énergies alternatives).                         *)
+(*                                                                        *)
+(**************************************************************************)
+
+(* this is a prelude for Alt-Ergo*)
+(** The theory BuiltIn_ must be appended to this file*)
+(** The theory Bool_ must be appended to this file*)
+(** The theory int_Int_ must be appended to this file*)
+logic abs_int : int -> int
+
+axiom abs_def : (forall x:int. ((0 <= x) -> (abs_int(x) = x)))
+
+axiom abs_def1 : (forall x:int. ((not (0 <= x)) -> (abs_int(x) = (-x))))
+
+axiom Abs_le :
+  (forall x:int. forall y:int. ((abs_int(x) <= y) -> ((-y) <= x)))
+
+axiom Abs_le1 : (forall x:int. forall y:int. ((abs_int(x) <= y) -> (x <= y)))
+
+axiom Abs_le2 :
+  (forall x:int. forall y:int. ((((-y) <= x) and (x <= y)) ->
+  (abs_int(x) <= y)))
+
+axiom Abs_pos : (forall x:int. (0 <= abs_int(x)))
+
+(**************************************************************************)
+(*                                                                        *)
+(*  The Why3 Verification Platform   /   The Why3 Development Team        *)
+(*  Copyright 2010-2013   --   INRIA - CNRS - Paris-Sud University        *)
+(*                                                                        *)
+(*  This software is distributed under the terms of the GNU Lesser        *)
+(*  General Public License version 2.1, with the special exception        *)
+(*  on linking described in file LICENSE.                                 *)
+(*                                                                        *)
+(*  File modified by CEA (Commissariat à l'énergie atomique et aux        *)
+(*                        énergies alternatives).                         *)
+(*                                                                        *)
+(**************************************************************************)
+
+(* this is a prelude for Alt-Ergo*)
+logic safe_comp_div: int, int -> int
+axiom safe_comp_div_def: forall x, y:int. x >= 0 and y > 0 -> safe_comp_div(x,y) = x / y
+logic safe_comp_mod: int, int -> int
+axiom safe_comp_mod_def: forall x, y:int. x >= 0 and y > 0 -> safe_comp_mod(x,y) = x % y
+(** The theory BuiltIn_ must be appended to this file*)
+(** The theory Bool_ must be appended to this file*)
+(** The theory int_Int_ must be appended to this file*)
+(** The theory int_Abs_ must be appended to this file*)
+axiom Div_bound :
+  (forall x:int. forall y:int. (((0 <= x) and (0 <  y)) ->
+  (0 <= safe_comp_div(x,y))))
+
+axiom Div_bound1 :
+  (forall x:int. forall y:int. (((0 <= x) and (0 <  y)) ->
+  (safe_comp_div(x,y) <= x)))
+
+axiom Div_1 : (forall x:int. (safe_comp_div(x,1) = x))
+
+axiom Mod_1 : (forall x:int. (safe_comp_mod(x,1) = 0))
+
+axiom Div_inf :
+  (forall x:int. forall y:int. (((0 <= x) and (x <  y)) ->
+  (safe_comp_div(x,y) = 0)))
+
+axiom Mod_inf :
+  (forall x:int. forall y:int. (((0 <= x) and (x <  y)) ->
+  (safe_comp_mod(x,y) = x)))
+
+axiom Div_mult :
+  (forall x:int. forall y:int. forall z:int [safe_comp_div(((x * y) + z),x)].
+  (((0 <  x) and ((0 <= y) and (0 <= z))) ->
+  (safe_comp_div(((x * y) + z),x) = (y + safe_comp_div(z,x)))))
+
+axiom Mod_mult :
+  (forall x:int. forall y:int. forall z:int [safe_comp_mod(((x * y) + z),x)].
+  (((0 <  x) and ((0 <= y) and (0 <= z))) ->
+  (safe_comp_mod(((x * y) + z),x) = safe_comp_mod(z,x))))
+
+(**************************************************************************)
+(*                                                                        *)
+(*  The Why3 Verification Platform   /   The Why3 Development Team        *)
+(*  Copyright 2010-2013   --   INRIA - CNRS - Paris-Sud University        *)
+(*                                                                        *)
+(*  This software is distributed under the terms of the GNU Lesser        *)
+(*  General Public License version 2.1, with the special exception        *)
+(*  on linking described in file LICENSE.                                 *)
+(*                                                                        *)
+(*  File modified by CEA (Commissariat à l'énergie atomique et aux        *)
+(*                        énergies alternatives).                         *)
+(*                                                                        *)
+(**************************************************************************)
+
+(* this is a prelude for Alt-Ergo*)
+(* this is a prelude for Alt-Ergo real arithmetic *)
+(** The theory BuiltIn_ must be appended to this file*)
+(** The theory Bool_ must be appended to this file*)
+axiom add_div :
+  (forall x:real. forall y:real. forall z:real. ((not (z = 0.0)) ->
+  (((x + y) / z) = ((x / z) + (y / z)))))
+
+axiom sub_div :
+  (forall x:real. forall y:real. forall z:real. ((not (z = 0.0)) ->
+  (((x - y) / z) = ((x / z) - (y / z)))))
+
+axiom neg_div :
+  (forall x:real. forall y:real. ((not (y = 0.0)) ->
+  (((-x) / y) = (-(x / y)))))
+
+axiom assoc_mul_div :
+  (forall x:real. forall y:real. forall z:real. ((not (z = 0.0)) ->
+  (((x * y) / z) = (x * (y / z)))))
+
+axiom assoc_div_mul :
+  (forall x:real. forall y:real. forall z:real. (((not (y = 0.0)) and
+  (not (z = 0.0))) -> (((x / y) / z) = (x / (y * z)))))
+
+axiom assoc_div_div :
+  (forall x:real. forall y:real. forall z:real. (((not (y = 0.0)) and
+  (not (z = 0.0))) -> ((x / (y / z)) = ((x * z) / y))))
+
+(**************************************************************************)
+(*                                                                        *)
+(*  The Why3 Verification Platform   /   The Why3 Development Team        *)
+(*  Copyright 2010-2013   --   INRIA - CNRS - Paris-Sud University        *)
+(*                                                                        *)
+(*  This software is distributed under the terms of the GNU Lesser        *)
+(*  General Public License version 2.1, with the special exception        *)
+(*  on linking described in file LICENSE.                                 *)
+(*                                                                        *)
+(*  File modified by CEA (Commissariat à l'énergie atomique et aux        *)
+(*                        énergies alternatives).                         *)
+(*                                                                        *)
+(**************************************************************************)
+
+(* this is a prelude for Alt-Ergo*)
+(** The theory BuiltIn_ must be appended to this file*)
+(** The theory Bool_ must be appended to this file*)
+(** The theory real_Real_ must be appended to this file*)
+(**************************************************************************)
+(*                                                                        *)
+(*  The Why3 Verification Platform   /   The Why3 Development Team        *)
+(*  Copyright 2010-2013   --   INRIA - CNRS - Paris-Sud University        *)
+(*                                                                        *)
+(*  This software is distributed under the terms of the GNU Lesser        *)
+(*  General Public License version 2.1, with the special exception        *)
+(*  on linking described in file LICENSE.                                 *)
+(*                                                                        *)
+(*  File modified by CEA (Commissariat à l'énergie atomique et aux        *)
+(*                        énergies alternatives).                         *)
+(*                                                                        *)
+(**************************************************************************)
+
+(* this is a prelude for Alt-Ergo*)
+(** The theory BuiltIn_ must be appended to this file*)
+(** The theory Bool_ must be appended to this file*)
+(** The theory int_Int_ must be appended to this file*)
+(** The theory real_Real_ must be appended to this file*)
+logic from_int : int -> real
+
+axiom Zero : (from_int(0) = 0.0)
+
+axiom One : (from_int(1) = 1.0)
+
+axiom Add :
+  (forall x:int. forall y:int.
+  (from_int((x + y)) = (from_int(x) + from_int(y))))
+
+axiom Sub :
+  (forall x:int. forall y:int.
+  (from_int((x - y)) = (from_int(x) - from_int(y))))
+
+axiom Mul :
+  (forall x:int. forall y:int.
+  (from_int((x * y)) = (from_int(x) * from_int(y))))
+
+axiom Neg : (forall x:int. (from_int((-x)) = (-from_int(x))))
+
+(**************************************************************************)
+(*                                                                        *)
+(*  This file is part of WP plug-in of Frama-C.                           *)
+(*                                                                        *)
+(*  Copyright (C) 2007-2014                                               *)
+(*    CEA (Commissariat a l'energie atomique et aux energies              *)
+(*         alternatives)                                                  *)
+(*                                                                        *)
+(*  you can redistribute it and/or modify it under the terms of the GNU   *)
+(*  Lesser General Public License as published by the Free Software       *)
+(*  Foundation, version 2.1.                                              *)
+(*                                                                        *)
+(*  It is distributed in the hope that it will be useful,                 *)
+(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
+(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *)
+(*  GNU Lesser General Public License for more details.                   *)
+(*                                                                        *)
+(*  See the GNU Lesser General Public License version 2.1                 *)
+(*  for more details (enclosed in the file licenses/LGPLv2.1).            *)
+(*                                                                        *)
+(**************************************************************************)
+
+(* this is a prelude for Alt-Ergo*)
+(** The theory BuiltIn_ must be appended to this file*)
+(** The theory Bool_ must be appended to this file*)
+(** The theory bool_Bool_ must be appended to this file*)
+(** The theory int_Int_ must be appended to this file*)
+(** The theory int_Abs_ must be appended to this file*)
+(** The theory int_ComputerDivision_ must be appended to this file*)
+(** The theory real_Real_ must be appended to this file*)
+(** The theory real_RealInfix_ must be appended to this file*)
+(** The theory real_FromInt_ must be appended to this file*)
+logic ite : bool, 'a, 'a -> 'a
+
+axiom ite1 :
+  (forall p:bool. forall x:'a. forall y:'a [ite(p, x, y)]. (((p = true) and
+  (ite(p, x, y) = x)) or ((p = false) and (ite(p, x, y) = y))))
+
+logic eqb : 'a, 'a -> bool
+
+axiom eqb1 : (forall x:'a. forall y:'a. ((eqb(x, y) = true) -> (x = y)))
+
+axiom eqb2 : (forall x:'a. forall y:'a. ((x = y) -> (eqb(x, y) = true)))
+
+logic neqb : 'a, 'a -> bool
+
+axiom neqb1 :
+  (forall x:'a. forall y:'a. ((neqb(x, y) = true) -> (not (x = y))))
+
+axiom neqb2 :
+  (forall x:'a. forall y:'a. ((not (x = y)) -> (neqb(x, y) = true)))
+
+logic zlt : int, int -> bool
+
+logic zleq : int, int -> bool
+
+axiom zlt1 : (forall x:int. forall y:int. ((zlt(x, y) = true) -> (x <  y)))
+
+axiom zlt2 : (forall x:int. forall y:int. ((x <  y) -> (zlt(x, y) = true)))
+
+axiom zleq1 : (forall x:int. forall y:int. ((zleq(x, y) = true) -> (x <= y)))
+
+axiom zleq2 : (forall x:int. forall y:int. ((x <= y) -> (zleq(x, y) = true)))
+
+logic rlt : real, real -> bool
+
+logic rleq : real, real -> bool
+
+axiom rlt1 : (forall x:real. forall y:real. ((rlt(x, y) = true) -> (x <  y)))
+
+axiom rlt2 : (forall x:real. forall y:real. ((x <  y) -> (rlt(x, y) = true)))
+
+axiom rleq1 :
+  (forall x:real. forall y:real. ((rleq(x, y) = true) -> (x <= y)))
+
+axiom rleq2 :
+  (forall x:real. forall y:real. ((x <= y) -> (rleq(x, y) = true)))
+
+logic truncate : real -> int
+
+function real_of_int(x: int) : real = from_int(x)
+
+axiom truncate_of_int : (forall x:int. (truncate(real_of_int(x)) = x))
+
+axiom c_euclidian :
+  (forall n:int. forall d:int [safe_comp_div(n,d), safe_comp_mod(n,d)].
+  ((not (d = 0)) -> (n = ((safe_comp_div(n,d) * d) + safe_comp_mod(n,d)))))
+
+axiom cdiv_cases :
+  (forall n:int. forall d:int [safe_comp_div(n,d)]. ((0 <= n) -> ((0 <  d) ->
+  (safe_comp_div(n,d) = (n / d)))))
+
+axiom cdiv_cases1 :
+  (forall n:int. forall d:int [safe_comp_div(n,d)]. ((n <= 0) -> ((0 <  d) ->
+  (safe_comp_div(n,d) = (-((-n) / d))))))
+
+axiom cdiv_cases2 :
+  (forall n:int. forall d:int [safe_comp_div(n,d)]. ((0 <= n) -> ((d <  0) ->
+  (safe_comp_div(n,d) = (-(n / (-d)))))))
+
+axiom cdiv_cases3 :
+  (forall n:int. forall d:int [safe_comp_div(n,d)]. ((n <= 0) -> ((d <  0) ->
+  (safe_comp_div(n,d) = ((-n) / (-d))))))
+
+axiom cmod_cases :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((0 <= n) -> ((0 <  d) ->
+  (safe_comp_mod(n,d) = (n % d)))))
+
+axiom cmod_cases1 :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((n <= 0) -> ((0 <  d) ->
+  (safe_comp_mod(n,d) = (-((-n) % d))))))
+
+axiom cmod_cases2 :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((0 <= n) -> ((d <  0) ->
+  (safe_comp_mod(n,d) = (n % (-d))))))
+
+axiom cmod_cases3 :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((n <= 0) -> ((d <  0) ->
+  (safe_comp_mod(n,d) = (-((-n) % (-d)))))))
+
+axiom cmod_remainder :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((0 <= n) -> ((0 <  d) ->
+  (0 <= safe_comp_mod(n,d)))))
+
+axiom cmod_remainder1 :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((0 <= n) -> ((0 <  d) ->
+  (safe_comp_mod(n,d) <  d))))
+
+axiom cmod_remainder2 :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((n <= 0) -> ((0 <  d) ->
+  ((-d) <  safe_comp_mod(n,d)))))
+
+axiom cmod_remainder3 :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((n <= 0) -> ((0 <  d) ->
+  (safe_comp_mod(n,d) <= 0))))
+
+axiom cmod_remainder4 :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((0 <= n) -> ((d <  0) ->
+  (0 <= safe_comp_mod(n,d)))))
+
+axiom cmod_remainder5 :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((0 <= n) -> ((d <  0) ->
+  (safe_comp_mod(n,d) <  (-d)))))
+
+axiom cmod_remainder6 :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((n <= 0) -> ((d <  0) ->
+  (d <  safe_comp_mod(n,d)))))
+
+axiom cmod_remainder7 :
+  (forall n:int. forall d:int [safe_comp_mod(n,d)]. ((n <= 0) -> ((d <  0) ->
+  (safe_comp_mod(n,d) <= 0))))
+
+axiom cdiv_neutral :
+  (forall a:int [safe_comp_div(a,1)]. (safe_comp_div(a,1) = a))
+
+axiom cdiv_inv :
+  (forall a:int [safe_comp_div(a,a)]. ((not (a = 0)) ->
+  (safe_comp_div(a,a) = 1)))
+
+(**************************************************************************)
+(*                                                                        *)
+(*  This file is part of WP plug-in of Frama-C.                           *)
+(*                                                                        *)
+(*  Copyright (C) 2007-2014                                               *)
+(*    CEA (Commissariat a l'energie atomique et aux energies              *)
+(*         alternatives)                                                  *)
+(*                                                                        *)
+(*  you can redistribute it and/or modify it under the terms of the GNU   *)
+(*  Lesser General Public License as published by the Free Software       *)
+(*  Foundation, version 2.1.                                              *)
+(*                                                                        *)
+(*  It is distributed in the hope that it will be useful,                 *)
+(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
+(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *)
+(*  GNU Lesser General Public License for more details.                   *)
+(*                                                                        *)
+(*  See the GNU Lesser General Public License version 2.1                 *)
+(*  for more details (enclosed in the file licenses/LGPLv2.1).            *)
+(*                                                                        *)
+(**************************************************************************)
+
+(* this is a prelude for Alt-Ergo*)
+(** The theory BuiltIn_ must be appended to this file*)
+(** The theory Bool_ must be appended to this file*)
+(** The theory bool_Bool_ must be appended to this file*)
+(** The theory int_Int_ must be appended to this file*)
+(** The theory map_Map_ must be appended to this file*)
+type addr = { base : int; offset : int
+}
+
+logic addr_le : addr, addr -> prop
+
+logic addr_lt : addr, addr -> prop
+
+logic addr_le_bool : addr, addr -> bool
+
+logic addr_lt_bool : addr, addr -> bool
+
+axiom addr_le_def :
+  (forall p:addr. forall q:addr [addr_le(p, q)]. (((p).base = (q).base) ->
+  (addr_le(p, q) -> ((p).offset <= (q).offset))))
+
+axiom addr_le_def1 :
+  (forall p:addr. forall q:addr [addr_le(p, q)]. (((p).base = (q).base) ->
+  (((p).offset <= (q).offset) -> addr_le(p, q))))
+
+axiom addr_lt_def :
+  (forall p:addr. forall q:addr [addr_lt(p, q)]. (((p).base = (q).base) ->
+  (addr_lt(p, q) -> ((p).offset <  (q).offset))))
+
+axiom addr_lt_def1 :
+  (forall p:addr. forall q:addr [addr_lt(p, q)]. (((p).base = (q).base) ->
+  (((p).offset <  (q).offset) -> addr_lt(p, q))))
+
+axiom addr_le_bool_def :
+  (forall p:addr. forall q:addr [addr_le_bool(p, q)]. (addr_le(p, q) ->
+  (addr_le_bool(p, q) = true)))
+
+axiom addr_le_bool_def1 :
+  (forall p:addr. forall q:addr [addr_le_bool(p, q)]. ((addr_le_bool(p,
+  q) = true) -> addr_le(p, q)))
+
+axiom addr_lt_bool_def :
+  (forall p:addr. forall q:addr [addr_lt_bool(p, q)]. (addr_lt(p, q) ->
+  (addr_lt_bool(p, q) = true)))
+
+axiom addr_lt_bool_def1 :
+  (forall p:addr. forall q:addr [addr_lt_bool(p, q)]. ((addr_lt_bool(p,
+  q) = true) -> addr_lt(p, q)))
+
+function null() : addr = { base = 0; offset = 0 }
+
+function global(b: int) : addr = { base = b; offset = 0 }
+
+function shift(p: addr, k: int) : addr = { base = (p).base; offset =
+  ((p).offset + k) }
+
+predicate included(p: addr, a: int, q: addr, b: int) = ((0 <  a) ->
+  ((0 <= b) and (((p).base = (q).base) and (((q).offset <= (p).offset) and
+  (((p).offset + a) <= ((q).offset + b))))))
+
+predicate separated(p: addr, a: int, q: addr, b: int) = ((a <= 0) or
+  ((b <= 0) or ((not ((p).base = (q).base)) or
+  ((((q).offset + b) <= (p).offset) or (((p).offset + a) <= (q).offset)))))
+
+predicate eqmem(m1: (addr,'a) farray, m2: (addr,'a) farray, p: addr,
+  a1: int) =
+  (forall q:addr [(m1[p])| (m2[q])]. (included(q, 1, p, a1) ->
+  ((m1[q]) = (m2[q]))))
+
+predicate havoc(m1: (addr,'a) farray, m2: (addr,'a) farray, p: addr,
+  a1: int) =
+  (forall q:addr [(m1[p])| (m2[q])]. (separated(q, 1, p, a1) ->
+  ((m1[q]) = (m2[q]))))
+
+predicate valid_rd(m: (int,int) farray, p: addr, n: int) = ((0 <  n) ->
+  ((0 <= (p).offset) and (((p).offset + n) <= (m[(p).base]))))
+
+predicate valid_rw(m: (int,int) farray, p: addr, n: int) = ((0 <  n) ->
+  ((0 <  (p).base) and ((0 <= (p).offset) and
+  (((p).offset + n) <= (m[(p).base])))))
+
+axiom valid_rw_rd :
+  (forall m:(int,int) farray.
+  (forall p:addr. (forall n:int. (valid_rw(m, p, n) -> valid_rd(m, p, n)))))
+
+axiom valid_string :
+  (forall m:(int,int) farray.
+  (forall p:addr. (((p).base <  0) -> (((0 <= (p).offset) and
+  ((p).offset <  (m[(p).base]))) -> valid_rd(m, p, 1)))))
+
+axiom valid_string1 :
+  (forall m:(int,int) farray.
+  (forall p:addr. (((p).base <  0) -> (((0 <= (p).offset) and
+  ((p).offset <  (m[(p).base]))) -> (not valid_rw(m, p, 1))))))
+
+axiom separated_1 :
+  (forall p:addr. forall q:addr.
+  (forall a:int. forall b:int. forall i:int. forall j:int [separated(p, a, q,
+  b), { base = (p).base; offset = i }, { base = (q).base; offset = j }].
+  (separated(p, a, q, b) -> ((((p).offset <= i) and
+  (i <  ((p).offset + a))) -> ((((q).offset <= j) and
+  (j <  ((q).offset + b))) -> (not ({ base = (p).base; offset = i } = {
+  base = (q).base; offset = j })))))))
+
+logic region : int -> int
+
+logic linked : (int,int) farray -> prop
+
+logic sconst : (addr,int) farray -> prop
+
+predicate framed(m: (addr,addr) farray) =
+  (forall p:addr [(m[p])]. (region(((m[p])).base) <= 0))
+
+axiom separated_included :
+  (forall p:addr. forall q:addr.
+  (forall a:int. forall b:int [separated(p, a, q, b), included(p, a, q, b)].
+  ((0 <  a) -> ((0 <  b) -> (separated(p, a, q, b) -> (not included(p, a, q,
+  b)))))))
+
+axiom included_trans :
+  (forall p:addr. forall q:addr. forall r:addr.
+  (forall a:int. forall b:int. forall c:int [included(p, a, q, b),
+  included(q, b, r, c)]. (included(p, a, q, b) -> (included(q, b, r, c) ->
+  included(p, a, r, c)))))
+
+axiom separated_trans :
+  (forall p:addr. forall q:addr. forall r:addr.
+  (forall a:int. forall b:int. forall c:int [included(p, a, q, b),
+  separated(q, b, r, c)]. (included(p, a, q, b) -> (separated(q, b, r, c) ->
+  separated(p, a, r, c)))))
+
+axiom separated_sym :
+  (forall p:addr. forall q:addr.
+  (forall a:int. forall b:int [separated(p, a, q, b)]. (separated(p, a, q,
+  b) -> separated(q, b, p, a))))
+
+axiom separated_sym1 :
+  (forall p:addr. forall q:addr.
+  (forall a:int. forall b:int [separated(p, a, q, b)]. (separated(q, b, p,
+  a) -> separated(p, a, q, b))))
+
+axiom eqmem_included :
+  (forall m1:(addr,'a) farray. forall m2:(addr,'a) farray.
+  (forall p:addr. forall q:addr.
+  (forall a1:int. forall b:int [eqmem(m1, m2, p, a1), eqmem(m1, m2, q, b)].
+  (included(p, a1, q, b) -> (eqmem(m1, m2, q, b) -> eqmem(m1, m2, p, a1))))))
+
+axiom eqmem_sym :
+  (forall m1:(addr,'a) farray. forall m2:(addr,'a) farray.
+  (forall p:addr.
+  (forall a1:int. (eqmem(m1, m2, p, a1) -> eqmem(m2, m1, p, a1)))))
+
+axiom havoc_sym :
+  (forall m1:(addr,'a) farray. forall m2:(addr,'a) farray.
+  (forall p:addr.
+  (forall a1:int. (havoc(m1, m2, p, a1) -> havoc(m2, m1, p, a1)))))
+
+logic cast : addr -> int
+
+axiom cast_injective :
+  (forall p:addr. forall q:addr [cast(p), cast(q)]. ((cast(p) = cast(q)) ->
+  (p = q)))
+
+logic hardware : int -> int
+
+axiom hardnull : (hardware(0) = 0)
+
+(**************************************************************************)
+(*                                                                        *)
+(*  This file is part of WP plug-in of Frama-C.                           *)
+(*                                                                        *)
+(*  Copyright (C) 2007-2014                                               *)
+(*    CEA (Commissariat a l'energie atomique et aux energies              *)
+(*         alternatives)                                                  *)
+(*                                                                        *)
+(*  you can redistribute it and/or modify it under the terms of the GNU   *)
+(*  Lesser General Public License as published by the Free Software       *)
+(*  Foundation, version 2.1.                                              *)
+(*                                                                        *)
+(*  It is distributed in the hope that it will be useful,                 *)
+(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
+(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *)
+(*  GNU Lesser General Public License for more details.                   *)
+(*                                                                        *)
+(*  See the GNU Lesser General Public License version 2.1                 *)
+(*  for more details (enclosed in the file licenses/LGPLv2.1).            *)
+(*                                                                        *)
+(**************************************************************************)
+
+(* this is a prelude for Alt-Ergo*)
+(** The theory BuiltIn_ must be appended to this file*)
+(** The theory Bool_ must be appended to this file*)
+(** The theory bool_Bool_ must be appended to this file*)
+(** The theory int_Int_ must be appended to this file*)
+logic is_uint8 : int -> prop
+
+axiom is_uint8_def : (forall x:int [is_uint8(x)]. (is_uint8(x) -> (0 <= x)))
+
+axiom is_uint8_def1 :
+  (forall x:int [is_uint8(x)]. (is_uint8(x) -> (x <  256)))
+
+axiom is_uint8_def2 :
+  (forall x:int [is_uint8(x)]. (((0 <= x) and (x <  256)) -> is_uint8(x)))
+
+logic is_sint8 : int -> prop
+
+axiom is_sint8_def :
+  (forall x:int [is_sint8(x)]. (is_sint8(x) -> ((-128) <= x)))
+
+axiom is_sint8_def1 :
+  (forall x:int [is_sint8(x)]. (is_sint8(x) -> (x <  128)))
+
+axiom is_sint8_def2 :
+  (forall x:int [is_sint8(x)]. ((((-128) <= x) and (x <  128)) ->
+  is_sint8(x)))
+
+logic is_uint16 : int -> prop
+
+axiom is_uint16_def :
+  (forall x:int [is_uint16(x)]. (is_uint16(x) -> (0 <= x)))
+
+axiom is_uint16_def1 :
+  (forall x:int [is_uint16(x)]. (is_uint16(x) -> (x <  65536)))
+
+axiom is_uint16_def2 :
+  (forall x:int [is_uint16(x)]. (((0 <= x) and (x <  65536)) ->
+  is_uint16(x)))
+
+predicate is_sint16(x: int) = (((-32768) <= x) and (x <  32768))
+
+logic is_uint32 : int -> prop
+
+axiom is_uint32_def :
+  (forall x:int [is_uint32(x)]. (is_uint32(x) -> (0 <= x)))
+
+axiom is_uint32_def1 :
+  (forall x:int [is_uint32(x)]. (is_uint32(x) -> (x <  4294967296)))
+
+axiom is_uint32_def2 :
+  (forall x:int [is_uint32(x)]. (((0 <= x) and (x <  4294967296)) ->
+  is_uint32(x)))
+
+logic is_sint32 : int -> prop
+
+axiom is_sint32_def :
+  (forall x:int [is_sint32(x)]. (is_sint32(x) -> ((-2147483648) <= x)))
+
+axiom is_sint32_def1 :
+  (forall x:int [is_sint32(x)]. (is_sint32(x) -> (x <  2147483648)))
+
+axiom is_sint32_def2 :
+  (forall x:int [is_sint32(x)]. ((((-2147483648) <= x) and
+  (x <  2147483648)) -> is_sint32(x)))
+
+logic is_uint64 : int -> prop
+
+axiom is_uint64_def :
+  (forall x:int [is_uint64(x)]. (is_uint64(x) -> (0 <= x)))
+
+axiom is_uint64_def1 :
+  (forall x:int [is_uint64(x)]. (is_uint64(x) ->
+  (x <  18446744073709551616)))
+
+axiom is_uint64_def2 :
+  (forall x:int [is_uint64(x)]. (((0 <= x) and
+  (x <  18446744073709551616)) -> is_uint64(x)))
+
+logic is_sint64 : int -> prop
+
+axiom is_sint64_def :
+  (forall x:int [is_sint64(x)]. (is_sint64(x) ->
+  ((-9223372036854775808) <= x)))
+
+axiom is_sint64_def1 :
+  (forall x:int [is_sint64(x)]. (is_sint64(x) -> (x <  9223372036854775808)))
+
+axiom is_sint64_def2 :
+  (forall x:int [is_sint64(x)]. ((((-9223372036854775808) <= x) and
+  (x <  9223372036854775808)) -> is_sint64(x)))
+
+logic to_uint8 : int -> int
+
+logic to_sint8 : int -> int
+
+logic to_uint16 : int -> int
+
+logic to_sint16 : int -> int
+
+logic to_uint32 : int -> int
+
+logic to_sint32 : int -> int
+
+logic to_uint64 : int -> int
+
+logic to_sint64 : int -> int
+
+axiom is_to_uint8 :
+  (forall x:int [is_uint8(to_uint8(x))]. is_uint8(to_uint8(x)))
+
+axiom is_to_sint8 :
+  (forall x:int [is_sint8(to_sint8(x))]. is_sint8(to_sint8(x)))
+
+axiom is_to_uint16 :
+  (forall x:int [is_uint16(to_uint16(x))]. is_uint16(to_uint16(x)))
+
+axiom is_to_sint16 :
+  (forall x:int [is_sint16(to_sint16(x))]. is_sint16(to_sint16(x)))
+
+axiom is_to_uint32 :
+  (forall x:int [is_uint32(to_uint32(x))]. is_uint32(to_uint32(x)))
+
+axiom is_to_sint32 :
+  (forall x:int [is_sint32(to_sint32(x))]. is_sint32(to_sint32(x)))
+
+axiom is_to_uint64 :
+  (forall x:int [is_uint64(to_uint64(x))]. is_uint64(to_uint64(x)))
+
+axiom is_to_sint64 :
+  (forall x:int [is_sint64(to_sint64(x))]. is_sint64(to_sint64(x)))
+
+axiom id_uint8 :
+  (forall x:int [to_uint8(x)]. (((0 <= x) and (x <  256)) ->
+  (to_uint8(x) = x)))
+
+axiom id_sint8 :
+  (forall x:int [to_sint8(x)]. ((((-128) <= x) and (x <  128)) ->
+  (to_sint8(x) = x)))
+
+axiom id_uint16 :
+  (forall x:int [to_uint16(x)]. (((0 <= x) and (x <  65536)) ->
+  (to_uint16(x) = x)))
+
+axiom id_sint16 :
+  (forall x:int [to_sint16(x)]. ((((-32768) <= x) and (x <  32768)) ->
+  (to_sint16(x) = x)))
+
+axiom id_uint32 :
+  (forall x:int [to_uint32(x)]. (((0 <= x) and (x <  4294967296)) ->
+  (to_uint32(x) = x)))
+
+axiom id_sint32 :
+  (forall x:int [to_sint32(x)]. ((((-2147483648) <= x) and
+  (x <  2147483648)) -> (to_sint32(x) = x)))
+
+axiom id_uint64 :
+  (forall x:int [to_uint64(x)]. (((0 <= x) and
+  (x <  18446744073709551616)) -> (to_uint64(x) = x)))
+
+axiom id_sint64 :
+  (forall x:int [to_sint64(x)]. ((((-9223372036854775808) <= x) and
+  (x <  9223372036854775808)) -> (to_sint64(x) = x)))
+
+logic lnot : int -> int
+
+logic ac land : int, int -> int
+
+logic ac lxor : int, int -> int
+
+logic ac lor : int, int -> int
+
+logic lsl : int, int -> int
+
+logic lsr : int, int -> int
+
+logic bit_testb : int, int -> bool
+
+logic bit_test : int, int -> prop
+
+(**************************************************************************)
+(*                                                                        *)
+(*  This file is part of WP plug-in of Frama-C.                           *)
+(*                                                                        *)
+(*  Copyright (C) 2007-2014                                               *)
+(*    CEA (Commissariat a l'energie atomique et aux energies              *)
+(*         alternatives)                                                  *)
+(*                                                                        *)
+(*  you can redistribute it and/or modify it under the terms of the GNU   *)
+(*  Lesser General Public License as published by the Free Software       *)
+(*  Foundation, version 2.1.                                              *)
+(*                                                                        *)
+(*  It is distributed in the hope that it will be useful,                 *)
+(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
+(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *)
+(*  GNU Lesser General Public License for more details.                   *)
+(*                                                                        *)
+(*  See the GNU Lesser General Public License version 2.1                 *)
+(*  for more details (enclosed in the file licenses/LGPLv2.1).            *)
+(*                                                                        *)
+(**************************************************************************)
+
+(* this is a prelude for Alt-Ergo*)
+(** The theory BuiltIn_ must be appended to this file*)
+(** The theory Bool_ must be appended to this file*)
+(** The theory Qed_ must be appended to this file*)
+(** The theory bool_Bool_ must be appended to this file*)
+(** The theory int_Int_ must be appended to this file*)
+(** The theory int_Abs_ must be appended to this file*)
+(** The theory int_ComputerDivision_ must be appended to this file*)
+(** The theory real_Real_ must be appended to this file*)
+(** The theory real_RealInfix_ must be appended to this file*)
+(** The theory real_FromInt_ must be appended to this file*)
+(** The theory Cint_ must be appended to this file*)
+axiom bit_test_def :
+  (forall x:int. forall k:int [bit_testb(x, k)]. ((bit_testb(x, k) = true) ->
+  bit_test(x, k)))
+
+axiom bit_test_def1 :
+  (forall x:int. forall k:int [bit_testb(x, k)]. (bit_test(x, k) ->
+  (bit_testb(x, k) = true)))
+
+axiom bit_test_extraction :
+  (forall x:int. forall k:int [land(x, lsl(1, k))| land(lsl(1, k), x)].
+  ((0 <= k) -> ((not (land(x, lsl(1, k)) = 0)) -> bit_test(x, k))))
+
+axiom bit_test_extraction1 :
+  (forall x:int. forall k:int [land(x, lsl(1, k))| land(lsl(1, k), x)].
+  ((0 <= k) -> (bit_test(x, k) -> (not (land(x, lsl(1, k)) = 0)))))
+
+axiom lnot_extraction :
+  (forall x:int. forall i:int [bit_test(lnot(x), i)]. ((0 <= i) ->
+  (bit_test(lnot(x), i) -> (not bit_test(x, i)))))
+
+axiom lnot_extraction1 :
+  (forall x:int. forall i:int [bit_test(lnot(x), i)]. ((0 <= i) ->
+  ((not bit_test(x, i)) -> bit_test(lnot(x), i))))
+
+axiom land_extraction :
+  (forall x:int. forall y:int. forall i:int [bit_test(land(x, y), i)].
+  ((0 <= i) -> (bit_test(land(x, y), i) -> bit_test(x, i))))
+
+axiom land_extraction1 :
+  (forall x:int. forall y:int. forall i:int [bit_test(land(x, y), i)].
+  ((0 <= i) -> (bit_test(land(x, y), i) -> bit_test(y, i))))
+
+axiom land_extraction2 :
+  (forall x:int. forall y:int. forall i:int [bit_test(land(x, y), i)].
+  ((0 <= i) -> ((bit_test(x, i) and bit_test(y, i)) -> bit_test(land(x, y),
+  i))))
+
+axiom lor_extraction :
+  (forall x:int. forall y:int. forall i:int [bit_test(lor(x, y), i)].
+  ((0 <= i) -> (bit_test(lor(x, y), i) -> (bit_test(x, i) or bit_test(y,
+  i)))))
+
+axiom lor_extraction1 :
+  (forall x:int. forall y:int. forall i:int [bit_test(lor(x, y), i)].
+  ((0 <= i) -> ((bit_test(x, i) or bit_test(y, i)) -> bit_test(lor(x, y),
+  i))))
+
+axiom lxor_extraction :
+  (forall x:int. forall y:int. forall i:int [bit_test(lxor(x, y), i)].
+  ((0 <= i) -> (bit_test(lxor(x, y), i) -> (bit_test(x, i) ->
+  (not bit_test(y, i))))))
+
+axiom lxor_extraction1 :
+  (forall x:int. forall y:int. forall i:int [bit_test(lxor(x, y), i)].
+  ((0 <= i) -> (bit_test(lxor(x, y), i) -> ((not bit_test(y, i)) ->
+  bit_test(x, i)))))
+
+axiom lxor_extraction2 :
+  (forall x:int. forall y:int. forall i:int [bit_test(lxor(x, y), i)].
+  ((0 <= i) -> ((bit_test(x, i) <-> (not bit_test(y, i))) -> bit_test(lxor(x,
+  y), i))))
+
+axiom lsl_extraction_sup :
+  (forall x:int. forall n:int. forall m:int [bit_test(lsl(x, n), m)].
+  ((0 <= n) -> ((0 <= m) -> ((n <= m) -> (bit_test(lsl(x, n), m) ->
+  bit_test(x, (m - n)))))))
+
+axiom lsl_extraction_sup1 :
+  (forall x:int. forall n:int. forall m:int [bit_test(lsl(x, n), m)].
+  ((0 <= n) -> ((0 <= m) -> ((n <= m) -> (bit_test(x, (m - n)) ->
+  bit_test(lsl(x, n), m))))))
+
+axiom lsl_extraction_inf :
+  (forall x:int. forall n:int. forall m:int [bit_test(lsl(x, n), m)].
+  ((0 <= n) -> ((0 <= m) -> ((m <  n) -> (not bit_test(lsl(x, n), m))))))
+
+axiom lsr_extractionl :
+  (forall x:int. forall n:int. forall m:int [bit_test(lsr(x, n), m)].
+  ((0 <= n) -> ((0 <= m) -> (bit_test(lsr(x, n), m) -> bit_test(x,
+  (m + n))))))
+
+axiom lsr_extractionl1 :
+  (forall x:int. forall n:int. forall m:int [bit_test(lsr(x, n), m)].
+  ((0 <= n) -> ((0 <= m) -> (bit_test(x, (m + n)) -> bit_test(lsr(x, n),
+  m)))))
+
+axiom lsl1_extraction :
+  (forall i:int. forall j:int [bit_test(lsl(1, i), j)]. ((0 <= i) ->
+  ((0 <= j) -> (bit_test(lsl(1, i), j) -> (i = j)))))
+
+axiom lsl1_extraction1 :
+  (forall i:int. forall j:int [bit_test(lsl(1, i), j)]. ((0 <= i) ->
+  ((0 <= j) -> ((i = j) -> bit_test(lsl(1, i), j)))))
+
+axiom to_uint8_extraction_sup :
+  (forall x:int. forall i:int [is_uint8(x), bit_test(x, i)]. ((8 <= i) ->
+  (is_uint8(x) -> (not bit_test(x, i)))))
+
+axiom to_uint8_extraction_inf :
+  (forall x:int. forall i:int [bit_test(to_uint8(x), i)]. (((0 <= i) and
+  (i <  8)) -> (bit_test(to_uint8(x), i) -> bit_test(x, i))))
+
+axiom to_uint8_extraction_inf1 :
+  (forall x:int. forall i:int [bit_test(to_uint8(x), i)]. (((0 <= i) and
+  (i <  8)) -> (bit_test(x, i) -> bit_test(to_uint8(x), i))))
+
+axiom to_uint16_extraction_sup :
+  (forall x:int. forall i:int [is_uint16(x), bit_test(x, i)]. ((16 <= i) ->
+  (is_uint16(x) -> (not bit_test(x, i)))))
+
+axiom to_uint16_extraction_inf :
+  (forall x:int. forall i:int [bit_test(to_uint16(x), i)]. (((0 <= i) and
+  (i <  16)) -> (bit_test(to_uint16(x), i) -> bit_test(x, i))))
+
+axiom to_uint16_extraction_inf1 :
+  (forall x:int. forall i:int [bit_test(to_uint16(x), i)]. (((0 <= i) and
+  (i <  16)) -> (bit_test(x, i) -> bit_test(to_uint16(x), i))))
+
+axiom to_uint32_extraction_sup :
+  (forall x:int. forall i:int [is_uint32(x), bit_test(x, i)]. ((32 <= i) ->
+  (is_uint32(x) -> (not bit_test(x, i)))))
+
+axiom to_uint32_extraction_inf :
+  (forall x:int. forall i:int [bit_test(to_uint32(x), i)]. (((0 <= i) and
+  (i <  32)) -> (bit_test(to_uint32(x), i) -> bit_test(x, i))))
+
+axiom to_uint32_extraction_inf1 :
+  (forall x:int. forall i:int [bit_test(to_uint32(x), i)]. (((0 <= i) and
+  (i <  32)) -> (bit_test(x, i) -> bit_test(to_uint32(x), i))))
+
+axiom to_uint64_extraction_sup :
+  (forall x:int. forall i:int [is_uint64(x), bit_test(x, i)]. ((64 <= i) ->
+  (is_uint64(x) -> (not bit_test(x, i)))))
+
+axiom to_uint64_extraction_inf :
+  (forall x:int. forall i:int [bit_test(to_uint64(x), i)]. (((0 <= i) and
+  (i <  64)) -> (bit_test(to_uint64(x), i) -> bit_test(x, i))))
+
+axiom to_uint64_extraction_inf1 :
+  (forall x:int. forall i:int [bit_test(to_uint64(x), i)]. (((0 <= i) and
+  (i <  64)) -> (bit_test(x, i) -> bit_test(to_uint64(x), i))))
+
+axiom to_sint8_extraction_sup :
+  (forall x:int. forall i:int [is_sint8(x), bit_test(x, i)]. ((7 <= i) ->
+  (is_sint8(x) -> (bit_test(x, i) -> (x <  0)))))
+
+axiom to_sint8_extraction_sup1 :
+  (forall x:int. forall i:int [is_sint8(x), bit_test(x, i)]. ((7 <= i) ->
+  (is_sint8(x) -> ((x <  0) -> bit_test(x, i)))))
+
+axiom to_sint8_extraction_inf :
+  (forall x:int. forall i:int [bit_test(to_sint8(x), i)]. (((0 <= i) and
+  (i <  7)) -> (bit_test(to_sint8(x), i) -> bit_test(x, i))))
+
+axiom to_sint8_extraction_inf1 :
+  (forall x:int. forall i:int [bit_test(to_sint8(x), i)]. (((0 <= i) and
+  (i <  7)) -> (bit_test(x, i) -> bit_test(to_sint8(x), i))))
+
+axiom to_sint16_extraction_sup :
+  (forall x:int. forall i:int [is_sint16(x), bit_test(x, i)]. ((15 <= i) ->
+  (is_sint16(x) -> (bit_test(x, i) -> (x <  0)))))
+
+axiom to_sint16_extraction_sup1 :
+  (forall x:int. forall i:int [is_sint16(x), bit_test(x, i)]. ((15 <= i) ->
+  (is_sint16(x) -> ((x <  0) -> bit_test(x, i)))))
+
+axiom to_sint16_extraction_inf :
+  (forall x:int. forall i:int [bit_test(to_sint16(x), i)]. (((0 <= i) and
+  (i <  15)) -> (bit_test(to_sint16(x), i) -> bit_test(x, i))))
+
+axiom to_sint16_extraction_inf1 :
+  (forall x:int. forall i:int [bit_test(to_sint16(x), i)]. (((0 <= i) and
+  (i <  15)) -> (bit_test(x, i) -> bit_test(to_sint16(x), i))))
+
+axiom to_sint32_extraction_sup :
+  (forall x:int. forall i:int [is_sint32(x), bit_test(x, i)]. ((31 <= i) ->
+  (is_sint32(x) -> (bit_test(x, i) -> (x <  0)))))
+
+axiom to_sint32_extraction_sup1 :
+  (forall x:int. forall i:int [is_sint32(x), bit_test(x, i)]. ((31 <= i) ->
+  (is_sint32(x) -> ((x <  0) -> bit_test(x, i)))))
+
+axiom to_sint32_extraction_inf :
+  (forall x:int. forall i:int [bit_test(to_sint32(x), i)]. (((0 <= i) and
+  (i <  31)) -> (bit_test(to_sint32(x), i) -> bit_test(x, i))))
+
+axiom to_sint32_extraction_inf1 :
+  (forall x:int. forall i:int [bit_test(to_sint32(x), i)]. (((0 <= i) and
+  (i <  31)) -> (bit_test(x, i) -> bit_test(to_sint32(x), i))))
+
+axiom to_sint64_extraction_sup :
+  (forall x:int. forall i:int [is_sint64(x), bit_test(x, i)]. ((63 <= i) ->
+  (is_sint64(x) -> (bit_test(x, i) -> (x <  0)))))
+
+axiom to_sint64_extraction_sup1 :
+  (forall x:int. forall i:int [is_sint64(x), bit_test(x, i)]. ((63 <= i) ->
+  (is_sint64(x) -> ((x <  0) -> bit_test(x, i)))))
+
+axiom to_sint64_extraction_inf :
+  (forall x:int. forall i:int [bit_test(to_sint64(x), i)]. (((0 <= i) and
+  (i <  63)) -> (bit_test(to_sint64(x), i) -> bit_test(x, i))))
+
+axiom to_sint64_extraction_inf1 :
+  (forall x:int. forall i:int [bit_test(to_sint64(x), i)]. (((0 <= i) and
+  (i <  63)) -> (bit_test(x, i) -> bit_test(to_sint64(x), i))))
+
+axiom is_uint8_lor :
+  (forall x:int. forall y:int [to_uint8(lor(x, y))]. (is_uint8(x) ->
+  (is_uint8(y) -> (to_uint8(lor(x, y)) = lor(x, y)))))
+
+axiom is_uint8_land :
+  (forall x:int. forall y:int [to_uint8(land(x, y))]. (is_uint8(x) ->
+  (is_uint8(y) -> (to_uint8(land(x, y)) = land(x, y)))))
+
+axiom is_uint8_lsr :
+  (forall x:int. forall y:int [to_uint8(lsr(x, y))]. ((0 <= y) ->
+  (is_uint8(x) -> (to_uint8(lsr(x, y)) = lsr(x, y)))))
+
+axiom is_uint8_lsl1_inf :
+  (forall y:int [to_uint8(lsl(1, y))]. (((0 <= y) and (y <  8)) ->
+  (to_uint8(lsl(1, y)) = lsl(1, y))))
+
+axiom is_uint8_lsl1_sup :
+  (forall y:int [to_uint8(lsl(1, y))]. ((8 <= y) -> (to_uint8(lsl(1,
+  y)) = 0)))
+
+axiom is_uint16_lor :
+  (forall x:int. forall y:int [to_uint16(lor(x, y))]. (is_uint16(x) ->
+  (is_uint16(y) -> (to_uint16(lor(x, y)) = lor(x, y)))))
+
+axiom is_uint16_land :
+  (forall x:int. forall y:int [to_uint16(land(x, y))]. (is_uint16(x) ->
+  (is_uint16(y) -> (to_uint16(land(x, y)) = land(x, y)))))
+
+axiom is_uint16_lsr :
+  (forall x:int. forall y:int [to_uint16(lsr(x, y))]. ((0 <= y) ->
+  (is_uint16(x) -> (to_uint16(lsr(x, y)) = lsr(x, y)))))
+
+axiom is_uint16_lsl1_inf :
+  (forall y:int [to_uint16(lsl(1, y))]. (((0 <= y) and (y <  16)) -> (lsl(1,
+  y) = to_uint16(lsl(1, y)))))
+
+axiom is_uint16_lsl1_sup :
+  (forall y:int [to_uint16(lsl(1, y))]. ((16 <= y) -> (to_uint16(lsl(1,
+  y)) = 0)))
+
+axiom is_uint32_lor :
+  (forall x:int. forall y:int [to_uint32(lor(x, y))]. (is_uint32(x) ->
+  (is_uint32(y) -> (to_uint32(lor(x, y)) = lor(x, y)))))
+
+axiom is_uint32_land :
+  (forall x:int. forall y:int [to_uint32(land(x, y))]. (is_uint32(x) ->
+  (is_uint32(y) -> (to_uint32(land(x, y)) = land(x, y)))))
+
+axiom is_uint32_lsr :
+  (forall x:int. forall y:int [to_uint32(lsr(x, y))]. ((0 <= y) ->
+  (is_uint32(x) -> (to_uint32(lsr(x, y)) = lsr(x, y)))))
+
+axiom is_uint32_lsl1_inf :
+  (forall y:int [to_uint32(lsl(1, y))]. (((0 <= y) and (y <  32)) -> (lsl(1,
+  y) = to_uint32(lsl(1, y)))))
+
+axiom is_uint32_lsl1_sup :
+  (forall y:int [to_uint32(lsl(1, y))]. ((32 <= y) -> (to_uint32(lsl(1,
+  y)) = 0)))
+
+axiom is_uint64_lor :
+  (forall x:int. forall y:int [to_uint64(lor(x, y))]. (is_uint64(x) ->
+  (is_uint64(y) -> (to_uint64(lor(x, y)) = lor(x, y)))))
+
+axiom is_uint64_land :
+  (forall x:int. forall y:int [to_uint64(land(x, y))]. (is_uint64(x) ->
+  (is_uint64(y) -> (to_uint64(land(x, y)) = land(x, y)))))
+
+axiom is_uint64_lsr :
+  (forall x:int. forall y:int [to_uint64(lsr(x, y))]. ((0 <= y) ->
+  (is_uint64(x) -> (to_uint64(lsr(x, y)) = lsr(x, y)))))
+
+axiom is_uint64_lsl1_inf :
+  (forall y:int [to_uint64(lsl(1, y))]. (((0 <= y) and (y <  64)) ->
+  (to_uint64(lsl(1, y)) = lsl(1, y))))
+
+axiom is_uint64_lsl1_sup :
+  (forall y:int [to_uint64(lsl(1, y))]. ((64 <= y) -> (to_uint64(lsl(1,
+  y)) = 0)))
+
+axiom is_sint8_lnot :
+  (forall x:int [to_sint8(lnot(x))]. (is_sint8(x) ->
+  (to_sint8(lnot(x)) = lnot(x))))
+
+axiom is_sint8_lxor :
+  (forall x:int. forall y:int [to_sint8(lxor(x, y))]. (is_sint8(x) ->
+  (is_sint8(y) -> (to_sint8(lxor(x, y)) = lxor(x, y)))))
+
+axiom is_sint8_lor :
+  (forall x:int. forall y:int [to_sint8(lor(x, y))]. (is_sint8(x) ->
+  (is_sint8(y) -> (to_sint8(lor(x, y)) = lor(x, y)))))
+
+axiom is_sint8_land :
+  (forall x:int. forall y:int [to_sint8(land(x, y))]. (is_sint8(x) ->
+  (is_sint8(y) -> (to_sint8(land(x, y)) = land(x, y)))))
+
+axiom is_sint8_lsr :
+  (forall x:int. forall y:int [to_sint8(lsr(x, y))]. ((0 <= y) ->
+  (is_sint8(x) -> (to_sint8(lsr(x, y)) = lsr(x, y)))))
+
+axiom is_sint8_lsl1 : (lsl(1, 7) = 128)
+
+axiom is_sint8_lsl1_inf :
+  (forall y:int [lsl(1, y)]. (((0 <= y) and (y <  7)) -> is_sint8(lsl(1,
+  y))))
+
+axiom is_sint8_lsl1_sup :
+  (forall y:int [to_sint8(lsl(1, y))]. ((8 <= y) -> (to_sint8(lsl(1,
+  y)) = 0)))
+
+axiom is_sint16_lnot :
+  (forall x:int [to_sint16(lnot(x))]. (is_sint16(x) ->
+  (to_sint16(lnot(x)) = lnot(x))))
+
+axiom is_sint16_lxor :
+  (forall x:int. forall y:int [to_sint16(lxor(x, y))]. (is_sint16(x) ->
+  (is_sint16(y) -> (to_sint16(lxor(x, y)) = lxor(x, y)))))
+
+axiom is_sint16_lor :
+  (forall x:int. forall y:int [to_sint16(lor(x, y))]. (is_sint16(x) ->
+  (is_sint16(y) -> (to_sint16(lor(x, y)) = lor(x, y)))))
+
+axiom is_sint16_land :
+  (forall x:int. forall y:int [to_sint16(land(x, y))]. (is_sint16(x) ->
+  (is_sint16(y) -> (to_sint16(land(x, y)) = land(x, y)))))
+
+axiom is_sint16_lsr :
+  (forall x:int. forall y:int [to_sint16(lsr(x, y))]. ((0 <= y) ->
+  (is_sint16(x) -> (to_sint16(lsr(x, y)) = lsr(x, y)))))
+
+axiom is_sint16_lsl1 : (lsl(1, 15) = 32768)
+
+axiom is_sint16_lsl1_inf :
+  (forall y:int [lsl(1, y)]. (((0 <= y) and (y <  15)) -> is_sint16(lsl(1,
+  y))))
+
+axiom is_sint16_lsl1_sup :
+  (forall y:int [to_sint16(lsl(1, y))]. ((16 <= y) -> (to_sint16(lsl(1,
+  y)) = 0)))
+
+axiom is_sint32_lnot :
+  (forall x:int [to_sint32(lnot(x))]. (is_sint32(x) ->
+  (to_sint32(lnot(x)) = lnot(x))))
+
+axiom is_sint32_lxor :
+  (forall x:int. forall y:int [to_sint32(lxor(x, y))]. (is_sint32(x) ->
+  (is_sint32(y) -> (to_sint32(lxor(x, y)) = lxor(x, y)))))
+
+axiom is_sint32_lor :
+  (forall x:int. forall y:int [to_sint32(lor(x, y))]. (is_sint32(x) ->
+  (is_sint32(y) -> (to_sint32(lor(x, y)) = lor(x, y)))))
+
+axiom is_sint32_land :
+  (forall x:int. forall y:int [to_sint32(land(x, y))]. (is_sint32(x) ->
+  (is_sint32(y) -> (to_sint32(land(x, y)) = land(x, y)))))
+
+axiom is_sint32_lsr :
+  (forall x:int. forall y:int [to_sint32(lsr(x, y))]. ((0 <= y) ->
+  (is_sint32(x) -> (to_sint32(lsr(x, y)) = lsr(x, y)))))
+
+axiom is_sint32_lsl1 : (lsl(1, 31) = 2147483648)
+
+axiom is_sint32_lsl1_inf :
+  (forall y:int [lsl(1, y)]. (((0 <= y) and (y <  31)) -> is_sint32(lsl(1,
+  y))))
+
+axiom is_sint32_lsl1_sup :
+  (forall y:int [to_sint32(lsl(1, y))]. ((32 <= y) -> (to_sint32(lsl(1,
+  y)) = 0)))
+
+axiom is_sint64_lnot :
+  (forall x:int [to_sint64(lnot(x))]. (is_sint64(x) ->
+  (to_sint64(lnot(x)) = lnot(x))))
+
+axiom is_sint64_lxor :
+  (forall x:int. forall y:int [to_sint64(lxor(x, y))]. (is_sint64(x) ->
+  (is_sint64(y) -> (to_sint64(lxor(x, y)) = lxor(x, y)))))
+
+axiom is_sint64_lor :
+  (forall x:int. forall y:int [to_sint64(lor(x, y))]. (is_sint64(x) ->
+  (is_sint64(y) -> (to_sint64(lor(x, y)) = lor(x, y)))))
+
+axiom is_sint64_land :
+  (forall x:int. forall y:int [to_sint64(land(x, y))]. (is_sint64(x) ->
+  (is_sint64(y) -> (to_sint64(land(x, y)) = land(x, y)))))
+
+axiom is_sint64_lsr :
+  (forall x:int. forall y:int [to_sint64(lsr(x, y))]. ((0 <= y) ->
+  (is_sint64(x) -> (to_sint64(lsr(x, y)) = lsr(x, y)))))
+
+axiom is_sint64_lsl1 : (lsl(1, 63) = 9223372036854775808)
+
+axiom is_sint64_lsl1_inf :
+  (forall y:int [lsl(1, y)]. (((0 <= y) and (y <  63)) -> is_sint64(lsl(1,
+  y))))
+
+axiom is_sint64_lsl1_sup :
+  (forall y:int [to_sint64(lsl(1, y))]. ((64 <= y) -> (to_sint64(lsl(1,
+  y)) = 0)))
+
+(* ---------------------------------------------------------- *)
+(* --- Global Definitions                                 --- *)
+(* ---------------------------------------------------------- *)
+
+predicate P_complementary
+    (Mint_0:(addr,int) farray,
+    val_0:addr,
+    comp_0:addr) =
+    (Mint_0[shift(comp_0, 0)] = to_uint8(lnot(Mint_0[shift(val_0, 0)]))) and
+    (Mint_0[shift(comp_0, 1)] = to_uint8(lnot(Mint_0[shift(val_0, 1)]))) and
+    (Mint_0[shift(comp_0, 2)] = to_uint8(lnot(Mint_0[shift(val_0, 2)]))) and
+    (Mint_0[shift(comp_0, 3)] = to_uint8(lnot(Mint_0[shift(val_0, 3)]))) and
+    (Mint_0[shift(comp_0, 4)] = to_uint8(lnot(Mint_0[shift(val_0, 4)]))) and
+    (Mint_0[shift(comp_0, 5)] = to_uint16(lnot(Mint_0[shift(val_0, 5)]))) and
+    (Mint_0[shift(comp_0, 6)] = to_uint16(lnot(Mint_0[shift(val_0, 6)]))) and
+    (Mint_0[shift(comp_0, 7)] = to_sint16(lnot(Mint_0[shift(val_0, 7)]))) and
+    (Mint_0[shift(comp_0, 8)] = to_uint8(lnot(Mint_0[shift(val_0, 8)]))) and
+    (Mint_0[shift(comp_0, 9)] = to_uint16(lnot(Mint_0[shift(val_0, 9)]))) and
+    (Mint_0[shift(comp_0, 10)] = to_uint8(lnot(Mint_0[shift(val_0, 10)]))) and
+    (Mint_0[shift(comp_0, 11)] = to_uint8(lnot(Mint_0[shift(val_0, 11)]))) and
+    (Mint_0[shift(comp_0, 13)] = to_uint8(lnot(Mint_0[shift(val_0, 13)]))) and
+    (Mint_0[shift(comp_0, 14)] = to_uint8(lnot(Mint_0[shift(val_0, 14)]))) and
+    (Mint_0[shift(comp_0, 15)] = to_uint8(lnot(Mint_0[shift(val_0, 15)]))) and
+    (Mint_0[shift(comp_0, 16)] = to_uint8(lnot(Mint_0[shift(val_0, 16)]))) and
+    (Mint_0[shift(comp_0, 17)] = to_uint8(lnot(Mint_0[shift(val_0, 17)]))) and
+    (Mint_0[shift(comp_0, 18)] = to_uint8(lnot(Mint_0[shift(val_0, 18)]))) and
+    (Mint_0[shift(comp_0, 19)] = to_uint8(lnot(Mint_0[shift(val_0, 19)]))) and
+    (Mint_0[shift(comp_0, 20)] = to_uint8(lnot(Mint_0[shift(val_0, 20)]))) and
+    (Mint_0[shift(comp_0, 21)] = to_uint16(lnot(Mint_0[shift(val_0, 21)]))) and
+    (Mint_0[shift(comp_0, 22)] = to_uint16(lnot(Mint_0[shift(val_0, 22)]))) and
+    (Mint_0[shift(comp_0, 23)] = to_uint16(lnot(Mint_0[shift(val_0, 23)]))) and
+    (Mint_0[shift(comp_0, 24)] = to_uint8(lnot(Mint_0[shift(val_0, 24)]))) and
+    (Mint_0[shift(comp_0, 25)] = to_uint8(lnot(Mint_0[shift(val_0, 25)])))
+
+axiom Q_bittoggle_symmetric:
+  forall x_0 : int. is_uint8(x_0) -> (x_0 = lnot(lnot(x_0)))
+
+(* ---------------------------------------------------------- *)
+(* --- Assertion (file test.c, line 141)                  --- *)
+(* ---------------------------------------------------------- *)
+
+goal fill_assert_39:
+  forall u8Field14_0 : int.
+  forall Malloc_0 : int farray.
+  forall Mint_0 : (addr,int) farray.
+  forall pNeg_0,pPos_0 : addr.
+  let a_0 = shift(pNeg_0, 0) : addr in
+  let a_1 = shift(pPos_0, 0) : addr in
+  let a_2 = shift(pPos_0, 1) : addr in
+  let a_3 = shift(pPos_0, 2) : addr in
+  let a_4 = shift(pPos_0, 3) : addr in
+  let a_5 = shift(pPos_0, 4) : addr in
+  let a_6 = shift(pPos_0, 5) : addr in
+  let a_7 = shift(pPos_0, 6) : addr in
+  let a_8 = shift(pPos_0, 7) : addr in
+  let a_9 = shift(pPos_0, 8) : addr in
+  let a_10 = shift(pPos_0, 9) : addr in
+  let a_11 = shift(pPos_0, 10) : addr in
+  let a_12 = shift(pPos_0, 11) : addr in
+  let a_13 = shift(pPos_0, 13) : addr in
+  let a_14 = shift(pPos_0, 14) : addr in
+  let a_15 = shift(pPos_0, 15) : addr in
+  let a_16 = shift(pPos_0, 16) : addr in
+  let a_17 = shift(pPos_0, 17) : addr in
+  let a_18 = shift(pPos_0, 18) : addr in
+  let a_19 = shift(pPos_0, 19) : addr in
+  let a_20 = shift(pPos_0, 20) : addr in
+  let a_21 = shift(pPos_0, 21) : addr in
+  let a_22 = shift(pPos_0, 22) : addr in
+  let a_23 = shift(pPos_0, 23) : addr in
+  let a_24 = shift(pPos_0, 24) : addr in
+  let a_25 = shift(pPos_0, 25) : addr in
+  let a_26 = shift(pNeg_0, 1) : addr in
+  let a_27 = shift(pNeg_0, 2) : addr in
+  let a_28 = shift(pNeg_0, 3) : addr in
+  let a_29 = shift(pNeg_0, 4) : addr in
+  let a_30 = shift(pNeg_0, 5) : addr in
+  let a_31 = shift(pNeg_0, 6) : addr in
+  let a_32 = shift(pNeg_0, 7) : addr in
+  let a_33 = shift(pNeg_0, 8) : addr in
+  let a_34 = shift(pNeg_0, 9) : addr in
+  let a_35 = shift(pNeg_0, 10) : addr in
+  let a_36 = shift(pNeg_0, 11) : addr in
+  let a_37 = shift(pNeg_0, 13) : addr in
+  let a_38 = shift(pNeg_0, 14) : addr in
+  let a_39 = shift(pNeg_0, 15) : addr in
+  let a_40 = shift(pNeg_0, 16) : addr in
+  let a_41 = shift(pNeg_0, 17) : addr in
+  let a_42 = shift(pNeg_0, 18) : addr in
+  let a_43 = shift(pNeg_0, 19) : addr in
+  let a_44 = shift(pNeg_0, 20) : addr in
+  let a_45 = shift(pNeg_0, 21) : addr in
+  let a_46 = shift(pNeg_0, 22) : addr in
+  let a_47 = shift(pNeg_0, 23) : addr in
+  let a_48 = shift(pNeg_0, 24) : addr in
+  let a_49 = shift(pNeg_0, 25) : addr in
+  let x_0 = Mint_0[a_0] : int in
+  let x_1 = Mint_0[a_26] : int in
+  let x_2 = Mint_0[a_27] : int in
+  let x_3 = Mint_0[a_28] : int in
+  let x_4 = Mint_0[a_29] : int in
+  let x_5 = Mint_0[a_33] : int in
+  let x_6 = Mint_0[a_35] : int in
+  let x_7 = Mint_0[a_36] : int in
+  let x_8 = Mint_0[a_37] : int in
+  let x_9 = Mint_0[a_38] : int in
+  let x_10 = Mint_0[a_39] : int in
+  let x_11 = Mint_0[a_40] : int in
+  let x_12 = Mint_0[a_41] : int in
+  let x_13 = Mint_0[a_42] : int in
+  let x_14 = Mint_0[a_43] : int in
+  let x_15 = Mint_0[a_44] : int in
+  let x_16 = Mint_0[a_48] : int in
+  let x_17 = Mint_0[a_49] : int in
+  let x_18 = Mint_0[a_1] : int in
+  let x_19 = Mint_0[a_2] : int in
+  let x_20 = Mint_0[a_3] : int in
+  let x_21 = Mint_0[a_4] : int in
+  let x_22 = Mint_0[a_5] : int in
+  let x_23 = Mint_0[a_9] : int in
+  let x_24 = Mint_0[a_11] : int in
+  let x_25 = Mint_0[a_12] : int in
+  let x_26 = Mint_0[a_13] : int in
+  let x_27 = Mint_0[a_14] : int in
+  let x_28 = Mint_0[a_15] : int in
+  let x_29 = Mint_0[a_16] : int in
+  let x_30 = Mint_0[a_17] : int in
+  let x_31 = Mint_0[a_18] : int in
+  let x_32 = Mint_0[a_19] : int in
+  let x_33 = Mint_0[a_20] : int in
+  let x_34 = Mint_0[a_24] : int in
+  let x_35 = Mint_0[a_25] : int in
+  let x_36 = Mint_0[a_30] : int in
+  let x_37 = Mint_0[a_31] : int in
+  let x_38 = Mint_0[a_34] : int in
+  let x_39 = Mint_0[a_45] : int in
+  let x_40 = Mint_0[a_46] : int in
+  let x_41 = Mint_0[a_47] : int in
+  let x_42 = Mint_0[a_6] : int in
+  let x_43 = Mint_0[a_7] : int in
+  let x_44 = Mint_0[a_10] : int in
+  let x_45 = Mint_0[a_21] : int in
+  let x_46 = Mint_0[a_22] : int in
+  let x_47 = Mint_0[a_23] : int in
+  let x_48 = Mint_0[a_32] : int in
+  let x_49 = Mint_0[a_8] : int in
+  let m_0 = Mint_0[a_14 <- u8Field14_0] : (addr,int) farray in
+  let x_50 = m_0[a_0] : int in
+  let x_51 = m_0[a_26] : int in
+  let x_52 = m_0[a_27] : int in
+  let x_53 = m_0[a_28] : int in
+  let x_54 = m_0[a_29] : int in
+  let x_55 = m_0[a_33] : int in
+  let x_56 = m_0[a_35] : int in
+  let x_57 = m_0[a_36] : int in
+  let x_58 = m_0[a_37] : int in
+  let x_59 = m_0[a_30] : int in
+  let x_60 = m_0[a_31] : int in
+  let x_61 = m_0[a_34] : int in
+  let x_62 = m_0[a_32] : int in
+  let x_63 = to_uint8(lnot(u8Field14_0)) : int in
+  let m_1 = m_0[a_38 <- x_63] : (addr,int) farray in
+  let x_64 = m_1[a_1] : int in
+  let x_65 = m_1[a_2] : int in
+  let x_66 = m_1[a_3] : int in
+  let x_67 = m_1[a_4] : int in
+  let x_68 = m_1[a_5] : int in
+  let x_69 = m_1[a_9] : int in
+  let x_70 = m_1[a_11] : int in
+  let x_71 = m_1[a_12] : int in
+  let x_72 = m_1[a_13] : int in
+  let x_73 = m_1[a_14] : int in
+  let x_74 = m_1[a_6] : int in
+  let x_75 = m_1[a_7] : int in
+  let x_76 = m_1[a_10] : int in
+  let x_77 = m_1[a_8] : int in
+  linked(Malloc_0) ->
+  is_uint8(u8Field14_0) ->
+  (a_0 <> a_1) ->
+  (a_0 <> a_2) ->
+  (a_0 <> a_3) ->
+  (a_0 <> a_4) ->
+  (a_0 <> a_5) ->
+  (a_0 <> a_6) ->
+  (a_0 <> a_7) ->
+  (a_0 <> a_8) ->
+  (a_0 <> a_9) ->
+  (a_0 <> a_10) ->
+  (a_0 <> a_11) ->
+  (a_0 <> a_12) ->
+  (a_0 <> a_13) ->
+  (a_0 <> a_14) ->
+  (a_0 <> a_15) ->
+  (a_0 <> a_16) ->
+  (a_0 <> a_17) ->
+  (a_0 <> a_18) ->
+  (a_0 <> a_19) ->
+  (a_0 <> a_20) ->
+  (a_0 <> a_21) ->
+  (a_0 <> a_22) ->
+  (a_0 <> a_23) ->
+  (a_0 <> a_24) ->
+  (a_0 <> a_25) ->
+  (a_26 <> a_1) ->
+  (a_26 <> a_2) ->
+  (a_26 <> a_3) ->
+  (a_26 <> a_4) ->
+  (a_26 <> a_5) ->
+  (a_26 <> a_6) ->
+  (a_26 <> a_7) ->
+  (a_26 <> a_8) ->
+  (a_26 <> a_9) ->
+  (a_26 <> a_10) ->
+  (a_26 <> a_11) ->
+  (a_26 <> a_12) ->
+  (a_26 <> a_13) ->
+  (a_26 <> a_14) ->
+  (a_26 <> a_15) ->
+  (a_26 <> a_16) ->
+  (a_26 <> a_17) ->
+  (a_26 <> a_18) ->
+  (a_26 <> a_19) ->
+  (a_26 <> a_20) ->
+  (a_26 <> a_21) ->
+  (a_26 <> a_22) ->
+  (a_26 <> a_23) ->
+  (a_26 <> a_24) ->
+  (a_26 <> a_25) ->
+  (a_27 <> a_1) ->
+  (a_27 <> a_2) ->
+  (a_27 <> a_3) ->
+  (a_27 <> a_4) ->
+  (a_27 <> a_5) ->
+  (a_27 <> a_6) ->
+  (a_27 <> a_7) ->
+  (a_27 <> a_8) ->
+  (a_27 <> a_9) ->
+  (a_27 <> a_10) ->
+  (a_27 <> a_11) ->
+  (a_27 <> a_12) ->
+  (a_27 <> a_13) ->
+  (a_27 <> a_14) ->
+  (a_27 <> a_15) ->
+  (a_27 <> a_16) ->
+  (a_27 <> a_17) ->
+  (a_27 <> a_18) ->
+  (a_27 <> a_19) ->
+  (a_27 <> a_20) ->
+  (a_27 <> a_21) ->
+  (a_27 <> a_22) ->
+  (a_27 <> a_23) ->
+  (a_27 <> a_24) ->
+  (a_27 <> a_25) ->
+  (a_28 <> a_1) ->
+  (a_28 <> a_2) ->
+  (a_28 <> a_3) ->
+  (a_28 <> a_4) ->
+  (a_28 <> a_5) ->
+  (a_28 <> a_6) ->
+  (a_28 <> a_7) ->
+  (a_28 <> a_8) ->
+  (a_28 <> a_9) ->
+  (a_28 <> a_10) ->
+  (a_28 <> a_11) ->
+  (a_28 <> a_12) ->
+  (a_28 <> a_13) ->
+  (a_28 <> a_14) ->
+  (a_28 <> a_15) ->
+  (a_28 <> a_16) ->
+  (a_28 <> a_17) ->
+  (a_28 <> a_18) ->
+  (a_28 <> a_19) ->
+  (a_28 <> a_20) ->
+  (a_28 <> a_21) ->
+  (a_28 <> a_22) ->
+  (a_28 <> a_23) ->
+  (a_28 <> a_24) ->
+  (a_28 <> a_25) ->
+  (a_29 <> a_1) ->
+  (a_29 <> a_2) ->
+  (a_29 <> a_3) ->
+  (a_29 <> a_4) ->
+  (a_29 <> a_5) ->
+  (a_29 <> a_6) ->
+  (a_29 <> a_7) ->
+  (a_29 <> a_8) ->
+  (a_29 <> a_9) ->
+  (a_29 <> a_10) ->
+  (a_29 <> a_11) ->
+  (a_29 <> a_12) ->
+  (a_29 <> a_13) ->
+  (a_29 <> a_14) ->
+  (a_29 <> a_15) ->
+  (a_29 <> a_16) ->
+  (a_29 <> a_17) ->
+  (a_29 <> a_18) ->
+  (a_29 <> a_19) ->
+  (a_29 <> a_20) ->
+  (a_29 <> a_21) ->
+  (a_29 <> a_22) ->
+  (a_29 <> a_23) ->
+  (a_29 <> a_24) ->
+  (a_29 <> a_25) ->
+  (a_30 <> a_1) ->
+  (a_30 <> a_2) ->
+  (a_30 <> a_3) ->
+  (a_30 <> a_4) ->
+  (a_30 <> a_5) ->
+  (a_30 <> a_6) ->
+  (a_30 <> a_7) ->
+  (a_30 <> a_8) ->
+  (a_30 <> a_9) ->
+  (a_30 <> a_10) ->
+  (a_30 <> a_11) ->
+  (a_30 <> a_12) ->
+  (a_30 <> a_13) ->
+  (a_30 <> a_14) ->
+  (a_30 <> a_15) ->
+  (a_30 <> a_16) ->
+  (a_30 <> a_17) ->
+  (a_30 <> a_18) ->
+  (a_30 <> a_19) ->
+  (a_30 <> a_20) ->
+  (a_30 <> a_21) ->
+  (a_30 <> a_22) ->
+  (a_30 <> a_23) ->
+  (a_30 <> a_24) ->
+  (a_30 <> a_25) ->
+  (a_31 <> a_1) ->
+  (a_31 <> a_2) ->
+  (a_31 <> a_3) ->
+  (a_31 <> a_4) ->
+  (a_31 <> a_5) ->
+  (a_31 <> a_6) ->
+  (a_31 <> a_7) ->
+  (a_31 <> a_8) ->
+  (a_31 <> a_9) ->
+  (a_31 <> a_10) ->
+  (a_31 <> a_11) ->
+  (a_31 <> a_12) ->
+  (a_31 <> a_13) ->
+  (a_31 <> a_14) ->
+  (a_31 <> a_15) ->
+  (a_31 <> a_16) ->
+  (a_31 <> a_17) ->
+  (a_31 <> a_18) ->
+  (a_31 <> a_19) ->
+  (a_31 <> a_20) ->
+  (a_31 <> a_21) ->
+  (a_31 <> a_22) ->
+  (a_31 <> a_23) ->
+  (a_31 <> a_24) ->
+  (a_31 <> a_25) ->
+  (a_32 <> a_1) ->
+  (a_32 <> a_2) ->
+  (a_32 <> a_3) ->
+  (a_32 <> a_4) ->
+  (a_32 <> a_5) ->
+  (a_32 <> a_6) ->
+  (a_32 <> a_7) ->
+  (a_32 <> a_8) ->
+  (a_32 <> a_9) ->
+  (a_32 <> a_10) ->
+  (a_32 <> a_11) ->
+  (a_32 <> a_12) ->
+  (a_32 <> a_13) ->
+  (a_32 <> a_14) ->
+  (a_32 <> a_15) ->
+  (a_32 <> a_16) ->
+  (a_32 <> a_17) ->
+  (a_32 <> a_18) ->
+  (a_32 <> a_19) ->
+  (a_32 <> a_20) ->
+  (a_32 <> a_21) ->
+  (a_32 <> a_22) ->
+  (a_32 <> a_23) ->
+  (a_32 <> a_24) ->
+  (a_32 <> a_25) ->
+  (a_33 <> a_1) ->
+  (a_33 <> a_2) ->
+  (a_33 <> a_3) ->
+  (a_33 <> a_4) ->
+  (a_33 <> a_5) ->
+  (a_33 <> a_6) ->
+  (a_33 <> a_7) ->
+  (a_33 <> a_8) ->
+  (a_33 <> a_9) ->
+  (a_33 <> a_10) ->
+  (a_33 <> a_11) ->
+  (a_33 <> a_12) ->
+  (a_33 <> a_13) ->
+  (a_33 <> a_14) ->
+  (a_33 <> a_15) ->
+  (a_33 <> a_16) ->
+  (a_33 <> a_17) ->
+  (a_33 <> a_18) ->
+  (a_33 <> a_19) ->
+  (a_33 <> a_20) ->
+  (a_33 <> a_21) ->
+  (a_33 <> a_22) ->
+  (a_33 <> a_23) ->
+  (a_33 <> a_24) ->
+  (a_33 <> a_25) ->
+  (a_34 <> a_1) ->
+  (a_34 <> a_2) ->
+  (a_34 <> a_3) ->
+  (a_34 <> a_4) ->
+  (a_34 <> a_5) ->
+  (a_34 <> a_6) ->
+  (a_34 <> a_7) ->
+  (a_34 <> a_8) ->
+  (a_34 <> a_9) ->
+  (a_34 <> a_10) ->
+  (a_34 <> a_11) ->
+  (a_34 <> a_12) ->
+  (a_34 <> a_13) ->
+  (a_34 <> a_14) ->
+  (a_34 <> a_15) ->
+  (a_34 <> a_16) ->
+  (a_34 <> a_17) ->
+  (a_34 <> a_18) ->
+  (a_34 <> a_19) ->
+  (a_34 <> a_20) ->
+  (a_34 <> a_21) ->
+  (a_34 <> a_22) ->
+  (a_34 <> a_23) ->
+  (a_34 <> a_24) ->
+  (a_34 <> a_25) ->
+  (a_35 <> a_1) ->
+  (a_35 <> a_2) ->
+  (a_35 <> a_3) ->
+  (a_35 <> a_4) ->
+  (a_35 <> a_5) ->
+  (a_35 <> a_6) ->
+  (a_35 <> a_7) ->
+  (a_35 <> a_8) ->
+  (a_35 <> a_9) ->
+  (a_35 <> a_10) ->
+  (a_35 <> a_11) ->
+  (a_35 <> a_12) ->
+  (a_35 <> a_13) ->
+  (a_35 <> a_14) ->
+  (a_35 <> a_15) ->
+  (a_35 <> a_16) ->
+  (a_35 <> a_17) ->
+  (a_35 <> a_18) ->
+  (a_35 <> a_19) ->
+  (a_35 <> a_20) ->
+  (a_35 <> a_21) ->
+  (a_35 <> a_22) ->
+  (a_35 <> a_23) ->
+  (a_35 <> a_24) ->
+  (a_35 <> a_25) ->
+  (a_36 <> a_1) ->
+  (a_36 <> a_2) ->
+  (a_36 <> a_3) ->
+  (a_36 <> a_4) ->
+  (a_36 <> a_5) ->
+  (a_36 <> a_6) ->
+  (a_36 <> a_7) ->
+  (a_36 <> a_8) ->
+  (a_36 <> a_9) ->
+  (a_36 <> a_10) ->
+  (a_36 <> a_11) ->
+  (a_36 <> a_12) ->
+  (a_36 <> a_13) ->
+  (a_36 <> a_14) ->
+  (a_36 <> a_15) ->
+  (a_36 <> a_16) ->
+  (a_36 <> a_17) ->
+  (a_36 <> a_18) ->
+  (a_36 <> a_19) ->
+  (a_36 <> a_20) ->
+  (a_36 <> a_21) ->
+  (a_36 <> a_22) ->
+  (a_36 <> a_23) ->
+  (a_36 <> a_24) ->
+  (a_36 <> a_25) ->
+  (a_37 <> a_1) ->
+  (a_37 <> a_2) ->
+  (a_37 <> a_3) ->
+  (a_37 <> a_4) ->
+  (a_37 <> a_5) ->
+  (a_37 <> a_6) ->
+  (a_37 <> a_7) ->
+  (a_37 <> a_8) ->
+  (a_37 <> a_9) ->
+  (a_37 <> a_10) ->
+  (a_37 <> a_11) ->
+  (a_37 <> a_12) ->
+  (a_37 <> a_13) ->
+  (a_37 <> a_14) ->
+  (a_37 <> a_15) ->
+  (a_37 <> a_16) ->
+  (a_37 <> a_17) ->
+  (a_37 <> a_18) ->
+  (a_37 <> a_19) ->
+  (a_37 <> a_20) ->
+  (a_37 <> a_21) ->
+  (a_37 <> a_22) ->
+  (a_37 <> a_23) ->
+  (a_37 <> a_24) ->
+  (a_37 <> a_25) ->
+  (a_38 <> a_1) ->
+  (a_38 <> a_2) ->
+  (a_38 <> a_3) ->
+  (a_38 <> a_4) ->
+  (a_38 <> a_5) ->
+  (a_38 <> a_6) ->
+  (a_38 <> a_7) ->
+  (a_38 <> a_8) ->
+  (a_38 <> a_9) ->
+  (a_38 <> a_10) ->
+  (a_38 <> a_11) ->
+  (a_38 <> a_12) ->
+  (a_38 <> a_13) ->
+  (a_38 <> a_14) ->
+  (a_38 <> a_15) ->
+  (a_38 <> a_16) ->
+  (a_38 <> a_17) ->
+  (a_38 <> a_18) ->
+  (a_38 <> a_19) ->
+  (a_38 <> a_20) ->
+  (a_38 <> a_21) ->
+  (a_38 <> a_22) ->
+  (a_38 <> a_23) ->
+  (a_38 <> a_24) ->
+  (a_38 <> a_25) ->
+  (a_39 <> a_1) ->
+  (a_39 <> a_2) ->
+  (a_39 <> a_3) ->
+  (a_39 <> a_4) ->
+  (a_39 <> a_5) ->
+  (a_39 <> a_6) ->
+  (a_39 <> a_7) ->
+  (a_39 <> a_8) ->
+  (a_39 <> a_9) ->
+  (a_39 <> a_10) ->
+  (a_39 <> a_11) ->
+  (a_39 <> a_12) ->
+  (a_39 <> a_13) ->
+  (a_39 <> a_14) ->
+  (a_39 <> a_15) ->
+  (a_39 <> a_16) ->
+  (a_39 <> a_17) ->
+  (a_39 <> a_18) ->
+  (a_39 <> a_19) ->
+  (a_39 <> a_20) ->
+  (a_39 <> a_21) ->
+  (a_39 <> a_22) ->
+  (a_39 <> a_23) ->
+  (a_39 <> a_24) ->
+  (a_39 <> a_25) ->
+  (a_40 <> a_1) ->
+  (a_40 <> a_2) ->
+  (a_40 <> a_3) ->
+  (a_40 <> a_4) ->
+  (a_40 <> a_5) ->
+  (a_40 <> a_6) ->
+  (a_40 <> a_7) ->
+  (a_40 <> a_8) ->
+  (a_40 <> a_9) ->
+  (a_40 <> a_10) ->
+  (a_40 <> a_11) ->
+  (a_40 <> a_12) ->
+  (a_40 <> a_13) ->
+  (a_40 <> a_14) ->
+  (a_40 <> a_15) ->
+  (a_40 <> a_16) ->
+  (a_40 <> a_17) ->
+  (a_40 <> a_18) ->
+  (a_40 <> a_19) ->
+  (a_40 <> a_20) ->
+  (a_40 <> a_21) ->
+  (a_40 <> a_22) ->
+  (a_40 <> a_23) ->
+  (a_40 <> a_24) ->
+  (a_40 <> a_25) ->
+  (a_41 <> a_1) ->
+  (a_41 <> a_2) ->
+  (a_41 <> a_3) ->
+  (a_41 <> a_4) ->
+  (a_41 <> a_5) ->
+  (a_41 <> a_6) ->
+  (a_41 <> a_7) ->
+  (a_41 <> a_8) ->
+  (a_41 <> a_9) ->
+  (a_41 <> a_10) ->
+  (a_41 <> a_11) ->
+  (a_41 <> a_12) ->
+  (a_41 <> a_13) ->
+  (a_41 <> a_14) ->
+  (a_41 <> a_15) ->
+  (a_41 <> a_16) ->
+  (a_41 <> a_17) ->
+  (a_41 <> a_18) ->
+  (a_41 <> a_19) ->
+  (a_41 <> a_20) ->
+  (a_41 <> a_21) ->
+  (a_41 <> a_22) ->
+  (a_41 <> a_23) ->
+  (a_41 <> a_24) ->
+  (a_41 <> a_25) ->
+  (a_42 <> a_1) ->
+  (a_42 <> a_2) ->
+  (a_42 <> a_3) ->
+  (a_42 <> a_4) ->
+  (a_42 <> a_5) ->
+  (a_42 <> a_6) ->
+  (a_42 <> a_7) ->
+  (a_42 <> a_8) ->
+  (a_42 <> a_9) ->
+  (a_42 <> a_10) ->
+  (a_42 <> a_11) ->
+  (a_42 <> a_12) ->
+  (a_42 <> a_13) ->
+  (a_42 <> a_14) ->
+  (a_42 <> a_15) ->
+  (a_42 <> a_16) ->
+  (a_42 <> a_17) ->
+  (a_42 <> a_18) ->
+  (a_42 <> a_19) ->
+  (a_42 <> a_20) ->
+  (a_42 <> a_21) ->
+  (a_42 <> a_22) ->
+  (a_42 <> a_23) ->
+  (a_42 <> a_24) ->
+  (a_42 <> a_25) ->
+  (a_43 <> a_1) ->
+  (a_43 <> a_2) ->
+  (a_43 <> a_3) ->
+  (a_43 <> a_4) ->
+  (a_43 <> a_5) ->
+  (a_43 <> a_6) ->
+  (a_43 <> a_7) ->
+  (a_43 <> a_8) ->
+  (a_43 <> a_9) ->
+  (a_43 <> a_10) ->
+  (a_43 <> a_11) ->
+  (a_43 <> a_12) ->
+  (a_43 <> a_13) ->
+  (a_43 <> a_14) ->
+  (a_43 <> a_15) ->
+  (a_43 <> a_16) ->
+  (a_43 <> a_17) ->
+  (a_43 <> a_18) ->
+  (a_43 <> a_19) ->
+  (a_43 <> a_20) ->
+  (a_43 <> a_21) ->
+  (a_43 <> a_22) ->
+  (a_43 <> a_23) ->
+  (a_43 <> a_24) ->
+  (a_43 <> a_25) ->
+  (a_44 <> a_1) ->
+  (a_44 <> a_2) ->
+  (a_44 <> a_3) ->
+  (a_44 <> a_4) ->
+  (a_44 <> a_5) ->
+  (a_44 <> a_6) ->
+  (a_44 <> a_7) ->
+  (a_44 <> a_8) ->
+  (a_44 <> a_9) ->
+  (a_44 <> a_10) ->
+  (a_44 <> a_11) ->
+  (a_44 <> a_12) ->
+  (a_44 <> a_13) ->
+  (a_44 <> a_14) ->
+  (a_44 <> a_15) ->
+  (a_44 <> a_16) ->
+  (a_44 <> a_17) ->
+  (a_44 <> a_18) ->
+  (a_44 <> a_19) ->
+  (a_44 <> a_20) ->
+  (a_44 <> a_21) ->
+  (a_44 <> a_22) ->
+  (a_44 <> a_23) ->
+  (a_44 <> a_24) ->
+  (a_44 <> a_25) ->
+  (a_45 <> a_1) ->
+  (a_45 <> a_2) ->
+  (a_45 <> a_3) ->
+  (a_45 <> a_4) ->
+  (a_45 <> a_5) ->
+  (a_45 <> a_6) ->
+  (a_45 <> a_7) ->
+  (a_45 <> a_8) ->
+  (a_45 <> a_9) ->
+  (a_45 <> a_10) ->
+  (a_45 <> a_11) ->
+  (a_45 <> a_12) ->
+  (a_45 <> a_13) ->
+  (a_45 <> a_14) ->
+  (a_45 <> a_15) ->
+  (a_45 <> a_16) ->
+  (a_45 <> a_17) ->
+  (a_45 <> a_18) ->
+  (a_45 <> a_19) ->
+  (a_45 <> a_20) ->
+  (a_45 <> a_21) ->
+  (a_45 <> a_22) ->
+  (a_45 <> a_23) ->
+  (a_45 <> a_24) ->
+  (a_45 <> a_25) ->
+  (a_46 <> a_1) ->
+  (a_46 <> a_2) ->
+  (a_46 <> a_3) ->
+  (a_46 <> a_4) ->
+  (a_46 <> a_5) ->
+  (a_46 <> a_6) ->
+  (a_46 <> a_7) ->
+  (a_46 <> a_8) ->
+  (a_46 <> a_9) ->
+  (a_46 <> a_10) ->
+  (a_46 <> a_11) ->
+  (a_46 <> a_12) ->
+  (a_46 <> a_13) ->
+  (a_46 <> a_14) ->
+  (a_46 <> a_15) ->
+  (a_46 <> a_16) ->
+  (a_46 <> a_17) ->
+  (a_46 <> a_18) ->
+  (a_46 <> a_19) ->
+  (a_46 <> a_20) ->
+  (a_46 <> a_21) ->
+  (a_46 <> a_22) ->
+  (a_46 <> a_23) ->
+  (a_46 <> a_24) ->
+  (a_46 <> a_25) ->
+  (a_47 <> a_1) ->
+  (a_47 <> a_2) ->
+  (a_47 <> a_3) ->
+  (a_47 <> a_4) ->
+  (a_47 <> a_5) ->
+  (a_47 <> a_6) ->
+  (a_47 <> a_7) ->
+  (a_47 <> a_8) ->
+  (a_47 <> a_9) ->
+  (a_47 <> a_10) ->
+  (a_47 <> a_11) ->
+  (a_47 <> a_12) ->
+  (a_47 <> a_13) ->
+  (a_47 <> a_14) ->
+  (a_47 <> a_15) ->
+  (a_47 <> a_16) ->
+  (a_47 <> a_17) ->
+  (a_47 <> a_18) ->
+  (a_47 <> a_19) ->
+  (a_47 <> a_20) ->
+  (a_47 <> a_21) ->
+  (a_47 <> a_22) ->
+  (a_47 <> a_23) ->
+  (a_47 <> a_24) ->
+  (a_47 <> a_25) ->
+  (a_48 <> a_1) ->
+  (a_48 <> a_2) ->
+  (a_48 <> a_3) ->
+  (a_48 <> a_4) ->
+  (a_48 <> a_5) ->
+  (a_48 <> a_6) ->
+  (a_48 <> a_7) ->
+  (a_48 <> a_8) ->
+  (a_48 <> a_9) ->
+  (a_48 <> a_10) ->
+  (a_48 <> a_11) ->
+  (a_48 <> a_12) ->
+  (a_48 <> a_13) ->
+  (a_48 <> a_14) ->
+  (a_48 <> a_15) ->
+  (a_48 <> a_16) ->
+  (a_48 <> a_17) ->
+  (a_48 <> a_18) ->
+  (a_48 <> a_19) ->
+  (a_48 <> a_20) ->
+  (a_48 <> a_21) ->
+  (a_48 <> a_22) ->
+  (a_48 <> a_23) ->
+  (a_48 <> a_24) ->
+  (a_48 <> a_25) ->
+  (a_49 <> a_1) ->
+  (a_49 <> a_2) ->
+  (a_49 <> a_3) ->
+  (a_49 <> a_4) ->
+  (a_49 <> a_5) ->
+  (a_49 <> a_6) ->
+  (a_49 <> a_7) ->
+  (a_49 <> a_8) ->
+  (a_49 <> a_9) ->
+  (a_49 <> a_10) ->
+  (a_49 <> a_11) ->
+  (a_49 <> a_12) ->
+  (a_49 <> a_13) ->
+  (a_49 <> a_14) ->
+  (a_49 <> a_15) ->
+  (a_49 <> a_16) ->
+  (a_49 <> a_17) ->
+  (a_49 <> a_18) ->
+  (a_49 <> a_19) ->
+  (a_49 <> a_20) ->
+  (a_49 <> a_21) ->
+  (a_49 <> a_22) ->
+  (a_49 <> a_23) ->
+  (a_49 <> a_24) ->
+  (a_49 <> a_25) ->
+  valid_rw(Malloc_0, pNeg_0, 26) ->
+  valid_rw(Malloc_0, pPos_0, 26) ->
+  P_complementary(Mint_0, pPos_0, pNeg_0) ->
+  separated(pPos_0, 26, pNeg_0, 26) ->
+  is_uint8(x_0) ->
+  is_uint8(x_1) ->
+  is_uint8(x_2) ->
+  is_uint8(x_3) ->
+  is_uint8(x_4) ->
+  is_uint8(x_5) ->
+  is_uint8(x_6) ->
+  is_uint8(x_7) ->
+  is_uint8(x_8) ->
+  is_uint8(x_9) ->
+  is_uint8(x_10) ->
+  is_uint8(x_11) ->
+  is_uint8(x_12) ->
+  is_uint8(x_13) ->
+  is_uint8(x_14) ->
+  is_uint8(x_15) ->
+  is_uint8(x_16) ->
+  is_uint8(x_17) ->
+  is_uint8(x_18) ->
+  is_uint8(x_19) ->
+  is_uint8(x_20) ->
+  is_uint8(x_21) ->
+  is_uint8(x_22) ->
+  is_uint8(x_23) ->
+  is_uint8(x_24) ->
+  is_uint8(x_25) ->
+  is_uint8(x_26) ->
+  is_uint8(x_27) ->
+  is_uint8(x_28) ->
+  is_uint8(x_29) ->
+  is_uint8(x_30) ->
+  is_uint8(x_31) ->
+  is_uint8(x_32) ->
+  is_uint8(x_33) ->
+  is_uint8(x_34) ->
+  is_uint8(x_35) ->
+  is_uint16(x_36) ->
+  is_uint16(x_37) ->
+  is_uint16(x_38) ->
+  is_uint16(x_39) ->
+  is_uint16(x_40) ->
+  is_uint16(x_41) ->
+  is_uint16(x_42) ->
+  is_uint16(x_43) ->
+  is_uint16(x_44) ->
+  is_uint16(x_45) ->
+  is_uint16(x_46) ->
+  is_uint16(x_47) ->
+  is_sint16(x_48) ->
+  is_sint16(x_49) ->
+  is_uint8(x_50) ->
+  is_uint8(x_51) ->
+  is_uint8(x_52) ->
+  is_uint8(x_53) ->
+  is_uint8(x_54) ->
+  is_uint8(x_55) ->
+  is_uint8(x_56) ->
+  is_uint8(x_57) ->
+  is_uint8(x_58) ->
+  is_uint8(m_0[a_39]) ->
+  is_uint8(m_0[a_40]) ->
+  is_uint8(m_0[a_41]) ->
+  is_uint8(m_0[a_42]) ->
+  is_uint8(m_0[a_43]) ->
+  is_uint8(m_0[a_44]) ->
+  is_uint8(m_0[a_48]) ->
+  is_uint8(m_0[a_49]) ->
+  is_uint16(x_59) ->
+  is_uint16(x_60) ->
+  is_uint16(x_61) ->
+  is_uint16(m_0[a_45]) ->
+  is_uint16(m_0[a_46]) ->
+  is_uint16(m_0[a_47]) ->
+  is_sint16(x_62) ->
+  is_uint8(x_64) ->
+  is_uint8(x_65) ->
+  is_uint8(x_66) ->
+  is_uint8(x_67) ->
+  is_uint8(x_68) ->
+  is_uint8(x_69) ->
+  is_uint8(x_70) ->
+  is_uint8(x_71) ->
+  is_uint8(x_72) ->
+  is_uint8(x_73) ->
+  is_uint8(m_1[a_15]) ->
+  is_uint8(m_1[a_16]) ->
+  is_uint8(m_1[a_17]) ->
+  is_uint8(m_1[a_18]) ->
+  is_uint8(m_1[a_19]) ->
+  is_uint8(m_1[a_20]) ->
+  is_uint8(m_1[a_24]) ->
+  is_uint8(m_1[a_25]) ->
+  is_uint16(x_74) ->
+  is_uint16(x_75) ->
+  is_uint16(x_76) ->
+  is_uint16(m_1[a_21]) ->
+  is_uint16(m_1[a_22]) ->
+  is_uint16(m_1[a_23]) ->
+  is_sint16(x_77) ->
+  (x_0 = to_uint8(lnot(x_18))) ->
+  (x_1 = to_uint8(lnot(x_19))) ->
+  (x_2 = to_uint8(lnot(x_20))) ->
+  (x_3 = to_uint8(lnot(x_21))) ->
+  (x_4 = to_uint8(lnot(x_22))) ->
+  (x_36 = to_uint16(lnot(x_42))) ->
+  (x_37 = to_uint16(lnot(x_43))) ->
+  (x_48 = to_sint16(lnot(x_49))) ->
+  (x_5 = to_uint8(lnot(x_23))) ->
+  (x_38 = to_uint16(lnot(x_44))) ->
+  (x_6 = to_uint8(lnot(x_24))) ->
+  (x_7 = to_uint8(lnot(x_25))) ->
+  (x_8 = to_uint8(lnot(x_26))) ->
+  (x_9 = to_uint8(lnot(x_27))) ->
+  (x_10 = to_uint8(lnot(x_28))) ->
+  (x_11 = to_uint8(lnot(x_29))) ->
+  (x_12 = to_uint8(lnot(x_30))) ->
+  (x_13 = to_uint8(lnot(x_31))) ->
+  (x_14 = to_uint8(lnot(x_32))) ->
+  (x_15 = to_uint8(lnot(x_33))) ->
+  (x_39 = to_uint16(lnot(x_45))) ->
+  (x_40 = to_uint16(lnot(x_46))) ->
+  (x_41 = to_uint16(lnot(x_47))) ->
+  (x_16 = to_uint8(lnot(x_34))) ->
+  (x_17 = to_uint8(lnot(x_35))) ->
+  (x_50 = to_uint8(lnot(x_64))) ->
+  (x_51 = to_uint8(lnot(x_65))) ->
+  (x_52 = to_uint8(lnot(x_66))) ->
+  (x_53 = to_uint8(lnot(x_67))) ->
+  (x_54 = to_uint8(lnot(x_68))) ->
+  (x_59 = to_uint16(lnot(x_74))) ->
+  (x_60 = to_uint16(lnot(x_75))) ->
+  (x_62 = to_sint16(lnot(x_77))) ->
+  (x_55 = to_uint8(lnot(x_69))) ->
+  (x_61 = to_uint16(lnot(x_76))) ->
+  (x_56 = to_uint8(lnot(x_70))) ->
+  (x_57 = to_uint8(lnot(x_71))) ->
+  (x_58 = to_uint8(lnot(x_72))) ->
+  (x_63 = to_uint8(lnot(x_73)))
+

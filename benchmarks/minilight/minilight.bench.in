@@ -1,0 +1,6 @@
+((name minilight)
+ (descr "Benchmark of minilight")
+ (cmd (%{bin}%/minilight-ocaml %{minilight-bench:share}%/roomfront.ml.txt))
+ (file_check 
+   (("%{minilight-bench:share}%/expected.ppm" "%{minilight-bench:share}%/roomfront.ml.txt.ppm")))
+ (speed Slower))
