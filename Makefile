@@ -27,15 +27,12 @@ _opam/%: _opam/config ocaml-versions/%.comp
 	opam switch create $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
 
-ocaml-versions/.packages.%: ocaml-versions/%.comp _opam/%
-	opam update
-	opam install --switch=$* --best-effort --yes $(PACKAGES)
-	touch $@
-
 .PHONY: .FORCE
 .FORCE:
-ocaml-versions/%.bench: ocaml-versions/.packages.% .FORCE
-	{ echo '(lang dune 1.0)'; echo '(context (opam (switch $*)))'; } > ocaml-versions/.workspace.%
+ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
+	@opam update
+	@opam install --switch=$* --best-effort --yes $(PACKAGES)
+	@{ echo '(lang dune 1.0)'; echo '(context (opam (switch $*)))'; } > ocaml-versions/.workspace.%
 	opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.% @bench
 	find _build/$* -name '*.bench' | xargs cat > $@
 
