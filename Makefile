@@ -1,10 +1,11 @@
 .SECONDARY:
 export OPAMROOT=$(CURDIR)/_opam
 
-# FIXME: include frama-c-base
+# FIXME: include frama-c-base, alt-ergo
 PACKAGES = \
   cpdf menhir minilight camlimages yojson  \
-  lwt ctypes orun alt-ergo cil
+  lwt ctypes orun cil \
+  js_of_ocaml-compiler uuidm react ocplib-endian nbcodec
 
 .PHONY: bash list clean
 
