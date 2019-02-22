@@ -18,9 +18,9 @@ _opam/config:
 _opam/%: _opam/config ocaml-versions/%.comp
 	rm -rf dependencies/packages/ocaml/ocaml.$*
 	rm -rf dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
-	mkdir dependencies/packages/ocaml/ocaml.$*
+	mkdir -p dependencies/packages/ocaml/ocaml.$*
 	cp -R dependencies/template/ocaml/* dependencies/packages/ocaml/ocaml.$*/
-	mkdir dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
+	mkdir -p dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
 	cp -R dependencies/template/ocaml-base-compiler/* \
 	  dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/
 	{ url="$$(cat ocaml-versions/$*.comp)"; echo "url { src: \"$$url\" }"; echo "setenv: [ [ ORUN_CONFIG_ocaml_url = \"$$url\" ] ]"; } \
