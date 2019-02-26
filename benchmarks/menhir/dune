@@ -18,4 +18,8 @@
  (action (ignore-outputs (run orun -o %{targets} --
    menhir -v --table %{deps}))))
 
-(alias (name bench) (deps menhir-list-errors.bench menhir-sql.bench menhir-sysver.bench))
+(alias (name bench) (deps
+;; temporarily disabled because it takes so long
+;;  menhir-list-errors.bench
+  menhir-sql.bench
+  menhir-sysver.bench))

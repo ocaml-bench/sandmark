@@ -10,5 +10,4 @@
  (deps yyll.why)
  (action (ignore-stdout (run orun -o %{targets} -- alt-ergo %{deps}))))
 
-;; disabled until the package gets fixed
-;;(alias (name bench) (deps alt-ergo-fill.bench alt-ergo-yyll.bench))
+(alias (name bench) (deps alt-ergo-fill.bench alt-ergo-yyll.bench))
