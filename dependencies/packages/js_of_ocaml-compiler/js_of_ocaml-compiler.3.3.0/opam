@@ -21,7 +21,7 @@ conflicts: [
   "ocamlfind"   {< "1.5.1"}
   "js_of_ocaml" {< "3.0"}
 ]
-
+patches: [ "disable-find-loc.patch" ]
 synopsis: "Compiler from OCaml bytecode to Javascript"
 url {
   src: "https://github.com/ocsigen/js_of_ocaml/archive/3.3.0.tar.gz"

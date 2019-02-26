@@ -1,0 +1,33 @@
+diff -ru js_of_ocaml-compiler.3.3.0-orig/compiler/lib/util.cppo.ml js_of_ocaml-compiler.3.3.0/compiler/lib/util.cppo.ml
+--- js_of_ocaml-compiler.3.3.0-orig/compiler/lib/util.cppo.ml	2018-11-29 15:25:02.000000000 +0000
++++ js_of_ocaml-compiler.3.3.0/compiler/lib/util.cppo.ml	2019-02-26 15:22:57.623853771 +0000
+@@ -525,28 +525,4 @@
+ let capitalize_ascii s = apply1 Char.uppercase_ascii s
+ let uncapitalize_ascii s = apply1 Char.lowercase_ascii s
+ 
+-let rec find_loc_in_summary ident' = function
+-  | Env.Env_empty -> None
+-  | Env.Env_value (_summary, ident, description)
+-    when ident = ident' ->
+-    Some description.Types.val_loc
+-  | Env.Env_value (summary,_,_)
+-  | Env.Env_type (summary, _, _)
+-  | Env.Env_extension (summary, _, _)
+-  | Env.Env_module (summary, _, _)
+-  | Env.Env_modtype (summary, _, _)
+-  | Env.Env_class (summary, _, _)
+-  | Env.Env_cltype (summary, _, _)
+-#if OCAML_VERSION >= (4,7,0)
+-  | Env.Env_open (summary, _, _)
+-#else
+-  | Env.Env_open (summary, _)
+-#endif
+-  | Env.Env_functor_arg (summary, _)
+-#if OCAML_VERSION >= (4,4,0)
+-  | Env.Env_constraints (summary, _)
+-#endif
+-#if OCAML_VERSION >= (4,6,0)
+-  | Env.Env_copy_types (summary, _)
+-#endif
+-   -> find_loc_in_summary ident' summary
++let find_loc_in_summary _ _ = None
