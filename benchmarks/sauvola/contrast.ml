@@ -54,11 +54,6 @@ type img_statistics_t =
         }
 
 
-(** syntactic sugar *)
-let (|>) x f = f x
-let (|>) = Pervasives.(|>)
-
-
 (** decurrify a function expecting a tupel of values *)
  let uncurry f (x,y) = f x y
 
