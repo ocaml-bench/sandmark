@@ -1,10 +1,10 @@
 .SECONDARY:
 export OPAMROOT=$(CURDIR)/_opam
 
-# FIXME: include frama-c-base, alt-ergo
+# FIXME: include alt-ergo
 PACKAGES = \
   cpdf menhir minilight camlimages yojson  \
-  lwt ctypes orun cil \
+  lwt ctypes orun cil frama-c-base \
   js_of_ocaml-compiler uuidm react ocplib-endian nbcodec
 
 .PHONY: bash list clean
@@ -36,7 +36,7 @@ ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
 	@opam install --switch=$* --best-effort --yes $(PACKAGES)
 	@{ echo '(lang dune 1.0)'; echo '(context (opam (switch $*)))'; } > ocaml-versions/.workspace.$*
 	opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @bench; \
-	  ex=$?; find _build/$* -name '*.bench' | xargs cat > $@; exit $?
+	  ex=$?; find _build/$* -name '*.bench' | xargs cat > $@; exit $ex
 
 
 clean:

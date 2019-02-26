@@ -1,0 +1,15 @@
+diff -ru frama-c-Phosphorus-20170501-dep/src/plugins/wp/Makefile.in frama-c-Phosphorus-20170501-fix/src/plugins/wp/Makefile.in
+--- frama-c-Phosphorus-20170501-dep/src/plugins/wp/Makefile.in	2017-06-01 09:02:10.000000000 +0100
++++ frama-c-Phosphorus-20170501-fix/src/plugins/wp/Makefile.in	2019-02-26 14:37:27.520868564 +0000
+@@ -184,8 +184,9 @@
+ 	Context.mli Warning.mli Model.mli \
+ 	Lang.mli Repr.mli Passive.mli Splitter.mli \
+ 	LogicBuiltins.mli Definitions.mli \
+-	Cint.mli Cfloat.mli Vset.mli Cstring.mli \
+-	Memory.ml Mstate.mli Conditions.mli \
++	Cstring.mli Vset.mli \
++	Memory.ml Mstate.mli  Conditions.mli \
++	Cint.mli Cfloat.mli \
+ 	CodeSemantics.mli LogicCompiler.mli LogicSemantics.mli \
+ 	Sigma.mli MemVar.mli MemTyped.mli \
+ 	Factory.mli VCS.mli Tactical.mli Strategy.mli Auto.mli \

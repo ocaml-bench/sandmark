@@ -7,5 +7,4 @@
  (action (ignore-stdout (run orun -o %{targets} --
     frama-c -slevel 1000000000 -no-results -no-val-show-progress %{in} -val))))
 
-;; disabled until I figure out the ocamlpack issue...
-;; (alias (name bench) (deps frama-c-deflate.bench))
+(alias (name bench) (deps frama-c-deflate.bench))
