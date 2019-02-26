@@ -1,20 +1,24 @@
 opam-version: "2.0"
-name: "frama-c-base"
-version: "15.0"
+synopsis: "Platform dedicated to the analysis of source code written in C"
 maintainer: "francois.bobot@cea.fr"
 authors: [
   "Michele Alberti"
+  "Thibaud Antignac"
   "Gergö Barany"
   "Patrick Baudin"
+  "Lionel Blatter"
   "François Bobot"
   "Richard Bonichon"
+  "Quentin Bouillaguet"
   "David Bühler"
+  "Zakaria Chihani"
   "Loïc Correnson"
   "Julien Crétin"
   "Pascal Cuoq"
   "Zaynah Dargaye"
   "Jean-Christophe Filliâtre"
   "Philippe Herrmann"
+  "Maxime Jacquemin"
   "Florent Kirchner"
   "Tristan Le Gall"
   "Jean-Christophe Léchenet"
@@ -22,6 +26,7 @@ authors: [
   "David Maison"
   "Claude Marché"
   "André Maroneze"
+  "Melody Méaulle"
   "Benjamin Monate"
   "Yannick Moy"
   "Anne Pacalet"
@@ -36,8 +41,8 @@ authors: [
 ]
 homepage: "http://frama-c.com/"
 license: "GNU Lesser General Public License version 2.1"
-dev-repo: "git+https://github.com/Frama-C/Frama-C-snapshot.git"
-doc: ["http://frama-c.com/download/user-manual-Phosphorus-20170501.pdf"]
+dev-repo: "git+https://github.com/Frama-C/Frama-C-snapshot.git#latest"
+doc: "http://frama-c.com/download/user-manual-18.0-Argon.pdf"
 bug-reports: "https://bts.frama-c.com/"
 tags: [
   "deductive"
@@ -56,69 +61,67 @@ tags: [
 ]
 
 build: [
-  ["sh" "-eux" "./run_autoconf_if_needed.sh"]
-  [
-    "./configure"
-    "--prefix"
-    prefix
-    "--disable-gui"
-      {!conf-gtksourceview:installed | !conf-gnomecanvas:installed}
+  ["./configure" "--prefix" prefix
+                 "--disable-gui"
+                 "--mandir=%{man}%"
   ]
   [make "-j%{jobs}%"]
   [make "-C" "doc" "download"] {with-doc}
 ]
+
 install: [
   [make "install"]
-  [make "-C" "doc" "FRAMAC_DOCDIR=%{frama-c-base:doc}%" "install"] {with-doc}
-]
-remove: [
-  ["sh" "-eux" "./run_autoconf_if_needed.sh"] # when used in pinned mode,
-                                              # the configure *cannot* yet be
-                                              # generated
-  ["./configure" "--prefix" prefix
-                 "--disable-gui" { !conf-gtksourceview:installed |
-                                   !conf-gnomecanvas:installed }
-]
-  [make "uninstall"]
-  ["rm" "-rf" frama-c-base:doc]
+  [make "-C" "doc" "install"] {with-doc}
 ]
 
 depends: [
-  "ocaml" {>= "4.02.3"}
-  "ocamlgraph" {>= "1.8.5" & < "1.9~"}
-  "ocamlfind"
+  "ocaml" { >= "4.02.3" }
+  "ocamlgraph" { >= "1.8.8" & < "1.9~" }
+  "ocamlfind" # needed beyond build stage, used by -load-module
   "zarith"
-  "conf-autoconf"
-]
-depopts: [
-  "lablgtk"
-  "conf-gtksourceview"
-  "conf-gnomecanvas"
-  "coq" { build }
-  "why3" { build }
+  "alt-ergo"
 ]
 
-messages: [
-   "Why3 can be used by the WP plug-in for running additional automatic solvers" { !why3:installed }
-   "Coq can be used with the WP plug-in for proving interactively proof obligations" { !coq:installed }
+depopts: [
+  "yojson" { build }
+  "coq" { build }
+  "why3" { build }
+  "mlgmpidl" { build }
+  "apron" { build }
 ]
 
 conflicts: [
-  "why3-base" { < "0.86" } #for WP plug-in
+  "why3-base" { < "0.88" } #for WP plug-in
+  "why3"      { >= "1.0.0" } #for WP plug-in
   "coq"      { < "8.4.6" } #for WP plug-in
-  "coq"      { >= "8.7"  } #for WP plug-in
   "lablgtk" { < "2.18.2" } #for ocaml >= 4.02.1
   "frama-c-e-acsl" #avoid mixing old releases of E-ACSL, it is already
                    #distributed with this version of Frama-C
+  "frama-c-base"   #avoid mixing old releases of Frama-C, now that only the
+                   #'frama-c' package exists
 ]
 
-synopsis: "Platform dedicated to the analysis of source code written in C."
+messages: [
+  "Yojson enables kernel option -json-compilation-database"
+    {!yojson:installed}
+  "Why3 can be used by the WP plug-in for running additional automatic solvers"
+    {!why3:installed}
+  "Coq can be used with the WP plug-in for proving interactively proof obligations"
+    {!coq:installed}
+  "Alt-Ergo Graphical Interface can be used by the WP plug-in"
+    {!altgr-ergo:installed & alt-ergo <= "1.30"}
+  "Note: the package altgr-ergo could prevent the installation of newer versions of Alt-Ergo"
+    {!altgr-ergo:installed & alt-ergo <= "1.30" & ocaml >= "4.04.0"}
+  "Note: the installed package altgr-ergo could prevent the installation of newer versions of Alt-Ergo"
+    {altgr-ergo:installed & ocaml >= "4.04.0"}
+]
+
 description: """
 Frama-C gathers several analysis techniques in a single collaborative
 framework, based on analyzers (called "plug-ins") that can build upon the
 results computed by other analyzers in the framework.
 Thanks to this approach, Frama-C provides sophisticated tools, including:
-- an analyzer based on abstract interpretation (EVA plug-in);
+- an analyzer based on abstract interpretation (Eva plug-in);
 - a program proof framework based on weakest precondition calculus (WP plug-in);
 - a program slicer (Slicing plug-in);
 - a tool for verification of temporal (LTL) properties (Aoraï plug-in);
@@ -126,16 +129,10 @@ Thanks to this approach, Frama-C provides sophisticated tools, including:
 - several tools for code base exploration and dependency analysis
   (plug-ins From, Impact, Metrics, Occurrence, Scope, etc.).
 These plug-ins communicate between each other via the Frama-C API
-and via ACSL (ANSI/ISO C Specification Language) properties."""
-extra-files: [
-  ["run_autoconf_if_needed.sh" "md5=8896537e4468e4228e7b0112f1cfd0ed"]
-  ["dynlink_init.patch" "md5=9e2e49c043a3f8eb788ec40d736fafbc"]
-  ["pack-ordering.patch" "md5=db4fed4173a1d6ad83025164d6fda3f4"]
-]
-patches: [
-  "dynlink_init.patch" "pack-ordering.patch"
-]
+and via ACSL (ANSI/ISO C Specification Language) properties.
+"""
+patches: [ "dynlink_init.patch" "inline_simplifier_type.patch"]
 url {
-  src: "http://frama-c.com/download/frama-c-Phosphorus-20170501.tar.gz"
-  checksum: "md5=996a4690cce7c4812dae74837cf0faa3"
+  src: "https://frama-c.com/download/frama-c-18.0-Argon.tar.gz"
+  checksum: "md5=659cf094d6e92a8adeb5863ec229020b"
 }

@@ -3,18 +3,17 @@ export OPAMROOT=$(CURDIR)/_opam
 
 PACKAGES = \
   cpdf menhir minilight camlimages yojson  \
-  lwt ctypes orun cil frama-c-base alt-ergo \
+  lwt ctypes orun cil frama-c alt-ergo \
   js_of_ocaml-compiler uuidm react ocplib-endian nbcodec
 
 .PHONY: bash list clean
 
 ocamls=$(wildcard ocaml-versions/*.comp)
 
-
-_opam/config:
+_opam/opam-init/init.sh:
 	opam init --bare --no-setup --no-opamrc ./dependencies
 
-_opam/%: _opam/config ocaml-versions/%.comp
+_opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp
 	rm -rf dependencies/packages/ocaml/ocaml.$*
 	rm -rf dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
 	mkdir -p dependencies/packages/ocaml/ocaml.$*
