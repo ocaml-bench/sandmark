@@ -1,0 +1,11 @@
+
+(library
+ ((name lwt_unix)
+  (public_name lwt.unix)
+  (synopsis "Unix support for Lwt")
+  (optional)
+  (wrapped false)
+  (libraries (bigarray lwt))
+  (flags (:standard -w +A-29))
+  (modules lwt_main)
+))

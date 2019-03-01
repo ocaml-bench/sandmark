@@ -54,10 +54,8 @@ synchronization primitives. Code can be run in parallel on an opt-in basis."""
 conflicts: [
   "ocaml-variants" {= "4.02.1+BER"}
 ]
-extra-files: [
-  "map_file.patch" "md5=7dd8baab7282fe15001ac8f208438001"
-]
 patches: [
+  "disable_unix.patch"
   "map_file.patch" {ocaml:version >= "4.06.0"}
 ]
 url {
