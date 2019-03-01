@@ -1,0 +1,502 @@
+diff -Nru camlspotter-camlimages-fc75238237a7/camlimages.install camlspotter-camlimages-new/camlimages.install
+--- camlspotter-camlimages-fc75238237a7/camlimages.install	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/camlimages.install	2019-03-01 12:39:31.338693287 +0000
+@@ -0,0 +1,346 @@
++lib: [
++  "_build/install/default/lib/camlimages/META" {"META"}
++  "_build/install/default/lib/camlimages/core/bitmap.cmi" {"core/bitmap.cmi"}
++  "_build/install/default/lib/camlimages/core/bitmap.cmt" {"core/bitmap.cmt"}
++  "_build/install/default/lib/camlimages/core/bitmap.cmti" {"core/bitmap.cmti"}
++  "_build/install/default/lib/camlimages/core/bitmap.cmx" {"core/bitmap.cmx"}
++  "_build/install/default/lib/camlimages/core/bitmap.ml" {"core/bitmap.ml"}
++  "_build/install/default/lib/camlimages/core/bitmap.mli" {"core/bitmap.mli"}
++  "_build/install/default/lib/camlimages/core/blend.cmi" {"core/blend.cmi"}
++  "_build/install/default/lib/camlimages/core/blend.cmt" {"core/blend.cmt"}
++  "_build/install/default/lib/camlimages/core/blend.cmti" {"core/blend.cmti"}
++  "_build/install/default/lib/camlimages/core/blend.cmx" {"core/blend.cmx"}
++  "_build/install/default/lib/camlimages/core/blend.ml" {"core/blend.ml"}
++  "_build/install/default/lib/camlimages/core/blend.mli" {"core/blend.mli"}
++  "_build/install/default/lib/camlimages/core/bmp.cmi" {"core/bmp.cmi"}
++  "_build/install/default/lib/camlimages/core/bmp.cmt" {"core/bmp.cmt"}
++  "_build/install/default/lib/camlimages/core/bmp.cmti" {"core/bmp.cmti"}
++  "_build/install/default/lib/camlimages/core/bmp.cmx" {"core/bmp.cmx"}
++  "_build/install/default/lib/camlimages/core/bmp.ml" {"core/bmp.ml"}
++  "_build/install/default/lib/camlimages/core/bmp.mli" {"core/bmp.mli"}
++  "_build/install/default/lib/camlimages/core/camlimages.a" {"core/camlimages.a"}
++  "_build/install/default/lib/camlimages/core/camlimages.cma" {"core/camlimages.cma"}
++  "_build/install/default/lib/camlimages/core/camlimages.cmi" {"core/camlimages.cmi"}
++  "_build/install/default/lib/camlimages/core/camlimages.cmt" {"core/camlimages.cmt"}
++  "_build/install/default/lib/camlimages/core/camlimages.cmx" {"core/camlimages.cmx"}
++  "_build/install/default/lib/camlimages/core/camlimages.cmxa" {"core/camlimages.cmxa"}
++  "_build/install/default/lib/camlimages/core/camlimages.cmxs" {"core/camlimages.cmxs"}
++  "_build/install/default/lib/camlimages/core/camlimages.ml" {"core/camlimages.ml"}
++  "_build/install/default/lib/camlimages/core/cmyk32.cmi" {"core/cmyk32.cmi"}
++  "_build/install/default/lib/camlimages/core/cmyk32.cmt" {"core/cmyk32.cmt"}
++  "_build/install/default/lib/camlimages/core/cmyk32.cmti" {"core/cmyk32.cmti"}
++  "_build/install/default/lib/camlimages/core/cmyk32.cmx" {"core/cmyk32.cmx"}
++  "_build/install/default/lib/camlimages/core/cmyk32.ml" {"core/cmyk32.ml"}
++  "_build/install/default/lib/camlimages/core/cmyk32.mli" {"core/cmyk32.mli"}
++  "_build/install/default/lib/camlimages/core/color.cmi" {"core/color.cmi"}
++  "_build/install/default/lib/camlimages/core/color.cmt" {"core/color.cmt"}
++  "_build/install/default/lib/camlimages/core/color.cmti" {"core/color.cmti"}
++  "_build/install/default/lib/camlimages/core/color.cmx" {"core/color.cmx"}
++  "_build/install/default/lib/camlimages/core/color.ml" {"core/color.ml"}
++  "_build/install/default/lib/camlimages/core/color.mli" {"core/color.mli"}
++  "_build/install/default/lib/camlimages/core/colorhist.cmi" {"core/colorhist.cmi"}
++  "_build/install/default/lib/camlimages/core/colorhist.cmt" {"core/colorhist.cmt"}
++  "_build/install/default/lib/camlimages/core/colorhist.cmti" {"core/colorhist.cmti"}
++  "_build/install/default/lib/camlimages/core/colorhist.cmx" {"core/colorhist.cmx"}
++  "_build/install/default/lib/camlimages/core/colorhist.ml" {"core/colorhist.ml"}
++  "_build/install/default/lib/camlimages/core/colorhist.mli" {"core/colorhist.mli"}
++  "_build/install/default/lib/camlimages/core/dummy_supported.cmi" {"core/dummy_supported.cmi"}
++  "_build/install/default/lib/camlimages/core/dummy_supported.cmt" {"core/dummy_supported.cmt"}
++  "_build/install/default/lib/camlimages/core/dummy_supported.cmx" {"core/dummy_supported.cmx"}
++  "_build/install/default/lib/camlimages/core/dummy_supported.ml" {"core/dummy_supported.ml"}
++  "_build/install/default/lib/camlimages/core/genimage.cmi" {"core/genimage.cmi"}
++  "_build/install/default/lib/camlimages/core/genimage.cmt" {"core/genimage.cmt"}
++  "_build/install/default/lib/camlimages/core/genimage.cmti" {"core/genimage.cmti"}
++  "_build/install/default/lib/camlimages/core/genimage.cmx" {"core/genimage.cmx"}
++  "_build/install/default/lib/camlimages/core/genimage.ml" {"core/genimage.ml"}
++  "_build/install/default/lib/camlimages/core/genimage.mli" {"core/genimage.mli"}
++  "_build/install/default/lib/camlimages/core/geometry.cmi" {"core/geometry.cmi"}
++  "_build/install/default/lib/camlimages/core/geometry.cmt" {"core/geometry.cmt"}
++  "_build/install/default/lib/camlimages/core/geometry.cmti" {"core/geometry.cmti"}
++  "_build/install/default/lib/camlimages/core/geometry.cmx" {"core/geometry.cmx"}
++  "_build/install/default/lib/camlimages/core/geometry.ml" {"core/geometry.ml"}
++  "_build/install/default/lib/camlimages/core/geometry.mli" {"core/geometry.mli"}
++  "_build/install/default/lib/camlimages/core/image_intf.cmi" {"core/image_intf.cmi"}
++  "_build/install/default/lib/camlimages/core/image_intf.cmt" {"core/image_intf.cmt"}
++  "_build/install/default/lib/camlimages/core/image_intf.cmx" {"core/image_intf.cmx"}
++  "_build/install/default/lib/camlimages/core/image_intf.ml" {"core/image_intf.ml"}
++  "_build/install/default/lib/camlimages/core/images.cmi" {"core/images.cmi"}
++  "_build/install/default/lib/camlimages/core/images.cmt" {"core/images.cmt"}
++  "_build/install/default/lib/camlimages/core/images.cmti" {"core/images.cmti"}
++  "_build/install/default/lib/camlimages/core/images.cmx" {"core/images.cmx"}
++  "_build/install/default/lib/camlimages/core/images.ml" {"core/images.ml"}
++  "_build/install/default/lib/camlimages/core/images.mli" {"core/images.mli"}
++  "_build/install/default/lib/camlimages/core/index16.cmi" {"core/index16.cmi"}
++  "_build/install/default/lib/camlimages/core/index16.cmt" {"core/index16.cmt"}
++  "_build/install/default/lib/camlimages/core/index16.cmti" {"core/index16.cmti"}
++  "_build/install/default/lib/camlimages/core/index16.cmx" {"core/index16.cmx"}
++  "_build/install/default/lib/camlimages/core/index16.ml" {"core/index16.ml"}
++  "_build/install/default/lib/camlimages/core/index16.mli" {"core/index16.mli"}
++  "_build/install/default/lib/camlimages/core/index8.cmi" {"core/index8.cmi"}
++  "_build/install/default/lib/camlimages/core/index8.cmt" {"core/index8.cmt"}
++  "_build/install/default/lib/camlimages/core/index8.cmti" {"core/index8.cmti"}
++  "_build/install/default/lib/camlimages/core/index8.cmx" {"core/index8.cmx"}
++  "_build/install/default/lib/camlimages/core/index8.ml" {"core/index8.ml"}
++  "_build/install/default/lib/camlimages/core/index8.mli" {"core/index8.mli"}
++  "_build/install/default/lib/camlimages/core/info.cmi" {"core/info.cmi"}
++  "_build/install/default/lib/camlimages/core/info.cmt" {"core/info.cmt"}
++  "_build/install/default/lib/camlimages/core/info.cmx" {"core/info.cmx"}
++  "_build/install/default/lib/camlimages/core/info.ml" {"core/info.ml"}
++  "_build/install/default/lib/camlimages/core/jis_table.cmi" {"core/jis_table.cmi"}
++  "_build/install/default/lib/camlimages/core/jis_table.cmt" {"core/jis_table.cmt"}
++  "_build/install/default/lib/camlimages/core/jis_table.cmx" {"core/jis_table.cmx"}
++  "_build/install/default/lib/camlimages/core/jis_table.ml" {"core/jis_table.ml"}
++  "_build/install/default/lib/camlimages/core/jis_unicode.cmi" {"core/jis_unicode.cmi"}
++  "_build/install/default/lib/camlimages/core/jis_unicode.cmt" {"core/jis_unicode.cmt"}
++  "_build/install/default/lib/camlimages/core/jis_unicode.cmti" {"core/jis_unicode.cmti"}
++  "_build/install/default/lib/camlimages/core/jis_unicode.cmx" {"core/jis_unicode.cmx"}
++  "_build/install/default/lib/camlimages/core/jis_unicode.ml" {"core/jis_unicode.ml"}
++  "_build/install/default/lib/camlimages/core/jis_unicode.mli" {"core/jis_unicode.mli"}
++  "_build/install/default/lib/camlimages/core/mstring.cmi" {"core/mstring.cmi"}
++  "_build/install/default/lib/camlimages/core/mstring.cmt" {"core/mstring.cmt"}
++  "_build/install/default/lib/camlimages/core/mstring.cmti" {"core/mstring.cmti"}
++  "_build/install/default/lib/camlimages/core/mstring.cmx" {"core/mstring.cmx"}
++  "_build/install/default/lib/camlimages/core/mstring.ml" {"core/mstring.ml"}
++  "_build/install/default/lib/camlimages/core/mstring.mli" {"core/mstring.mli"}
++  "_build/install/default/lib/camlimages/core/oBmp.cmi" {"core/oBmp.cmi"}
++  "_build/install/default/lib/camlimages/core/oBmp.cmt" {"core/oBmp.cmt"}
++  "_build/install/default/lib/camlimages/core/oBmp.cmx" {"core/oBmp.cmx"}
++  "_build/install/default/lib/camlimages/core/oBmp.ml" {"core/oBmp.ml"}
++  "_build/install/default/lib/camlimages/core/oColor.cmi" {"core/oColor.cmi"}
++  "_build/install/default/lib/camlimages/core/oColor.cmt" {"core/oColor.cmt"}
++  "_build/install/default/lib/camlimages/core/oColor.cmti" {"core/oColor.cmti"}
++  "_build/install/default/lib/camlimages/core/oColor.cmx" {"core/oColor.cmx"}
++  "_build/install/default/lib/camlimages/core/oColor.ml" {"core/oColor.ml"}
++  "_build/install/default/lib/camlimages/core/oColor.mli" {"core/oColor.mli"}
++  "_build/install/default/lib/camlimages/core/oImages.cmi" {"core/oImages.cmi"}
++  "_build/install/default/lib/camlimages/core/oImages.cmt" {"core/oImages.cmt"}
++  "_build/install/default/lib/camlimages/core/oImages.cmti" {"core/oImages.cmti"}
++  "_build/install/default/lib/camlimages/core/oImages.cmx" {"core/oImages.cmx"}
++  "_build/install/default/lib/camlimages/core/oImages.ml" {"core/oImages.ml"}
++  "_build/install/default/lib/camlimages/core/oImages.mli" {"core/oImages.mli"}
++  "_build/install/default/lib/camlimages/core/oPpm.cmi" {"core/oPpm.cmi"}
++  "_build/install/default/lib/camlimages/core/oPpm.cmt" {"core/oPpm.cmt"}
++  "_build/install/default/lib/camlimages/core/oPpm.cmx" {"core/oPpm.cmx"}
++  "_build/install/default/lib/camlimages/core/oPpm.ml" {"core/oPpm.ml"}
++  "_build/install/default/lib/camlimages/core/oPs.cmi" {"core/oPs.cmi"}
++  "_build/install/default/lib/camlimages/core/oPs.cmt" {"core/oPs.cmt"}
++  "_build/install/default/lib/camlimages/core/oPs.cmx" {"core/oPs.cmx"}
++  "_build/install/default/lib/camlimages/core/oPs.ml" {"core/oPs.ml"}
++  "_build/install/default/lib/camlimages/core/oXvthumb.cmi" {"core/oXvthumb.cmi"}
++  "_build/install/default/lib/camlimages/core/oXvthumb.cmt" {"core/oXvthumb.cmt"}
++  "_build/install/default/lib/camlimages/core/oXvthumb.cmti" {"core/oXvthumb.cmti"}
++  "_build/install/default/lib/camlimages/core/oXvthumb.cmx" {"core/oXvthumb.cmx"}
++  "_build/install/default/lib/camlimages/core/oXvthumb.ml" {"core/oXvthumb.ml"}
++  "_build/install/default/lib/camlimages/core/oXvthumb.mli" {"core/oXvthumb.mli"}
++  "_build/install/default/lib/camlimages/core/ppm.cmi" {"core/ppm.cmi"}
++  "_build/install/default/lib/camlimages/core/ppm.cmt" {"core/ppm.cmt"}
++  "_build/install/default/lib/camlimages/core/ppm.cmti" {"core/ppm.cmti"}
++  "_build/install/default/lib/camlimages/core/ppm.cmx" {"core/ppm.cmx"}
++  "_build/install/default/lib/camlimages/core/ppm.ml" {"core/ppm.ml"}
++  "_build/install/default/lib/camlimages/core/ppm.mli" {"core/ppm.mli"}
++  "_build/install/default/lib/camlimages/core/ps.cmi" {"core/ps.cmi"}
++  "_build/install/default/lib/camlimages/core/ps.cmt" {"core/ps.cmt"}
++  "_build/install/default/lib/camlimages/core/ps.cmti" {"core/ps.cmti"}
++  "_build/install/default/lib/camlimages/core/ps.cmx" {"core/ps.cmx"}
++  "_build/install/default/lib/camlimages/core/ps.ml" {"core/ps.ml"}
++  "_build/install/default/lib/camlimages/core/ps.mli" {"core/ps.mli"}
++  "_build/install/default/lib/camlimages/core/reduce.cmi" {"core/reduce.cmi"}
++  "_build/install/default/lib/camlimages/core/reduce.cmt" {"core/reduce.cmt"}
++  "_build/install/default/lib/camlimages/core/reduce.cmti" {"core/reduce.cmti"}
++  "_build/install/default/lib/camlimages/core/reduce.cmx" {"core/reduce.cmx"}
++  "_build/install/default/lib/camlimages/core/reduce.ml" {"core/reduce.ml"}
++  "_build/install/default/lib/camlimages/core/reduce.mli" {"core/reduce.mli"}
++  "_build/install/default/lib/camlimages/core/region.cmi" {"core/region.cmi"}
++  "_build/install/default/lib/camlimages/core/region.cmt" {"core/region.cmt"}
++  "_build/install/default/lib/camlimages/core/region.cmti" {"core/region.cmti"}
++  "_build/install/default/lib/camlimages/core/region.cmx" {"core/region.cmx"}
++  "_build/install/default/lib/camlimages/core/region.ml" {"core/region.ml"}
++  "_build/install/default/lib/camlimages/core/region.mli" {"core/region.mli"}
++  "_build/install/default/lib/camlimages/core/rgb24.cmi" {"core/rgb24.cmi"}
++  "_build/install/default/lib/camlimages/core/rgb24.cmt" {"core/rgb24.cmt"}
++  "_build/install/default/lib/camlimages/core/rgb24.cmti" {"core/rgb24.cmti"}
++  "_build/install/default/lib/camlimages/core/rgb24.cmx" {"core/rgb24.cmx"}
++  "_build/install/default/lib/camlimages/core/rgb24.ml" {"core/rgb24.ml"}
++  "_build/install/default/lib/camlimages/core/rgb24.mli" {"core/rgb24.mli"}
++  "_build/install/default/lib/camlimages/core/rgba32.cmi" {"core/rgba32.cmi"}
++  "_build/install/default/lib/camlimages/core/rgba32.cmt" {"core/rgba32.cmt"}
++  "_build/install/default/lib/camlimages/core/rgba32.cmti" {"core/rgba32.cmti"}
++  "_build/install/default/lib/camlimages/core/rgba32.cmx" {"core/rgba32.cmx"}
++  "_build/install/default/lib/camlimages/core/rgba32.ml" {"core/rgba32.ml"}
++  "_build/install/default/lib/camlimages/core/rgba32.mli" {"core/rgba32.mli"}
++  "_build/install/default/lib/camlimages/core/tmpfile.cmi" {"core/tmpfile.cmi"}
++  "_build/install/default/lib/camlimages/core/tmpfile.cmt" {"core/tmpfile.cmt"}
++  "_build/install/default/lib/camlimages/core/tmpfile.cmti" {"core/tmpfile.cmti"}
++  "_build/install/default/lib/camlimages/core/tmpfile.cmx" {"core/tmpfile.cmx"}
++  "_build/install/default/lib/camlimages/core/tmpfile.ml" {"core/tmpfile.ml"}
++  "_build/install/default/lib/camlimages/core/tmpfile.mli" {"core/tmpfile.mli"}
++  "_build/install/default/lib/camlimages/core/units.cmi" {"core/units.cmi"}
++  "_build/install/default/lib/camlimages/core/units.cmt" {"core/units.cmt"}
++  "_build/install/default/lib/camlimages/core/units.cmx" {"core/units.cmx"}
++  "_build/install/default/lib/camlimages/core/units.ml" {"core/units.ml"}
++  "_build/install/default/lib/camlimages/core/util.cmi" {"core/util.cmi"}
++  "_build/install/default/lib/camlimages/core/util.cmt" {"core/util.cmt"}
++  "_build/install/default/lib/camlimages/core/util.cmti" {"core/util.cmti"}
++  "_build/install/default/lib/camlimages/core/util.cmx" {"core/util.cmx"}
++  "_build/install/default/lib/camlimages/core/util.ml" {"core/util.ml"}
++  "_build/install/default/lib/camlimages/core/util.mli" {"core/util.mli"}
++  "_build/install/default/lib/camlimages/core/xvthumb.cmi" {"core/xvthumb.cmi"}
++  "_build/install/default/lib/camlimages/core/xvthumb.cmt" {"core/xvthumb.cmt"}
++  "_build/install/default/lib/camlimages/core/xvthumb.cmti" {"core/xvthumb.cmti"}
++  "_build/install/default/lib/camlimages/core/xvthumb.cmx" {"core/xvthumb.cmx"}
++  "_build/install/default/lib/camlimages/core/xvthumb.ml" {"core/xvthumb.ml"}
++  "_build/install/default/lib/camlimages/core/xvthumb.mli" {"core/xvthumb.mli"}
++  "_build/install/default/lib/camlimages/dune-package" {"dune-package"}
++  "_build/install/default/lib/camlimages/exif/camlimages_exif.a" {"exif/camlimages_exif.a"}
++  "_build/install/default/lib/camlimages/exif/camlimages_exif.cma" {"exif/camlimages_exif.cma"}
++  "_build/install/default/lib/camlimages/exif/camlimages_exif.cmxa" {"exif/camlimages_exif.cmxa"}
++  "_build/install/default/lib/camlimages/exif/camlimages_exif.cmxs" {"exif/camlimages_exif.cmxs"}
++  "_build/install/default/lib/camlimages/exif/exif.cmi" {"exif/exif.cmi"}
++  "_build/install/default/lib/camlimages/exif/exif.cmt" {"exif/exif.cmt"}
++  "_build/install/default/lib/camlimages/exif/exif.cmti" {"exif/exif.cmti"}
++  "_build/install/default/lib/camlimages/exif/exif.cmx" {"exif/exif.cmx"}
++  "_build/install/default/lib/camlimages/exif/exif.ml" {"exif/exif.ml"}
++  "_build/install/default/lib/camlimages/exif/exif.mli" {"exif/exif.mli"}
++  "_build/install/default/lib/camlimages/exif/exifanalyze.cmi" {"exif/exifanalyze.cmi"}
++  "_build/install/default/lib/camlimages/exif/exifanalyze.cmt" {"exif/exifanalyze.cmt"}
++  "_build/install/default/lib/camlimages/exif/exifanalyze.cmx" {"exif/exifanalyze.cmx"}
++  "_build/install/default/lib/camlimages/exif/exifanalyze.ml" {"exif/exifanalyze.ml"}
++  "_build/install/default/lib/camlimages/exif/exifutil.cmi" {"exif/exifutil.cmi"}
++  "_build/install/default/lib/camlimages/exif/exifutil.cmt" {"exif/exifutil.cmt"}
++  "_build/install/default/lib/camlimages/exif/exifutil.cmx" {"exif/exifutil.cmx"}
++  "_build/install/default/lib/camlimages/exif/exifutil.ml" {"exif/exifutil.ml"}
++  "_build/install/default/lib/camlimages/exif/libcamlimages_exif_stubs.a" {"exif/libcamlimages_exif_stubs.a"}
++  "_build/install/default/lib/camlimages/freetype/camlimages_freetype.a" {"freetype/camlimages_freetype.a"}
++  "_build/install/default/lib/camlimages/freetype/camlimages_freetype.cma" {"freetype/camlimages_freetype.cma"}
++  "_build/install/default/lib/camlimages/freetype/camlimages_freetype.cmxa" {"freetype/camlimages_freetype.cmxa"}
++  "_build/install/default/lib/camlimages/freetype/camlimages_freetype.cmxs" {"freetype/camlimages_freetype.cmxs"}
++  "_build/install/default/lib/camlimages/freetype/freetype.cmi" {"freetype/freetype.cmi"}
++  "_build/install/default/lib/camlimages/freetype/freetype.cmt" {"freetype/freetype.cmt"}
++  "_build/install/default/lib/camlimages/freetype/freetype.cmti" {"freetype/freetype.cmti"}
++  "_build/install/default/lib/camlimages/freetype/freetype.cmx" {"freetype/freetype.cmx"}
++  "_build/install/default/lib/camlimages/freetype/freetype.ml" {"freetype/freetype.ml"}
++  "_build/install/default/lib/camlimages/freetype/freetype.mli" {"freetype/freetype.mli"}
++  "_build/install/default/lib/camlimages/freetype/ftlow.cmi" {"freetype/ftlow.cmi"}
++  "_build/install/default/lib/camlimages/freetype/ftlow.cmt" {"freetype/ftlow.cmt"}
++  "_build/install/default/lib/camlimages/freetype/ftlow.cmti" {"freetype/ftlow.cmti"}
++  "_build/install/default/lib/camlimages/freetype/ftlow.cmx" {"freetype/ftlow.cmx"}
++  "_build/install/default/lib/camlimages/freetype/ftlow.ml" {"freetype/ftlow.ml"}
++  "_build/install/default/lib/camlimages/freetype/ftlow.mli" {"freetype/ftlow.mli"}
++  "_build/install/default/lib/camlimages/freetype/fttext.cmi" {"freetype/fttext.cmi"}
++  "_build/install/default/lib/camlimages/freetype/fttext.cmt" {"freetype/fttext.cmt"}
++  "_build/install/default/lib/camlimages/freetype/fttext.cmti" {"freetype/fttext.cmti"}
++  "_build/install/default/lib/camlimages/freetype/fttext.cmx" {"freetype/fttext.cmx"}
++  "_build/install/default/lib/camlimages/freetype/fttext.ml" {"freetype/fttext.ml"}
++  "_build/install/default/lib/camlimages/freetype/fttext.mli" {"freetype/fttext.mli"}
++  "_build/install/default/lib/camlimages/freetype/libcamlimages_freetype_stubs.a" {"freetype/libcamlimages_freetype_stubs.a"}
++  "_build/install/default/lib/camlimages/freetype/oFreetype.cmi" {"freetype/oFreetype.cmi"}
++  "_build/install/default/lib/camlimages/freetype/oFreetype.cmt" {"freetype/oFreetype.cmt"}
++  "_build/install/default/lib/camlimages/freetype/oFreetype.cmx" {"freetype/oFreetype.cmx"}
++  "_build/install/default/lib/camlimages/freetype/oFreetype.ml" {"freetype/oFreetype.ml"}
++  "_build/install/default/lib/camlimages/gif/camlimages_gif.a" {"gif/camlimages_gif.a"}
++  "_build/install/default/lib/camlimages/gif/camlimages_gif.cma" {"gif/camlimages_gif.cma"}
++  "_build/install/default/lib/camlimages/gif/camlimages_gif.cmxa" {"gif/camlimages_gif.cmxa"}
++  "_build/install/default/lib/camlimages/gif/camlimages_gif.cmxs" {"gif/camlimages_gif.cmxs"}
++  "_build/install/default/lib/camlimages/gif/gif.cmi" {"gif/gif.cmi"}
++  "_build/install/default/lib/camlimages/gif/gif.cmt" {"gif/gif.cmt"}
++  "_build/install/default/lib/camlimages/gif/gif.cmti" {"gif/gif.cmti"}
++  "_build/install/default/lib/camlimages/gif/gif.cmx" {"gif/gif.cmx"}
++  "_build/install/default/lib/camlimages/gif/gif.ml" {"gif/gif.ml"}
++  "_build/install/default/lib/camlimages/gif/gif.mli" {"gif/gif.mli"}
++  "_build/install/default/lib/camlimages/gif/libcamlimages_gif_stubs.a" {"gif/libcamlimages_gif_stubs.a"}
++  "_build/install/default/lib/camlimages/gif/oGif.cmi" {"gif/oGif.cmi"}
++  "_build/install/default/lib/camlimages/gif/oGif.cmt" {"gif/oGif.cmt"}
++  "_build/install/default/lib/camlimages/gif/oGif.cmx" {"gif/oGif.cmx"}
++  "_build/install/default/lib/camlimages/gif/oGif.ml" {"gif/oGif.ml"}
++  "_build/install/default/lib/camlimages/graphics/camlimages_graphics.a" {"graphics/camlimages_graphics.a"}
++  "_build/install/default/lib/camlimages/graphics/camlimages_graphics.cma" {"graphics/camlimages_graphics.cma"}
++  "_build/install/default/lib/camlimages/graphics/camlimages_graphics.cmxa" {"graphics/camlimages_graphics.cmxa"}
++  "_build/install/default/lib/camlimages/graphics/camlimages_graphics.cmxs" {"graphics/camlimages_graphics.cmxs"}
++  "_build/install/default/lib/camlimages/graphics/graphic_image.cmi" {"graphics/graphic_image.cmi"}
++  "_build/install/default/lib/camlimages/graphics/graphic_image.cmt" {"graphics/graphic_image.cmt"}
++  "_build/install/default/lib/camlimages/graphics/graphic_image.cmti" {"graphics/graphic_image.cmti"}
++  "_build/install/default/lib/camlimages/graphics/graphic_image.cmx" {"graphics/graphic_image.cmx"}
++  "_build/install/default/lib/camlimages/graphics/graphic_image.ml" {"graphics/graphic_image.ml"}
++  "_build/install/default/lib/camlimages/graphics/graphic_image.mli" {"graphics/graphic_image.mli"}
++  "_build/install/default/lib/camlimages/graphics/oGraphic.cmi" {"graphics/oGraphic.cmi"}
++  "_build/install/default/lib/camlimages/graphics/oGraphic.cmt" {"graphics/oGraphic.cmt"}
++  "_build/install/default/lib/camlimages/graphics/oGraphic.cmx" {"graphics/oGraphic.cmx"}
++  "_build/install/default/lib/camlimages/graphics/oGraphic.ml" {"graphics/oGraphic.ml"}
++  "_build/install/default/lib/camlimages/jpeg/camlimages_jpeg.a" {"jpeg/camlimages_jpeg.a"}
++  "_build/install/default/lib/camlimages/jpeg/camlimages_jpeg.cma" {"jpeg/camlimages_jpeg.cma"}
++  "_build/install/default/lib/camlimages/jpeg/camlimages_jpeg.cmxa" {"jpeg/camlimages_jpeg.cmxa"}
++  "_build/install/default/lib/camlimages/jpeg/camlimages_jpeg.cmxs" {"jpeg/camlimages_jpeg.cmxs"}
++  "_build/install/default/lib/camlimages/jpeg/jpeg.cmi" {"jpeg/jpeg.cmi"}
++  "_build/install/default/lib/camlimages/jpeg/jpeg.cmt" {"jpeg/jpeg.cmt"}
++  "_build/install/default/lib/camlimages/jpeg/jpeg.cmti" {"jpeg/jpeg.cmti"}
++  "_build/install/default/lib/camlimages/jpeg/jpeg.cmx" {"jpeg/jpeg.cmx"}
++  "_build/install/default/lib/camlimages/jpeg/jpeg.ml" {"jpeg/jpeg.ml"}
++  "_build/install/default/lib/camlimages/jpeg/jpeg.mli" {"jpeg/jpeg.mli"}
++  "_build/install/default/lib/camlimages/jpeg/libcamlimages_jpeg_stubs.a" {"jpeg/libcamlimages_jpeg_stubs.a"}
++  "_build/install/default/lib/camlimages/jpeg/oJpeg.cmi" {"jpeg/oJpeg.cmi"}
++  "_build/install/default/lib/camlimages/jpeg/oJpeg.cmt" {"jpeg/oJpeg.cmt"}
++  "_build/install/default/lib/camlimages/jpeg/oJpeg.cmti" {"jpeg/oJpeg.cmti"}
++  "_build/install/default/lib/camlimages/jpeg/oJpeg.cmx" {"jpeg/oJpeg.cmx"}
++  "_build/install/default/lib/camlimages/jpeg/oJpeg.ml" {"jpeg/oJpeg.ml"}
++  "_build/install/default/lib/camlimages/jpeg/oJpeg.mli" {"jpeg/oJpeg.mli"}
++  "_build/install/default/lib/camlimages/opam" {"opam"}
++  "_build/install/default/lib/camlimages/png/camlimages_png.a" {"png/camlimages_png.a"}
++  "_build/install/default/lib/camlimages/png/camlimages_png.cma" {"png/camlimages_png.cma"}
++  "_build/install/default/lib/camlimages/png/camlimages_png.cmxa" {"png/camlimages_png.cmxa"}
++  "_build/install/default/lib/camlimages/png/camlimages_png.cmxs" {"png/camlimages_png.cmxs"}
++  "_build/install/default/lib/camlimages/png/libcamlimages_png_stubs.a" {"png/libcamlimages_png_stubs.a"}
++  "_build/install/default/lib/camlimages/png/oPng.cmi" {"png/oPng.cmi"}
++  "_build/install/default/lib/camlimages/png/oPng.cmt" {"png/oPng.cmt"}
++  "_build/install/default/lib/camlimages/png/oPng.cmti" {"png/oPng.cmti"}
++  "_build/install/default/lib/camlimages/png/oPng.cmx" {"png/oPng.cmx"}
++  "_build/install/default/lib/camlimages/png/oPng.ml" {"png/oPng.ml"}
++  "_build/install/default/lib/camlimages/png/oPng.mli" {"png/oPng.mli"}
++  "_build/install/default/lib/camlimages/png/png.cmi" {"png/png.cmi"}
++  "_build/install/default/lib/camlimages/png/png.cmt" {"png/png.cmt"}
++  "_build/install/default/lib/camlimages/png/png.cmti" {"png/png.cmti"}
++  "_build/install/default/lib/camlimages/png/png.cmx" {"png/png.cmx"}
++  "_build/install/default/lib/camlimages/png/png.ml" {"png/png.ml"}
++  "_build/install/default/lib/camlimages/png/png.mli" {"png/png.mli"}
++  "_build/install/default/lib/camlimages/tiff/camlimages_tiff.a" {"tiff/camlimages_tiff.a"}
++  "_build/install/default/lib/camlimages/tiff/camlimages_tiff.cma" {"tiff/camlimages_tiff.cma"}
++  "_build/install/default/lib/camlimages/tiff/camlimages_tiff.cmxa" {"tiff/camlimages_tiff.cmxa"}
++  "_build/install/default/lib/camlimages/tiff/camlimages_tiff.cmxs" {"tiff/camlimages_tiff.cmxs"}
++  "_build/install/default/lib/camlimages/tiff/libcamlimages_tiff_stubs.a" {"tiff/libcamlimages_tiff_stubs.a"}
++  "_build/install/default/lib/camlimages/tiff/oTiff.cmi" {"tiff/oTiff.cmi"}
++  "_build/install/default/lib/camlimages/tiff/oTiff.cmt" {"tiff/oTiff.cmt"}
++  "_build/install/default/lib/camlimages/tiff/oTiff.cmx" {"tiff/oTiff.cmx"}
++  "_build/install/default/lib/camlimages/tiff/oTiff.ml" {"tiff/oTiff.ml"}
++  "_build/install/default/lib/camlimages/tiff/tiff.cmi" {"tiff/tiff.cmi"}
++  "_build/install/default/lib/camlimages/tiff/tiff.cmt" {"tiff/tiff.cmt"}
++  "_build/install/default/lib/camlimages/tiff/tiff.cmti" {"tiff/tiff.cmti"}
++  "_build/install/default/lib/camlimages/tiff/tiff.cmx" {"tiff/tiff.cmx"}
++  "_build/install/default/lib/camlimages/tiff/tiff.ml" {"tiff/tiff.ml"}
++  "_build/install/default/lib/camlimages/tiff/tiff.mli" {"tiff/tiff.mli"}
++  "_build/install/default/lib/camlimages/xpm/camlimages_xpm.a" {"xpm/camlimages_xpm.a"}
++  "_build/install/default/lib/camlimages/xpm/camlimages_xpm.cma" {"xpm/camlimages_xpm.cma"}
++  "_build/install/default/lib/camlimages/xpm/camlimages_xpm.cmxa" {"xpm/camlimages_xpm.cmxa"}
++  "_build/install/default/lib/camlimages/xpm/camlimages_xpm.cmxs" {"xpm/camlimages_xpm.cmxs"}
++  "_build/install/default/lib/camlimages/xpm/libcamlimages_xpm_stubs.a" {"xpm/libcamlimages_xpm_stubs.a"}
++  "_build/install/default/lib/camlimages/xpm/oXpm.cmi" {"xpm/oXpm.cmi"}
++  "_build/install/default/lib/camlimages/xpm/oXpm.cmt" {"xpm/oXpm.cmt"}
++  "_build/install/default/lib/camlimages/xpm/oXpm.cmx" {"xpm/oXpm.cmx"}
++  "_build/install/default/lib/camlimages/xpm/oXpm.ml" {"xpm/oXpm.ml"}
++  "_build/install/default/lib/camlimages/xpm/xpm.cmi" {"xpm/xpm.cmi"}
++  "_build/install/default/lib/camlimages/xpm/xpm.cmt" {"xpm/xpm.cmt"}
++  "_build/install/default/lib/camlimages/xpm/xpm.cmti" {"xpm/xpm.cmti"}
++  "_build/install/default/lib/camlimages/xpm/xpm.cmx" {"xpm/xpm.cmx"}
++  "_build/install/default/lib/camlimages/xpm/xpm.ml" {"xpm/xpm.ml"}
++  "_build/install/default/lib/camlimages/xpm/xpm.mli" {"xpm/xpm.mli"}
++]
++doc: [
++  "_build/install/default/doc/camlimages/README.md"
++]
++stublibs: [
++  "_build/install/default/lib/stublibs/dllcamlimages_exif_stubs.so"
++  "_build/install/default/lib/stublibs/dllcamlimages_freetype_stubs.so"
++  "_build/install/default/lib/stublibs/dllcamlimages_gif_stubs.so"
++  "_build/install/default/lib/stublibs/dllcamlimages_jpeg_stubs.so"
++  "_build/install/default/lib/stublibs/dllcamlimages_png_stubs.so"
++  "_build/install/default/lib/stublibs/dllcamlimages_tiff_stubs.so"
++  "_build/install/default/lib/stublibs/dllcamlimages_xpm_stubs.so"
++]
+diff -Nru camlspotter-camlimages-fc75238237a7/config/all_c_flags.sexp camlspotter-camlimages-new/config/all_c_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/all_c_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/all_c_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/all_c_library_flags.sexp camlspotter-camlimages-new/config/all_c_library_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/all_c_library_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/all_c_library_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/config.h camlspotter-camlimages-new/config/config.h
+--- camlspotter-camlimages-fc75238237a7/config/config.h	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/config.h	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1,25 @@
++#ifndef CAMLIMAGES_CONFIG_H
++#define CAMLIMAGES_CONFIG_H
++#define BOOL_EXIF "false"
++#define BOOL_FREETYPE "false"
++#define BOOL_GHOSTSCRIPT "false"
++#define BOOL_GIF "false"
++#define BOOL_GRAPHICS "false"
++#define BOOL_JPEG "false"
++#define BOOL_LABLGTK2 "false"
++#define BOOL_PNG "false"
++#define BOOL_RGB_TXT "false"
++#define BOOL_TIFF "false"
++#define BOOL_XPM "false"
++#undef  HAS_EXIF
++#undef  HAS_FREETYPE
++#undef  HAS_GHOSTSCRIPT
++#undef  HAS_GIF
++#undef  HAS_GRAPHICS
++#undef  HAS_JPEG
++#undef  HAS_LABLGTK2
++#undef  HAS_PNG
++#undef  HAS_RGB_TXT
++#undef  HAS_TIFF
++#undef  HAS_XPM
++#endif
+diff -Nru camlspotter-camlimages-fc75238237a7/config/exif_c_flags.sexp camlspotter-camlimages-new/config/exif_c_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/exif_c_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/exif_c_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/exif_c_library_flags.sexp camlspotter-camlimages-new/config/exif_c_library_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/exif_c_library_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/exif_c_library_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/freetype_c_flags.sexp camlspotter-camlimages-new/config/freetype_c_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/freetype_c_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/freetype_c_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/freetype_c_library_flags.sexp camlspotter-camlimages-new/config/freetype_c_library_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/freetype_c_library_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/freetype_c_library_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/gif_c_flags.sexp camlspotter-camlimages-new/config/gif_c_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/gif_c_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/gif_c_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/gif_c_library_flags.sexp camlspotter-camlimages-new/config/gif_c_library_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/gif_c_library_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/gif_c_library_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/jbuild camlspotter-camlimages-new/config/jbuild
+--- camlspotter-camlimages-fc75238237a7/config/jbuild	2018-04-02 05:53:42.000000000 +0100
++++ camlspotter-camlimages-new/config/jbuild	1970-01-01 01:00:00.000000000 +0100
+@@ -1,29 +0,0 @@
+-(jbuild_version 1)
+-
+-(executable
+- ((name ciconfig)
+-  (flags (:standard -w -6))
+-  (libraries ( configurator findlib ))))
+-	   
+-(rule
+- ((targets (
+-	    config.h
+-	    all_c_flags.sexp
+-	    all_c_library_flags.sexp
+-	    jpeg_c_flags.sexp
+-	    jpeg_c_library_flags.sexp
+-	    gif_c_flags.sexp
+-	    gif_c_library_flags.sexp
+-	    tiff_c_flags.sexp
+-	    tiff_c_library_flags.sexp
+-	    png_c_flags.sexp
+-	    png_c_library_flags.sexp
+-	    freetype_c_flags.sexp
+-	    freetype_c_library_flags.sexp
+-	    exif_c_flags.sexp
+-	    exif_c_library_flags.sexp
+-	    xpm_c_flags.sexp
+-	    xpm_c_library_flags.sexp
+-	    ))
+-  (deps (ciconfig.exe))
+-  (action (run ${<}))))
+diff -Nru camlspotter-camlimages-fc75238237a7/config/jpeg_c_flags.sexp camlspotter-camlimages-new/config/jpeg_c_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/jpeg_c_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/jpeg_c_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/jpeg_c_library_flags.sexp camlspotter-camlimages-new/config/jpeg_c_library_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/jpeg_c_library_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/jpeg_c_library_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/lablgtk2_c_flags.sexp camlspotter-camlimages-new/config/lablgtk2_c_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/lablgtk2_c_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/lablgtk2_c_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/lablgtk2_c_library_flags.sexp camlspotter-camlimages-new/config/lablgtk2_c_library_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/lablgtk2_c_library_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/lablgtk2_c_library_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/png_c_flags.sexp camlspotter-camlimages-new/config/png_c_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/png_c_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/png_c_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/png_c_library_flags.sexp camlspotter-camlimages-new/config/png_c_library_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/png_c_library_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/png_c_library_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/tiff_c_flags.sexp camlspotter-camlimages-new/config/tiff_c_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/tiff_c_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/tiff_c_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/tiff_c_library_flags.sexp camlspotter-camlimages-new/config/tiff_c_library_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/tiff_c_library_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/tiff_c_library_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/xpm_c_flags.sexp camlspotter-camlimages-new/config/xpm_c_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/xpm_c_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/xpm_c_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
+diff -Nru camlspotter-camlimages-fc75238237a7/config/xpm_c_library_flags.sexp camlspotter-camlimages-new/config/xpm_c_library_flags.sexp
+--- camlspotter-camlimages-fc75238237a7/config/xpm_c_library_flags.sexp	1970-01-01 01:00:00.000000000 +0100
++++ camlspotter-camlimages-new/config/xpm_c_library_flags.sexp	2019-03-01 12:42:15.210927864 +0000
+@@ -0,0 +1 @@
++()
