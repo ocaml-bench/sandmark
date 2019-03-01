@@ -25,7 +25,6 @@ depends: [
   "base-bytes"
   "integers" { < "0.3.0" }
   "ocamlfind" {build}
-  "conf-pkg-config" {build}
   "lwt" {with-test & >= "2.4.7" & < "4.0.0"}
   "ounit" {with-test}
   "ctypes-foreign" {with-test}
