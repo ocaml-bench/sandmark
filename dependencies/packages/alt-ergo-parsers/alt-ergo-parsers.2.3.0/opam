@@ -14,7 +14,6 @@ depends: [
   "dune" { build }
   "alt-ergo-lib" { = "2.3.0" }
   "psmt2-frontend" { >= "0.2" }
-  "camlzip"
   "menhir"
 ]
 homepage: "http://alt-ergo.ocamlpro.com/"
@@ -28,7 +27,7 @@ description:
 Alt-Ergo is an automatic theorem prover of mathematical formulas. It was developed at LRI, and is now maintained at OCamlPro.
 
 See more details on http://alt-ergo.ocamlpro.com/"
-
+patches: [ "disable-camlzip.patch" ]
 url {
   src:
     "http://alt-ergo.ocamlpro.com/http/alt-ergo-2.3.0/alt-ergo-2.3.0.tar.gz"

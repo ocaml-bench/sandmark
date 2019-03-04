@@ -1,0 +1,40 @@
+diff -ru alt-ergo-parsers.2.3.0/parsers/dune alt-ergo-parsers.2.3.0-fix/parsers/dune
+--- alt-ergo-parsers.2.3.0/parsers/dune	2019-02-11 16:43:50.000000000 +0000
++++ alt-ergo-parsers.2.3.0-fix/parsers/dune	2019-03-04 09:37:06.030705831 +0000
+@@ -14,7 +14,7 @@
+ (library
+     (name             AltErgoParsers)
+     (public_name      alt-ergo-parsers)
+-    (libraries        camlzip dynlink psmt2-frontend alt-ergo-lib)
++    (libraries        dynlink psmt2-frontend alt-ergo-lib)
+     (modules
+       ; common
+       Parsers Parsers_loader MyZip
+diff -ru alt-ergo-parsers.2.3.0/parsers/myZip.ml alt-ergo-parsers.2.3.0-fix/parsers/myZip.ml
+--- alt-ergo-parsers.2.3.0/parsers/myZip.ml	2019-02-11 16:43:50.000000000 +0000
++++ alt-ergo-parsers.2.3.0-fix/parsers/myZip.ml	2019-03-04 09:39:41.938968557 +0000
+@@ -11,7 +11,7 @@
+ 
+ (** A wrapper of the Zip module of CamlZip: we use Zip except when we want to
+     generate the.js file for try-Alt-Ergo **)
+-
++(*
+ module ZipWrapper = struct
+   include Zip
+   let filename e = e.Zip.filename
+@@ -19,8 +19,8 @@
+ end
+ 
+ include ZipWrapper
++*)
+ 
+-(* !! This commented code is used when compiling to javascript !!
+    module DummyZip = struct
+    type entry = unit
+    type in_file = unit
+@@ -36,4 +36,4 @@
+    end
+ 
+    include DummyZip
+-*)
++
