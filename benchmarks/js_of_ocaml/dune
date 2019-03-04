@@ -3,6 +3,6 @@
 (rule
  (targets js-of-ocaml.bench)
  (action (ignore-outputs (system
-   "orun -o %{targets} -- js_of_ocaml - < %{bin:frama-c.byte}"))))
+   "orun -o %{targets} -- js_of_ocaml --disable=check-magic-number - < %{bin:frama-c.byte}"))))
 
 (alias (name bench) (deps js-of-ocaml.bench))
