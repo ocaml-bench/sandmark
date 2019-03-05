@@ -13,7 +13,6 @@ build: [
 ]
 depends: [
   "ocaml" {>= "4.02.3"}
-  "conf-which" {build}
   "jbuilder" {build & >= "1.0+beta7"}
   "easy-format"
 ]
