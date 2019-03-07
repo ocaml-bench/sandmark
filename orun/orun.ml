@@ -98,7 +98,7 @@ let gc_stats stderr_file =
        (key, `Int value) :: go true in
   `Assoc (go false)
 
-let run output cmdline =
+let run output input cmdline =
   let prog = List.hd cmdline in
   (* workaround for the lack of execve *)
   let prog = if Filename.is_implicit prog && Sys.file_exists prog then
@@ -107,9 +107,13 @@ let run output cmdline =
     let before = Unix.gettimeofday () in
     let captured_stderr_filename = Filename.temp_file "orun" "stderr" in
     let stderr_fd = Unix.openfile captured_stderr_filename [Unix.O_WRONLY] 0600 in
+    let process_stdin = match input with 
+      | Some stdin_file -> Unix.openfile stdin_file [] 0600
+      | None -> Unix.stdin
+      in
     let environ = "OCAMLRUNPARAM=v=0x400" ::
       List.filter (fun s -> not (starts_with s "OCAMLRUNPARAM=")) (Array.to_list (Unix.environment ())) in
-    let pid = Unix.(create_process_env prog (Array.of_list cmdline) (Array.of_list environ) stdin stdout stderr_fd) in
+    let pid = Unix.(create_process_env prog (Array.of_list cmdline) (Array.of_list environ) process_stdin stdout stderr_fd) in
     Unix.close stderr_fd;
     let { status; user_secs; sys_secs; maxrss_kB } = wait4 pid in
     let status = match status with
@@ -153,6 +157,10 @@ let output =
   let doc = "Output location for run statistics" in
   Arg.(value & opt string "" & info ["o"; "output"] ~docv:"FILE" ~doc)
 
+let input =
+  let doc = "Optional file to use as stdin" in
+  Arg.(value & opt (some string) None & info ["i"; "input"] ~docv:"FILE" ~doc)
+
 let target =
   Arg.(non_empty & pos_all string [] & info [] ~docv:"PROG")
 
@@ -161,6 +169,6 @@ let prog =
     let doc = "run an OCaml program, measuring its runtime and memory use" in
     let man = [] in
     Term.info "orun" ~version:"v0.1" ~doc ~man in
-  (Term.(const run $ output $ target), info)
+  (Term.(const run $ output $ input $ target), info)
 
 let () = Term.exit_status (Term.eval prog)

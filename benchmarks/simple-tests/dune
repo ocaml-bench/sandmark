@@ -1,0 +1,12 @@
+(include lists-dune.inc)
+(include stress-dune.inc)
+
+(executables
+ (names alloc) (modules alloc))
+
+(rule
+ (targets alloc.bench)
+ (deps (:prog alloc.exe))
+ (action (run orun -o %{targets} -- %{prog})))
+
+(alias (name bench) (deps alloc.bench))
