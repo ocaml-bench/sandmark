@@ -38,8 +38,8 @@
        (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
 (rule
      (targets regexredux2.bench)
-      (deps (:prog regexredux2.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
+      (deps (:prog regexredux2.exe) (:txt knucleotide-input.txt))
+       (action (ignore-stdout (run orun -o %{targets} -i knucleotide-input.txt -- %{prog}))))
 
 (rule
      (targets knucleotide-input.txt)
