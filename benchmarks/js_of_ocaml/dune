@@ -2,7 +2,7 @@
 ;; See https://github.com/OCamlPro/ocamlbench-repo
 (rule
  (targets js-of-ocaml.bench)
- (action (ignore-outputs (system
-   "orun -o %{targets} -- js_of_ocaml --disable=check-magic-number - < %{bin:frama-c.byte}"))))
+ (action (ignore-outputs (run
+   orun -o %{targets} -i %{bin:frama-c.byte} -- js_of_ocaml --disable=check-magic-number -))))
 
 (alias (name bench) (deps js-of-ocaml.bench))
