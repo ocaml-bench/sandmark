@@ -11,8 +11,7 @@ homepage: "https://github.com/OCamlPro-Iguernlala/ocplib-simplex"
 bug-reports: "https://github.com/OCamlPro-Iguernlala/ocplib-simplex/issues"
 dev-repo: "git+https://github.com/OCamlPro-Iguernlala/ocplib-simplex.git"
 build:[
-        ["autoconf"]
-        ["./configure" "-prefix" "%{prefix}%"]
+        ["sh" "./configure" "-prefix" "%{prefix}%"]
 	[make]
 ]
 
@@ -28,7 +27,6 @@ remove:[
 depends: [
   "ocaml" {>= "4.01.0"}
   "ocamlfind" {build}
-  "conf-autoconf" {build}
   "num"
 ]
 conflicts: [ "osdp" {= "0.5.4"} ]
