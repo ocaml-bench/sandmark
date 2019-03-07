@@ -23,7 +23,7 @@
 (rule
      (targets knucleotide.bench)
       (deps (:prog knucleotide.exe) (:txt knucleotide-input.txt))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog} < knucleotide-input.txt))))
+       (action (ignore-stdout (run orun -o %{targets} -i knucleotide-input.txt -- %{prog}))))
 (rule
      (targets mandelbrot6.bench)
       (deps (:prog mandelbrot6.exe))
@@ -49,7 +49,7 @@
 (rule
      (targets revcomp2.bench)
       (deps (:prog revcomp2.exe) (:txt knucleotide-input.txt))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog} < knucleotide-input.txt))))
+       (action (ignore-stdout (run orun -o %{targets} -i knucleotide-input.txt -- %{prog}))))
 (rule
      (targets spectralnorm2.bench)
       (deps (:prog spectralnorm2.exe))
