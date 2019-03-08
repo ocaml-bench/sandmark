@@ -1,5 +1,6 @@
 (include lists-dune.inc)
 (include stress-dune.inc)
+(include stacks-dune.inc)
 
 (executables
  (names alloc) (modules alloc))
