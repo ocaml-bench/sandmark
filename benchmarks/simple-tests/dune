@@ -2,13 +2,14 @@
 (include stress-dune.inc)
 (include stacks-dune.inc)
 (include ocamlcapi-dune.inc)
+(include lazy-dune.inc)
 
 (executables
  (names alloc) (modules alloc))
 
  (executables (names morestacks) (modules morestacks))
 
-(rule
+ (rule
  (targets morestacks.bench)
  (deps (:prog morestacks.exe))
  (action (run orun -o %{targets} -- %{prog})))
