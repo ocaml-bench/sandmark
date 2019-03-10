@@ -1,6 +1,7 @@
 (include lists-dune.inc)
 (include stress-dune.inc)
 (include stacks-dune.inc)
+(include ocamlcapi-dune.inc)
 
 (executables
  (names alloc) (modules alloc))
