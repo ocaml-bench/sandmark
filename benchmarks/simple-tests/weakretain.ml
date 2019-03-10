@@ -14,6 +14,6 @@ let () =
         Weak.set weak_array !v (Some t);
         v := (!v + 1) mod weak_array_size
       end
-      else
-        ignore(ref t)
+    else
+      ignore(ref t)
   done

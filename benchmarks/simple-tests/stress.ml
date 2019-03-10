@@ -5,7 +5,7 @@ let percent_retain = int_of_string Sys.argv.(2)
 let words_to_allocate = 1000000000.
 
 let rec init_list acc i n =
-    if i >= n then acc
+  if i >= n then acc
     else init_list ((ref (0,0)) :: acc) (i+1) n
 
 let retain_list = ref (init_list [] 0 list_length)

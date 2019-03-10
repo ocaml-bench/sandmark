@@ -20,8 +20,8 @@ let allocate_list () =
   | _ -> failwith "unexpected data type"
 
 let () = while (Gc.minor_words() < words_to_allocate) do
-    for i = 0 to 100 do
-      allocate_list()
-    done
+  for i = 0 to 100 do
+    allocate_list()
+  done
   done
 

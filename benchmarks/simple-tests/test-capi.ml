@@ -1,9 +1,9 @@
 let test_name = Sys.argv.(1)
 
 let run_many_times f =
-    for _ = 1 to 20000 do
-        ignore(f())
-    done
+  for _ = 1 to 20000 do
+    ignore(f())
+  done
 
 let () = match test_name with
     | "test_no_args_alloc" -> run_many_times (fun _ -> test_no_args_alloc())
