@@ -3,6 +3,7 @@
 (include stacks-dune.inc)
 (include ocamlcapi-dune.inc)
 (include lazy-dune.inc)
+(include weak-dune.inc)
 
 (executables
  (names alloc) (modules alloc))
