@@ -22,6 +22,7 @@ build: [
     "-exc"
     "LDFLAGS=\"$LDFLAGS -L/opt/local/lib -L/usr/local/lib\" CFLAGS=\"$CFLAGS -I/opt/local/include -I/usr/local/include\" ./configure"
   ] {os = "macos"}
+  ["ocaml-update-c" "caml_z.c"] {ocaml:update-c}
   [make]
 ]
 install: [

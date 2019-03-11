@@ -4,7 +4,10 @@ authors: ["John Whitington"]
 homepage: "http://github.com/johnwhitington/camlpdf"
 bug-reports: "http://github.com/johnwhitington/camlpdf/issues"
 dev-repo: "git://github.com/johnwhitington/camlpdf"
-build: [[make]]
+build: [
+  ["ocaml-update-c" "flatestubs.c"] {ocaml:update-c}
+  [make]
+]
 install: [[make "install"]]
 remove: [["ocamlfind" "remove" "camlpdf"]]
 depends: ["ocaml" "ocamlfind"]

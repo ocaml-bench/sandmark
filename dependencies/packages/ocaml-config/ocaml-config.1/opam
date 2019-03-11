@@ -13,8 +13,4 @@ depends: [
   "ocaml-base-compiler" | "ocaml-variants" | "ocaml-system"
 ]
 substs: "gen_ocaml_config.ml"
-extra-files: [
-  ["gen_ocaml_config.ml.in" "md5=b5d620081220de592b4110f425941bfc"]
-  ["ocaml-config.install" "md5=8e50c5e2517d3463b3aad649748cafd7"]
-]
 

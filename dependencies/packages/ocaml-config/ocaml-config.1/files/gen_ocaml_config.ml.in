@@ -48,6 +48,8 @@ let () =
     (Sys.file_exists (ocamlc^".opt"^suffix));
   p "  native-dynlink: %%b"
     (Sys.file_exists (Filename.concat libdir "dynlink.cmxa"));
+  p "  update-c: %%b"
+    (Sys.file_exists (ocaml^"-update-c"^suffix));
   p "  stubsdir: %%S"
     stubsdir;
   p "  preinstalled: %{ocaml-system:installed}%";
