@@ -15,5 +15,5 @@ let () =
   for _ = 0 to iterations do
     let l = create_list() in
     let list_head = List.hd l in
-    ignore(Lazy.force list_head)
+    ignore(Sys.opaque_identity Lazy.force list_head)
   done

@@ -15,5 +15,5 @@ let () =
         v := (!v + 1) mod weak_array_size
       end
     else
-      ignore(ref t)
+      ignore(Sys.opaque_identity ref t)
   done

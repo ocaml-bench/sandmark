@@ -23,12 +23,13 @@ else
 
 let run_many_times f =
   for _ = 1 to 20000 do
-    f()
+    f ()
   done
 
-let () = match arguments with
-    | "ints-small" -> ignore(run_many_times (fun _ -> ints_small 100 depth))
-    | "ints-large" -> ignore(run_many_times (fun _ -> ints_large 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 depth))   
-    | "floats-small" -> ignore(run_many_times (fun _ -> floats_small 100.0 depth))
-    | "floats-large" -> ignore(run_many_times (fun _ -> floats_large 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 16.0 depth))
+let () = let result = match arguments with
+    | "ints-small" -> run_many_times (fun _ -> ints_small 100 depth)
+    | "ints-large" -> run_many_times (fun _ -> ints_large 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 depth)
+    | "floats-small" -> run_many_times (fun _ -> floats_small 100.0 depth)
+    | "floats-large" -> run_many_times (fun _ -> floats_large 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 16.0 depth)
     | _ -> failwith "unexpected arguments"
+  in ignore(Sys.opaque_identity result)
