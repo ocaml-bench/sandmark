@@ -1,7 +1,7 @@
 type a_mutable_record = { mutable an_int : int; a_string : string ; a_float: float }
 
-let weak_array_size = int_of_string Sys.argv.(1)
-let weak_percent = int_of_string Sys.argv.(2)
+let weak_percent = 100 / int_of_string Sys.argv.(1)
+let weak_array_size = int_of_string Sys.argv.(2)
 
 let weak_array = Weak.create weak_array_size
 
