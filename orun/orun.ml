@@ -94,8 +94,14 @@ let gc_stats stderr_file =
        go false
     | _, s ->
        let key, value = break ':' s in
+       match key with
+       | "mean_space_overhead" -> 
+       let value = float_of_string value in
+       (key, `Float value) :: go true
+       | _ ->
        let value = int_of_string value in
-       (key, `Int value) :: go true in
+       (key, `Int value) :: go true
+       in
   `Assoc (go false)
 
 let run output input cmdline =
