@@ -17,6 +17,8 @@ let allocate_list () =
   | "string" -> ignore (Sys.opaque_identity create_list (fun n -> (string_of_int n)) list_length)
   | "record" -> ignore (Sys.opaque_identity create_list (fun n -> { an_int = n; a_string = (string_of_int n); a_float = (float_of_int n)}) list_length)
   | "float-array" -> ignore (Sys.opaque_identity create_list (fun n -> [| (float_of_int n), (float_of_int n), (float_of_int n) |]) list_length)
+  | "int-array" -> ignore (Sys.opaque_identity create_list (fun n -> [| n, n, n |]) list_length)
+  | "int-option-array" -> ignore (Sys.opaque_identity create_list (fun n -> [| Some n, Some n, Some n, None |]) list_length)
   | _ -> failwith "unexpected data type"
 
 let () = for _ = 0 to iterations do
