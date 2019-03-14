@@ -2,7 +2,7 @@ open Printf
 
 let list_length = int_of_string Sys.argv.(1)
 let percent_retain = int_of_string Sys.argv.(2)
-let iterations = 100000000
+let iterations = 100000
 
 let rec init_list acc i n =
   if i >= n then acc
