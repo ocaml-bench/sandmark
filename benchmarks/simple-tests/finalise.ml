@@ -1,5 +1,5 @@
 let percent_finalize = 100 / int_of_string Sys.argv.(1)
-let iterations = 1000000
+let iterations = 10000
 
 type a_record = { an_int: int; mutable a_string : string; a_float : float }
 
