@@ -23,7 +23,7 @@ else
 
 let run_many_times f =
   for _ = 1 to 20000 do
-    f ()
+    f () |> ignore
   done
 
 let () = let result = match arguments with

@@ -10,8 +10,8 @@ let allocate () =
     let v = { an_int = 5; a_string = "foo"; a_float = 0.0 } in
     if Random.int 100 < percent_finalize then
       Gc.finalise (fun n -> ignore(Sys.opaque_identity (n.an_int+1))) v
-  else
-    ignore(Sys.opaque_identity ref v)
+    else
+      ignore(Sys.opaque_identity ref v)
   done
 
 let () = for _ = 0 to iterations do
