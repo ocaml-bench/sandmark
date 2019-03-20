@@ -29,6 +29,8 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp
 	opam switch create $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
 
+TARGET ?= bench
+
 .PHONY: .FORCE
 .FORCE:
 ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
@@ -38,7 +40,7 @@ ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
            done } > ocaml-versions/.workspace.$*
-	opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @bench; \
+	opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(TARGET); \
 	  ex=$$?; find _build/$*_* -name '*.bench' | xargs cat > $@; exit $$ex
 
 
