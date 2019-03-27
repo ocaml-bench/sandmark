@@ -4,9 +4,10 @@ export OPAMROOT=$(CURDIR)/_opam
 PACKAGES = \
   cpdf menhir minilight camlimages yojson  \
   lwt ctypes orun cil frama-c alt-ergo \
-  js_of_ocaml-compiler uuidm react ocplib-endian nbcodec
+  js_of_ocaml-compiler uuidm react ocplib-endian nbcodec \
+  checkseum decompress
 
-ITER = 5
+ITER ?= 5
 
 .PHONY: bash list clean
 
