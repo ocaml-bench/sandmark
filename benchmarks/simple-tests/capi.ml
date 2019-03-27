@@ -1,10 +1,8 @@
 let test_name = Sys.argv.(1)
 
 let run_many_times f =
-  for _ = 1 to 1_000 do
-    for _ = 1 to 1_000_000 do
+    for _ = 1 to 1_000_000_000 do
       ignore(Sys.opaque_identity f ())
-    done
     done
 
 let () = match test_name with
