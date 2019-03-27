@@ -6,7 +6,7 @@ PACKAGES = \
   lwt ctypes orun cil frama-c alt-ergo \
   js_of_ocaml-compiler uuidm react ocplib-endian nbcodec
 
-ITER = 5
+ITER ?= 5
 
 .PHONY: bash list clean
 
@@ -31,6 +31,10 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp
 
 TARGET ?= bench
 
+# setup default for pre benchmark wrappers
+# for example PRE_BENCH_EXEC='taskset --cpu-list 3 setarch `uname -m` --addr-no-randomize'
+PRE_BENCH_EXEC ?=
+
 .PHONY: .FORCE
 .FORCE:
 ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
@@ -40,7 +44,7 @@ ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
            done } > ocaml-versions/.workspace.$*
-	opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(TARGET); \
+	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(TARGET); \
 	  ex=$$?; find _build/$*_* -name '*.bench' | xargs cat > $@; exit $$ex
 
 
