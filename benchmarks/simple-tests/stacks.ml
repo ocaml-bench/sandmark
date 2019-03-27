@@ -32,4 +32,4 @@ let () = let result = match arguments with
     | "floats-small" -> run_many_times (fun _ -> floats_small 100.0 depth)
     | "floats-large" -> run_many_times (fun _ -> floats_large 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 16.0 depth)
     | _ -> failwith "unexpected arguments"
-  in ignore(Sys.opaque_identity result)
+  in ignore(result)
