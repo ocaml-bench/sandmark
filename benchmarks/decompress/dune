@@ -1,0 +1,11 @@
+(executable
+ (name test_decompress)
+  (libraries checkseum.ocaml decompress))
+
+(rule
+ (targets test_decompress.bench)
+ (deps (:prog test_decompress.exe))
+ (action (ignore-outputs (run
+   orun -o %{targets} -- %{prog}))))
+
+(alias (name bench) (deps test_decompress.bench))
