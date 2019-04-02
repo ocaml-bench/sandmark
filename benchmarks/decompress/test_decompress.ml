@@ -115,7 +115,7 @@ let data_to_compress =
         buf
 
 let () =
-    for run = 0 to 20 do
+    for run = 0 to 8 do
         let result = compress data_to_compress in
             let original = uncompress result in
                 ignore(original)
