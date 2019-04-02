@@ -44,7 +44,7 @@
 (rule
      (targets knucleotide-input.txt)
      (deps (:prog fasta3.exe))
-     (action (with-stdout-to %{targets} (run %{prog} 10000000 > %{targets}))))
+     (action (with-stdout-to %{targets} (run %{prog} 1000000 > %{targets}))))
 
 (rule
      (targets revcomp2.bench)
