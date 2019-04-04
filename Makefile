@@ -31,7 +31,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp
 	{ url="$$(cat ocaml-versions/$*.comp)"; echo "url { src: \"$$url\" }"; echo "setenv: [ [ ORUN_CONFIG_ocaml_url = \"$$url\" ] ]"; } \
 	  >> dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/opam
 	opam update
-	opam switch create $* ocaml-base-compiler.$*
+	opam switch --yes create $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
 
 BENCH_TARGET ?= bench
