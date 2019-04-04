@@ -13,8 +13,12 @@ ITER ?= 5
 
 ocamls=$(wildcard ocaml-versions/*.comp)
 
+# to build in a Dockerfile you need to disable sandboxing in opam
+ifeq ($(OPAM_DISABLE_SANDBOXING), true)
+     OPAM_INIT_EXTRA_FLAGS=--disable-sandboxing
+endif
 _opam/opam-init/init.sh:
-	opam init --bare --no-setup --no-opamrc ./dependencies
+	opam init --bare --no-setup --no-opamrc $(OPAM_INIT_EXTRA_FLAGS) ./dependencies
 
 _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp
 	rm -rf dependencies/packages/ocaml/ocaml.$*
