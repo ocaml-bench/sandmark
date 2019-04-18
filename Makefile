@@ -5,7 +5,7 @@ PACKAGES = \
   cpdf menhir minilight camlimages yojson  \
   lwt ctypes orun cil frama-c alt-ergo \
   js_of_ocaml-compiler uuidm react ocplib-endian nbcodec \
-  checkseum decompress
+  checkseum decompress lockfree kcas
 
 ITER ?= 5
 
