@@ -5,16 +5,17 @@ homepage: "https://github.com/ocaml-multicore/lockfree"
 doc: "https://kayceesrk.github.io/lockfree/doc"
 synopsis: "Lock-free data structures for multicore OCaml"
 license: "ISC"
-dev-repo: "https://github.com/ocaml-multicore/lockfree.git"
+dev-repo: "git+https://github.com/ocaml-multicore/lockfree.git"
 bug-reports: "https://github.com/ocaml-multicore/lockfree/issues"
-tags: []
 depends: [
+  "ocaml" {>= "4.06.1"}
   "ocamlfind" {build}
   "dune" {build}
   "kcas" {>= "0.1.3"}
 ]
-depopts: []
 build: [
   "dune" "build" "-p" name ]
-
-
+  url {
+src: "https://github.com/ocaml-multicore/lockfree/archive/0.1.3.zip"
+       checksum: "md5=d52cb8bf33deb87c13087f7ad1a2787c"
+  }
