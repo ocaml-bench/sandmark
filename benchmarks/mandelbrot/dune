@@ -1,0 +1,22 @@
+(executable
+ (name mandelbrot_multicore)
+ (modules mandelbrot_multicore))
+
+(executable
+ (name mandelbrot_vanilla)
+ (modules mandelbrot_vanilla)
+ (libraries unix))
+
+(rule
+     (targets mandelbrot_multicore.bench)
+      (deps (:prog mandelbrot_multicore.exe))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
+
+(rule
+     (targets mandelbrot_vanilla.bench)
+      (deps (:prog mandelbrot_vanilla.exe))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
+
+
+ (alias (name bench) (deps mandelbrot_vanilla.bench))
+ (alias (name multibench) (deps mandelbrot_multicore.bench))
