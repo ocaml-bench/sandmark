@@ -10,12 +10,12 @@
 (rule
      (targets mandelbrot_multicore.bench)
       (deps (:prog mandelbrot_multicore.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 16000 3))))
 
 (rule
      (targets mandelbrot_vanilla.bench)
       (deps (:prog mandelbrot_vanilla.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 16000 3))))
 
 
  (alias (name bench) (deps mandelbrot_vanilla.bench))
