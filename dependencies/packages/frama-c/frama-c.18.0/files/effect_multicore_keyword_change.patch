@@ -1,0 +1,1289 @@
+diff --git a/src/plugins/wp/CfgCompiler.ml b/src/plugins/wp/CfgCompiler.ml
+index 8d456082..eaf05a7e 100644
+--- a/src/plugins/wp/CfgCompiler.ml
++++ b/src/plugins/wp/CfgCompiler.ml
+@@ -113,9 +113,9 @@ sig
+   val guard' : node -> C.t -> node -> cfg
+   val either : node -> node list -> cfg
+   val implies : node -> (C.t * node) list -> cfg
+-  val effect : node -> E.t -> node -> cfg
++  val an_effect : node -> E.t -> node -> cfg
+   val assume : P.t -> cfg
+-  val havoc : node -> effects:node sequence -> node -> cfg
++  val havoc : node -> an_effects:node sequence -> node -> cfg
+ 
+   val compile : ?name:string -> ?mode:mode -> node -> Node.Set.t -> S.domain Node.Map.t ->
+     cfg -> F.pred Node.Map.t * S.t Node.Map.t * Conditions.sequence
+@@ -181,7 +181,7 @@ struct
+ 
+   module E = struct
+     type t = S.t sequence * F.pred
+-    let pretty fmt (_seq,p) = Format.fprintf fmt "effect: @[%a@]" F.pp_pred p
++    let pretty fmt (_seq,p) = Format.fprintf fmt "an_effect: @[%a@]" F.pp_pred p
+     let get : t -> F.pred = snd
+     let create seq p = seq,p
+ 
+@@ -357,7 +357,7 @@ struct
+     | Implies l -> Format.fprintf fmt "implies(%a)"
+                      (Pretty_utils.pp_list ~sep:",@ " (fun fmt (c,a) ->
+                           Format.fprintf fmt "%a=>%a" Lang.F.pp_pred (C.get c) Node.pp a)) l
+-    | Effect(_,n) -> Format.fprintf fmt "effect(%a)" Node.pp n
++    | Effect(_,n) -> Format.fprintf fmt "an_effect(%a)" Node.pp n
+     | Havoc(_,n) -> Format.fprintf fmt "havoc(%a)" Node.pp n
+     | Binding(_,n) -> Format.fprintf fmt "binding(%a)" Node.pp n
+ 
+@@ -566,7 +566,7 @@ struct
+     | [g,dest] -> guard node g dest
+     | node_list -> edge node (Implies(node_list))
+ 
+-  let effect node1 e node2 =
++  let an_effect node1 e node2 =
+     edge node1 (Effect(e, node2))
+ 
+   let assume (predicate:P.t) =
+@@ -574,7 +574,7 @@ struct
+     then nop
+     else new_env ~assumes:(Bag.elt predicate) ()
+ 
+-  let havoc node1 ~effects:node_seq node2 =
++  let havoc node1 ~an_effects:node_seq node2 =
+     edge node1 (Havoc(node_seq,node2))
+ 
+   let option_bind ~f = function
+@@ -597,7 +597,7 @@ struct
+     | Some d2 -> Some (union d1 d2)
+ 
+   (** return None when post is not accessible from this node *)
+-  let rec effects : type a.  (_,a) env -> node -> node -> S.domain option =
++  let rec an_effects : type a.  (_,a) env -> node -> node -> S.domain option =
+     fun env post node ->
+       if node = post
+       then Some S.empty
+@@ -605,34 +605,34 @@ struct
+         match Node.Map.find node env.succs with
+         | exception Not_found -> None
+         | Goto (node2) ->
+-            effects env post node2
++            an_effects env post node2
+         | Branch (_, node2, node3) ->
+             union_opt_or S.union
+-              (option_bind ~f:(effects env post) node2)
+-              (option_bind ~f:(effects env post) node3)
++              (option_bind ~f:(an_effects env post) node2)
++              (option_bind ~f:(an_effects env post) node3)
+         | Either (l) ->
+             (List.fold_left
+                (fun acc node2 -> union_opt_or S.union
+-                   acc (effects env post node2))
++                   acc (an_effects env post node2))
+                None l)
+         | Implies (l) ->
+             (List.fold_left
+                (fun acc (_,node2) -> union_opt_or S.union
+-                   acc (effects env post node2))
++                   acc (an_effects env post node2))
+                None l)
+-        | Effect (effect , node2) ->
++        | Effect (an_effect , node2) ->
+             add_only_if_alive S.union
+-              (E.writes effect)
+-              (effects env post node2)
++              (E.writes an_effect)
++              (an_effects env post node2)
+         | Havoc (m, node2) ->
+             union_opt_and S.union
+-              (effects env m.post m.pre)
+-              (effects env post node2)
++              (an_effects env m.post m.pre)
++              (an_effects env post node2)
+         | Binding (_,node2) ->
+-            effects env post node2
++            an_effects env post node2
+ 
+   (** restrict a cfg to the nodes accessible from the pre post given,
+-      and compute havoc effect *)
++      and compute havoc an_effect *)
+   let restrict (cfg:pre_env) pre posts : restricted_env =
+     let rec walk acc node : restricted_env option =
+       if Node.Map.mem node acc.succs then Some acc
+@@ -673,7 +673,7 @@ struct
+               if l = [] then None
+               else Some (env_union acc (new_env (Implies (List.rev l))))
+           | Havoc (m, node2) ->
+-              match effects cfg m.post m.pre with
++              match an_effects cfg m.post m.pre with
+               | None -> None
+               | Some eff ->
+                   union_opt_and env_union
+@@ -928,13 +928,13 @@ struct
+               in
+               add_edge node (Implies l);
+               s1
+-          | Effect (effect , node2) ->
++          | Effect (an_effect , node2) ->
+               let s2 = aux node2 in
+-              let s1 = S.remove_chunks s2 (E.writes effect) in
++              let s1 = S.remove_chunks s2 (E.writes an_effect) in
+               allocate dom s1;
+-              allocate (E.reads effect) s1;
+-              let effect = E.relocate {pre=s1;post=s2} effect in
+-              add_edge node (Effect(effect,node2));
++              allocate (E.reads an_effect) s1;
++              let an_effect = E.relocate {pre=s1;post=s2} an_effect in
++              add_edge node (Effect(an_effect,node2));
+               s1
+           | Havoc (eff, node2) ->
+               let s2 = aux node2 in
+@@ -1377,7 +1377,7 @@ struct
+           Node.pp pre (Pretty_utils.pp_iter ~sep:"@ " Node.Set.iter Node.pp) posts;
+       if Wp_parameters.has_dkey dkey then
+         Format.printf "@[1) %a@]@." pretty_env env;
+-      (** restrict environment to useful node and compute havoc effects *)
++      (** restrict environment to useful node and compute havoc an_effects *)
+       let env = restrict env pre posts in
+       if Wp_parameters.has_dkey dkey then
+         Format.printf "@[2) %a@]@." pretty_env env;
+@@ -1429,7 +1429,7 @@ struct
+                 Node.Set.fold (fun p cfg ->
+                     let s = {pre=S.create();post=S.create()} in
+                     let e =  s,Lang.F.p_true in
+-                    let goto = effect p e final_node in
++                    let goto = an_effect p e final_node in
+                     concat goto cfg
+                   ) posts env
+               in
+diff --git a/src/plugins/wp/CfgCompiler.mli b/src/plugins/wp/CfgCompiler.mli
+index 9263f60d..ee197401 100644
+--- a/src/plugins/wp/CfgCompiler.mli
++++ b/src/plugins/wp/CfgCompiler.mli
+@@ -126,7 +126,7 @@ sig
+   end
+ 
+ 
+-  (** Relocatable effect (a predicate that depend on two states). *)
++  (** Relocatable an_effect (a predicate that depend on two states). *)
+   module E : sig
+     type t
+     val pretty: Format.formatter -> t -> unit
+@@ -219,12 +219,12 @@ sig
+   *)
+ 
+ 
+-  val effect : node -> E.t -> node -> cfg
++  val an_effect : node -> E.t -> node -> cfg
+   (** Represents all execution trace [T] such that, if [T] contains node [a],
+-      then [T] also contains [b] with the given effect on corresponding
++      then [T] also contains [b] with the given an_effect on corresponding
+       memory states.
+ 
+-      Formally: [| effect a e b |]_I iff (( I(a) iff I(b) ) /\ [| e |]_I )
++      Formally: [| an_effect a e b |]_I iff (( I(a) iff I(b) ) /\ [| e |]_I )
+   *)
+ 
+   val assume : P.t -> cfg
+@@ -236,17 +236,17 @@ sig
+       Formally: [| assume P |]_I iff [| P |]_I
+   *)
+ 
+-  val havoc : node -> effects:node sequence -> node -> cfg
+-  (** Inserts an assigns effect between nodes [a] and [b], correspondings
++  val havoc : node -> an_effects:node sequence -> node -> cfg
++  (** Inserts an assigns an_effect between nodes [a] and [b], correspondings
+       to all the written memory chunks accessible in execution paths delimited
+-      by the [effects] sequence of nodes.
++      by the [an_effects] sequence of nodes.
+ 
+       Formally: [| havoc a s b |]_I is verified if there is no path between s.pre and s.path,
+       otherwise if (I(a) iff I(b) and if I(a) is defined then I(a) and I(b) are equal
+-      for all the chunks that are not in the written domain of an effect that can be found
++      for all the chunks that are not in the written domain of an an_effect that can be found
+       between [s.pre] to [s.post].
+ 
+-      Note: the effects are collected in the {i final} control-flow,
++      Note: the an_effects are collected in the {i final} control-flow,
+       when {!compile} is invoked. The portion of the sub-graph in the sequence
+       shall be concatenated to the [cfg] before compiling-it, otherwize it would be
+       considered empty and [havoc] would be a nop (no connection between a and b).
+diff --git a/src/plugins/wp/CodeSemantics.ml b/src/plugins/wp/CodeSemantics.ml
+index eaf5063d..6eff6070 100644
+--- a/src/plugins/wp/CodeSemantics.ml
++++ b/src/plugins/wp/CodeSemantics.ml
+@@ -316,7 +316,7 @@ struct
+     Warning.handle
+       ~handler:exp_undefined
+       ~severe:false
+-      ~effect:"Hide sub-term definition"
++      ~an_effect:"Hide sub-term definition"
+       (exp_node env) e
+ 
+   (* -------------------------------------------------------------------------- *)
+@@ -411,7 +411,7 @@ struct
+   let init_value ~sigma lv typ init =
+     let obj = Ctypes.object_of typ in
+     let outcome = Warning.catch
+-        ~severe:false ~effect:"Skip initializer"
++        ~severe:false ~an_effect:"Skip initializer"
+         (fun () ->
+            let l = lval sigma lv in
+            match init with
+@@ -427,7 +427,7 @@ struct
+   let init_range ~sigma lv typ a b value =
+     let obj = Ctypes.object_of typ in
+     let outcome = Warning.catch
+-        ~severe:false ~effect:"Skip initializer"
++        ~severe:false ~an_effect:"Skip initializer"
+         (fun () ->
+            let l = lval sigma lv in
+            let e = Extlib.opt_map (exp sigma) value in
+diff --git a/src/plugins/wp/Cvalues.ml b/src/plugins/wp/Cvalues.ml
+index fdd75ec8..771b4874 100644
+--- a/src/plugins/wp/Cvalues.ml
++++ b/src/plugins/wp/Cvalues.ml
+@@ -224,7 +224,7 @@ let volatile ?warn () =
+   Wp_parameters.Volatile.get () ||
+   ( Extlib.may
+       (fun w -> Warning.emit ~severe:false
+-          ~effect:"ignore volatile attribute" "%s" w)
++          ~an_effect:"ignore volatile attribute" "%s" w)
+       warn ; false )
+ 
+ (* -------------------------------------------------------------------------- *)
+diff --git a/src/plugins/wp/GuiSource.ml b/src/plugins/wp/GuiSource.ml
+index 2adc52d3..6e124175 100644
+--- a/src/plugins/wp/GuiSource.ml
++++ b/src/plugins/wp/GuiSource.ml
+@@ -158,7 +158,7 @@ let apply_tag name attr buffer start stop =
+   Gtk_helper.apply_tag buffer tg start stop
+ 
+ let apply_goal = apply_tag "wp.goal" [`BACKGROUND "lightblue"]
+-let apply_effect = apply_tag "wp.effect" [`BACKGROUND "lightblue"]
++let apply_an_effect = apply_tag "wp.an_effect" [`BACKGROUND "lightblue"]
+ let apply_path = apply_tag "wp.path" [`BACKGROUND "yellow"]
+ let apply_depend = apply_tag "wp.depend" [`BACKGROUND "pink"]
+ 
+@@ -176,7 +176,7 @@ class highlighter (main:Design.main_window_extension_points) =
+   object(self)
+ 
+     val mutable goal = None (* orange *)
+-    val mutable effect = None (* blue *)
++    val mutable an_effect = None (* blue *)
+     val mutable path = PATH.empty (* yellow *)
+     val mutable deps = DEPS.empty (* green *)
+     val mutable current = None
+@@ -184,7 +184,7 @@ class highlighter (main:Design.main_window_extension_points) =
+     method private clear =
+       begin
+         goal <- None ;
+-        effect <- None ;
++        an_effect <- None ;
+         path <- PATH.empty ;
+         deps <- DEPS.empty ;
+       end
+@@ -213,7 +213,7 @@ class highlighter (main:Design.main_window_extension_points) =
+                 | GoalLemma l ->
+                     deps <- lemmas l.VC_Lemma.depends
+                 | GoalAnnot a ->
+-                    effect <- a.VC_Annot.effect ;
++                    an_effect <- a.VC_Annot.an_effect ;
+                     path <- instructions a.VC_Annot.path ;
+                     deps <- a.VC_Annot.deps ;
+               end ;
+@@ -234,9 +234,9 @@ class highlighter (main:Design.main_window_extension_points) =
+       begin match loc with
+         | PStmt( _ , stmt ) ->
+             begin
+-              match effect with
++              match an_effect with
+               | Some(s,_) when Stmt.equal stmt s ->
+-                  apply_effect buffer start stop
++                  apply_an_effect buffer start stop
+               | _ ->
+                   if PATH.mem stmt path then
+                     apply_path buffer start stop
+diff --git a/src/plugins/wp/LogicSemantics.ml b/src/plugins/wp/LogicSemantics.ml
+index 98494b13..90b87560 100644
+--- a/src/plugins/wp/LogicSemantics.ml
++++ b/src/plugins/wp/LogicSemantics.ml
+@@ -954,19 +954,19 @@ struct
+     Warning.handle
+       ~handler:term_undefined
+       ~severe:false
+-      ~effect:"Hide sub-term definition"
++      ~an_effect:"Hide sub-term definition"
+       (term_node env) t
+ 
+   let pred_protected polarity env p =
+     match polarity with
+     | `Positive ->
+         Warning.handle
+-          ~effect:"Target turned to False"
++          ~an_effect:"Target turned to False"
+           ~severe:true ~handler:(fun _ -> p_false)
+           (predicate `Positive env) p
+     | `Negative ->
+         Warning.handle
+-          ~effect:"Ignored Hypothesis"
++          ~an_effect:"Ignored Hypothesis"
+           ~severe:false ~handler:(fun _ -> p_true)
+           (predicate `Negative env) p
+     | `NoPolarity ->
+diff --git a/src/plugins/wp/MemTyped.ml b/src/plugins/wp/MemTyped.ml
+index 0a96ae3f..1120abd0 100644
+--- a/src/plugins/wp/MemTyped.ml
++++ b/src/plugins/wp/MemTyped.ml
+@@ -764,7 +764,7 @@ module BASE = Model.Generator(Varinfo)
+           if x.vglob then
+             Warning.handle
+               ~handler:(fun _ -> None)
+-              ~effect:(Printf.sprintf "No allocation size for variable '%s'" x.vname)
++              ~an_effect:(Printf.sprintf "No allocation size for variable '%s'" x.vname)
+               (fun obj -> Some (size_of_object obj))
+               obj
+           else Some 0
+@@ -1221,7 +1221,7 @@ let cast s l =
+       | Unsafe ->
+           if not (Layout.fits s.post s.pre) then
+             Warning.emit ~severe:false ~source:"Typed Model"
+-              ~effect:"Keep pointer value"
++              ~an_effect:"Keep pointer value"
+               "%a" pp_mismatch s ; l
+     end
+ 
+diff --git a/src/plugins/wp/Pcond.ml b/src/plugins/wp/Pcond.ml
+index 670f4171..7b8abd90 100644
+--- a/src/plugins/wp/Pcond.ml
++++ b/src/plugins/wp/Pcond.ml
+@@ -205,7 +205,7 @@ class engine (lang : #Plang.engine) =
+     method pp_warning fmt w =
+       let open Warning in
+       Format.fprintf fmt "@[<hov 0>@{<wp:warning>Warning@}[%s]: %s@ (%s).@]"
+-        w.source w.reason w.effect
++        w.source w.reason w.an_effect
+ 
+     method pp_definition fmt x e =
+       Format.fprintf fmt "@[<hov 4>%a %a = %a.@]"
+diff --git a/src/plugins/wp/ProofEngine.ml b/src/plugins/wp/ProofEngine.ml
+index 299b800d..87620ea0 100644
+--- a/src/plugins/wp/ProofEngine.ml
++++ b/src/plugins/wp/ProofEngine.ml
+@@ -265,7 +265,7 @@ let mk_annot axioms goal vc =
+       tags = [] ; warn = [] ;
+       deps = Property.Set.empty ;
+       path = Cil_datatype.Stmt.Set.empty ;
+-      effect = None ;
++      an_effect = None ;
+     }
+ 
+ let mk_formula ~main axioms sequent =
+diff --git a/src/plugins/wp/Sigma.ml b/src/plugins/wp/Sigma.ml
+index baa50363..eb1ac63d 100644
+--- a/src/plugins/wp/Sigma.ml
++++ b/src/plugins/wp/Sigma.ml
+@@ -169,7 +169,7 @@ struct
+     end
+ 
+   let writes seq =
+-    let effect = ref Chunk.Set.empty in
++    let an_effect = ref Chunk.Set.empty in
+     iter2
+       (fun chunk u v ->
+          let written =
+@@ -179,8 +179,8 @@ struct
+            | Some _ , None -> false (** no need to create a new so it is the same *)
+            | None, None -> assert false
+          in
+-         if written then effect := Chunk.Set.add chunk !effect
++         if written then an_effect := Chunk.Set.add chunk !an_effect
+       ) seq.Sigs.pre seq.Sigs.post ;
+-    !effect
++    !an_effect
+ 
+ end
+diff --git a/src/plugins/wp/Sigs.ml b/src/plugins/wp/Sigs.ml
+index 13b0d563..09bac1bd 100644
+--- a/src/plugins/wp/Sigs.ml
++++ b/src/plugins/wp/Sigs.ml
+@@ -144,7 +144,7 @@ sig
+   val is_framed : t -> bool
+   (** Whether the chunk is local to a function call.
+ 
+-      Means the chunk is separated from anyother call side-effects.
++      Means the chunk is separated from anyother call side-an_effects.
+       If [true], entails that a function assigning everything can not modify
+       the chunk. Only used for optimisation, it would be safe to always
+       return [false]. *)
+diff --git a/src/plugins/wp/StmtSemantics.ml b/src/plugins/wp/StmtSemantics.ml
+index b4fb518b..daa45dd8 100644
+--- a/src/plugins/wp/StmtSemantics.ml
++++ b/src/plugins/wp/StmtSemantics.ml
+@@ -117,7 +117,7 @@ struct
+   let guard' nc c nt = (Cfg.guard' nc c nt) |> paths_of_cfg
+   let either n ns = (Cfg.either n ns) |> paths_of_cfg
+   let implies n ns = (Cfg.implies n ns) |> paths_of_cfg
+-  let effect n1 e n2 = (Cfg.effect n1 e n2) |> paths_of_cfg
++  let an_effect n1 e n2 = (Cfg.an_effect n1 e n2) |> paths_of_cfg
+   let assume p = (Cfg.assume p) |> paths_of_cfg
+ 
+   let current env sigma =
+@@ -194,7 +194,7 @@ struct
+         Cfg.E.pretty e
+     in
+     meta ~descr (env @: Clabels.here)
+-    @^ effect (env @: Clabels.here) e (env @: Clabels.next)
++    @^ an_effect (env @: Clabels.here) e (env @: Clabels.next)
+ 
+   (* -------------------------------------------------------------------------- *)
+   (* --- Compiler: Assignment                                               --- *)
+@@ -216,7 +216,7 @@ struct
+     let descr = Format.asprintf "Set: @[%a = %a@]"
+         Printer.pp_lval lv Printer.pp_exp exp in
+     meta ~descr (env @: Clabels.here)
+-    @^ effect ( env @: Clabels.here ) e (env @: Clabels.next)
++    @^ an_effect ( env @: Clabels.here ) e (env @: Clabels.next)
+ 
+   (* -------------------------------------------------------------------------- *)
+   (* --- Compiler: Return                                                   --- *)
+@@ -357,7 +357,7 @@ struct
+                 (C.cast tr env.return (Val (Lang.F.e_var env.result)))
+             in
+             let e = Cfg.E.create { pre; post } p in
+-            effect (env @: Clabels.here) e (env @: Clabels.next)
++            an_effect (env @: Clabels.here) e (env @: Clabels.next)
+       in
+ 
+       let old_status = env.status in
+@@ -366,7 +366,7 @@ struct
+         let p = Lang.F.p_equal (Lang.F.e_var old_status) (Lang.F.e_var env.status) in
+         let s = M.Sigma.create () in
+         let e = Cfg.E.create {pre=s;post=s} p in
+-        effect (env @: Clabels.here) e (env @: Clabels.next)
++        an_effect (env @: Clabels.here) e (env @: Clabels.next)
+       in
+ 
+       let subst_formals = List.fold_left2
+@@ -416,7 +416,7 @@ struct
+         let next = Sigma.create () in
+         (*TODO: make something of warnings *)
+         let hyp = Lang.F.p_all snd (C.init ~sigma:next vi (Some init)) in
+-        effect (env @: Clabels.here) (Cfg.E.create {pre=here; post=next} hyp) (env @: Clabels.next)
++        an_effect (env @: Clabels.here) (Cfg.E.create {pre=here; post=next} hyp) (env @: Clabels.next)
+     | Skip _ | Code_annot _ -> goto (env @: Clabels.here) (env @: Clabels.next)
+ 
+   (* -------------------------------------------------------------------------- *)
+@@ -483,7 +483,7 @@ struct
+         let next = M.Sigma.havoc here domain in
+         let seq = { pre = here; post = next } in
+         let preds = A.apply_assigns seq region in
+-        effect (env @: Clabels.here) (Cfg.E.create seq (Lang.F.p_conj preds)) (env @: Clabels.next)
++        an_effect (env @: Clabels.here) (Cfg.E.create seq (Lang.F.p_conj preds)) (env @: Clabels.next)
+ 
+   and froms : env -> from list -> paths = fun env froms ->
+     assigns env (Writes froms)
+@@ -632,7 +632,7 @@ struct
+           let _,paths = do_list ~fresh_nodes:true paths nodes n_loop invariants in
+           (* arbitrary number of loop *)
+           let n_havoc = Cfg.node () in
+-          let havoc = Cfg.havoc n ~effects:{pre=n_havoc;post=n_loop} n_havoc in
++          let havoc = Cfg.havoc n ~an_effects:{pre=n_havoc;post=n_loop} n_havoc in
+           let paths = (havoc |> paths_of_cfg) @^ paths in
+           (* body *)
+           let invariants_as_assumes = as_assumes invariants in
+@@ -694,7 +694,7 @@ struct
+             ) nop
+         else nop
+       in
+-      cfg_init @^ effect ninit havoc nconst @^ consts @^ goto nconst (env @: Clabels.here)
++      cfg_init @^ an_effect ninit havoc nconst @^ consts @^ goto nconst (env @: Clabels.here)
+ 
+   let pre_spec env spec =
+     let pre_cond polarity env p =
+diff --git a/src/plugins/wp/Warning.ml b/src/plugins/wp/Warning.ml
+index 3463365a..8762d570 100644
+--- a/src/plugins/wp/Warning.ml
++++ b/src/plugins/wp/Warning.ml
+@@ -32,7 +32,7 @@ struct
+     severe : bool ;
+     source : string ;
+     reason : string ;
+-    effect : string ;
++    an_effect : string ;
+   }
+ 
+   let compare w1 w2 =
+@@ -66,9 +66,9 @@ let pretty fmt w =
+       w.source ;
+     if w.severe then
+       Format.fprintf fmt " - Warning: %s, looking for context inconsistency"
+-        w.effect
++        w.an_effect
+     else
+-      Format.fprintf fmt " - Warning: %s" w.effect ;
++      Format.fprintf fmt " - Warning: %s" w.an_effect ;
+     Format.fprintf fmt "@\n   Reason: %s@]" w.reason ;
+   end
+ 
+@@ -115,7 +115,7 @@ let add w =
+   let c = Context.get collector in
+   c.warnings <- Set.add w c.warnings
+ 
+-let kprintf phi ?(log=true) ?(severe=false) ?source ~effect message =
++let kprintf phi ?(log=true) ?(severe=false) ?source ~an_effect message =
+   let source = match source with Some s -> s | None -> default () in
+   let buffer = Buffer.create 80 in
+   Format.kfprintf
+@@ -129,23 +129,23 @@ let kprintf phi ?(log=true) ?(severe=false) ?source ~effect message =
+          loc = fst loc ;
+          severe = severe ;
+          source = source ;
+-         effect = effect ;
++         an_effect = an_effect ;
+          reason = text ;
+        })
+     (Format.formatter_of_buffer buffer)
+     message
+ 
+-let create ?log ?severe ?source ~effect msg =
+-  kprintf (fun w -> w) ?log ?severe ?source ~effect msg
++let create ?log ?severe ?source ~an_effect msg =
++  kprintf (fun w -> w) ?log ?severe ?source ~an_effect msg
+ 
+-let emit ?severe ?source ~effect msg =
+-  kprintf add ~log:true ?severe ?source ~effect msg
++let emit ?severe ?source ~an_effect msg =
++  kprintf add ~log:true ?severe ?source ~an_effect msg
+ 
+-let handle ?(severe=false) ~effect ~handler cc x =
++let handle ?(severe=false) ~an_effect ~handler cc x =
+   try cc x
+   with Error(source,reason) ->
+     if Context.defined collector then
+-      ( emit ~severe ~source ~effect "%s" reason ; handler x )
++      ( emit ~severe ~source ~an_effect "%s" reason ; handler x )
+     else
+     if source <> "wp" then
+       Wp_parameters.fatal ~current:true "[%s] %s" source reason
+@@ -156,9 +156,9 @@ type 'a outcome =
+   | Result of Set.t * 'a
+   | Failed of Set.t
+ 
+-let catch ?source ?(severe=true) ~effect cc x =
++let catch ?source ?(severe=true) ~an_effect cc x =
+   let wrn = context ?source () in
+   try let y = cc x in Result(flush wrn,y) (* DO NOT inline this let *)
+   with Error(source,reason) ->
+-    emit ~severe ~source ~effect "%s" reason ;
++    emit ~severe ~source ~an_effect "%s" reason ;
+     Failed (flush wrn)
+diff --git a/src/plugins/wp/Warning.mli b/src/plugins/wp/Warning.mli
+index b94a35fe..10c75573 100644
+--- a/src/plugins/wp/Warning.mli
++++ b/src/plugins/wp/Warning.mli
+@@ -33,7 +33,7 @@ type t = {
+   severe : bool ;
+   source : string ;
+   reason : string ;
+-  effect : string ;
++  an_effect : string ;
+ }
+ 
+ val compare : t -> t -> int
+@@ -50,16 +50,16 @@ val context : ?source:string -> unit -> context
+ val flush : context -> Set.t
+ val add : t -> unit
+ 
+-val create : ?log:bool -> ?severe:bool -> ?source:string -> effect:string ->
++val create : ?log:bool -> ?severe:bool -> ?source:string -> an_effect:string ->
+   ('a,Format.formatter,unit,t) format4 -> 'a
+ 
+-val emit : ?severe:bool -> ?source:string -> effect:string ->
++val emit : ?severe:bool -> ?source:string -> an_effect:string ->
+   ('a,Format.formatter,unit) format -> 'a
+ (** Emit a warning in current context.
+     Defaults: [severe=true], [source="wp"]. *)
+ 
+-val handle : ?severe:bool -> effect:string -> handler:('a -> 'b) -> ('a -> 'b) -> 'a -> 'b
+-(** Handle the error and emit a warning with specified severity and effect
++val handle : ?severe:bool -> an_effect:string -> handler:('a -> 'b) -> ('a -> 'b) -> 'a -> 'b
++(** Handle the error and emit a warning with specified severity and an_effect
+     if a context has been set.
+     Otherwise, a WP-fatal error is raised instead.
+     Default for [severe] is false. *)
+@@ -68,7 +68,7 @@ type 'a outcome =
+   | Result of Set.t * 'a
+   | Failed of Set.t
+ 
+-val catch : ?source:string -> ?severe:bool -> effect:string -> ('a -> 'b) -> 'a -> 'b outcome
++val catch : ?source:string -> ?severe:bool -> an_effect:string -> ('a -> 'b) -> 'a -> 'b outcome
+ (** Set up a context for the job. If non-handled errors are raised,
+-    then a warning is emitted with specified severity and effect.
++    then a warning is emitted with specified severity and an_effect.
+     Default for [severe] is [true]. *)
+diff --git a/src/plugins/wp/cfgWP.ml b/src/plugins/wp/cfgWP.ml
+index 83d95408..7fc7ba1a 100644
+--- a/src/plugins/wp/cfgWP.ml
++++ b/src/plugins/wp/cfgWP.ml
+@@ -47,8 +47,8 @@ struct
+ 
+   type target =
+     | Gprop of P.t
+-    | Geffect of P.t * Stmt.t * effect_source
+-    | Gposteffect of P.t
++    | Gan_effect of P.t * Stmt.t * an_effect_source
++    | Gpostan_effect of P.t
+ 
+   module TARGET =
+   struct
+@@ -56,38 +56,38 @@ struct
+     let hsrc = function
+       | FromCode -> 1 | FromCall -> 2 | FromReturn -> 3
+     let hash = function
+-      | Gprop p | Gposteffect p -> P.hash p
+-      | Geffect(p,s,e) -> P.hash p * 37 + 41 * Stmt.hash s + hsrc e
++      | Gprop p | Gpostan_effect p -> P.hash p
++      | Gan_effect(p,s,e) -> P.hash p * 37 + 41 * Stmt.hash s + hsrc e
+     let compare g1 g2 =
+       if g1 == g2 then 0 else
+         match g1,g2 with
+         | Gprop p1 , Gprop p2 -> P.compare p1 p2
+         | Gprop _ , _ -> (-1)
+         | _ , Gprop _ -> 1
+-        | Geffect(p1,s1,e1) , Geffect(p2,s2,e2) ->
++        | Gan_effect(p1,s1,e1) , Gan_effect(p2,s2,e2) ->
+             let c = P.compare p1 p2 in
+             if c <> 0 then c else
+               let c = Stmt.compare s1 s2 in
+               if c <> 0 then c else
+                 hsrc e1 - hsrc e2
+-        | Geffect _ , _ -> (-1)
+-        | _ , Geffect _ -> 1
+-        | Gposteffect p1 , Gposteffect p2 -> P.compare p1 p2
++        | Gan_effect _ , _ -> (-1)
++        | _ , Gan_effect _ -> 1
++        | Gpostan_effect p1 , Gpostan_effect p2 -> P.compare p1 p2
+     let equal g1 g2 = (compare g1 g2 = 0)
+-    let prop_id = function Gprop p | Gposteffect p | Geffect(p,_,_) -> p
+-    let source = function Gprop _ | Gposteffect _ -> None | Geffect(_,s,e) -> Some(s,e)
++    let prop_id = function Gprop p | Gpostan_effect p | Gan_effect(p,_,_) -> p
++    let source = function Gprop _ | Gpostan_effect _ -> None | Gan_effect(_,s,e) -> Some(s,e)
+     let pretty fmt = function
+       | Gprop p -> WpPropId.pretty fmt p
+-      | Geffect(p,s,FromCode) -> Format.fprintf fmt "%a at sid:%d" WpPropId.pretty p s.sid
+-      | Geffect(p,s,FromCall) -> Format.fprintf fmt "Call %a at sid:%d" WpPropId.pretty p s.sid
+-      | Geffect(p,s,FromReturn) -> Format.fprintf fmt "Return %a at sid:%d" WpPropId.pretty p s.sid
+-      | Gposteffect p -> Format.fprintf fmt "%a post-effect" WpPropId.pretty p
++      | Gan_effect(p,s,FromCode) -> Format.fprintf fmt "%a at sid:%d" WpPropId.pretty p s.sid
++      | Gan_effect(p,s,FromCall) -> Format.fprintf fmt "Call %a at sid:%d" WpPropId.pretty p s.sid
++      | Gan_effect(p,s,FromReturn) -> Format.fprintf fmt "Return %a at sid:%d" WpPropId.pretty p s.sid
++      | Gpostan_effect p -> Format.fprintf fmt "%a post-an_effect" WpPropId.pretty p
+   end
+ 
+   (* Authorized written region from an assigns specification *)
+-  type effect = {
++  type an_effect = {
+     e_pid : P.t ; (* Assign Property *)
+-    e_kind : a_kind ; (* Requires post effects (in case of loop-assigns) *)
++    e_kind : a_kind ; (* Requires post an_effects (in case of loop-assigns) *)
+     e_label : c_label ; (* scope for collection *)
+     e_valid : L.sigma ; (* sigma where locations are filtered for validity *)
+     e_region : L.region ; (* expected from spec *)
+@@ -96,7 +96,7 @@ struct
+ 
+   module EFFECT =
+   struct
+-    type t = effect
++    type t = an_effect
+     let compare e1 e2 = P.compare e1.e_pid e2.e_pid
+   end
+ 
+@@ -111,7 +111,7 @@ struct
+   type vc = {
+     hyps : Conditions.bundle ;
+     goal : F.pred ;
+-    vars : Vars.t ; (* the variables of effects/goal to collect *)
++    vars : Vars.t ; (* the variables of an_effects/goal to collect *)
+     warn : W.t ;
+     deps : D.t ;
+     path : S.t ;
+@@ -128,7 +128,7 @@ struct
+ 
+   type t_prop = {
+     sigma : L.sigma option ;
+-    effects : Eset.t ;
++    an_effects : Eset.t ;
+     vcs : vc Splitter.t Gmap.t ;
+   }
+ 
+@@ -355,7 +355,7 @@ struct
+ 
+   let empty = {
+     sigma = None ;
+-    effects = Eset.empty ;
++    an_effects = Eset.empty ;
+     vcs = Gmap.empty ;
+   }
+ 
+@@ -369,11 +369,11 @@ struct
+     L.in_frame wenv.frame
+       (fun () ->
+          let sigma,pa1,pa2 = merge_sigma wp1.sigma wp2.sigma in
+-         let effects = Eset.union wp1.effects wp2.effects in
++         let an_effects = Eset.union wp1.an_effects wp2.an_effects in
+          let vcs1 = gmap (passify_vc pa1) wp1.vcs in
+          let vcs2 = gmap (passify_vc pa2) wp2.vcs in
+          let vcs = gmerge vcs1 vcs2 in
+-         { sigma = sigma ; vcs = vcs ; effects = effects }
++         { sigma = sigma ; vcs = vcs ; an_effects = an_effects }
+       ) ()
+ 
+   (* -------------------------------------------------------------------------- *)
+@@ -426,7 +426,7 @@ struct
+   (* --- Compilation of Effects                                           --- *)
+   (* ------------------------------------------------------------------------ *)
+ 
+-  let cc_effect env pid (ainfo:WpPropId.assigns_desc) : effect option =
++  let cc_an_effect env pid (ainfo:WpPropId.assigns_desc) : an_effect option =
+     let from = ainfo.WpPropId.a_label in
+     let sigma = L.mem_frame from in
+     let authorized_region =
+@@ -446,12 +446,12 @@ struct
+         e_warn = Warning.Set.empty ;
+       }
+ 
+-  let cc_posteffect e vcs =
++  let cc_postan_effect e vcs =
+     match e.e_kind with
+     | StmtAssigns -> vcs
+     | LoopAssigns ->
+         let vc = { empty_vc with vars = L.vars e.e_region } in
+-        Gmap.add (Gposteffect e.e_pid) (Splitter.singleton vc) vcs
++        Gmap.add (Gpostan_effect e.e_pid) (Splitter.singleton vc) vcs
+ 
+   (* -------------------------------------------------------------------------- *)
+   (* --- WP RULES : adding axioms, hypotheses and goals                     --- *)
+@@ -463,7 +463,7 @@ struct
+       (fun env wp ->
+          let descr = Pretty_utils.to_string WpPropId.pretty hpid in
+          let outcome = Warning.catch
+-             ~severe:false ~effect:"Skip hypothesis"
++             ~severe:false ~an_effect:"Skip hypothesis"
+              (L.pred `Negative env) predicate in
+          let warn,hs = match outcome with
+            | Warning.Result(warn,p) -> warn , [p]
+@@ -475,7 +475,7 @@ struct
+   let add_goal wenv (gpid,predicate) wp = in_wenv wenv wp
+       (fun env wp ->
+          let outcome = Warning.catch
+-             ~severe:true ~effect:"Degenerated goal"
++             ~severe:true ~an_effect:"Degenerated goal"
+              (L.pred `Positive env) predicate in
+          let warn,goal = match outcome with
+            | Warning.Result(warn,goal) -> warn,goal
+@@ -487,15 +487,15 @@ struct
+   let add_assigns wenv (gpid,ainfo) wp = in_wenv wenv wp
+       begin fun env wp ->
+         let outcome = Warning.catch
+-            ~severe:true ~effect:"Degenerated goal"
+-            (cc_effect env gpid) ainfo
++            ~severe:true ~an_effect:"Degenerated goal"
++            (cc_an_effect env gpid) ainfo
+         in match outcome with
+         | Warning.Result (_,None) -> wp
+         | Warning.Result (warn,Some e) ->
+             let e = { e with e_warn = warn } in
+-            let effects = Eset.add e wp.effects in
+-            let vcs = cc_posteffect e wp.vcs in
+-            { wp with effects = effects ; vcs = vcs }
++            let an_effects = Eset.add e wp.an_effects in
++            let vcs = cc_postan_effect e wp.vcs in
++            { wp with an_effects = an_effects ; vcs = vcs }
+         | Warning.Failed warn ->
+             let vcs = add_vc (Gprop gpid) ~warn p_false wp.vcs in
+             { wp with vcs = vcs }
+@@ -508,7 +508,7 @@ struct
+   (* --- WP RULE : use assigns clause                                       --- *)
+   (* -------------------------------------------------------------------------- *)
+ 
+-  let assigns_condition (region : L.region) (e:effect) : F.pred =
++  let assigns_condition (region : L.region) (e:an_effect) : F.pred =
+     L.check_assigns e.e_valid ~written:region ~assignable:e.e_region
+ 
+   exception COLLECTED
+@@ -523,14 +523,14 @@ struct
+       false
+     with COLLECTED -> true
+ 
+-  let check_nothing effects vcs =
++  let check_nothing an_effects vcs =
+     Eset.fold
+       (fun e vcs ->
+          if is_collected vcs e.e_pid then vcs else
+            Gmap.add (Gprop e.e_pid) (Splitter.singleton empty_vc) vcs
+-      ) effects vcs
++      ) an_effects vcs
+ 
+-  let check_assigns sloc source ?(warn=Warning.Set.empty) region effects vcs =
++  let check_assigns sloc source ?(warn=Warning.Set.empty) region an_effects vcs =
+     Eset.fold
+       (fun e vcs ->
+          let xs,hs,goal = introduction (assigns_condition region e) in
+@@ -547,32 +547,32 @@ struct
+            | StmtAssigns ->
+                Splitter.singleton (setup empty_vc)
+            | LoopAssigns ->
+-               try Splitter.map setup (Gmap.find (Gposteffect e.e_pid) vcs)
++               try Splitter.map setup (Gmap.find (Gpostan_effect e.e_pid) vcs)
+                with Not_found ->
+-                 Wp_parameters.fatal "Missing post-effect for %a"
++                 Wp_parameters.fatal "Missing post-an_effect for %a"
+                    WpPropId.pretty e.e_pid
+          in
+          let target = match sloc with
+            | None -> Gprop e.e_pid
+-           | Some stmt -> Geffect(e.e_pid,stmt,source)
++           | Some stmt -> Gan_effect(e.e_pid,stmt,source)
+          in
+          Gmap.add target group vcs
+-      ) effects vcs
++      ) an_effects vcs
+ 
+-  let do_assigns ?descr ?stmt ~source ?hpid ?warn sequence region effects vcs =
+-    let vcs = check_assigns stmt source ?warn region effects vcs in
++  let do_assigns ?descr ?stmt ~source ?hpid ?warn sequence region an_effects vcs =
++    let vcs = check_assigns stmt source ?warn region an_effects vcs in
+     let eqmem = A.apply_assigns sequence region in
+     gmap (assume_vc ?descr ?hpid ?stmt ?warn eqmem) vcs
+ 
+-  let do_assigns_everything ?stmt ?warn effects vcs =
++  let do_assigns_everything ?stmt ?warn an_effects vcs =
+     Eset.fold
+       (fun e vcs ->
+          let target = match stmt with
+            | None -> Gprop e.e_pid
+-           | Some s -> Geffect(e.e_pid,s,FromCode)
++           | Some s -> Gan_effect(e.e_pid,s,FromCode)
+          in
+          add_vc target ?warn F.p_false vcs)
+-      effects vcs
++      an_effects vcs
+ 
+   let cc_assigned env ~unfold kind froms =
+     let dummy = Sigma.create () in
+@@ -594,35 +594,35 @@ struct
+ 
+         | WritesAny ->
+             let sigma = Sigma.havoc_any ~call:false (L.current env) in
+-            let vcs = do_assigns_everything ?stmt wp.effects wp.vcs in
+-            { sigma = Some sigma ; vcs=vcs ; effects = wp.effects }
++            let vcs = do_assigns_everything ?stmt wp.an_effects wp.vcs in
++            { sigma = Some sigma ; vcs=vcs ; an_effects = wp.an_effects }
+ 
+         | Writes froms ->
+             let kind = ainfo.WpPropId.a_kind in
+             let unfold = Wp_parameters.UnfoldAssigns.get () in
+             let outcome =
+-              Warning.catch ~severe:true ~effect:"Assigns everything"
++              Warning.catch ~severe:true ~an_effect:"Assigns everything"
+                 (cc_assigned env ~unfold kind) froms
+             in
+             match outcome with
+             | Warning.Result(warn,(sequence,assigned)) ->
+                 let vcs =
+                   do_assigns ~source:FromCode
+-                    ?hpid ?stmt ~warn sequence assigned wp.effects wp.vcs in
+-                { sigma = Some sequence.pre ; vcs=vcs ; effects = wp.effects }
++                    ?hpid ?stmt ~warn sequence assigned wp.an_effects wp.vcs in
++                { sigma = Some sequence.pre ; vcs=vcs ; an_effects = wp.an_effects }
+             | Warning.Failed warn ->
+                 let sigma = Sigma.havoc_any ~call:false (L.current env) in
+-                let vcs = do_assigns_everything ?stmt ~warn wp.effects wp.vcs in
+-                { sigma = Some sigma ; vcs=vcs ; effects = wp.effects }
++                let vcs = do_assigns_everything ?stmt ~warn wp.an_effects wp.vcs in
++                { sigma = Some sigma ; vcs=vcs ; an_effects = wp.an_effects }
+       end
+ 
+   (* -------------------------------------------------------------------------- *)
+   (* --- WP RULE : label                                                    --- *)
+   (* -------------------------------------------------------------------------- *)
+ 
+-  let is_stopeffect l e = Clabels.equal l e.e_label
+-  let not_posteffect es target _vcs = match target with
+-    | Gposteffect p -> not (Eset.exists (fun e -> P.equal p e.e_pid) es)
++  let is_stopan_effect l e = Clabels.equal l e.e_label
++  let not_postan_effect es target _vcs = match target with
++    | Gpostan_effect p -> not (Eset.exists (fun e -> P.equal p e.e_pid) es)
+     | _ -> true
+ 
+   let state_vcs stmt sigma vcs =
+@@ -642,12 +642,12 @@ struct
+            let s_here = L.current env in
+            let s_labl = L.mem_frame label in
+            let pa = Sigma.join s_here s_labl in
+-           let stop,effects = Eset.partition (is_stopeffect label) wp.effects in
+-           let vcs = Gmap.filter (not_posteffect stop) wp.vcs in
++           let stop,an_effects = Eset.partition (is_stopan_effect label) wp.an_effects in
++           let vcs = Gmap.filter (not_postan_effect stop) wp.vcs in
+            let vcs = gmap (passify_vc pa) vcs in
+            let vcs = check_nothing stop vcs in
+            let vcs = state_vcs stmt s_here vcs in
+-           { sigma = Some s_here ; vcs=vcs ; effects=effects })
++           { sigma = Some s_here ; vcs=vcs ; an_effects=an_effects })
+ 
+   (* -------------------------------------------------------------------------- *)
+   (* --- WP RULE : assignation                                              --- *)
+@@ -678,19 +678,19 @@ struct
+   let assign wenv stmt lv expr wp = in_wenv wenv wp
+       begin fun env wp ->
+         let outcome = Warning.catch
+-            ~severe:true ~effect:"Assigns everything (unknown l-value)"
++            ~severe:true ~an_effect:"Assigns everything (unknown l-value)"
+             (cc_lval env) lv in
+         match outcome with
+         | Warning.Failed warn ->
+             (* L-Value is unknown *)
+             let sigma = Sigma.havoc_any ~call:false (L.current env) in
+-            let vcs = do_assigns_everything ~stmt ~warn wp.effects wp.vcs in
+-            { sigma = Some sigma ; vcs=vcs ; effects = wp.effects }
++            let vcs = do_assigns_everything ~stmt ~warn wp.an_effects wp.vcs in
++            { sigma = Some sigma ; vcs=vcs ; an_effects = wp.an_effects }
+         | Warning.Result(l_warn,(obj,dom,seq,loc)) ->
+             (* L-Value has been translated *)
+             let region = [obj,Sloc loc] in
+             let outcome = Warning.catch
+-                ~severe:false ~effect:"Havoc l-value (unknown r-value)"
++                ~severe:false ~an_effect:"Havoc l-value (unknown r-value)"
+                 (cc_stored lv seq loc obj) expr in
+             match outcome with
+             | Warning.Failed r_warn
+@@ -698,10 +698,10 @@ struct
+                 (* R-Value is unknown or L-Value is volatile *)
+                 let warn = Warning.Set.union l_warn r_warn in
+                 let vcs = do_assigns ~source:FromCode
+-                    ~stmt ~warn seq region wp.effects wp.vcs in
+-                { sigma = Some seq.pre ; vcs=vcs ; effects = wp.effects }
++                    ~stmt ~warn seq region wp.an_effects wp.vcs in
++                { sigma = Some seq.pre ; vcs=vcs ; an_effects = wp.an_effects }
+             | Warning.Result(r_warn,Some stored) ->
+-                (* R-Value and effects has been translated *)
++                (* R-Value and an_effects has been translated *)
+                 let warn = Warning.Set.union l_warn r_warn in
+                 let ft = M.Heap.Set.fold_sorted
+                     (fun chunk ft -> M.Sigma.get seq.post chunk :: ft) dom []
+@@ -714,8 +714,8 @@ struct
+                   else vc in
+                 let vcs = gmap update wp.vcs in
+                 let vcs =
+-                  check_assigns (Some stmt) FromCode region wp.effects vcs in
+-                { sigma = Some seq.pre ; vcs=vcs ; effects = wp.effects }
++                  check_assigns (Some stmt) FromCode region wp.an_effects vcs in
++                { sigma = Some seq.pre ; vcs=vcs ; an_effects = wp.an_effects }
+       end
+ 
+   (* -------------------------------------------------------------------------- *)
+@@ -756,13 +756,13 @@ struct
+          let sigma,pa1,pa2 = sigma_union wp1.sigma wp2.sigma in
+          let warn,cond =
+            match Warning.catch ~source:"Condition"
+-                   ~severe:false ~effect:"Skip condition value"
++                   ~severe:false ~an_effect:"Skip condition value"
+                    (C.cond sigma) exp
+            with
+            | Warning.Result(warn,cond) -> warn,cond
+            | Warning.Failed(warn) -> warn,random()
+          in
+-         let effects = Eset.union wp1.effects wp2.effects in
++         let an_effects = Eset.union wp1.an_effects wp2.an_effects in
+          let vcs =
+            if Wp_parameters.Split.get () then
+              let cneg = p_not cond in
+@@ -783,7 +783,7 @@ struct
+                ~both:(branch_vc ~stmt ~warn cond)
+                vcs1 vcs2
+          in
+-         { sigma = Some sigma ; vcs=vcs ; effects=effects }) ()
++         { sigma = Some sigma ; vcs=vcs ; an_effects=an_effects }) ()
+ 
+   (* -------------------------------------------------------------------------- *)
+   (* --- WP RULE : switch                                                   --- *)
+@@ -832,7 +832,7 @@ struct
+          let sigma = Sigma.havoc (Sigma.create ()) domain in
+          let warn,value =
+            match Warning.catch ~source:"Switch"
+-                   ~severe:false ~effect:"Skip switched value"
++                   ~severe:false ~an_effect:"Skip switched value"
+                    (C.val_of_exp sigma) exp
+            with
+            | Warning.Result(warn,value) -> warn,value
+@@ -844,10 +844,10 @@ struct
+          let neq = List.map (fun (vs,_) -> p_all (p_neq value) vs) vcs_cases in
+          let vcs_default = cc_default stmt sigma neq default in
+          let vcs = merge_all_vcs ( vcs_default :: List.map snd vcs_cases ) in
+-         let effects = List.fold_left
+-             (fun es (_,wp) -> Eset.union es wp.effects)
+-             default.effects cases in
+-         { sigma = Some sigma ; effects = effects ; vcs = vcs }) ()
++         let an_effects = List.fold_left
++             (fun es (_,wp) -> Eset.union es wp.an_effects)
++             default.an_effects cases in
++         { sigma = Some sigma ; an_effects = an_effects ; vcs = vcs }) ()
+ 
+   (* -------------------------------------------------------------------------- *)
+   (* --- WP RULES : initial values                                          --- *)
+@@ -887,7 +887,7 @@ struct
+ 
+   let call_instances sigma gpid fct calls vcs =
+     let outcome = Warning.catch
+-        ~severe:true ~effect:"Degenerated goal"
++        ~severe:true ~an_effect:"Degenerated goal"
+         (C.call sigma) fct in
+     let warn,goal = match outcome with
+       | Warning.Failed warn -> warn,F.p_false
+@@ -919,7 +919,7 @@ struct
+       begin fun () ->
+         let sigma = Sigma.create () in
+         let outcome = Warning.catch
+-            ~severe:false ~effect:"Ignored function pointer value"
++            ~severe:false ~an_effect:"Ignored function pointer value"
+             (C.call sigma) fct in
+         let fptr = match outcome with
+           | Warning.Failed _warn -> None
+@@ -927,9 +927,9 @@ struct
+         let vcs_calls = List.map (call_contract stmt sigma fptr) calls in
+         let vcs = merge_all_vcs vcs_calls in
+         let vcs = call_instances sigma gpid fct (List.map fst calls) vcs in
+-        let effects = List.fold_left
+-            (fun es (_,wp) -> Eset.union es wp.effects) Eset.empty calls in
+-        { sigma = Some sigma ; vcs = vcs ; effects = effects }
++        let an_effects = List.fold_left
++            (fun es (_,wp) -> Eset.union es wp.an_effects) Eset.empty calls in
++        { sigma = Some sigma ; vcs = vcs ; an_effects = an_effects }
+       end ()
+ 
+   (* -------------------------------------------------------------------------- *)
+@@ -940,7 +940,7 @@ struct
+       (fun env wp ->
+          let sigma = L.current env in
+          let outcome = Warning.catch
+-             ~severe:true ~effect:"Can not prove call preconditions"
++             ~severe:true ~an_effect:"Can not prove call preconditions"
+              (List.map (C.exp sigma)) es in
+          match outcome with
+          | Warning.Failed warn ->
+@@ -956,7 +956,7 @@ struct
+              let vcs = List.fold_left
+                  (fun vcs (gid,p) ->
+                     let outcome = Warning.catch
+-                        ~severe:true ~effect:"Can not prove call precondition"
++                        ~severe:true ~an_effect:"Can not prove call precondition"
+                         (L.in_frame call_f (L.pred `Positive call_e)) p in
+                     match outcome with
+                     | Warning.Result(warn2,goal) ->
+@@ -1045,12 +1045,12 @@ struct
+     vcs_exit : vc Splitter.t Gmap.t ;
+   }
+ 
+-  let cc_call_effects stmt cenv env0 assigns wpost wexit =
++  let cc_call_an_effects stmt cenv env0 assigns wpost wexit =
+     match assigns with
+     | WritesAny ->
+         {
+-          vcs_post = do_assigns_everything ~stmt wpost.effects wpost.vcs ;
+-          vcs_exit = do_assigns_everything ~stmt wexit.effects wexit.vcs ;
++          vcs_post = do_assigns_everything ~stmt wpost.an_effects wpost.vcs ;
++          vcs_exit = do_assigns_everything ~stmt wexit.an_effects wexit.vcs ;
+         }
+     | Writes froms ->
+         let env = L.move_at env0 cenv.sigma_pre in
+@@ -1058,16 +1058,16 @@ struct
+         let call_region = L.in_frame cenv.frame_pre
+             (L.assigned_of_froms env ~unfold) froms in
+         let vcs_post = do_assigns ~descr:"Call Effects" ~source:FromCall
+-            ~stmt cenv.seq_post call_region wpost.effects wpost.vcs in
++            ~stmt cenv.seq_post call_region wpost.an_effects wpost.vcs in
+         let vcs_exit = do_assigns ~descr:"Exit Effects" ~source:FromCall
+-            ~stmt cenv.seq_exit call_region wexit.effects wexit.vcs in
++            ~stmt cenv.seq_exit call_region wexit.an_effects wexit.vcs in
+         let vcs_result =
+           match cenv.loc_result with
+           | None -> vcs_post (* no result *)
+           | Some(_,obj,loc) ->
+               let res_region = [obj,Sloc loc] in
+               do_assigns ~descr:"Return Effects" ~source:FromReturn
+-                ~stmt cenv.seq_result res_region wpost.effects vcs_post
++                ~stmt cenv.seq_result res_region wpost.an_effects vcs_post
+         in
+         { vcs_post = vcs_result ; vcs_exit = vcs_exit }
+ 
+@@ -1112,8 +1112,8 @@ struct
+     let hs_post = cc_result call @ hs_post in
+     let hs_exit = cc_status wenv.frame call.frame_exit :: hs_exit in
+ 
+-    (* Checking effects (assigns and result) *)
+-    let ceff = cc_call_effects stmt call wenv.main assigns p_post p_exit in
++    (* Checking an_effects (assigns and result) *)
++    let ceff = cc_call_an_effects stmt call wenv.main assigns p_post p_exit in
+ 
+     (* Applying specifications *)
+     let fname = Kernel_function.get_name kf in
+@@ -1133,25 +1133,25 @@ struct
+ 
+     (* Final vcs *)
+     let vcs = gmerge cond_post cond_exit in
+-    let effects = Eset.union p_post.effects p_exit.effects in
+-    { sigma = Some call.sigma_pre ; effects=effects ; vcs=vcs }
++    let an_effects = Eset.union p_post.an_effects p_exit.an_effects in
++    { sigma = Some call.sigma_pre ; an_effects=an_effects ; vcs=vcs }
+ 
+   let call wenv stmt lvr kf es ~pre ~post ~pexit ~assigns ~p_post ~p_exit
+     = L.in_frame wenv.frame
+       (fun () ->
+          let outcome = Warning.catch
+-             ~severe:true ~effect:"Call assigns everything"
++             ~severe:true ~an_effect:"Call assigns everything"
+              (call_proper wenv stmt lvr kf es
+                 ~pre ~post ~pexit ~assigns ~p_post ~p_exit) () in
+          match outcome with
+          | Warning.Result(warn , wp) -> { wp with vcs = add_warnings warn wp.vcs }
+          | Warning.Failed warn ->
+-             let v_post = do_assigns_everything ~stmt ~warn p_post.effects p_exit.vcs in
+-             let v_exit = do_assigns_everything ~stmt ~warn p_exit.effects p_exit.vcs in
+-             let effects = Eset.union p_post.effects p_exit.effects in
++             let v_post = do_assigns_everything ~stmt ~warn p_post.an_effects p_exit.vcs in
++             let v_exit = do_assigns_everything ~stmt ~warn p_exit.an_effects p_exit.vcs in
++             let an_effects = Eset.union p_post.an_effects p_exit.an_effects in
+              let vcs = gmerge v_post v_exit in
+              let sigma = Sigma.create () in
+-             { sigma = Some sigma ; vcs = vcs ; effects = effects }
++             { sigma = Some sigma ; vcs = vcs ; an_effects = an_effects }
+       ) ()
+ 
+   (* -------------------------------------------------------------------------- *)
+@@ -1227,7 +1227,7 @@ struct
+              (fun ds (pid,_) -> D.add (WpPropId.property_of_id pid) ds)
+              D.empty preconds in
+          let vcs = gmap (cc_from ds hs) wp.vcs in
+-         { sigma = Some sigma ; effects = Eset.empty ; vcs=vcs })
++         { sigma = Some sigma ; an_effects = Eset.empty ; vcs=vcs })
+ 
+   (* -------------------------------------------------------------------------- *)
+   (* --- WPO Builder                                                        --- *)
+@@ -1243,7 +1243,7 @@ struct
+ 
+   let make_vcqs target tags vc =
+     let vcq = {
+-      VC_Annot.effect = TARGET.source target ;
++      VC_Annot.an_effect = TARGET.source target ;
+       VC_Annot.axioms = None ;
+       VC_Annot.goal = GOAL.dummy ;
+       VC_Annot.tags = tags ;
+@@ -1259,7 +1259,7 @@ struct
+ 
+   let make_trivial vc =
+     {
+-      VC_Annot.effect = None ;
++      VC_Annot.an_effect = None ;
+       VC_Annot.axioms = None ;
+       VC_Annot.goal = GOAL.trivial ;
+       VC_Annot.tags = [] ;
+diff --git a/src/plugins/wp/tests/wp/stmtcompiler_test.ml b/src/plugins/wp/tests/wp/stmtcompiler_test.ml
+index d5752c3f..3e7b8369 100644
+--- a/src/plugins/wp/tests/wp/stmtcompiler_test.ml
++++ b/src/plugins/wp/tests/wp/stmtcompiler_test.ml
+@@ -50,7 +50,7 @@ let run () =
+         tags = []; warn = [];
+         deps = Property.Set.empty;
+         path = Cil_datatype.Stmt.Set.empty;
+-        effect = None;
++        an_effect = None;
+       } in
+     let po = Wpo.{
+         po_gid = ""; po_sid = ""; po_name = "";
+diff --git a/src/plugins/wp/tests/wp/stmtcompiler_test_rela.ml b/src/plugins/wp/tests/wp/stmtcompiler_test_rela.ml
+index a10fb172..6a2467bc 100644
+--- a/src/plugins/wp/tests/wp/stmtcompiler_test_rela.ml
++++ b/src/plugins/wp/tests/wp/stmtcompiler_test_rela.ml
+@@ -46,7 +46,7 @@ let run () =
+         tags = []; warn = [];
+         deps = Property.Set.empty;
+         path = Cil_datatype.Stmt.Set.empty;
+-        effect = None;
++        an_effect = None;
+       }
+     in
+     let funct = Kernel_function.get_definition kf in
+diff --git a/src/plugins/wp/wpPropId.ml b/src/plugins/wp/wpPropId.ml
+index 082d80f1..2da7cd0c 100644
+--- a/src/plugins/wp/wpPropId.ml
++++ b/src/plugins/wp/wpPropId.ml
+@@ -650,7 +650,7 @@ let select_call_pre s_call asked_pre pid =
+ 
+ type a_kind = LoopAssigns | StmtAssigns
+ 
+-type effect_source = FromCode | FromCall | FromReturn
++type an_effect_source = FromCode | FromCall | FromReturn
+ 
+ type assigns_desc = {
+   a_label : Clabels.c_label ;
+diff --git a/src/plugins/wp/wpPropId.mli b/src/plugins/wp/wpPropId.mli
+index 31d34420..8dd50a1c 100644
+--- a/src/plugins/wp/wpPropId.mli
++++ b/src/plugins/wp/wpPropId.mli
+@@ -186,7 +186,7 @@ type assigns_desc = private {
+ }
+ val pp_assigns_desc : Format.formatter -> assigns_desc -> unit
+ 
+-type effect_source = FromCode | FromCall | FromReturn
++type an_effect_source = FromCode | FromCall | FromReturn
+ type assigns_info = prop_id * assigns_desc
+ val assigns_info_id : assigns_info -> prop_id
+ 
+diff --git a/src/plugins/wp/wpo.ml b/src/plugins/wp/wpo.ml
+index d2acb4ea..53767308 100644
+--- a/src/plugins/wp/wpo.ml
++++ b/src/plugins/wp/wpo.ml
+@@ -301,7 +301,7 @@ struct
+     warn : Warning.t list ;
+     deps : Property.Set.t ;
+     path : Stmt.Set.t ;
+-    effect : (stmt * WpPropId.effect_source) option ;
++    an_effect : (stmt * WpPropId.an_effect_source) option ;
+   }
+ 
+   let repr = {
+@@ -311,13 +311,13 @@ struct
+     warn = [] ;
+     deps = Property.Set.empty ;
+     path = Stmt.Set.empty ;
+-    effect = None ;
++    an_effect = None ;
+   }
+ 
+   let resolve vcq = GOAL.compute_proof vcq.goal == Lang.F.p_true
+   let is_trivial vcq = GOAL.is_trivial vcq.goal
+ 
+-  let pp_effect fmt = function
++  let pp_an_effect fmt = function
+     | None -> ()
+     | Some(s,e) ->
+         let loc = fst (Stmt.loc s) in
+@@ -332,7 +332,7 @@ struct
+   let pretty fmt pid vc results =
+     begin
+       Format.fprintf fmt "@{<bf>Goal@} %a:@\n" WpPropId.pretty pid ;
+-      pp_effect fmt vc.effect ;
++      pp_an_effect fmt vc.an_effect ;
+       if vc.tags <> [] then
+         begin
+           Format.fprintf fmt "@[<hov 2>@{<bf>Tags@}:" ;
+diff --git a/src/plugins/wp/wpo.mli b/src/plugins/wp/wpo.mli
+index ce76b513..ec9861f6 100644
+--- a/src/plugins/wp/wpo.mli
++++ b/src/plugins/wp/wpo.mli
+@@ -85,7 +85,7 @@ sig
+     warn : Warning.t list ;
+     deps : Property.Set.t ;
+     path : Stmt.Set.t ;
+-    effect : (stmt * effect_source) option ;
++    an_effect : (stmt * an_effect_source) option ;
+   }
+ 
+   val resolve : t -> bool

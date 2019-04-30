@@ -131,7 +131,7 @@ Thanks to this approach, Frama-C provides sophisticated tools, including:
 These plug-ins communicate between each other via the Frama-C API
 and via ACSL (ANSI/ISO C Specification Language) properties.
 """
-patches: [ "dynlink_init.patch" "inline_simplifier_type.patch"]
+patches: [ "dynlink_init.patch" "inline_simplifier_type.patch" "effect_multicore_keyword_change.patch"]
 url {
   src: "https://frama-c.com/download/frama-c-18.0-Argon.tar.gz"
   checksum: "md5=659cf094d6e92a8adeb5863ec229020b"
