@@ -8,15 +8,15 @@
  (libraries unix))
 
 (rule
-     (targets mandelbrot_multicore.bench)
+     (targets mandelbrot_multicore_16000_3.bench)
       (deps (:prog mandelbrot_multicore.exe))
        (action (ignore-stdout (run orun -o %{targets} -- %{prog} 16000 3))))
 
 (rule
-     (targets mandelbrot_vanilla.bench)
+     (targets mandelbrot_vanilla_16000_3.bench)
       (deps (:prog mandelbrot_vanilla.exe))
        (action (ignore-stdout (run orun -o %{targets} -- %{prog} 16000 3))))
 
 
- (alias (name bench) (deps mandelbrot_vanilla.bench))
- (alias (name multibench) (deps mandelbrot_multicore.bench))
+ (alias (name parallelbench) (deps mandelbrot_vanilla_16000_3.bench))
+ (alias (name multibench) (deps mandelbrot_multicore_16000_3.bench))
