@@ -10,11 +10,9 @@ let h = Hash.create()
 let do_stuff_with_hash () = 
   for _ = 1 to 100_000 do
     if Random.int 100 > read_percent then
-      begin
         Hash.add h (Random.int 1000) 0
-      end
     else
-      ignore(Hash.find h (Random.int 1000))
+        ignore(Hash.find h (Random.int 1000))
   done
 
 let () =
