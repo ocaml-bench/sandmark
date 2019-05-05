@@ -1,0 +1,39 @@
+(executables
+    (names algorithmic_differentiation)
+    (modules algorithmic_differentiation))
+
+(executables
+    (names queens)
+    (modules queens))
+
+(executables
+    (names eratosthenes)
+    (modules eratosthenes)
+    (libraries lockfree))
+
+(executables
+    (names test_sched)
+    (modules ms_sched test_sched)
+    (libraries lockfree))
+
+(rule
+ (targets algorithmic_differentiation.bench)
+ (deps (:prog algorithmic_differentiation.exe))
+ (action (run orun -o %{targets} -- %{prog})))
+
+(rule
+ (targets queens.bench)
+ (deps (:prog queens.exe))
+ (action (run orun -o %{targets} -- %{prog})))
+
+(rule
+ (targets eratosthenes.bench)
+ (deps (:prog eratosthenes.exe))
+ (action (run orun -o %{targets} -- %{prog})))
+
+(rule
+ (targets test_sched.bench)
+ (deps (:prog test_sched.exe))
+ (action (run orun -o %{targets} -- %{prog})))
+
+(alias (name multibench) (deps algorithmic_differentiation.bench queens.bench eratosthenes.bench test_sched.bench))
