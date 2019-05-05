@@ -37,14 +37,9 @@ let find_solution n =
       in loop lst
 
 let main () =
-  let n = 8
-  in
-  match find_solution n with
-  | None -> print_endline "No solutions found"
-  | Some l ->
-      List.iter (fun (x,y) -> Printf.printf "(%d,%d) " x y) l;
-      print_endline ""
-
+  let n = 8 in
+    find_solution n
+  
 let () = for iteration = 0 to 100_000 do
     main ()
 done
