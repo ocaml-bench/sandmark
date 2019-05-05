@@ -1,0 +1,19 @@
+(executables
+    (names algorithmic_differentiation)
+    (modules algorithmic_differentiation))
+
+(executables
+    (names queens)
+    (modules queens))
+
+(rule
+ (targets algorithmic_differentiation.bench)
+ (deps (:prog algorithmic_differentiation.exe))
+ (action (run orun -o %{targets} -- %{prog})))
+
+(rule
+ (targets queens.bench)
+ (deps (:prog queens.exe))
+ (action (run orun -o %{targets} -- %{prog})))
+
+(alias (name multibench) (deps algorithmic_differentiation.bench queens.bench))
