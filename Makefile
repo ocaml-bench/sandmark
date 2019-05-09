@@ -1,13 +1,30 @@
-.SECONDARY:
-export OPAMROOT=$(CURDIR)/_opam
+# options for running the benchmarks
+
+# benchmark target type:
+#  - bench: single threaded
+#  - parallel: multiple process benchmarks that only work on stock OCaml
+#  - multibench: multicore threaded benchmarks that only work on OCaml multicore
+BENCH_TARGET ?= bench
+
+# number of benchmark iterations to run
+ITER ?= 5
+
+# setup default for pre benchmark wrappers
+# for example PRE_BENCH_EXEC='taskset --cpu-list 3 setarch `uname -m` --addr-no-randomize'
+PRE_BENCH_EXEC ?=
 
 PACKAGES = \
   cpdf menhir minilight camlimages yojson  \
   lwt ctypes orun cil frama-c alt-ergo \
   js_of_ocaml-compiler uuidm react ocplib-endian nbcodec \
-  checkseum decompress lockfree kcas
+  checkseum decompress
 
-ITER ?= 5
+ifeq ($(BENCH_TARGET),multibench)
+	PACKAGES += lockfree kcas
+endif
+
+.SECONDARY:
+export OPAMROOT=$(CURDIR)/_opam
 
 .PHONY: bash list clean
 
@@ -34,11 +51,6 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp
 	opam switch create --yes $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
 
-BENCH_TARGET ?= bench
-
-# setup default for pre benchmark wrappers
-# for example PRE_BENCH_EXEC='taskset --cpu-list 3 setarch `uname -m` --addr-no-randomize'
-PRE_BENCH_EXEC ?=
 
 .PHONY: .FORCE
 .FORCE:
