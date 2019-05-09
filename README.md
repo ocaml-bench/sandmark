@@ -4,10 +4,13 @@ a benchmarking suite for ocaml
 
 try `make ocaml-versions/4.06.0.bench`
 
-
 ## running a given benchmark
 
 `make ocaml-versions/4.06.0.bench BENCH_TARGET=benchmarks/js_of_ocaml/bench`
+
+## running multicore specific benchmarks
+
+`make ocaml-versions/4.06.1+multicore.bench BENCH_TARGET=multibench`
 
 ## pre-requisites
 
