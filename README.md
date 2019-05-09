@@ -8,15 +8,15 @@ try `make ocaml-versions/4.06.0.bench`
 
 `make ocaml-versions/4.06.0.bench BENCH_TARGET=benchmarks/js_of_ocaml/bench`
 
-## running multicore specific benchmarks
-
-`make ocaml-versions/4.06.1+multicore.bench BENCH_TARGET=multibench`
-
 ## pre-requisites
 
 on Linux you need to have `libgmp-dev` installed for several of the benchmarks to work. 
 
 ## Multicore notes
+
+### running multicore specific benchmarks
+
+`make ocaml-versions/4.06.1+multicore.bench BENCH_TARGET=multibench`
 
 ### ctypes
 
