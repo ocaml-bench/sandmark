@@ -2,7 +2,7 @@
 
 # benchmark target type:
 #  - bench: single threaded
-#  - parallel: multiple process benchmarks that only work on stock OCaml
+#  - parallelbench: multiple process benchmarks that only work on stock OCaml
 #  - multibench: multicore threaded benchmarks that only work on OCaml multicore
 BENCH_TARGET ?= bench
 
