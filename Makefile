@@ -13,6 +13,9 @@ ITER ?= 5
 # for example PRE_BENCH_EXEC='taskset --cpu-list 3 setarch `uname -m` --addr-no-randomize'
 PRE_BENCH_EXEC ?=
 
+# option to allow benchmarks to continue even if the opam package install errored
+CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
+
 PACKAGES = \
   cpdf menhir minilight camlimages yojson  \
   lwt ctypes orun cil frama-c alt-ergo \
@@ -56,7 +59,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp
 .FORCE:
 ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
 	@opam update
-	@opam install --switch=$* --best-effort --yes $(PACKAGES) || true
+	@opam install --switch=$* --best-effort --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
