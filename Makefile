@@ -17,8 +17,8 @@ PRE_BENCH_EXEC ?=
 CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
 PACKAGES = \
-  cpdf menhir minilight camlimages yojson  \
-  lwt ctypes orun cil frama-c alt-ergo \
+  cpdf menhir minilight camlimages yojson \
+  lwt ctypes orun cil frama-c alt-ergo zarith \
   js_of_ocaml-compiler uuidm react ocplib-endian nbcodec \
   checkseum decompress
 
