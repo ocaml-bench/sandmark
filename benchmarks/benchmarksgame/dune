@@ -1,4 +1,4 @@
-(executables (names binarytrees5 fannkuchredux2 fannkuchredux fasta3 fasta6 knucleotide mandelbrot6 nbody pidigits5 regexredux2 revcomp2 spectralnorm2) (libraries unix str))
+(executables (names binarytrees5 fannkuchredux2 fannkuchredux fasta3 fasta6 knucleotide mandelbrot6 nbody pidigits5 regexredux2 revcomp2 spectralnorm2) (libraries unix str zarith))
 
 (rule
      (targets binarytrees5.bench)
@@ -35,7 +35,7 @@
 (rule
      (targets pidigits5.bench)
       (deps (:prog pidigits5.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 8000))))
 (rule
      (targets regexredux2.bench)
       (deps (:prog regexredux2.exe) (:txt knucleotide-input.txt))
@@ -55,4 +55,4 @@
       (deps (:prog spectralnorm2.exe))
        (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
 
-(alias (name bench) (deps binarytrees5.bench fannkuchredux2.bench fannkuchredux.bench fasta3.bench fasta6.bench knucleotide.bench mandelbrot6.bench nbody.bench regexredux2.bench revcomp2.bench spectralnorm2.bench))
+(alias (name bench) (deps binarytrees5.bench fannkuchredux2.bench fannkuchredux.bench fasta3.bench fasta6.bench knucleotide.bench mandelbrot6.bench nbody.bench pidigits5.bench regexredux2.bench revcomp2.bench spectralnorm2.bench))
