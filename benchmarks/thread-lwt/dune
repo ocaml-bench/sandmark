@@ -7,11 +7,11 @@
 (rule
  (targets thread-lwt-mvar.bench)
  (deps thread_ring_lwt_mvar.exe)
- (action (run orun -o %{targets} -- %{deps})))
+ (action (run orun -o %{targets} -- %{deps} 20_000)))
 
 (rule
  (targets thread-lwt-stream.bench)
  (deps thread_ring_lwt_stream.exe)
- (action (run orun -o %{targets} -- %{deps})))
+ (action (run orun -o %{targets} -- %{deps} 20_000)))
 
 (alias (name bench) (deps thread-lwt-mvar.bench thread-lwt-stream.bench))
