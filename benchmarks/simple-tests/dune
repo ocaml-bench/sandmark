@@ -14,11 +14,11 @@
  (rule
  (targets morestacks.bench)
  (deps (:prog morestacks.exe))
- (action (run orun -o %{targets} -- %{prog})))
+ (action (run orun -o %{targets} -- %{prog} 1_000)))
 
 (rule
  (targets alloc.bench)
  (deps (:prog alloc.exe))
- (action (run orun -o %{targets} -- %{prog})))
+ (action (run orun -o %{targets} -- %{prog} 200_000)))
 
 (alias (name bench) (deps alloc.bench morestacks.bench))

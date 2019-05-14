@@ -1,4 +1,4 @@
-let iterations = 1000000
+let iterations = (try int_of_string(Array.get Sys.argv 1) with _ -> 1_000_000)
 
 type a_mutable_record = { an_int : int; mutable a_string : string ; a_float: float } 
 

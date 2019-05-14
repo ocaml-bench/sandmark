@@ -3,23 +3,23 @@
 (rule
      (targets binarytrees5.bench)
       (deps (:prog binarytrees5.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 16))))
 (rule
      (targets fannkuchredux2.bench)
       (deps (:prog fannkuchredux2.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 7))))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 10))))
 (rule
      (targets fannkuchredux.bench)
       (deps (:prog fannkuchredux.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 7))))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 10))))
 (rule
      (targets fasta3.bench)
       (deps (:prog fasta3.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 2_000_000))))
 (rule
      (targets fasta6.bench)
       (deps (:prog fasta6.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 2_000_000))))
 (rule
      (targets knucleotide.bench)
       (deps (:prog knucleotide.exe) (:txt knucleotide-input.txt))
@@ -27,11 +27,11 @@
 (rule
      (targets mandelbrot6.bench)
       (deps (:prog mandelbrot6.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 200))))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 2_000))))
 (rule
      (targets nbody.bench)
       (deps (:prog nbody.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 1000))))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 2_000_000))))
 (rule
      (targets pidigits5.bench)
       (deps (:prog pidigits5.exe))
@@ -44,7 +44,7 @@
 (rule
      (targets knucleotide-input.txt)
      (deps (:prog fasta3.exe))
-     (action (with-stdout-to %{targets} (run %{prog} 1000000 > %{targets}))))
+     (action (with-stdout-to %{targets} (run %{prog} 1_000_000 > %{targets}))))
 
 (rule
      (targets revcomp2.bench)
@@ -53,6 +53,6 @@
 (rule
      (targets spectralnorm2.bench)
       (deps (:prog spectralnorm2.exe))
-       (action (ignore-stdout (run orun -o %{targets} -- %{prog}))))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 2_000))))
 
 (alias (name bench) (deps binarytrees5.bench fannkuchredux2.bench fannkuchredux.bench fasta3.bench fasta6.bench knucleotide.bench mandelbrot6.bench nbody.bench regexredux2.bench revcomp2.bench spectralnorm2.bench))
