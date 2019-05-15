@@ -46,7 +46,7 @@ let iter_perms n f =
       done
   in
   let perm = Array.init n (fun i -> i) in
-  let copy = Array.create n 0 in
+  let copy = Array.make n 0 in
   let num = ref 0 in
     do_iter num perm copy f n
 

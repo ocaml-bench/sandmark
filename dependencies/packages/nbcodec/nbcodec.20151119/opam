@@ -1,6 +1,5 @@
 opam-version: "2.0"
 name: "nbcodec"
-version: "1.0"
 maintainer: "Vincent Bernardoff <vb@luminar.eu.org>"
 authors: "Daniel Bünzli <daniel.b uenlzi@erratique.ch>"
 homepage: "http://github.com/dbuenzli/nbcodec"
@@ -14,6 +13,7 @@ build: [
 depends: ["ocaml" "ocamlfind" "ocamlbuild"]
 flags: light-uninstall
 url {
-  src: "https://github.com/dbuenzli/nbcodec/archive/v0.0.4.tar.gz"
-  checksum: "md5=2984928304f110d290392cc40e742ebf"
+  # need to select nbcodec after v0.0.4 release that works with safe string
+  src: "https://github.com/dbuenzli/nbcodec/archive/54ede66d0f552628625c9e0599df592bda63ab2e.tar.gz"
+  checksum: "md5=784be8dbb9a31553a5479c8d928e60b3"
 }

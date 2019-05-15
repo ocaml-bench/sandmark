@@ -1,0 +1,11 @@
+--- cil-1.7.3/Makefile.in.orig	2019-05-15 11:04:16.000000000 +0100
++++ cil-1.7.3/Makefile.in	2019-05-15 13:55:48.000000000 +0100
+@@ -65,7 +65,7 @@
+ EXE = $(EXEMODE)$(EXEEXT)
+ 
+ OCAMLBUILD = @OCAMLBUILD@
+-OCAMLBUILD += -build-dir $(OBJDIR) -no-links -classic-display
++OCAMLBUILD += -build-dir $(OBJDIR) -no-links -classic-display -tag unsafe_string
+ 
+ OCAMLFIND = @OCAMLFIND@
+ 
