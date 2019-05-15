@@ -21,11 +21,15 @@ depends: [
   "ocamlbuild" {build}
   "num"
 ]
-patches: "format-obj-magic.patch" {ocaml:version >= "4.02.0"}
+patches: [
+  "format-obj-magic.patch" {ocaml:version >= "4.02.0"}
+  "unsafe_string.patch" {ocaml:version >= "4.06"}
+  ]
 synopsis:
   "A front-end for the C programming language that facilitates program analysis and transformation"
 extra-files: [
-  "format-obj-magic.patch" "md5=c57137c1ab0e0ade7b17db4edf940137"
+  ["unsafe_string.patch" "md5=c5379f99d051c52d4ea4e2776f2864c7"]
+  ["format-obj-magic.patch" "md5=c57137c1ab0e0ade7b17db4edf940137"]
 ]
 url {
   src: "http://downloads.sourceforge.net/project/cil/cil/cil-1.7.3.tar.gz"
