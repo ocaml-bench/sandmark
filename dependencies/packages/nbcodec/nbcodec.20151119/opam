@@ -1,6 +1,5 @@
 opam-version: "2.0"
 name: "nbcodec"
-version: "1.0"
 maintainer: "Vincent Bernardoff <vb@luminar.eu.org>"
 authors: "Daniel Bünzli <daniel.b uenlzi@erratique.ch>"
 homepage: "http://github.com/dbuenzli/nbcodec"
