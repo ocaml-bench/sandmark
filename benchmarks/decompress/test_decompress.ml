@@ -21,7 +21,7 @@ let compress ?(level = 4) data =
   (* We need to allocate an output buffer, is like you can. it's depends your
      capabilities of your writing. *)
   let pos = ref 0 in
-  let res = Buffer.create (Bytes.length data) in
+  let res = Buffer.create (String.length data) in
   (* The buffer is not a good idea. In fact, we can have a memory problem with
      that (like if the output is too big). You need to keep in your mind that
      is insecure to let a buffer to grow automatically (an attacker can use
@@ -55,12 +55,12 @@ let compress ?(level = 4) data =
   Zlib_deflate.bytes input_buffer output_buffer
     (fun input_buffer -> function
       | Some max ->
-          let n = min max (min 0xFFFF (Bytes.length data - !pos)) in
+          let n = min max (min 0xFFFF (String.length data - !pos)) in
           Bytes.blit_string data !pos input_buffer 0 n ;
           pos := !pos + n ;
           n
       | None ->
-          let n = min 0xFFFF (Bytes.length data - !pos) in
+          let n = min 0xFFFF (String.length data - !pos) in
           Bytes.blit_string data !pos input_buffer 0 n ;
           pos := !pos + n ;
           n )
@@ -87,11 +87,11 @@ let uncompress data =
      So in this case, we decompress only one time but if you want to decompress
      some flows, you can reuse this window after a [Window.reset]. *)
   let pos = ref 0 in
-  let res = Buffer.create (Bytes.length data) in
+  let res = Buffer.create (String.length data) in
   Zlib_inflate.bytes input_buffer output_buffer
     (* Same logic as [compress]. *)
       (fun input_buffer ->
-      let n = min 0xFFFF (Bytes.length data - !pos) in
+      let n = min 0xFFFF (String.length data - !pos) in
       Bytes.blit_string data !pos input_buffer 0 n ;
       pos := !pos + n ;
       n )
@@ -108,15 +108,18 @@ let () = Random.init(42)
 let data_size = 1024 * 1024
 
 let data_to_compress =
-    let buf = Bytes.create data_size in
-        for i = 0 to data_size-1 do
-            Bytes.set buf i (Char.chr (97 + (Random.int 26)))
-        done;
-        buf
+  let buf = Bytes.create data_size in
+  for i = 0 to data_size - 1 do
+    Bytes.set buf i (Char.chr (97 + Random.int 26))
+  done ;
+  Bytes.to_string buf
+
+let iterations =
+  try int_of_string(Sys.argv.(1)) with _ -> 8
 
 let () =
-    for run = 0 to 8 do
-        let result = compress data_to_compress in
-            let original = uncompress result in
-                ignore(original)
-    done
+  for run = 0 to iterations do
+    let result = compress data_to_compress in
+    let original = uncompress result in
+    ignore original
+  done
