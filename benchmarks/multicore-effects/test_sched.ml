@@ -1,8 +1,8 @@
-let num_domains = 16
+let num_domains = int_of_string Sys.argv.(1) 
 
-let tasks_to_spawn = 10_000
+let tasks_to_spawn = int_of_string Sys.argv.(2)
 
-let list_length = 10_000
+let list_length = int_of_string Sys.argv.(3)
 
 let rec create_list f n =
   match n with 0 -> [] | _ -> f n :: create_list f (n - 1)
@@ -15,4 +15,4 @@ let start_task () =
   done ;
   Ms_sched.exit ()
 
-let () = Ms_sched.start num_domains start_task |> ignore
+let () = ignore(Ms_sched.start num_domains start_task)
