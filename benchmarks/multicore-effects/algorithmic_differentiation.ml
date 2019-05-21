@@ -47,33 +47,34 @@ end = struct
   let ( *. ) a b = perform (Mult(a,b))
 end;;
 
-for iteration = 0 to 150_000 do
-  (* f = x + x^3 =>
-    df/dx = 1 + 3 * x^2 *)
-  for x = 0 to 10 do
-    let x = float_of_int x in
-    assert (F.(grad (fun x -> x +. x *. x *. x) x) =
-              1.0 +. 3.0 *. x *. x)
-  done;
-
-  (* f = x^2 + x^3 =>
-    df/dx = 2*x + 3 * x^2 *)
-  for x = 0 to 10 do
-    let x = float_of_int x in
-    assert (F.(grad (fun x -> x *. x +. x *. x *. x) x) =
-              2.0 *. x +. 3.0 *. x *. x)
-  done;
-
-  (* f = x^2 * y^4 =>
-    df/dx = 2 * x * y^4
-    df/dy = 4 * x^2 * y^3 *)
-  for x = 0 to 10 do
-    for y = 0 to 10 do
+let iterations = int_of_string Sys.argv.(1) in
+  for iteration = 0 to iterations do
+    (* f = x + x^3 =>
+      df/dx = 1 + 3 * x^2 *)
+    for x = 0 to 10 do
       let x = float_of_int x in
-      let y = float_of_int y in
-      assert (F.(grad2 (fun (x,y) -> x *. x *. y *. y *. y *. y) (x,y)) =
-                (2.0 *. x *. y *. y *. y *. y,
-                4.0 *. x *. x *. y *. y *. y))
+      assert (F.(grad (fun x -> x +. x *. x *. x) x) =
+                1.0 +. 3.0 *. x *. x)
+    done;
+
+    (* f = x^2 + x^3 =>
+      df/dx = 2*x + 3 * x^2 *)
+    for x = 0 to 10 do
+      let x = float_of_int x in
+      assert (F.(grad (fun x -> x *. x +. x *. x *. x) x) =
+                2.0 *. x +. 3.0 *. x *. x)
+    done;
+
+    (* f = x^2 * y^4 =>
+      df/dx = 2 * x * y^4
+      df/dy = 4 * x^2 * y^3 *)
+    for x = 0 to 10 do
+      for y = 0 to 10 do
+        let x = float_of_int x in
+        let y = float_of_int y in
+        assert (F.(grad2 (fun (x,y) -> x *. x *. y *. y *. y *. y) (x,y)) =
+                  (2.0 *. x *. y *. y *. y *. y,
+                  4.0 *. x *. x *. y *. y *. y))
+      done
     done
   done
-done
