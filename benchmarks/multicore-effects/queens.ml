@@ -39,7 +39,9 @@ let find_solution n =
 let main () =
   let n = 8 in
     find_solution n
-  
-let () = for iteration = 0 to 100_000 do
-    main ()
+
+let iterations = int_of_string Sys.argv.(1)
+
+let () = for iteration = 0 to iterations do
+    ignore(main ())
 done

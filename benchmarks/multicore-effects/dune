@@ -22,9 +22,9 @@
  (action (run orun -o %{targets} -- %{prog})))
 
 (rule
- (targets queens.bench)
+ (targets queens.100000.bench)
  (deps (:prog queens.exe))
- (action (run orun -o %{targets} -- %{prog})))
+ (action (run orun -o %{targets} -- %{prog} 100000)))
 
 (rule
  (targets eratosthenes.bench)
@@ -36,4 +36,4 @@
  (deps (:prog test_sched.exe))
  (action (run orun -o %{targets} -- %{prog})))
 
-(alias (name multibench) (deps algorithmic_differentiation.bench queens.bench eratosthenes.bench test_sched.bench))
+(alias (name multibench) (deps algorithmic_differentiation.bench queens.100000.bench eratosthenes.bench test_sched.bench))
