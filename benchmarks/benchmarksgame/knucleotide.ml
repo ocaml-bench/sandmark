@@ -79,7 +79,8 @@ let dna_three =
    done with End_of_file -> ());
   Buffer.to_bytes buf
 
-let () = Gc.set { (Gc.get()) with Gc.minor_heap_size = 1024 * 2048 }
+(* GC param suggestion:
+ let () = Gc.set { (Gc.get()) with Gc.minor_heap_size = 1024 * 2048 } *)
 
 let () =
   List.iter (fun i -> write_frequencies i dna_three) [1; 2];

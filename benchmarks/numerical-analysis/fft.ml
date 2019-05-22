@@ -54,10 +54,10 @@ let ifft x =
   let normalize z = { re = c *. z.re; im = ~-. c *. z.im } in
   fft (Array.map normalize x)
 
-let c = Gc.get ()
+(* GC param suggestion:
 let () = Gc.set
-    { c with Gc.minor_heap_size = 2000000;
-             Gc.space_overhead = 80 * 20 }
+    { (Gc.get()) with Gc.minor_heap_size = 2000000;
+             Gc.space_overhead = 80 * 20 } *)
 
 let gather t =
   t.Unix.tms_utime +. t.Unix.tms_stime +. t.Unix.tms_cutime +. t.Unix.tms_cstime
