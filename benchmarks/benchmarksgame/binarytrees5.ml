@@ -21,7 +21,8 @@ let max_depth = (let n = try int_of_string(Array.get Sys.argv 1) with _ -> 10 in
 let stretch_depth = max_depth + 1
 
 let () =
-  (* Gc.set { (Gc.get()) with Gc.minor_heap_size = 1024 * 1024; max_overhead = -1; }; *)
+  (* GC param suggestion:
+    Gc.set { (Gc.get()) with Gc.minor_heap_size = 1024 * 1024; max_overhead = -1; }; *)
   let c = check (make stretch_depth) in
   Printf.printf "stretch tree of depth %i\t check: %i\n" stretch_depth c
 
