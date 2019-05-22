@@ -22,7 +22,8 @@ PACKAGES = \
   js_of_ocaml-compiler uuidm react ocplib-endian nbcodec \
   checkseum decompress
 
-ifeq ($(BENCH_TARGET),multibench)
+# want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
+ifeq ($(findstring multibench,$(BENCH_TARGET)),multibench)
 	PACKAGES += lockfree kcas
 endif
 
