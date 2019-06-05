@@ -6,6 +6,14 @@ type wait4_result = {
 }
 external wait4 : int -> wait4_result = "ml_wait4"
 
+let escape_re = Str.regexp "\(\027\\[[0-9:;]*m\)*"
+
+let clean_escape_sequences line =
+  Str.global_replace escape_re "" line
+
+let escape_sequences_only line =
+  let _ = Str.search_forward escape_re line 0 in
+  Str.matched_string line
 
 let starts_with s line =
   String.length line >= String.length s &&
@@ -89,11 +97,14 @@ let gc_stats stderr_file =
   let rec go found_stats =
     match found_stats, input_line ic with
     | exception End_of_file -> close_in ic; []
-    | false, line when not (starts_with "allocated_words:" line) ->
+    | false, line when not (starts_with "allocated_words: " (clean_escape_sequences line)) ->
        prerr_endline line;
        go false
-    | _, s ->
-       let key, value = break ':' s in
+    | _, line ->
+       (* There may be some escape characters which need printing on allocated_words *)
+       prerr_string (escape_sequences_only line);
+       let line = clean_escape_sequences line in
+       let key, value = break ':' line in
        match key with
        | "mean_space_overhead" -> 
        let value = float_of_string value in
