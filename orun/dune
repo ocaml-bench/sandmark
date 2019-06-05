@@ -6,4 +6,4 @@
 (executable
  (name orun)
  (public_name orun)
- (libraries cmdliner yojson unix wait4))
+ (libraries str cmdliner yojson unix wait4))
