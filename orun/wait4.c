@@ -26,6 +26,7 @@ value ml_wait4(value pid)
   CAMLlocal2(st, usg);
   int wstatus;
   struct rusage usage;
+
   if (wait4(Long_val(pid), &wstatus, 0, &usage) < 0) {
     caml_failwith("wait4 failed");
   }

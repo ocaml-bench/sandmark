@@ -115,6 +115,37 @@ let gc_stats stderr_file =
        in
   `Assoc (go false)
 
+let rec file_descr_not_standard fd =
+  if (fd :> int) >= 3 then fd else file_descr_not_standard (Unix.dup fd)
+
+let safe_close fd =
+  try Unix.close fd with Unix.Unix_error(_,_,_) -> ()
+
+let perform_redirections new_stdin new_stdout new_stderr =
+  let new_stdin = file_descr_not_standard new_stdin in
+  let new_stdout = file_descr_not_standard new_stdout in
+  let new_stderr = file_descr_not_standard new_stderr in
+  (*  The three dup2 close the original stdin, stdout, stderr,
+      which are the descriptors possibly left open
+      by file_descr_not_standard *)
+  Unix.dup2 ~cloexec:false new_stdin stdin;
+  Unix.dup2 ~cloexec:false new_stdout stdout;
+  Unix.dup2 ~cloexec:false new_stderr stderr;
+  safe_close new_stdin;
+  safe_close new_stdout;
+  safe_close new_stderr
+
+let create_process_env cmd args env new_stdin new_stdout new_stderr =
+  match Unix.fork() with
+    0 ->
+      begin try
+        Unix.perform_redirections new_stdin new_stdout new_stderr;
+        Unix.execvpe cmd args env
+      with _ ->
+        Unix.sys_exit 127
+      end
+| id -> id
+
 let run output input cmdline =
   let prog = List.hd cmdline in
   (* workaround for the lack of execve *)
@@ -130,7 +161,7 @@ let run output input cmdline =
       in
     let environ = "OCAMLRUNPARAM=v=0x400" ::
       List.filter (fun s -> not (starts_with s "OCAMLRUNPARAM=")) (Array.to_list (Unix.environment ())) in
-    let pid = Unix.(create_process_env prog (Array.of_list cmdline) (Array.of_list environ) process_stdin stdout stderr_fd) in
+    let pid = (create_process_env prog (Array.of_list cmdline) (Array.of_list environ) process_stdin stdout stderr_fd) in
     Unix.close stderr_fd;
     let { status; user_secs; sys_secs; maxrss_kB } = wait4 pid in
     let status = match status with
