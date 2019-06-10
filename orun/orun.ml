@@ -143,6 +143,7 @@ let run output input cmdline =
     let name = if Filename.check_suffix output ".bench" then Filename.chop_suffix output ".bench" else output in
     let stats = [
       "name", `String name;
+      "command", `String (String.concat " " cmdline);
       "time_secs", `Float (after -. before);
       "user_time_secs", `Float user_secs;
       "sys_time_secs", `Float sys_secs;
