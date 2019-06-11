@@ -3,7 +3,12 @@
  (c_names wait4)
  (modules ))
 
+(library
+ (name profiler)
+ (c_names profiler)
+ (modules ))
+
 (executable
  (name orun)
  (public_name orun)
- (libraries str cmdliner yojson unix wait4))
+ (libraries str cmdliner yojson unix wait4 profiler))

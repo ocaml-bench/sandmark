@@ -115,37 +115,6 @@ let gc_stats stderr_file =
        in
   `Assoc (go false)
 
-let rec file_descr_not_standard fd =
-  if (fd :> int) >= 3 then fd else file_descr_not_standard (Unix.dup fd)
-
-let safe_close fd =
-  try Unix.close fd with Unix.Unix_error(_,_,_) -> ()
-
-let perform_redirections new_stdin new_stdout new_stderr =
-  let new_stdin = file_descr_not_standard new_stdin in
-  let new_stdout = file_descr_not_standard new_stdout in
-  let new_stderr = file_descr_not_standard new_stderr in
-  (*  The three dup2 close the original stdin, stdout, stderr,
-      which are the descriptors possibly left open
-      by file_descr_not_standard *)
-  Unix.dup2 ~cloexec:false new_stdin stdin;
-  Unix.dup2 ~cloexec:false new_stdout stdout;
-  Unix.dup2 ~cloexec:false new_stderr stderr;
-  safe_close new_stdin;
-  safe_close new_stdout;
-  safe_close new_stderr
-
-let create_process_env cmd args env new_stdin new_stdout new_stderr =
-  match Unix.fork() with
-    0 ->
-      begin try
-        Unix.perform_redirections new_stdin new_stdout new_stderr;
-        Unix.execvpe cmd args env
-      with _ ->
-        Unix.sys_exit 127
-      end
-| id -> id
-
 let run output input cmdline =
   let prog = List.hd cmdline in
   (* workaround for the lack of execve *)
@@ -161,8 +130,11 @@ let run output input cmdline =
       in
     let environ = "OCAMLRUNPARAM=v=0x400" ::
       List.filter (fun s -> not (starts_with s "OCAMLRUNPARAM=")) (Array.to_list (Unix.environment ())) in
-    let pid = (create_process_env prog (Array.of_list cmdline) (Array.of_list environ) process_stdin stdout stderr_fd) in
+    let pid = (Profiler.create_process_env_paused prog (Array.of_list cmdline) (Array.of_list environ) process_stdin Unix.stdout stderr_fd) in
+    let ips = Profiler.unpause_and_start_profiling pid in
     Unix.close stderr_fd;
+    Array.iter (fun ip -> print_string ((string_of_int ip) ^ "\n")) ips;
+
     let { status; user_secs; sys_secs; maxrss_kB } = wait4 pid in
     let status = match status with
         (* hack because Unix.create_process has terrible error handling :( *)
@@ -209,6 +181,10 @@ let output =
 let input =
   let doc = "Optional file to use as stdin" in
   Arg.(value & opt (some string) None & info ["i"; "input"] ~docv:"FILE" ~doc)
+
+let profile =
+  let doc = "Optionally profile the run" in
+  Arg.(value & opt bool false & info ["p"; "profile"] ~doc)
 
 let target =
   Arg.(non_empty & pos_all string [] & info [] ~docv:"PROG")
