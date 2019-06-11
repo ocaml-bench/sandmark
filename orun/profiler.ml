@@ -1,4 +1,15 @@
-external unpause_and_start_profiling : int -> int array = "ml_unpause_and_start_profiling"
+type mmap_entry = {
+    filename: string;
+    addr: int;
+    length: int;
+}
+
+type profiling_result = {
+  ips: int array;
+  mmap_entries: mmap_entry array;
+}
+
+external unpause_and_start_profiling : int -> profiling_result = "ml_unpause_and_start_profiling"
 
 let int_of_fd (x: Unix.file_descr) : int = Obj.magic x
 

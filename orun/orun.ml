@@ -131,9 +131,9 @@ let run output input cmdline =
     let environ = "OCAMLRUNPARAM=v=0x400" ::
       List.filter (fun s -> not (starts_with s "OCAMLRUNPARAM=")) (Array.to_list (Unix.environment ())) in
     let pid = (Profiler.create_process_env_paused prog (Array.of_list cmdline) (Array.of_list environ) process_stdin Unix.stdout stderr_fd) in
-    let ips = Profiler.unpause_and_start_profiling pid in
+    let result = Profiler.unpause_and_start_profiling pid in
     Unix.close stderr_fd;
-    Array.iter (fun ip -> print_string ((string_of_int ip) ^ "\n")) ips;
+    Array.iter (fun ip -> print_string ((string_of_int ip) ^ "\n")) result.ips;
 
     let { status; user_secs; sys_secs; maxrss_kB } = wait4 pid in
     let status = match status with

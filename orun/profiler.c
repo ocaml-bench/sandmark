@@ -74,6 +74,13 @@ struct ip_list
     uint64_t pos;
 };
 
+struct mmap_node {
+    char* filename;
+    uint64_t addr;
+    uint64_t length;
+    struct mmap_node* next;
+};
+
 void append_to_list( struct ip_list* list, uint64_t ip ) {
     if( list->pos == list->length ) {
         // Need to double the size of the list and copy the contents across
@@ -115,7 +122,7 @@ int poll_event(int fd)
     return pfd.revents;
 }
 
-int read_event(uint32_t type, void *buf, uint64_t* starting_vaddr, struct ip_list* ips)
+int read_event(uint32_t type, void *buf, struct ip_list* ips, struct mmap_node** head_ptr)
 {
     if (type == PERF_RECORD_MMAP)
     {
@@ -126,9 +133,22 @@ int read_event(uint32_t type, void *buf, uint64_t* starting_vaddr, struct ip_lis
     {
         struct perf_event_record_mmap2 *record = buf;
         
-        if( *starting_vaddr == NULL ) {
-            *starting_vaddr = record->addr;
+        struct mmap_node* node = malloc(sizeof(struct mmap_node));
+
+        node->filename = malloc(sizeof(record->filename[0]) * (strlen(record->filename)+1));
+
+        strcpy(node->filename, record->filename);
+
+        node->addr = record->addr;
+        node->length = record->len;
+
+        if( head_ptr != NULL ) {
+            node->next = *head_ptr;
+        } else {
+            node->next = NULL;
         }
+
+        *head_ptr = node;
     }
 
     if (type == PERF_RECORD_EXIT)
@@ -145,7 +165,7 @@ int read_event(uint32_t type, void *buf, uint64_t* starting_vaddr, struct ip_lis
 
         append_to_list(ips, record->ip);
 
-        printf("ip: %lu, branches: %lu\n", record->ip, record->bnr);
+        //printf("ip: %lu, branches: %lu\n", record->ip, record->bnr);
 /*
         for (int branches = 0; branches < record->bnr; branches++)
         {
@@ -163,9 +183,8 @@ int read_event(uint32_t type, void *buf, uint64_t* starting_vaddr, struct ip_lis
 value ml_unpause_and_start_profiling(value ml_pid)
 {
     CAMLparam1(ml_pid);
-    CAMLlocal1(ips);
+    CAMLlocal4(result,mmap_entries,ips,entry);
 
-    uint64_t starting_vaddr = NULL;
     struct ip_list* list = malloc(sizeof(struct ip_list));
     list->ips = malloc(INITIAL_LIST_LENGTH * sizeof(uint64_t));
 
@@ -176,6 +195,8 @@ value ml_unpause_and_start_profiling(value ml_pid)
 
     list->length = INITIAL_LIST_LENGTH;
     list->pos = 0;
+
+    struct mmap_node* head_ptr = NULL;
 
     pid_t pid = Long_val(ml_pid);
 
@@ -267,7 +288,7 @@ value ml_unpause_and_start_profiling(value ml_pid)
             memcpy(buffer, data + tail, remaining);
             memcpy(buffer + remaining, data, event_header->size - remaining);
 
-            int status = read_event(event_header->type, &buffer, &starting_vaddr, list);
+            int status = read_event(event_header->type, &buffer, list, &head_ptr);
 
             if (status == 0)
             {
@@ -277,7 +298,7 @@ value ml_unpause_and_start_profiling(value ml_pid)
         else
         {
             // Fast path, can just hand the memory straight from the ring
-            int status = read_event(event_header->type, data + tail, &starting_vaddr, list);
+            int status = read_event(event_header->type, data + tail, list, &head_ptr);
 
             if (status == 0)
             {
@@ -295,10 +316,6 @@ value ml_unpause_and_start_profiling(value ml_pid)
     fsync(perf_data_fd);
     close(perf_data_fd);
 
-    for( int x = 0; x < list->pos; x++ ) {
-        printf("%lu\n", list->ips[x]);
-    }
-
     ips = caml_alloc(list->pos, 0);
 
     for( int x = 0; x < list->pos; x++ ) {
@@ -308,7 +325,42 @@ value ml_unpause_and_start_profiling(value ml_pid)
     free(list->ips);
     free(list);
 
-    printf("returning to ocaml, vaddr: %lu\n", starting_vaddr);
+    struct mmap_node* curr = head_ptr;
+    int num_nodes = 0,i = 0;
 
-    CAMLreturn( ips );
+    while( curr != NULL ) {
+        num_nodes++;
+        curr = curr->next;
+    }
+
+    mmap_entries = caml_alloc(num_nodes, 0);
+
+    curr = head_ptr;
+
+    struct mmap_node* tmp;
+
+    while( curr != NULL ) {
+        tmp = curr;
+        curr = curr->next;
+
+        entry = caml_alloc(3, 0);
+
+        Store_field(entry, 0, caml_copy_string(tmp->filename));
+        Store_field(entry, 1, Val_long(tmp->addr));
+        Store_field(entry, 2, Val_long(tmp->length));
+
+        Store_field(mmap_entries, i, entry);
+
+        i++;
+        free(tmp->filename);
+        free(tmp);
+    }
+
+    result = caml_alloc(2, 0);
+    Store_field(result, 0, ips);
+    Store_field(result, 1, mmap_entries);
+
+    printf("returning to ocaml\n");
+
+    CAMLreturn( result );
 }
