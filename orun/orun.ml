@@ -134,6 +134,7 @@ let run output input cmdline =
     let result = Profiler.unpause_and_start_profiling pid in
     Unix.close stderr_fd;
     Array.iter (fun ip -> print_string ((string_of_int ip) ^ "\n")) result.ips;
+    Array.iter (fun (entry : Profiler.mmap_entry) -> print_string (entry.filename ^ "\n")) result.mmap_entries;
 
     let { status; user_secs; sys_secs; maxrss_kB } = wait4 pid in
     let status = match status with
