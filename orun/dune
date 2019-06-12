@@ -6,6 +6,7 @@
 (library
  (name profiler)
  (c_names profiler)
+ (c_library_flags (-ldw))
  (modules ))
 
 (executable

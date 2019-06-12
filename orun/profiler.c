@@ -17,6 +17,7 @@
 #include <sys/stat.h>
 #include <poll.h>
 #include <fcntl.h>
+#include <elfutils/libdwfl.h>
 
 #include <caml/mlvalues.h>
 #include <caml/memory.h>
@@ -180,6 +181,52 @@ int read_event(uint32_t type, void *buf, struct ip_list* ips, struct mmap_node**
     return 1;
 }
 
+void lookup_dwarf_data(struct mmap_node* head_ptr, struct ip_list* ips) {
+    static char *debuginfo_path;
+
+    static const Dwfl_Callbacks offline_callbacks =
+    {
+        .find_debuginfo = dwfl_standard_find_debuginfo,
+        .debuginfo_path = &debuginfo_path,
+        .section_address = dwfl_offline_section_address,
+        .find_elf = dwfl_build_id_find_elf,
+    };
+
+    struct Dwfl* dwfl = dwfl_begin(&offline_callbacks);
+
+    struct mmap_node* curr = head_ptr;
+
+    while( curr != NULL ) {
+        struct Dwfl_module* module = dwfl_report_elf(dwfl, curr->filename, curr->filename, -1, curr->addr, false);
+
+        curr = curr->next;
+    }
+
+    dwfl_report_end(dwfl, NULL, NULL);
+
+    for( int x = 0; x < ips->pos; x++ ) {
+        uint64_t ip = ips->ips[x];
+
+        Dwfl_Line* line = dwfl_getsrc(dwfl, ip);
+
+        if( line != NULL ) {
+            printf("Found line for %lu\n", ip);
+            Dwfl_Module* module = dwfl_linemodule(line);
+            int lineno;
+
+            char* filename = dwfl_lineinfo(line, NULL, &lineno, NULL, NULL, NULL);
+
+            if( filename != NULL ) {
+                printf("\t%s:%d\n", filename, lineno);
+            }
+        } else {
+            printf("Could not find line for %lu\n", ip);
+        }
+    }
+
+    dwfl_end(dwfl);
+}
+
 value ml_unpause_and_start_profiling(value ml_pid)
 {
     CAMLparam1(ml_pid);
@@ -316,49 +363,52 @@ value ml_unpause_and_start_profiling(value ml_pid)
     fsync(perf_data_fd);
     close(perf_data_fd);
 
-    ips = caml_alloc(list->pos, 0);
+    struct mmap_node *curr = head_ptr, *tmp, *prev = NULL, *next;
 
-    for( int x = 0; x < list->pos; x++ ) {
-        Store_field(ips, x, Val_long(list->ips[x]));
-    }
-
-    free(list->ips);
-    free(list);
-
-    struct mmap_node* curr = head_ptr;
-    int num_nodes = 0,i = 0;
-
+    // reverse our linked list
     while( curr != NULL ) {
-        num_nodes++;
-        curr = curr->next;
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
     }
 
-    mmap_entries = caml_alloc(num_nodes, 0);
+    head_ptr = prev;
+
+    lookup_dwarf_data(head_ptr, list);
+
+    /*for( int x = 0; x < list->pos; x++ ) {
+        uint64_t ip = list->ips[x];
+
+        // Look up in linked list of executables
+        curr = head_ptr;
+        int found = 0;
+        struct mmap_node* found_node = NULL;
+        while( curr != NULL && !found ) {
+            if( ip >= curr->addr && ip < (curr->addr+curr->length) ) {
+                found = 1;
+                found_node = curr;
+            }
+            curr = curr->next;
+        }
+
+        if( found ) {
+            printf("found %lu in %s at %lu\n", ip, found_node->filename, (ip - curr->addr));
+        } else {
+            printf("could not find %lu\n", ip);
+        }
+    }*/
 
     curr = head_ptr;
-
-    struct mmap_node* tmp;
-
     while( curr != NULL ) {
         tmp = curr;
         curr = curr->next;
-
-        entry = caml_alloc(3, 0);
-
-        Store_field(entry, 0, caml_copy_string(tmp->filename));
-        Store_field(entry, 1, Val_long(tmp->addr));
-        Store_field(entry, 2, Val_long(tmp->length));
-
-        Store_field(mmap_entries, i, entry);
-
-        i++;
         free(tmp->filename);
         free(tmp);
     }
 
-    result = caml_alloc(2, 0);
-    Store_field(result, 0, ips);
-    Store_field(result, 1, mmap_entries);
+    // For each ip in the list, figure out which executable it maps to
+
 
     printf("returning to ocaml\n");
 
