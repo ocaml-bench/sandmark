@@ -115,12 +115,32 @@ let gc_stats stderr_file =
        in
   `Assoc (go false)
 
+let write_profiling_result output_name (result : Profiler.profiling_result) =
+  let profile_out = open_out_bin (output_name ^ ".prof") in
+    let json_results = `List (List.map (fun (sample: Profiler.sample) -> `List [`String sample.comp_dir; `String sample.filename; `Int sample.line]) result.samples)  in
+    Yojson.Basic.to_channel profile_out json_results;
+    close_out profile_out
+
+let exec_prog profiling output_name prog cmdline env stdin stdout stderr =
+  if profiling then
+    let pid, parent_ready = (Profiler.create_process_env_paused prog cmdline env stdin stdout stderr) in
+    let result = Profiler.unpause_and_start_profiling pid parent_ready in
+      write_profiling_result output_name result;
+      pid
+  else
+    Unix.(create_process_env prog cmdline env stdin stdout stderr)
+
+
 let run output input cmdline =
   let prog = List.hd cmdline in
   (* workaround for the lack of execve *)
   let prog = if Filename.is_implicit prog && Sys.file_exists prog then
                "./" ^ prog else prog in
   try
+    let profiling = match Sys.getenv_opt "PROFILE" with
+    | None -> false
+    | Some _ -> true
+    in
     let before = Unix.gettimeofday () in
     let captured_stderr_filename = Filename.temp_file "orun" "stderr" in
     let stderr_fd = Unix.openfile captured_stderr_filename [Unix.O_WRONLY] 0600 in
@@ -128,13 +148,11 @@ let run output input cmdline =
       | Some stdin_file -> Unix.openfile stdin_file [] 0600
       | None -> Unix.stdin
       in
+    let name = if Filename.check_suffix output ".bench" then Filename.chop_suffix output ".bench" else output in      
     let environ = "OCAMLRUNPARAM=v=0x400" ::
       List.filter (fun s -> not (starts_with s "OCAMLRUNPARAM=")) (Array.to_list (Unix.environment ())) in
-    let pid = (Profiler.create_process_env_paused prog (Array.of_list cmdline) (Array.of_list environ) process_stdin Unix.stdout stderr_fd) in
-    let result = Profiler.unpause_and_start_profiling pid in
+    let pid = exec_prog profiling name prog (Array.of_list cmdline) (Array.of_list environ) process_stdin Unix.stdout stderr_fd in
     Unix.close stderr_fd;
-    Array.iter (fun ip -> print_string ((string_of_int ip) ^ "\n")) result.ips;
-    Array.iter (fun (entry : Profiler.mmap_entry) -> print_string (entry.filename ^ "\n")) result.mmap_entries;
 
     let { status; user_secs; sys_secs; maxrss_kB } = wait4 pid in
     let status = match status with
@@ -144,7 +162,6 @@ let run output input cmdline =
       | WSTOPPED _ -> failwith "WSTOPPED but not WUNTRACED?"
       | WSIGNALED s -> Unix.kill (Unix.getpid ()) s; assert false in
     let after = Unix.gettimeofday () in
-    let name = if Filename.check_suffix output ".bench" then Filename.chop_suffix output ".bench" else output in
     let stats = [
       "name", `String name;
       "command", `String (String.concat " " cmdline);

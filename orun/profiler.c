@@ -116,23 +116,18 @@ long perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
 
 int poll_event(int fd)
 {
-    struct pollfd pfd = {.fd = fd, .events = POLLIN};
+    struct pollfd pfd = {.fd = fd, .events = POLLIN | POLLHUP};
 
     int ret = poll(&pfd, 1, 1000);
 
     return pfd.revents;
 }
 
-int read_event(uint32_t type, void *buf, struct ip_list* ips, struct mmap_node** head_ptr)
+int read_event(uint32_t type, unsigned char *buf, struct ip_list* ips, struct mmap_node** head_ptr)
 {
-    if (type == PERF_RECORD_MMAP)
-    {
-        printf("got mmap record\n");
-    }
-
     if (type == PERF_RECORD_MMAP2)
     {
-        struct perf_event_record_mmap2 *record = buf;
+        struct perf_event_record_mmap2 *record = (struct perf_event_record_mmap2*)buf;
         
         struct mmap_node* node = malloc(sizeof(struct mmap_node));
 
@@ -151,16 +146,13 @@ int read_event(uint32_t type, void *buf, struct ip_list* ips, struct mmap_node**
 
         *head_ptr = node;
     }
-
-    if (type == PERF_RECORD_EXIT)
+    else if (type == PERF_RECORD_EXIT)
     {
-        printf("got process exit\n");
         return 0;
     }
-
-    if (type == PERF_RECORD_SAMPLE)
+    else if (type == PERF_RECORD_SAMPLE)
     {
-        struct perf_event_record_sample *record = buf;
+        struct perf_event_record_sample *record = (struct perf_event_record_sample*)buf;
 
         unsigned char *pos = buf + sizeof(struct perf_event_record_sample);
 
@@ -181,7 +173,12 @@ int read_event(uint32_t type, void *buf, struct ip_list* ips, struct mmap_node**
     return 1;
 }
 
-void lookup_dwarf_data(struct mmap_node* head_ptr, struct ip_list* ips) {
+value lookup_dwarf_data(struct mmap_node* head_ptr, struct ip_list* ips) {
+    CAMLparam0();
+    CAMLlocal3(cell,record,sample_head);
+
+    sample_head = Val_int(0);
+
     static char *debuginfo_path;
 
     static const Dwfl_Callbacks offline_callbacks =
@@ -197,7 +194,7 @@ void lookup_dwarf_data(struct mmap_node* head_ptr, struct ip_list* ips) {
     struct mmap_node* curr = head_ptr;
 
     while( curr != NULL ) {
-        struct Dwfl_module* module = dwfl_report_elf(dwfl, curr->filename, curr->filename, -1, curr->addr, false);
+        Dwfl_Module* module = dwfl_report_elf(dwfl, (const char*)curr->filename, (const char*)curr->filename, -1, curr->addr, false);
 
         curr = curr->next;
     }
@@ -210,27 +207,39 @@ void lookup_dwarf_data(struct mmap_node* head_ptr, struct ip_list* ips) {
         Dwfl_Line* line = dwfl_getsrc(dwfl, ip);
 
         if( line != NULL ) {
-            printf("Found line for %lu\n", ip);
             Dwfl_Module* module = dwfl_linemodule(line);
             int lineno;
 
-            char* filename = dwfl_lineinfo(line, NULL, &lineno, NULL, NULL, NULL);
+            const char* filename = dwfl_lineinfo(line, NULL, &lineno, NULL, NULL, NULL);
 
             if( filename != NULL ) {
-                printf("\t%s:%d\n", filename, lineno);
+                const char* comp_dir = dwfl_line_comp_dir(line);
+
+                record = caml_alloc(3, 0);
+                Store_field(record, 0, caml_copy_string(comp_dir));
+                Store_field(record, 1, caml_copy_string(filename));
+                Store_field(record, 2, lineno);
+
+                cell = caml_alloc(2, 0);
+                Store_field(cell, 0, record);
+                Store_field(cell, 1, sample_head);
+
+                sample_head = cell;
             }
-        } else {
-            printf("Could not find line for %lu\n", ip);
         }
     }
 
     dwfl_end(dwfl);
+
+    CAMLreturn(sample_head);
 }
 
-value ml_unpause_and_start_profiling(value ml_pid)
+value ml_unpause_and_start_profiling(value ml_pid, value ml_pipe_fds)
 {
-    CAMLparam1(ml_pid);
-    CAMLlocal4(result,mmap_entries,ips,entry);
+    CAMLparam2(ml_pid, ml_pipe_fds);
+    CAMLlocal2(result,entries);
+
+    int parent_ready_write = Long_val(ml_pipe_fds);
 
     struct ip_list* list = malloc(sizeof(struct ip_list));
     list->ips = malloc(INITIAL_LIST_LENGTH * sizeof(uint64_t));
@@ -250,7 +259,7 @@ value ml_unpause_and_start_profiling(value ml_pid)
     struct perf_event_attr pe;
     int perf_fd;
     struct perf_event_mmap_page *header;
-    void *base, *data;
+    unsigned char *base, *data;
     int page_size = getpagesize();
 
     memset(&pe, 0, sizeof(struct perf_event_attr));
@@ -259,7 +268,7 @@ value ml_unpause_and_start_profiling(value ml_pid)
     pe.size = sizeof(pe);
     pe.sample_type = PERF_SAMPLE_IP | PERF_SAMPLE_TIME | PERF_SAMPLE_BRANCH_STACK;
     pe.branch_sample_type = PERF_SAMPLE_BRANCH_USER | PERF_SAMPLE_BRANCH_ANY;
-    pe.sample_freq = 1000;
+    pe.sample_freq = 3000;
     pe.freq = 1;
     pe.exclude_kernel = 1;
     pe.exclude_hv = 1;
@@ -269,20 +278,13 @@ value ml_unpause_and_start_profiling(value ml_pid)
     pe.task = 1;
     pe.mmap = 1;
     pe.mmap2 = 1;
+    pe.wakeup_events = 1;
 
     perf_fd = perf_event_open(&pe, pid, -1, -1, 0);
 
     if (perf_fd < 0)
     {
         perror("perf_event_open");
-        return -1;
-    }
-
-    int perf_data_fd = open("perf-main.out", O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
-
-    if (perf_data_fd < 0)
-    {
-        perror("open");
         return -1;
     }
 
@@ -295,10 +297,28 @@ value ml_unpause_and_start_profiling(value ml_pid)
         err(EXIT_FAILURE, "mmap");
     }
 
-    header = base;
+    header = (struct perf_event_mmap_page*)base;
     data = base + header->data_offset;
 
-    kill(pid, SIGUSR1);
+    // Tell child we're ready
+    char* go = "!";
+
+    while( 1 ) {
+        int ret = write(parent_ready_write, go, 1);
+
+        if( ret < 0 ) {
+            if( errno == EAGAIN || errno == EINTR ) { 
+                continue;
+            }
+            else 
+            {
+                perror("write");
+                exit(-1);
+            }
+        }
+
+        break;
+    }
 
     uint64_t data_read = 0;
 
@@ -312,7 +332,11 @@ value ml_unpause_and_start_profiling(value ml_pid)
         if ((head - tail) % header->data_size == 0)
         {
             // Ring buffer is empty, let's wait for something interesting to happen
-            // int revents = poll_event(perf_fd);
+            int revents = poll_event(perf_fd);
+
+            if( (revents & POLLHUP) && (__atomic_load_n(&header->data_head, __ATOMIC_ACQUIRE) - tail) % header->data_size == 0 ) {
+                break;
+            }
 
             // Right, time to go check things again
             continue;
@@ -321,7 +345,7 @@ value ml_unpause_and_start_profiling(value ml_pid)
         head = head % header->data_size;
         tail = tail % header->data_size;
 
-        struct perf_event_header *event_header = (data + tail);
+        struct perf_event_header *event_header = (struct perf_event_header*)(data + tail);
 
         int space_left_in_ring = header->data_size - (tail + event_header->size);
 
@@ -335,11 +359,11 @@ value ml_unpause_and_start_profiling(value ml_pid)
             memcpy(buffer, data + tail, remaining);
             memcpy(buffer + remaining, data, event_header->size - remaining);
 
-            int status = read_event(event_header->type, &buffer, list, &head_ptr);
+            int status = read_event(event_header->type, buffer, list, &head_ptr);
 
             if (status == 0)
             {
-                break; // Succes
+                break; // Success
             }
         }
         else
@@ -360,8 +384,6 @@ value ml_unpause_and_start_profiling(value ml_pid)
 
     close(perf_fd);
     munmap(base, (1 + DATA_PAGES) * page_size);
-    fsync(perf_data_fd);
-    close(perf_data_fd);
 
     struct mmap_node *curr = head_ptr, *tmp, *prev = NULL, *next;
 
@@ -375,29 +397,7 @@ value ml_unpause_and_start_profiling(value ml_pid)
 
     head_ptr = prev;
 
-    lookup_dwarf_data(head_ptr, list);
-
-    /*for( int x = 0; x < list->pos; x++ ) {
-        uint64_t ip = list->ips[x];
-
-        // Look up in linked list of executables
-        curr = head_ptr;
-        int found = 0;
-        struct mmap_node* found_node = NULL;
-        while( curr != NULL && !found ) {
-            if( ip >= curr->addr && ip < (curr->addr+curr->length) ) {
-                found = 1;
-                found_node = curr;
-            }
-            curr = curr->next;
-        }
-
-        if( found ) {
-            printf("found %lu in %s at %lu\n", ip, found_node->filename, (ip - curr->addr));
-        } else {
-            printf("could not find %lu\n", ip);
-        }
-    }*/
+    entries = lookup_dwarf_data(head_ptr, list);
 
     curr = head_ptr;
     while( curr != NULL ) {
@@ -408,9 +408,11 @@ value ml_unpause_and_start_profiling(value ml_pid)
     }
 
     // For each ip in the list, figure out which executable it maps to
+    result = caml_alloc(1,0);
 
+    Store_field(result, 0, entries);
 
-    printf("returning to ocaml\n");
+    free(list);
 
     CAMLreturn( result );
 }
