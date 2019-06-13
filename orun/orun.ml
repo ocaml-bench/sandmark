@@ -15,6 +15,17 @@ let escape_sequences_only line =
   let _ = Str.search_forward escape_re line 0 in
   Str.matched_string line
 
+let quotes_needed = function
+  | 'a'..'z' | 'A'..'Z' | '0'..'9' | '/' | '_' | '.' | ',' | '-' | '+' | ':' -> false
+  | _ -> true
+
+let quote s =
+  match String.iter (fun ch -> if quotes_needed ch then raise Exit) s with
+  | () -> s
+  | exception Exit -> Filename.quote s
+
+let quote_cmd cmdline = String.concat " " (List.map quote cmdline)
+
 let starts_with s line =
   String.length line >= String.length s &&
     s = String.sub line 0 (String.length s)
@@ -143,7 +154,7 @@ let run output input cmdline =
     let name = if Filename.check_suffix output ".bench" then Filename.chop_suffix output ".bench" else output in
     let stats = [
       "name", `String name;
-      "command", `String (String.concat " " cmdline);
+      "command", `String (quote_cmd cmdline);
       "time_secs", `Float (after -. before);
       "user_time_secs", `Float user_secs;
       "sys_time_secs", `Float sys_secs;
