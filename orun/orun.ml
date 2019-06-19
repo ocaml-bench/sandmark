@@ -6,7 +6,7 @@ type wait4_result = {
 }
 external wait4 : int -> wait4_result = "ml_wait4"
 
-let escape_re = Str.regexp "\(\027\\[[0-9:;]*m\)*"
+let escape_re = Str.regexp "\\(\027\\[[0-9:;]*m\\)*"
 
 let clean_escape_sequences line =
   Str.global_replace escape_re "" line
