@@ -321,6 +321,7 @@ value ml_unpause_and_start_profiling(value ml_pid, value ml_pipe_fds, value samp
     pe.mmap = 1;
     pe.mmap2 = 1;
     pe.wakeup_events = 1;
+    pe.precise_ip = 2;
 
     perf_fd = perf_event_open(&pe, pid, -1, -1, 0);
 
