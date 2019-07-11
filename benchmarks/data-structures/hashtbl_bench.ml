@@ -40,9 +40,10 @@ let n = 1_000_000
 
 let create_hashtbl size =
   let h = Hashtbl.create size in
-    for i = 1 to size do
-      Hashtbl.add h i i
-    done; h
+  for i = 1 to size do
+    Hashtbl.add h i i
+  done ;
+  h
 
 let hashtbl_iter iterations =
   let h = create_hashtbl n in
@@ -52,26 +53,25 @@ let hashtbl_iter iterations =
 
 let hashtbl_fold iterations =
   let h = create_hashtbl n in
-    for i = 1 to iterations do
-      ignore (Sys.opaque_identity (Hashtbl.fold (fun c k v -> c + k + v) h 0))
-    done
+  for i = 1 to iterations do
+    ignore (Sys.opaque_identity (Hashtbl.fold (fun c k v -> c + k + v) h 0))
+  done
 
 let hashtbl_add sized iterations =
   let h = Hashtbl.create (if sized then iterations else 1) in
-    for i = 1 to iterations do
-      Hashtbl.add h i i
-    done
+  for i = 1 to iterations do
+    Hashtbl.add h i i
+  done
 
 let hashtbl_add_duplicate iterations =
   let h = Hashtbl.create 1 in
-    for i = 1 to iterations do
-      Hashtbl.add h i i;
-      Hashtbl.add h i i
-    done
+  for i = 1 to iterations do
+    Hashtbl.add h i i ; Hashtbl.add h i i
+  done
 
 let hashtbl_remove iterations =
-  for _ = 1 to (iterations/n + 1) do
-  let h = create_hashtbl n in
+  for _ = 1 to (iterations / n) + 1 do
+    let h = create_hashtbl n in
     for i = 1 to n do
       Hashtbl.remove h i
     done
@@ -86,7 +86,7 @@ let hashtbl_find iterations =
 let hashtbl_filter_map iterations =
   let h = create_hashtbl n in
   for i = 1 to iterations do
-    Hashtbl.filter_map_inplace (fun _a b -> Some(2 * b)) h
+    Hashtbl.filter_map_inplace (fun _a b -> Some (2 * b)) h
   done
 
 let () =
