@@ -3,3 +3,5 @@
 (include array.inc)
 (include set.inc)
 (include map.inc)
+(include string.inc)
+(include bytes.inc)
