@@ -2,3 +2,4 @@
 (include stack.inc)
 (include array.inc)
 (include set.inc)
+(include map.inc)
