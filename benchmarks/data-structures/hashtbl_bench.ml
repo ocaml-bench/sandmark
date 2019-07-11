@@ -86,7 +86,7 @@ let hashtbl_find iterations =
 let hashtbl_filter_map iterations =
   let h = create_hashtbl n in
   for i = 1 to iterations do
-    Hashtbl.filter_map_inplace (fun a b -> Some(2 * b)) h
+    Hashtbl.filter_map_inplace (fun _a b -> Some(2 * b)) h
   done
 
 let () =
