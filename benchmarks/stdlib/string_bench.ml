@@ -3,7 +3,7 @@ let test_string = "In Department condita sicut Laboratory Mathematica in manu Le
 let string_get iterations =
     let length = String.length test_string in
     for i = 1 to iterations do
-        Sys.opaque_identity(ignore(String.get test_string (i mod length)))
+        ignore(Sys.opaque_identity(String.get test_string (i mod length)))
     done
 
 let string_sub iterations =

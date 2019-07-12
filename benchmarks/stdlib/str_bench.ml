@@ -4,37 +4,37 @@ let test_string = "In Department condita sicut Laboratory Mathematica in manu Le
 
 let str_regexp iterations =
     for i = 1 to iterations do
-        Sys.opaque_identity(ignore(Str.regexp test_regex))
+        ignore(Sys.opaque_identity(Str.regexp test_regex))
     done
 
 let str_string_match iterations =
     let regex = Str.regexp test_regex in
     for i = 1 to iterations do
-        Sys.opaque_identity(ignore(Str.string_match regex test_string 0))
+        ignore(Sys.opaque_identity(Str.string_match regex test_string 0))
     done
 
 let str_search_forward iterations =
     let regex = Str.regexp test_regex in
     for i = 1 to iterations do
-        Sys.opaque_identity(ignore(Str.search_forward regex test_string 0))
+        ignore(Sys.opaque_identity(Str.search_forward regex test_string 0))
     done
 
 let str_string_partial_match iterations =
     let regex = Str.regexp test_regex in
     for i = 1 to iterations do
-        Sys.opaque_identity(ignore(Str.string_partial_match regex test_string 0))
+        ignore(Sys.opaque_identity(Str.string_partial_match regex test_string 0))
     done
 
 let str_global_replace iterations =
     let regex = Str.regexp test_regex in
     for i = 1 to iterations do
-        Sys.opaque_identity(ignore(Str.global_replace regex "." test_string))
+        ignore(Sys.opaque_identity(Str.global_replace regex "." test_string))
     done
 
 let str_split iterations =
     let regex = Str.regexp "@" in
     for i = 1 to iterations do
-        Sys.opaque_identity(ignore(Str.split regex test_string))
+        ignore(Sys.opaque_identity(Str.split regex test_string))
     done
 
 let () =

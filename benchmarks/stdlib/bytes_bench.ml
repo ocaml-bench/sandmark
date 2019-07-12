@@ -3,7 +3,7 @@ let test_bytes = "In Department condita sicut Laboratory Mathematica in manu Len
 let bytes_get iterations =
     let length = Bytes.length test_bytes in
     for i = 1 to iterations do
-        Sys.opaque_identity(ignore(Bytes.get test_bytes (i mod length)))
+        ignore(Sys.opaque_identity(Bytes.get test_bytes (i mod length)))
     done
 
 let bytes_set iterations =
@@ -16,7 +16,7 @@ let bytes_set iterations =
 let bytes_cat iterations =
     let s = Bytes.to_string "I AM A FISH" in
     for i = 1 to iterations do
-        Sys.opaque_identity(ignore(Bytes.cat s test_bytes))
+        ignore(Sys.opaque_identity(Bytes.cat s test_bytes))
     done
 
 let bytes_sub iterations =
