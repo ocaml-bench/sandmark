@@ -5,3 +5,4 @@
 (include map.inc)
 (include string.inc)
 (include bytes.inc)
+(include str.inc)
