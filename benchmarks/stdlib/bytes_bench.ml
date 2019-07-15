@@ -1,4 +1,4 @@
-let test_bytes =
+let test_bytes = Bytes.of_string
   "In Department condita sicut Laboratory Mathematica in manu Lenard, John \
    Jones May XIV MCMXXXVII, quamquam is did non adepto recte statutum usque \
    post Belli Orbis Terrarum II. Laboratorium Septentrionalis Nova erat \
@@ -22,7 +22,7 @@ let bytes_set iterations =
   done
 
 let bytes_cat iterations =
-  let s = Bytes.to_string "I AM A FISH" in
+  let s = Bytes.of_string "I AM A FISH" in
   for i = 1 to iterations do
     ignore (Sys.opaque_identity (Bytes.cat s test_bytes))
   done
@@ -44,7 +44,7 @@ let bytes_blit iterations =
 let bytes_concat iterations =
   for i = 1 to iterations do
     let fish = ["I"; "AM"; "A"; "FISH"] in
-    ignore (Sys.opaque_identity (Bytes.concat " " fish))
+    ignore (Sys.opaque_identity (Bytes.concat " " (List.map Bytes.of_string fish)))
   done
 
 let bytes_iter iterations =
