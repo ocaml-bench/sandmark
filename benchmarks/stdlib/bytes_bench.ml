@@ -42,9 +42,10 @@ let bytes_blit iterations =
   done
 
 let bytes_concat iterations =
+  let fish = List.map Bytes.of_string ["I"; "AM"; "A"; "FISH"] in
+  let delim = Bytes.of_string " " in
   for i = 1 to iterations do
-    let fish = ["I"; "AM"; "A"; "FISH"] in
-    ignore (Sys.opaque_identity (Bytes.concat " " (List.map Bytes.of_string fish)))
+    ignore (Sys.opaque_identity (Bytes.concat delim fish))
   done
 
 let bytes_iter iterations =
@@ -58,7 +59,7 @@ let bytes_map iterations =
   done
 
 let bytes_trim iterations =
-  let bytes_needing_trimming = "We need a trim\n\n\n\n\n" in
+  let bytes_needing_trimming = Bytes.of_string "We need a trim\n\n\n\n\n" in
   for i = 1 to iterations do
     ignore (Sys.opaque_identity (Bytes.trim bytes_needing_trimming))
   done

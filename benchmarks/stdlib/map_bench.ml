@@ -1,6 +1,13 @@
 let size = 10_000
 
-let alist = List.init size (fun i -> (i, i))
+let alist = 
+  let rec list_init n s =
+    if n < 0 then
+      s
+    else
+      list_init (n-1) ((n,n) :: s)
+    in 
+      list_init (size-1) []
 
 module IntMap = Map.Make (struct
   type t = int
