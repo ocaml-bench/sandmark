@@ -20,7 +20,7 @@ PACKAGES = \
   cpdf menhir minilight camlimages yojson \
   lwt ctypes orun cil frama-c alt-ergo zarith \
   js_of_ocaml-compiler uuidm react ocplib-endian nbcodec \
-  checkseum decompress
+  checkseum decompress base
 
 # want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
 ifeq ($(findstring multibench,$(BENCH_TARGET)),multibench)
