@@ -6,14 +6,14 @@ platform:
   arch: amd64
 
 steps:
-- name: 4.08.1.bench
+- name: 4.08.0.bench
   image: ocaml/opam2:4.07
   commands:
   - sudo apt-get update && sudo apt-get -y install libgmp-dev m4 libdw-dev
   - sudo chown -R opam .
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
-  - make ocaml-versions/4.08.1.bench
+  - make ocaml-versions/4.08.0.bench
 - name: 4.07.1.bench
   image: ocaml/opam2:4.07
   commands:
