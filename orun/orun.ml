@@ -48,7 +48,7 @@ let break ch s =
   (trim (sub s 0 i), trim (sub s (i + 1) (String.length s - (i + 1))))
 
 let chop_prefix pfx s =
-  assert (starts_with pfx s) ;
+  assert (starts_with pfx s);
   String.sub s (String.length pfx) (String.length s - String.length pfx)
 
 let get_ocaml_config () =
