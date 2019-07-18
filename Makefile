@@ -52,7 +52,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp
 	{ url="$$(cat ocaml-versions/$*.comp)"; echo "url { src: \"$$url\" }"; echo "setenv: [ [ ORUN_CONFIG_ocaml_url = \"$$url\" ] ]"; } \
 	  >> dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/opam
 	opam update
-	opam switch create --yes $* ocaml-base-compiler.$*
+	opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
 
 
@@ -60,7 +60,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp
 .FORCE:
 ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
 	@opam update
-	@opam install --switch=$* --best-effort --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
+	@opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \

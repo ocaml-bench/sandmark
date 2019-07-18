@@ -3,7 +3,18 @@
  (c_names wait4)
  (modules ))
 
+(library
+ (name profiler)
+ (c_names profiler)
+ (c_library_flags (:include profiler_library_flags.sexp))
+ (modules ))
+
 (executable
  (name orun)
  (public_name orun)
- (libraries str cmdliner yojson unix wait4))
+ (libraries str cmdliner yojson unix wait4 profiler))
+
+(rule
+ (targets profiler_library_flags.sexp)
+ (deps    (:detect_os config/detect_os.exe))
+ (action  (run %{detect_os})))
