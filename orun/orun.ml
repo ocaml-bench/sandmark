@@ -153,16 +153,6 @@ let gc_stats stderr_file =
   in
   `Assoc (go false)
 
-let exec_prog profiling output_name prog cmdline env stdin stdout stderr =
-  if profiling then (
-    let pid, parent_ready =
-      Profiler.create_process_env_paused prog cmdline env stdin stdout stderr
-    in
-    let result = Profiler.start_profiling pid parent_ready in
-    Profiler.write_profiling_result output_name result ;
-    pid )
-  else Unix.create_process_env prog cmdline env stdin stdout stderr
-
 let run output input cmdline =
   let prog = List.hd cmdline in
   (* workaround for the lack of execve *)
@@ -177,6 +167,17 @@ let run output input cmdline =
           false
       | Some _ ->
           true
+    in
+    let exec_prog output_name prog cmdline env stdin stdout stderr =
+      if profiling then (
+        let pid, parent_ready =
+          Profiler.create_process_env_paused prog cmdline env stdin stdout
+            stderr
+        in
+        let result = Profiler.start_profiling pid parent_ready in
+        Profiler.write_profiling_result output_name result ;
+        pid )
+      else Unix.create_process_env prog cmdline env stdin stdout stderr
     in
     let before = Unix.gettimeofday () in
     let captured_stderr_filename = Filename.temp_file "orun" "stderr" in
@@ -202,8 +203,8 @@ let run output input cmdline =
            (Array.to_list (Unix.environment ()))
     in
     let pid =
-      exec_prog profiling name prog (Array.of_list cmdline)
-        (Array.of_list environ) process_stdin Unix.stdout stderr_fd
+      exec_prog name prog (Array.of_list cmdline) (Array.of_list environ)
+        process_stdin Unix.stdout stderr_fd
     in
     Unix.close stderr_fd ;
     let {status; user_secs; sys_secs; maxrss_kB} = wait4 pid in
