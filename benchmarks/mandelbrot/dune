@@ -13,10 +13,15 @@
        (action (ignore-stdout (run orun -o %{targets} -- %{prog} 16000 3))))
 
 (rule
+     (targets mandelbrot_multicore_16000_1.bench)
+      (deps (:prog mandelbrot_multicore.exe))
+       (action (ignore-stdout (run orun -o %{targets} -- %{prog} 16000 1))))
+
+(rule
      (targets mandelbrot_vanilla_16000_3.bench)
       (deps (:prog mandelbrot_vanilla.exe))
        (action (ignore-stdout (run orun -o %{targets} -- %{prog} 16000 3))))
 
-
- (alias (name parallelbench) (deps mandelbrot_vanilla_16000_3.bench))
- (alias (name multibench) (deps mandelbrot_multicore_16000_3.bench))
+ (alias (name parallel_bench) (deps mandelbrot_vanilla_16000_3.bench))
+ (alias (name multibench_parallel) (deps mandelbrot_multicore_16000_3.bench))
+ (alias (name multibench_serial) (deps mandelbrot_multicore_16000_1.bench))

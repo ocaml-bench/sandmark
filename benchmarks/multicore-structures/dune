@@ -76,8 +76,14 @@
  (action (run orun -o %{targets} -- %{prog} 50000000)))
 
  (rule
- (targets test_spsc_queue_pingpong.bench)
+ (targets test_spsc_queue_pingpong_parallel.bench)
  (deps (:prog test_spsc_queue_pingpong.exe))
  (action (run orun -o %{targets} -- %{prog} 4 10000)))
 
-(alias (name multibench) (deps test_stack_sequential.bench test_stack_parallel.bench test_queue_sequential.bench test_queue_parallel.bench test_spsc_queue_sequential.bench test_spsc_queue_parallel.bench test_spsc_queue_pingpong.bench))
+ (rule
+ (targets test_spsc_queue_pingpong_sequential.bench)
+ (deps (:prog test_spsc_queue_pingpong.exe))
+ (action (run orun -o %{targets} -- %{prog} 1 10000)))
+
+(alias (name multibench_parallel) (deps test_stack_parallel.bench test_queue_parallel.bench test_spsc_queue_parallel.bench test_spsc_queue_pingpong_parallel.bench))
+(alias (name multibench_serial) (deps test_stack_sequential.bench test_queue_sequential.bench test_spsc_queue_sequential.bench test_spsc_queue_pingpong_sequential.bench))

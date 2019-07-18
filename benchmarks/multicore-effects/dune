@@ -36,4 +36,10 @@
  (deps (:prog test_sched.exe))
  (action (run orun -o %{targets} -- %{prog} 16 10000 10000)))
 
-(alias (name multibench) (deps algorithmic_differentiation.150000.bench queens.100000.bench eratosthenes.bench test_sched.16.10000.10000.bench))
+(rule
+ (targets test_sched.1.10000.10000.bench)
+ (deps (:prog test_sched.exe))
+ (action (run orun -o %{targets} -- %{prog} 1 10000 10000)))
+
+(alias (name multibench_serial) (deps algorithmic_differentiation.150000.bench queens.100000.bench eratosthenes.bench test_sched.1.10000.10000.bench))
+(alias (name multibench_parallel) (deps test_sched.16.10000.10000.bench))

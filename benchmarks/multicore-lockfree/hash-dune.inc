@@ -49,4 +49,5 @@
             (deps (:prog test_hash.exe))
             (action (run orun -o %{targets} -- %{prog} 3 99)))
 
-(alias (name multibench) (deps test_hash.1.25.bench test_hash.2.25.bench test_hash.3.25.bench test_hash.1.50.bench test_hash.2.50.bench test_hash.3.50.bench test_hash.1.75.bench test_hash.2.75.bench test_hash.3.75.bench test_hash.1.99.bench test_hash.2.99.bench test_hash.3.99.bench))
+(alias (name multibench_parallel) (deps test_hash.2.25.bench test_hash.3.25.bench test_hash.2.50.bench test_hash.3.50.bench test_hash.2.75.bench test_hash.3.75.bench test_hash.2.99.bench test_hash.3.99.bench))
+(alias (name multibench_serial) (deps test_hash.1.25.bench test_hash.1.50.bench test_hash.1.75.bench test_hash.1.99.bench))
