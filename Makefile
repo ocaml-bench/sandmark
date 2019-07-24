@@ -35,12 +35,13 @@ export OPAMROOT=$(CURDIR)/_opam
 # HACK: we are using the system installed dune to avoid breakages with
 # multicore and 4.09/trunk
 # This is a workaround for r14/4.09/trunk until better solutions arrive
-SYS_DUNE_BASE_DIR = $(subst /bin/dune,,$(shell which dune))
+SYS_DUNE_BASE_DIR ?= $(subst /bin/dune,,$(shell which dune))
 
 setup_sys_dune:
 ifeq (,$(SYS_DUNE_BASE_DIR))
 	$(error Could not find a system installation of dune (try `opam install dune`?))
 else
+	@echo "Linking to system dune files found at: "$(SYS_DUNE_BASE_DIR)
 	rm -rf $(CURDIR)/_opam/sys_dune
 	mkdir -p $(CURDIR)/_opam/sys_dune/bin
 	mkdir -p $(CURDIR)/_opam/sys_dune/lib
