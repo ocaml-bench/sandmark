@@ -58,7 +58,11 @@ extra-files: [
   ["ocaml-stub" "md5=181f259c9e0bad9ef523e7d4abfdf87a"]
 ]
 url {
-  src: "http://download.camlcity.org/download/findlib-1.8.0.tar.gz"
-  checksum: "md5=a710c559667672077a93d34eb6a42e5b"
-  mirrors: "http://download2.camlcity.org/download/findlib-1.8.0.tar.gz"
+  #src: "http://download.camlcity.org/download/findlib-1.8.0.tar.gz"
+  #checksum: "md5=a710c559667672077a93d34eb6a42e5b"
+  #mirrors: "http://download2.camlcity.org/download/findlib-1.8.0.tar.gz"
+
+  # vmthread fix for ocaml >= 4.09
+  src: "https://gitlab.camlcity.org/gerd/lib-findlib/-/archive/50b56eab2caeef781bf59dd94df70935bfea1a5a/lib-findlib-50b56eab2caeef781bf59dd94df70935bfea1a5a.tar.gz"
+  checksum: "md5=1459212a2bd4c705399a85a5d4310740"
 }
