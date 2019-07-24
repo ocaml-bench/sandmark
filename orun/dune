@@ -16,5 +16,5 @@
 
 (rule
  (targets profiler_library_flags.sexp)
- (deps    (:detect_os config/detect_os.exe))
+ (deps    (:detect_os config/detect_os.sh))
  (action  (run %{detect_os})))
