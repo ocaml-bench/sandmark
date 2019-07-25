@@ -43,6 +43,8 @@ steps:
   commands:
   - sudo apt-get update && sudo apt-get -y install libgmp-dev m4 libdw-dev
   - sudo chown -R opam .
+  - eval $(opam env)
+  - opam install dune
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - export BENCH_TARGET=multibench_parallel
@@ -52,6 +54,8 @@ steps:
   commands:
   - sudo apt-get update && sudo apt-get -y install libgmp-dev m4 libdw-dev
   - sudo chown -R opam .
+  - eval $(opam env)
+  - opam install dune
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   # get build coverage but cut the runtime as we start running up
