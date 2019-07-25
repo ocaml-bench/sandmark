@@ -6,14 +6,6 @@ platform:
   arch: amd64
 
 steps:
-- name: 4.08.0.bench
-  image: ocaml/opam2:4.07
-  commands:
-  - sudo apt-get update && sudo apt-get -y install libgmp-dev m4 libdw-dev
-  - sudo chown -R opam .
-  - export ITER=1
-  - export OPAM_DISABLE_SANDBOXING=true
-  - make ocaml-versions/4.08.0.bench
 - name: 4.07.1.bench
   image: ocaml/opam2:4.07
   commands:
@@ -49,4 +41,16 @@ steps:
   - export OPAM_DISABLE_SANDBOXING=true
   - export BENCH_TARGET=multibench_parallel
   - make ocaml-versions/4.06.1+multicore.bench
-
+- name: 4.08.0.bench
+  image: ocaml/opam2:4.07
+  commands:
+  - sudo apt-get update && sudo apt-get -y install libgmp-dev m4 libdw-dev
+  - sudo chown -R opam .
+  - export ITER=1
+  - export OPAM_DISABLE_SANDBOXING=true
+  # get build coverage but cut the runtime as we start running up
+  # against drone CI time limits
+  - export BENCH_TARGET=benchmarks/simple-tests/bench
+  - make ocaml-versions/4.08.0.bench
+  - export BENCH_TARGET=benchmarks/stdlib/bench
+  - make ocaml-versions/4.08.0.bench
