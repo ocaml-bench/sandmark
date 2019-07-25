@@ -32,6 +32,25 @@ export OPAMROOT=$(CURDIR)/_opam
 
 .PHONY: bash list clean
 
+# HACK: we are using the system installed dune to avoid breakages with
+# multicore and 4.09/trunk
+# This is a workaround for r14/4.09/trunk until better solutions arrive
+SYS_DUNE_BASE_DIR ?= $(subst /bin/dune,,$(shell which dune))
+
+setup_sys_dune:
+ifeq (,$(SYS_DUNE_BASE_DIR))
+	$(error Could not find a system installation of dune (try `opam install dune`?))
+else
+	@echo "Linking to system dune files found at: "$(SYS_DUNE_BASE_DIR)
+	@echo $(SYS_DUNE_BASE_DIR)"/bin/dune --version = "$(shell $(SYS_DUNE_BASE_DIR)/bin/dune --version)
+	@rm -rf $(CURDIR)/_opam/sys_dune
+	@mkdir -p $(CURDIR)/_opam/sys_dune/bin
+	@mkdir -p $(CURDIR)/_opam/sys_dune/lib
+	ln -s $(SYS_DUNE_BASE_DIR)/bin/dune $(CURDIR)/_opam/sys_dune/bin/dune
+	ln -s $(SYS_DUNE_BASE_DIR)/bin/jbuilder $(CURDIR)/_opam/sys_dune/bin/jbuilder
+	ln -s $(SYS_DUNE_BASE_DIR)/lib/dune $(CURDIR)/_opam/sys_dune/lib/dune
+endif
+
 ocamls=$(wildcard ocaml-versions/*.comp)
 
 # to build in a Dockerfile you need to disable sandboxing in opam
@@ -41,7 +60,7 @@ endif
 _opam/opam-init/init.sh:
 	opam init --bare --no-setup --no-opamrc $(OPAM_INIT_EXTRA_FLAGS) ./dependencies
 
-_opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp
+_opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp setup_sys_dune
 	rm -rf dependencies/packages/ocaml/ocaml.$*
 	rm -rf dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
 	mkdir -p dependencies/packages/ocaml/ocaml.$*
@@ -60,7 +79,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp
 .FORCE:
 ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
 	@opam update
-	@opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
+	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
