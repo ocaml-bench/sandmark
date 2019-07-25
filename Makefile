@@ -42,9 +42,10 @@ ifeq (,$(SYS_DUNE_BASE_DIR))
 	$(error Could not find a system installation of dune (try `opam install dune`?))
 else
 	@echo "Linking to system dune files found at: "$(SYS_DUNE_BASE_DIR)
-	rm -rf $(CURDIR)/_opam/sys_dune
-	mkdir -p $(CURDIR)/_opam/sys_dune/bin
-	mkdir -p $(CURDIR)/_opam/sys_dune/lib
+	@echo $(SYS_DUNE_BASE_DIR)"/bin/dune --version = "$(shell $(SYS_DUNE_BASE_DIR)/bin/dune --version)
+	@rm -rf $(CURDIR)/_opam/sys_dune
+	@mkdir -p $(CURDIR)/_opam/sys_dune/bin
+	@mkdir -p $(CURDIR)/_opam/sys_dune/lib
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/dune $(CURDIR)/_opam/sys_dune/bin/dune
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/jbuilder $(CURDIR)/_opam/sys_dune/bin/jbuilder
 	ln -s $(SYS_DUNE_BASE_DIR)/lib/dune $(CURDIR)/_opam/sys_dune/lib/dune
@@ -78,7 +79,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp setup_sys_dune
 .FORCE:
 ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
 	@opam update
-	@opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
+	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
