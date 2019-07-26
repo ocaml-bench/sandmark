@@ -1,8 +1,10 @@
+let bench_type = Sys.argv.(1)
+let length = int_of_string Sys.argv.(2)
+let iterations = int_of_string Sys.argv.(3)
+
 let create_array size =
   let a = Array.make size 0 in
   Array.mapi (fun i _ -> i) a
-
-let length = 1000
 
 let array_iter iterations =
   let a = create_array length in
@@ -24,8 +26,7 @@ let array_fold iterations =
   done
 
 let () =
-  let iterations = int_of_string Sys.argv.(2) in
-  match Sys.argv.(1) with
+  match bench_type with
   | "array_fold" ->
       array_fold iterations
   | "array_forall" ->
