@@ -1,6 +1,6 @@
 let list_length = int_of_string Sys.argv.(1)
 let percent_retain = int_of_string Sys.argv.(2)
-let iterations = 100000
+let iterations = 25000
 
 let () = Random.init 42
 
