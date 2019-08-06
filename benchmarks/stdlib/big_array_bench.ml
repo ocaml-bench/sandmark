@@ -11,7 +11,14 @@ let create_int_array size =
   done;
   a
 
-let int_rev a =
+let create_int32_array n =
+  let a = Array1.create int32 c_layout n in
+  for i = 0 to Array1.dim a - 1 do
+    Array1.set a i (Int32.of_int i)
+  done;
+  a
+
+let rev a =
   if Array1.dim a > 0
   then
     for i = 0 to (Array1.dim a - 1) / 2 do
@@ -24,12 +31,20 @@ let int_rev a =
 let big_array_int_rev iterations length =
   let a = create_int_array length in
   for i = 1 to iterations do
-    Sys.opaque_identity (ignore (int_rev a))
+    Sys.opaque_identity (ignore (rev a))
+  done
+
+let big_array_int32_rev iterations length =
+  let a = create_int32_array length in
+  for i = 1 to iterations do
+    Sys.opaque_identity (ignore (rev a))
   done
 
 let () =
   match bench_type with
   | "big_array_int_rev" ->
       big_array_int_rev iterations length
+  | "big_array_int32_rev" ->
+      big_array_int32_rev iterations length
   | _ ->
       ()
