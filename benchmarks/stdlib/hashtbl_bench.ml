@@ -1,8 +1,6 @@
 module IntHash = struct
   type t = int
-
   let equal i j = i = j
-
   let hash i = i land max_int
 end
 
@@ -96,9 +94,15 @@ let () =
   let int_tbl_replace2, int_tbl_find2 =
     gen_test_int_replace_and_find_int_hash n (IntHashtbl.create (2 * n))
   in
-  let caml_hashtbl_hash () =
+  let caml_hashtbl_hash_int () =
     for i = 0 to n - 1 do
       let (_ : int) = Hashtbl.hash i in
+      ()
+    done
+  in
+  let caml_hashtbl_hash_tuple () =
+    for i = 0 to n - 1 do
+      let (_ : int) = Hashtbl.hash (i,i) in
       ()
     done
   in
@@ -120,10 +124,14 @@ let () =
       for _ = 0 to iterations do
         Sys.opaque_identity (int_tbl_find2 ())
       done
-  | "caml_hash" ->
+  | "caml_hash_int" ->
       for _ = 0 to iterations do
-        Sys.opaque_identity (caml_hashtbl_hash ())
+        Sys.opaque_identity (caml_hashtbl_hash_int ())
       done
+  | "caml_hash_tuple" ->
+      for _ = 0 to iterations do
+        Sys.opaque_identity (caml_hashtbl_hash_tuple ())
+      done      
   | "hashtbl_iter" ->
       hashtbl_iter iterations
   | "hashtbl_fold" ->
