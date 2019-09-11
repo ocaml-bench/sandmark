@@ -6,6 +6,9 @@
 (rule
  (targets bdd.bench)
  (deps (:prog bdd.exe))
- (action (run orun -o %{targets} -- %{prog})))
+ (action (progn
+	(run orun -o %{targets} -- %{prog})
+	(run perf stat -ax'|' -o %{prog}.perf %{prog}))))
 
 (alias (name bench) (deps bdd.bench))
+
