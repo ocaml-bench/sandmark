@@ -84,6 +84,7 @@ ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
            done } > ocaml-versions/.workspace.$*
+	sh generate_dune_inc.sh
 	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(BENCH_TARGET); \
 	  ex=$$?; find _build/$*_* -name '*.bench' | xargs cat > $@; exit $$ex
 
