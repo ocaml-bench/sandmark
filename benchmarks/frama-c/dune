@@ -8,3 +8,4 @@
     frama-c -slevel 1000000000 -no-results -no-val-show-progress %{in} -val))))
 
 (alias (name bench) (deps frama-c-deflate.bench))
+(include dune.inc)

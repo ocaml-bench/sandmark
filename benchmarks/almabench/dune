@@ -9,3 +9,4 @@
  (action (run orun -o %{targets} -- %{prog})))
 
 (alias (name bench) (deps almabench.bench))
+(include dune.inc)

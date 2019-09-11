@@ -37,3 +37,5 @@
  (action (run orun -o %{targets} -- %{prog} 16 10000 10000)))
 
 (alias (name multibench) (deps algorithmic_differentiation.150000.bench queens.100000.bench eratosthenes.bench test_sched.16.10000.10000.bench))
+
+(include dune.inc)

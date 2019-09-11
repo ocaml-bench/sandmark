@@ -9,3 +9,4 @@
    orun -o %{targets} -- %{prog}))))
 
 (alias (name bench) (deps test_decompress.bench))
+(include dune.inc)

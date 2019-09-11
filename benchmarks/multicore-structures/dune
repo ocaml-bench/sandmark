@@ -81,3 +81,5 @@
  (action (run orun -o %{targets} -- %{prog} 4 10000)))
 
 (alias (name multibench) (deps test_stack_sequential.bench test_stack_parallel.bench test_queue_sequential.bench test_queue_parallel.bench test_spsc_queue_sequential.bench test_spsc_queue_parallel.bench test_spsc_queue_pingpong.bench))
+
+(include dune.inc)

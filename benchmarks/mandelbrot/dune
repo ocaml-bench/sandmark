@@ -20,3 +20,5 @@
 
  (alias (name parallelbench) (deps mandelbrot_vanilla_16000_3.bench))
  (alias (name multibench) (deps mandelbrot_multicore_16000_3.bench))
+
+(include dune.inc)

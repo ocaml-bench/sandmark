@@ -22,3 +22,5 @@
  (action (run orun -o %{targets} -- %{prog} 200_000)))
 
 (alias (name bench) (deps alloc.bench morestacks.bench))
+
+(include dune.inc)

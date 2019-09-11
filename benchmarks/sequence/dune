@@ -9,3 +9,5 @@
  (action (ignore-stdout (run orun -o %{targets} -- %{prog} 10000))))
 
 (alias (name bench) (deps sequence-cps.bench))
+
+(include dune.inc)

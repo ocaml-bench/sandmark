@@ -11,3 +11,4 @@
   (diff lexifi-g2pp-bench.output output.txt))))
 
 (alias (name bench) (deps lexifi-g2pp.bench))
+(include dune.inc)

@@ -10,3 +10,4 @@
  (action (run orun -o %{targets} -- %{prog} 200)))
 
 (alias (name bench) (deps valet-lwt.bench))
+(include dune.inc)

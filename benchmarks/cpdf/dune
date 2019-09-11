@@ -23,3 +23,4 @@
 
 (alias (name bench)
  (deps cpdf-merge.bench cpdf-reformat.bench cpdf-squeeze.bench cpdf-transform.bench))
+(include dune.inc)

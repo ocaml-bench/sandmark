@@ -15,3 +15,4 @@
  (action (run orun -o %{targets} -- %{deps} 20_000)))
 
 (alias (name bench) (deps thread-lwt-mvar.bench thread-lwt-stream.bench))
+(include dune.inc)

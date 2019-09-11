@@ -6,3 +6,4 @@
    setrip -enc -rseed 1067894368))))
 
 (alias (name bench) (deps nbcodec.bench))
+(include dune.inc)

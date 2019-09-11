@@ -11,3 +11,4 @@
  (action (ignore-stdout (run orun -o %{targets} -- alt-ergo %{deps}))))
 
 (alias (name bench) (deps alt-ergo-fill.bench alt-ergo-yyll.bench))
+(include dune.inc)

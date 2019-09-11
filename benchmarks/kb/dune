@@ -14,3 +14,4 @@
  (action (run orun -o %{targets} -- %{prog})))
 
 (alias (name bench) (deps kb.bench kb-no-exc.bench))
+(include dune.inc)

@@ -46,3 +46,5 @@
    numal-lu-decomposition.bench
    numal-naive-multilayer.bench
    numal-qr-decomposition.bench))
+
+(include dune.inc)

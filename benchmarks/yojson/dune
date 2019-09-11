@@ -11,3 +11,5 @@
  (action (ignore-stdout (run orun -o %{targets} -- %{prog} -c %{in}))))
 
 (alias (name bench) (deps yojson.bench))
+
+(include dune.inc)

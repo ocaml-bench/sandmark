@@ -10,3 +10,4 @@
  (action (ignore-stdout (run orun -o %{targets} -- %{prog} 600000))))
 
 (alias (name bench) (deps chameneos-lwt.bench))
+(include dune.inc)

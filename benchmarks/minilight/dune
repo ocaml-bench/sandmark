@@ -9,3 +9,4 @@
    (run cmp expected.ppm "roomfront.ml.txt.ppm"))))
 
 (alias (name bench) (deps minilight.bench))
+(include dune.inc)

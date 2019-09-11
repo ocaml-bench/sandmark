@@ -10,3 +10,4 @@
    %{dep:contrast.exe} %{dep:example2_small.ppm} example2))))
 
 (alias (name bench) (deps sauvola.bench))
+(include dune.inc)
