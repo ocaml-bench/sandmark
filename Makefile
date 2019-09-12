@@ -18,9 +18,9 @@ CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
 PACKAGES = \
   cpdf menhir minilight camlimages yojson \
-  lwt ctypes orun cil frama-c alt-ergo zarith \
+  lwt ctypes orun rungen cil frama-c alt-ergo zarith \
   js_of_ocaml-compiler uuidm react ocplib-endian nbcodec \
-  checkseum decompress
+  checkseum decompress sexplib0
 
 # want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
 ifeq ($(findstring multibench,$(BENCH_TARGET)),multibench)
@@ -73,6 +73,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp setup_sys_dune
 	opam update
 	opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
+	opam pin add -n --yes --switch $* rungen rungen/
 
 
 .PHONY: .FORCE
@@ -84,6 +85,7 @@ ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
            done } > ocaml-versions/.workspace.$*
+	opam exec --switch $* -- rungen > runs_dune.inc
 	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(BENCH_TARGET); \
 	  ex=$$?; find _build/$*_* -name '*.bench' | xargs cat > $@; exit $$ex
 

@@ -1,0 +1,38 @@
+    {
+        "wrappers": [
+            {
+                "name": "orun",
+                "command": "orun -o %{output} %{command}"
+            },
+            {
+                "name": "perfstat",
+                "command": "perf stat -o %{output} %{command}"
+            }
+        ],
+        "benchmarks": [
+            {
+                "executable": "benchmarks/stdlib/hashtbl_bench.exe",
+                "name": "hashtbl_bench",
+                "runs": [
+                    {
+                        "params": "int_replace1 10"
+                    },
+                    {
+                        "params": "int_find1 10"
+                    }
+                ]
+            },
+            {
+                "executable": "benchmarks/stdlib/set_bench.exe",
+                "name": "set_bench",
+                "runs": [
+                    {
+                        "params": "set_fold 1000000"
+                    },
+                    {
+                        "params": "set_add_rem 20000000"
+                    }
+                ]
+            }
+        ]
+    }
