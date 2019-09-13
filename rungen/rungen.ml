@@ -29,7 +29,7 @@ let parse_json () =
   let create_run (wrapper : wrapper) benchmark run =
     let run_params = replace_spaces_with_periods run.params in
     let run_name =
-      Printf.sprintf "%s.%s.%s.bench" benchmark.name wrapper.name run_params
+      Printf.sprintf "%s.%s.%s.bench" wrapper.name benchmark.name run_params
     in
     let subst_wrapper =
       Str.global_replace command_regexp
