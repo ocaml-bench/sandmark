@@ -74,19 +74,19 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp setup_sys_dune
 	opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
 
+BENCH = $(shell basename $(BENCH_TARGET))
 
 .PHONY: .FORCE
 .FORCE:
 ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
 	@opam update
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
-	@{ echo '(lang dune 1.0)'; \
-	   for i in `seq 1 $(ITER)`; do \
-	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
-           done } > ocaml-versions/.workspace.$*
-	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(BENCH_TARGET); \
-	  ex=$$?; find _build/$*_* -name '*.bench' | xargs cat > $@; exit $$ex
-
+	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release $(BENCH_TARGET)
+	@{ for i in `seq 1 $(ITER)`; do \
+		opam exec --switch $* -- orun -o _build/default/benchmarks/$(BENCH)/$(BENCH).$$i.bench -- \
+		_build/default/benchmarks/$(BENCH)/$(BENCH).exe; done; \
+		find _build/ -name '*.bench' | xargs cat > $@; \
+	}
 
 clean:
 	rm -rf dependencies/packages/ocaml/*
