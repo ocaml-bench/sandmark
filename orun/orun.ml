@@ -198,6 +198,8 @@ let run output input cmdline =
     in
     let environ =
       "OCAMLRUNPARAM=v=0x400"
+      :: "OCAML_EVENTLOG_ENABLED=1" (* enable tracing on eventlog branches *)
+      :: Printf.sprintf "OCAML_EVENTLOG_FILE=%s.trace" name
       :: List.filter
            (fun s -> not (starts_with s "OCAMLRUNPARAM="))
            (Array.to_list (Unix.environment ()))
