@@ -24,7 +24,7 @@
       "name": "ydump",
       "runs": [
         {
-          "params": "-c %{in}"
+          "params": ""
         }
       ]
     },
@@ -65,8 +65,8 @@
       ]
     },
     {
-      "executable": "%{deps}",
-      "name": "%{deps}",
+      "executable": "thread_ring_lwt_mvar.exe",
+      "name": "thread_ring_lwt_mvar",
       "runs": [
         {
           "params": "20_000"
@@ -74,8 +74,8 @@
       ]
     },
     {
-      "executable": "%{deps}",
-      "name": "%{deps}",
+      "executable": "thread_ring_lwt_stream.exe",
+      "name": "thread_ring_lwt_stream",
       "runs": [
         {
           "params": "20_000"
@@ -87,7 +87,8 @@
       "name": "cpdf",
       "runs": [
         {
-          "params": "-merge metro_geo.pdf -o /dev/null"
+          "params": "-merge metro_geo.pdf -o /dev/null",
+          "short_name": "merge"
         }
       ]
     },
@@ -96,10 +97,12 @@
       "name": "cpdf",
       "runs": [
         {
-          "params": "scale-to-fit a4landscape -twoup PDFReference16.pdf_toobig -o /dev/null"
+          "params": "scale-to-fit a4landscape -twoup PDFReference16.pdf_toobig -o /dev/null",
+          "short_name": "scale"
         },
         {
-          "params": "-squeeze PDFReference16.pdf_toobig -o /dev/null"
+          "params": "-squeeze PDFReference16.pdf_toobig -o /dev/null",
+          "short_name": "squeeze"
         }
       ]
     },
@@ -108,7 +111,8 @@
       "name": "cpdf",
       "runs": [
         {
-          "params": "-blacktext metro_geo.pdf -o /dev/null"
+          "params": "-blacktext metro_geo.pdf -o /dev/null",
+          "short_name": "blacktext"
         }
       ]
     },
@@ -158,15 +162,6 @@
       ]
     },
     {
-      "executable": "knucleotide-input.txt",
-      "name": "knucleotide-input.txt",
-      "runs": [
-        {
-          "params": "-- %{prog}"
-        }
-      ]
-    },
-    {
       "executable": "benchmarks/benchmarksgame/mandelbrot6.exe",
       "name": "mandelbrot6",
       "runs": [
@@ -190,33 +185,6 @@
       "runs": [
         {
           "params": "8000"
-        }
-      ]
-    },
-    {
-      "executable": "knucleotide-input.txt",
-      "name": "knucleotide-input.txt",
-      "runs": [
-        {
-          "params": "-- %{prog}"
-        }
-      ]
-    },
-    {
-      "executable": "%{prog}",
-      "name": "%{prog}",
-      "runs": [
-        {
-          "params": "1_000_000 > %{targets}"
-        }
-      ]
-    },
-    {
-      "executable": "knucleotide-input.txt",
-      "name": "knucleotide-input.txt",
-      "runs": [
-        {
-          "params": "-- %{prog}"
         }
       ]
     },
@@ -252,7 +220,8 @@
       "name": "frama-c",
       "runs": [
         {
-          "params": "-slevel 1000000000 -no-results -no-val-show-progress %{in} -val"
+          "params": "-slevel 1000000000 -no-results -no-val-show-progress -val",
+          "short_name": "slevel"
         }
       ]
     },
@@ -295,60 +264,6 @@
     {
       "executable": "benchmarks/lexifi-g2pp/main.exe",
       "name": "main",
-      "runs": [
-        {
-          "params": ""
-        }
-      ]
-    },
-    {
-      "executable": "%{deps}",
-      "name": "%{deps}",
-      "runs": [
-        {
-          "params": ""
-        }
-      ]
-    },
-    {
-      "executable": "%{deps}",
-      "name": "%{deps}",
-      "runs": [
-        {
-          "params": ""
-        }
-      ]
-    },
-    {
-      "executable": "%{deps}",
-      "name": "%{deps}",
-      "runs": [
-        {
-          "params": ""
-        }
-      ]
-    },
-    {
-      "executable": "%{deps}",
-      "name": "%{deps}",
-      "runs": [
-        {
-          "params": ""
-        }
-      ]
-    },
-    {
-      "executable": "%{deps}",
-      "name": "%{deps}",
-      "runs": [
-        {
-          "params": ""
-        }
-      ]
-    },
-    {
-      "executable": "%{deps}",
-      "name": "%{deps}",
       "runs": [
         {
           "params": ""

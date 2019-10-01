@@ -2,7 +2,7 @@ open Sexplib0
 
 type wrapper = {name: string; command: string}
 
-type run = {params: string}
+type run = {params: string; short_name: string option}
 
 type benchmark = {executable: string; name: string; runs: run list}
 
@@ -16,7 +16,7 @@ let replace_spaces_with_periods str = Str.global_replace space_regexp "." str
 
 let parse_json () =
   let open Yojson.Basic.Util in
-  let to_run json = {params= json |> member "params" |> to_string} in
+  let to_run json = {params= json |> member "params" |> to_string; short_name= json |> member "short_name" |> to_string_option} in
   let to_wrapper json =
     { name= json |> member "name" |> to_string
     ; command= json |> member "command" |> to_string }
@@ -26,10 +26,12 @@ let parse_json () =
     ; name= json |> member "name" |> to_string
     ; runs= json |> member "runs" |> convert_each to_run }
   in
-  let create_run (wrapper : wrapper) benchmark run =
+  let create_run (wrapper : wrapper) benchmark (run: run) =
     let run_params = replace_spaces_with_periods run.params in
     let run_name =
-      Printf.sprintf "%s.%s.%s.bench" wrapper.name benchmark.name run_params
+      match run.short_name with
+      | Some(x) -> Printf.sprintf "%s.%s.%s.bench" wrapper.name benchmark.name x
+      | None -> Printf.sprintf "%s.%s.%s.bench" wrapper.name benchmark.name run_params
     in
     let subst_wrapper =
       Str.global_replace command_regexp
