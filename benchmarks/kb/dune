@@ -3,14 +3,4 @@
 (executables
  (names kb kb_no_exc))
 
-(rule
- (targets kb.bench)
- (deps (:prog kb.exe))
- (action (run orun -o %{targets} -- %{prog})))
-
-(rule
- (targets kb-no-exc.bench)
- (deps (:prog kb_no_exc.exe))
- (action (run orun -o %{targets} -- %{prog})))
-
-(alias (name bench) (deps kb.bench kb-no-exc.bench))
+(alias (name buildbench) (deps kb.exe kb_no_exc.exe))

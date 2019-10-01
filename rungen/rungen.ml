@@ -12,11 +12,16 @@ let output_regexp = Str.regexp "%{output}"
 
 let command_regexp = Str.regexp "%{command}"
 
+let benchmarks_regexp = Str.regexp "benchmarks/"
+
 let replace_spaces_with_periods str = Str.global_replace space_regexp "." str
 
-let parse_json () =
+let parse_json build_dir =
   let open Yojson.Basic.Util in
-  let to_run json = {params= json |> member "params" |> to_string; short_name= json |> member "short_name" |> to_string_option} in
+  let to_run json =
+    { params= json |> member "params" |> to_string
+    ; short_name= json |> member "short_name" |> to_string_option }
+  in
   let to_wrapper json =
     { name= json |> member "name" |> to_string
     ; command= json |> member "command" |> to_string }
@@ -26,17 +31,26 @@ let parse_json () =
     ; name= json |> member "name" |> to_string
     ; runs= json |> member "runs" |> convert_each to_run }
   in
-  let create_run (wrapper : wrapper) benchmark (run: run) =
+  let create_run (wrapper : wrapper) benchmark (run : run) =
     let run_params = replace_spaces_with_periods run.params in
     let run_name =
       match run.short_name with
-      | Some(x) -> Printf.sprintf "%s.%s.%s.bench" wrapper.name benchmark.name x
-      | None -> Printf.sprintf "%s.%s.%s.bench" wrapper.name benchmark.name run_params
+      | Some x ->
+          Printf.sprintf "%s.%s.%s.bench" wrapper.name benchmark.name x
+      | None ->
+          Printf.sprintf "%s.%s.%s.bench" wrapper.name benchmark.name
+            run_params
+    in
+    let executable_dir, executable_name =
+      let splits = List.rev (String.split_on_char '/' benchmark.executable) in
+      (String.concat "/" (List.rev (List.tl splits)), List.hd splits)
     in
     let subst_wrapper =
       Str.global_replace command_regexp
-        (benchmark.executable ^ " " ^ run.params)
-        (Str.global_replace output_regexp run_name wrapper.command)
+        (executable_name ^ " " ^ run.params)
+        (Str.global_replace output_regexp
+           ("%{workspace_root}/" ^ run_name)
+           wrapper.command)
     in
     let make_sexp_params_list =
       List.map (fun s -> Sexp.Atom s) (Str.split space_regexp subst_wrapper)
@@ -47,7 +61,15 @@ let parse_json () =
         ; Sexp.List [Sexp.Atom "targets"; Sexp.Atom run_name]
         ; Sexp.List
             [ Sexp.Atom "action"
-            ; Sexp.List ([Sexp.Atom "run"] @ make_sexp_params_list) ] ] )
+            ; Sexp.List
+                [ Sexp.Atom "ignore-stdout"
+                ; Sexp.List
+                    [ Sexp.Atom "ignore-stderr"
+                    ; Sexp.List
+                        [ Sexp.Atom "chdir"
+                        ; Sexp.Atom executable_dir
+                        ; Sexp.List ([Sexp.Atom "run"] @ make_sexp_params_list)
+                        ] ] ] ] ] )
   in
   let config_json = Yojson.Basic.from_file "run_config.json" in
   let wrappers = config_json |> member "wrappers" |> convert_each to_wrapper in
@@ -84,5 +106,6 @@ let parse_json () =
       wrappers
 
 let () =
+  let build_dir = Sys.argv.(1) in
   print_endline
-    (String.concat "\n\n" (List.map Sexp.to_string_hum (parse_json ())))
+    (String.concat "\n\n" (List.map Sexp.to_string_hum (parse_json build_dir)))

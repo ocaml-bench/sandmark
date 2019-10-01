@@ -11,8 +11,9 @@ let () =
   blit_string "TVGHEFCDIJMLKNOPQYSAABWXRZ" 0 t 65 26;
   blit t 65 t 97 26;
 
+  let kinput = open_in "knucleotide-input.txt" in
   let rec rd ls =
-    let l, q = try input_line stdin, false with _ -> "", true in
+    let l, q = try input_line kinput, false with _ -> "", true in
     if l <> "" && l.[0] <> '>' then rd (l::ls)
     else (
       let rec wr = function

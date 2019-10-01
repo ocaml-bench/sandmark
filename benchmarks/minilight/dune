@@ -1,11 +1,4 @@
 ;; Adapted from OCamlPro's ocamlbench-repo
 ;; See https://github.com/OCamlPro/ocamlbench-repo
-(rule
- (targets minilight.bench)
- (deps roomfront.ml.txt expected.ppm)
- (action (progn
-   (ignore-stdout (run orun -o %{targets} --
-      minilight-ocaml roomfront.ml.txt))
-   (run cmp expected.ppm "roomfront.ml.txt.ppm"))))
 
-(alias (name bench) (deps minilight.bench))
+(alias (name buildbench) (deps roomfront.ml.txt))

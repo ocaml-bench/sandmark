@@ -1,25 +1,4 @@
 ;; Adapted from OCamlPro's ocamlbench-repo
 ;; See https://github.com/OCamlPro/ocamlbench-repo
-(rule
- (targets cpdf-merge.bench)
- (deps PDFReference16.pdf_toobig metro_geo.pdf)
- (action (ignore-stdout (run orun -o %{targets} --
-   cpdf -merge %{deps} -o /dev/null))))
-(rule
- (targets cpdf-reformat.bench)
- (deps PDFReference16.pdf_toobig)
- (action (ignore-stdout (run orun -o %{targets} --
-   cpdf scale-to-fit a4landscape -twoup %{deps} -o /dev/null))))
-(rule
- (targets cpdf-squeeze.bench)
- (deps PDFReference16.pdf_toobig)
- (action (ignore-stdout (run orun -o %{targets} --
-   cpdf -squeeze %{deps} -o /dev/null))))
-(rule
- (targets cpdf-transform.bench)
- (deps metro_geo.pdf)
- (action (ignore-stdout (run orun -o %{targets} --
-   cpdf -blacktext %{deps} -o /dev/null))))
 
-(alias (name bench)
- (deps cpdf-merge.bench cpdf-reformat.bench cpdf-squeeze.bench cpdf-transform.bench))
+(alias (name buildbench) (deps metro_geo.pdf PDFReference16.pdf_toobig))

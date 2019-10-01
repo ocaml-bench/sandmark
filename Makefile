@@ -4,7 +4,8 @@
 #  - bench: single threaded
 #  - parallelbench: multiple process benchmarks that only work on stock OCaml
 #  - multibench: multicore threaded benchmarks that only work on OCaml multicore
-BENCH_TARGET ?= bench
+BUILD_BENCH_TARGET ?= bench
+RUN_BENCH_TARGET ?= run_orun
 
 # number of benchmark iterations to run
 ITER ?= 5
@@ -85,8 +86,9 @@ ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
            done } > ocaml-versions/.workspace.$*
-	opam exec --switch $* -- rungen > runs_dune.inc
-	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(BENCH_TARGET); \
+	opam exec --switch $* -- rungen _build/$*_1 > runs_dune.inc;
+	opam exec --switch $* -- dune build --profile=release --workspace=ocaml-versions/.workspace.$* @$(BUILD_BENCH_TARGET);
+	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); \
 	  ex=$$?; find _build/$*_* -name '*.bench' | xargs cat > $@; exit $$ex
 
 

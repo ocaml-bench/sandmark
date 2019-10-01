@@ -12,37 +12,9 @@
  (name naive_multilayer)
  (modules naive_multilayer naive_multilayer_dataset))
 
-
-(rule
- (targets numal-durand-kerner-aberth.bench)
- (deps durand_kerner_aberth.exe)
- (action (run orun -o %{targets} -- %{deps})))
-(rule
- (targets numal-fft.bench)
- (deps fft.exe)
- (action (run orun -o %{targets} -- %{deps})))
-(rule
- (targets numal-levinson-durbin.bench)
- (deps levinson_durbin.exe)
- (action (run orun -o %{targets} -- %{deps})))
-(rule
- (targets numal-lu-decomposition.bench)
- (deps lu_decomposition.exe)
- (action (run orun -o %{targets} -- %{deps})))
-(rule
- (targets numal-naive-multilayer.bench)
- (deps naive_multilayer.exe)
- (action (run orun -o %{targets} -- %{deps})))
-(rule
- (targets numal-qr-decomposition.bench)
- (deps qr_decomposition.exe)
- (action (run orun -o %{targets} -- %{deps})))
-
-(alias (name bench)
+(alias (name buildbench)
  (deps
-   numal-durand-kerner-aberth.bench
-   numal-fft.bench
-   numal-levinson-durbin.bench
-   numal-lu-decomposition.bench
-   numal-naive-multilayer.bench
-   numal-qr-decomposition.bench))
+   durand_kerner_aberth.exe
+   fft.exe
+   lu_decomposition.exe
+   qr_decomposition.exe))

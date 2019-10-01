@@ -2,11 +2,11 @@
   "wrappers": [
     {
       "name": "orun",
-      "command": "orun -o %{output} %{command}"
+      "command": "orun -o %{output} -- %{command}"
     },
     {
       "name": "perfstat",
-      "command": "perf stat -o %{output} %{command}"
+      "command": "perf stat -o %{output} -- %{command}"
     }
   ],
   "benchmarks": [
@@ -20,11 +20,12 @@
       ]
     },
     {
-      "executable": "ydump.exe",
+      "executable": "benchmarks/yojson/ydump.exe",
       "name": "ydump",
       "runs": [
         {
-          "params": ""
+          "params": "-c sample.json",
+          "short_name": "sample.json"
         }
       ]
     },
@@ -65,7 +66,7 @@
       ]
     },
     {
-      "executable": "thread_ring_lwt_mvar.exe",
+      "executable": "benchmarks/thread-lwt/thread_ring_lwt_mvar.exe",
       "name": "thread_ring_lwt_mvar",
       "runs": [
         {
@@ -74,7 +75,7 @@
       ]
     },
     {
-      "executable": "thread_ring_lwt_stream.exe",
+      "executable": "benchmarks/thread-lwt/thread_ring_lwt_stream.exe",
       "name": "thread_ring_lwt_stream",
       "runs": [
         {
@@ -87,7 +88,7 @@
       "name": "cpdf",
       "runs": [
         {
-          "params": "-merge metro_geo.pdf -o /dev/null",
+          "params": "-merge benchmarks/cpdf/metro_geo.pdf -o /dev/null",
           "short_name": "merge"
         }
       ]
@@ -97,11 +98,11 @@
       "name": "cpdf",
       "runs": [
         {
-          "params": "scale-to-fit a4landscape -twoup PDFReference16.pdf_toobig -o /dev/null",
+          "params": "scale-to-fit a4landscape -twoup benchmarks/cpdf/PDFReference16.pdf_toobig -o /dev/null",
           "short_name": "scale"
         },
         {
-          "params": "-squeeze PDFReference16.pdf_toobig -o /dev/null",
+          "params": "-squeeze benchmarks/cpdf/PDFReference16.pdf_toobig -o /dev/null",
           "short_name": "squeeze"
         }
       ]
@@ -111,7 +112,7 @@
       "name": "cpdf",
       "runs": [
         {
-          "params": "-blacktext metro_geo.pdf -o /dev/null",
+          "params": "-blacktext benchmarks/cpdf/metro_geo.pdf -o /dev/null",
           "short_name": "blacktext"
         }
       ]
@@ -202,7 +203,8 @@
       "name": "minilight-ocaml",
       "runs": [
         {
-          "params": "roomfront.ml.txt"
+          "params": "benchmarks/minilight/roomfront.ml.txt",
+          "short_name": "roomfront.ml.txt"
         }
       ]
     },
@@ -220,7 +222,7 @@
       "name": "frama-c",
       "runs": [
         {
-          "params": "-slevel 1000000000 -no-results -no-val-show-progress -val",
+          "params": "-slevel 1000000000 -no-results -no-val-show-progress benchmarks/frama-c/t.c -val",
           "short_name": "slevel"
         }
       ]
@@ -235,8 +237,8 @@
       ]
     },
     {
-      "executable": "js-of-ocaml.bench",
-      "name": "js-of-ocaml.bench",
+      "executable": "js-of-ocaml",
+      "name": "js-of-ocaml",
       "runs": [
         {
           "params": ""
@@ -248,7 +250,8 @@
       "name": "alt-ergo",
       "runs": [
         {
-          "params": "fill.why"
+          "params": "benchmarks/alt-ergo/fill.why",
+          "short_name": "fill.why"
         }
       ]
     },
@@ -257,7 +260,8 @@
       "name": "alt-ergo",
       "runs": [
         {
-          "params": "yyll.why"
+          "params": "benchmarks/alt-ergo/yyll.why",
+          "short_name": "yyll.why"
         }
       ]
     },
@@ -325,65 +329,12 @@
       ]
     },
     {
-      "executable": "test_stack_sequential.exe",
-      "name": "test_stack_sequential",
+      "executable": "menhir",
+      "name": "menhir",
       "runs": [
         {
-          "params": "100000"
-        }
-      ]
-    },
-    {
-      "executable": "test_queue_sequential.exe",
-      "name": "test_queue_sequential",
-      "runs": [
-        {
-          "params": "100000"
-        }
-      ]
-    },
-    {
-      "executable": "test_stack_parallel.exe",
-      "name": "test_stack_parallel",
-      "runs": [
-        {
-          "params": "100000"
-        }
-      ]
-    },
-    {
-      "executable": "test_queue_parallel.exe",
-      "name": "test_queue_parallel",
-      "runs": [
-        {
-          "params": "100000"
-        }
-      ]
-    },
-    {
-      "executable": "test_spsc_queue_sequential.exe",
-      "name": "test_spsc_queue_sequential",
-      "runs": [
-        {
-          "params": "100000"
-        }
-      ]
-    },
-    {
-      "executable": "test_spsc_queue_parallel.exe",
-      "name": "test_spsc_queue_parallel",
-      "runs": [
-        {
-          "params": "50000000"
-        }
-      ]
-    },
-    {
-      "executable": "test_spsc_queue_pingpong.exe",
-      "name": "test_spsc_queue_pingpong",
-      "runs": [
-        {
-          "params": "4 10000"
+          "params": "benchmarks/menhir/ocaml.mly --list-errors -la 2 --no-stdlib --lalr",
+          "short_name": "ocamly.mly"
         }
       ]
     },
@@ -392,7 +343,8 @@
       "name": "menhir",
       "runs": [
         {
-          "params": "ocaml.mly --list-errors -la 2 --no-stdlib --lalr"
+          "params": "-v -t benchmarks/menhir/keywords.mly benchmarks/menhir/sql-parser.mly --base sql-parser",
+          "short_name": "sql-parser.mly"
         }
       ]
     },
@@ -401,16 +353,8 @@
       "name": "menhir",
       "runs": [
         {
-          "params": "-v -t sql-parser.mly --base sql-parser"
-        }
-      ]
-    },
-    {
-      "executable": "menhir",
-      "name": "menhir",
-      "runs": [
-        {
-          "params": "-v --table sysver.mly"
+          "params": "-v --table benchmarks/menhir/sysver.mly",
+          "short_name": "sysver.mly"
         }
       ]
     },
@@ -693,63 +637,6 @@
         },
         {
           "params": "100"
-        }
-      ]
-    },
-    {
-      "executable": "test_wsqueue.exe",
-      "name": "test_wsqueue",
-      "runs": [
-        {
-          "params": "1"
-        },
-        {
-          "params": "2"
-        },
-        {
-          "params": "3"
-        }
-      ]
-    },
-    {
-      "executable": "test_hash.exe",
-      "name": "test_hash",
-      "runs": [
-        {
-          "params": "1 25"
-        },
-        {
-          "params": "2 25"
-        },
-        {
-          "params": "3 25"
-        },
-        {
-          "params": "1 50"
-        },
-        {
-          "params": "2 50"
-        },
-        {
-          "params": "3 50"
-        },
-        {
-          "params": "1 75"
-        },
-        {
-          "params": "2 75"
-        },
-        {
-          "params": "3 75"
-        },
-        {
-          "params": "1 99"
-        },
-        {
-          "params": "2 99"
-        },
-        {
-          "params": "3 99"
         }
       ]
     },
