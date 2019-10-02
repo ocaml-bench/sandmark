@@ -47,7 +47,7 @@ let parse_json build_dir =
     in
     let subst_wrapper =
       Str.global_replace command_regexp
-        (executable_name ^ " " ^ run.params)
+        ((if executable_dir <> "" then "./" else "") ^ executable_name ^ " " ^ run.params)
         (Str.global_replace output_regexp
            ("%{workspace_root}/" ^ run_name)
            wrapper.command)
