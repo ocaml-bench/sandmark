@@ -237,11 +237,12 @@
       ]
     },
     {
-      "executable": "js-of-ocaml",
-      "name": "js-of-ocaml",
+      "executable": "js_of_ocaml",
+      "name": "js_of_ocaml",
       "runs": [
         {
-          "params": ""
+          "params": "--disable=check-magic-number %{bin:frama-c.byte}",
+	  "short_name": "frama-c_byte"
         }
       ]
     },
