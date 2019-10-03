@@ -646,10 +646,10 @@
       "name": "stack_bench",
       "runs": [
         {
-          "params": "stack_fold 1000000"
+          "params": "stack_fold 2500000"
         },
         {
-          "params": "stack_push_pop 1000000"
+          "params": "stack_push_pop 100000000"
         }
       ]
     },
@@ -673,16 +673,16 @@
       "name": "bytes_bench",
       "runs": [
         {
-          "params": "bytes_get 1000000"
+          "params": "bytes_get 100000000"
         },
         {
-          "params": "bytes_sub 1000000"
+          "params": "bytes_sub 100000000"
         },
         {
-          "params": "bytes_blit 1000000"
+          "params": "bytes_blit 2500000"
         },
         {
-          "params": "bytes_concat 1000000"
+          "params": "bytes_concat 2000000"
         },
         {
           "params": "bytes_iter 1000000"
@@ -691,22 +691,22 @@
           "params": "bytes_map 1000000"
         },
         {
-          "params": "bytes_trim 1000000"
+          "params": "bytes_trim 2500000"
         },
         {
-          "params": "bytes_index 1000000"
+          "params": "bytes_index 10000000"
         },
         {
-          "params": "bytes_contains 1000000"
+          "params": "bytes_contains 100000000"
         },
         {
           "params": "bytes_uppercase_ascii 1000000"
         },
         {
-          "params": "bytes_set 1000000"
+          "params": "bytes_set 1000000000"
         },
         {
-          "params": "bytes_cat 1000000"
+          "params": "bytes_cat 1000000000"
         }
       ]
     },
@@ -742,10 +742,10 @@
           "params": "caml_hash_tuple 200"
         },
         {
-          "params": "int_replace2 10"
+          "params": "int_replace2 25"
         },
         {
-          "params": "int_find2 10"
+          "params": "int_find2 100"
         },
         {
           "params": "hashtbl_iter 10"
@@ -754,10 +754,10 @@
           "params": "hashtbl_fold 10"
         },
         {
-          "params": "hashtbl_add_resizing 1000000"
+          "params": "hashtbl_add_resizing 2000000"
         },
         {
-          "params": "hashtbl_add_sized 1000000"
+          "params": "hashtbl_add_sized 2000000"
         },
         {
           "params": "hashtbl_add_duplicate 1000000"
@@ -766,7 +766,7 @@
           "params": "hashtbl_remove 1000000"
         },
         {
-          "params": "hashtbl_find 1000000"
+          "params": "hashtbl_find 2000000"
         },
         {
           "params": "hashtbl_filter_map 10"
@@ -778,43 +778,43 @@
       "name": "string_bench",
       "runs": [
         {
-          "params": "string_get 1000000"
+          "params": "string_get 50000000"
         },
         {
-          "params": "string_sub 1000000"
+          "params": "string_sub 50000000"
         },
         {
-          "params": "string_blit 1000000"
+          "params": "string_blit 25000000"
         },
         {
-          "params": "string_concat 1000000"
+          "params": "string_concat 20000000"
         },
         {
           "params": "string_iter 1000000"
         },
         {
-          "params": "string_map 1000000"
+          "params": "string_map 20000000"
         },
         {
           "params": "string_trim 1000000"
         },
         {
-          "params": "string_index 1000000"
+          "params": "string_index 25000000"
         },
         {
-          "params": "string_contains 1000000"
+          "params": "string_contains 25000000"
         },
         {
           "params": "string_uppercase_ascii 1000000"
         },
         {
-          "params": "string_split_on_char 250000"
+          "params": "string_split_on_char 500000"
         },
         {
           "params": "string_compare 10000"
         },
         {
-          "params": "string_equal 10000"
+          "params": "string_equal 25000"
         }
       ]
     },
@@ -826,19 +826,19 @@
           "params": "str_regexp 1000000"
         },
         {
-          "params": "str_string_match 1000000"
+          "params": "str_string_match 50000000"
         },
         {
-          "params": "str_search_forward 1000000"
+          "params": "str_search_forward 5000000"
         },
         {
-          "params": "str_string_partial_match 1000000"
+          "params": "str_string_partial_match 25000000"
         },
         {
           "params": "str_global_replace 1000000"
         },
         {
-          "params": "str_split 1000000"
+          "params": "str_split 2000000"
         }
       ]
     },
@@ -847,22 +847,22 @@
       "name": "pervasives_bench",
       "runs": [
         {
-          "params": "pervasives_equal_lists 100000000"
+          "params": "pervasives_equal_lists 1000000000"
         },
         {
           "params": "pervasives_compare_lists 100000000"
         },
         {
-          "params": "pervasives_equal_ints 100000000"
+          "params": "pervasives_equal_ints 1000000000"
         },
         {
-          "params": "pervasives_compare_ints 100000000"
+          "params": "pervasives_compare_ints 1000000000"
         },
         {
-          "params": "pervasives_equal_floats 100000000"
+          "params": "pervasives_equal_floats 1000000000"
         },
         {
-          "params": "pervasives_compare_floats 100000000"
+          "params": "pervasives_compare_floats 200000000"
         },
         {
           "params": "pervasives_equal_strings 20000000"
