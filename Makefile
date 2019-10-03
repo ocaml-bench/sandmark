@@ -77,7 +77,12 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp setup_sys_dune
 
 .PHONY: .FORCE
 .FORCE:
-ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
+
+# the file sandmark_git_hash.txt contains the current git hash for this version of sandmark
+log_sandmark_hash:
+	-git log -n 1
+
+ocaml-versions/%.bench: log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	@opam update
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	@{ echo '(lang dune 1.0)'; \
