@@ -34,7 +34,7 @@ let gen_test_int_replace_and_find_int_hash n tbl =
   in
   (replace, find)
 
-let n = 1_000_000
+let n = 1_000
 
 let create_hashtbl size =
   let h = Hashtbl.create size in
