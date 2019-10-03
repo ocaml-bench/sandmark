@@ -105,6 +105,7 @@ clean:
 	rm -rf ocaml-versions/*.bench
 	rm -rf _build
 	rm -rf _opam
+	rm -rf _results
 
 
 list:
