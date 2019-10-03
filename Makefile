@@ -1,10 +1,12 @@
 # options for running the benchmarks
 
-# benchmark target type:
-#  - bench: single threaded
-#  - parallelbench: multiple process benchmarks that only work on stock OCaml
-#  - multibench: multicore threaded benchmarks that only work on OCaml multicore
-BUILD_BENCH_TARGET ?= bench
+# benchmark build target type:
+#  - buildbench: build all single threaded tests
+BUILD_BENCH_TARGET ?= buildbench
+
+# benchmark run target type:
+#  - run_<wrapper> where wrapper is one of the wrappers defined in
+#    run_config.json (currently orun and perfstat)
 RUN_BENCH_TARGET ?= run_orun
 
 # number of benchmark iterations to run
@@ -88,8 +90,12 @@ ocaml-versions/%.bench: ocaml-versions/%.comp _opam/% .FORCE
            done } > ocaml-versions/.workspace.$*
 	opam exec --switch $* -- rungen _build/$*_1 > runs_dune.inc;
 	opam exec --switch $* -- dune build --profile=release --workspace=ocaml-versions/.workspace.$* @$(BUILD_BENCH_TARGET);
-	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); \
-	  ex=$$?; find _build/$*_* -name '*.bench' | xargs cat > $@; exit $$ex
+	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;
+	@{ for f in `find _build/$*_* -name '*.bench'`; do \
+	   d=`basename $$f | cut -d '.' -f 1,2`; \
+	   mkdir -p _results/$$d/ ; cp $$f _results/$$d/; \
+	done };
+	exit $$ex;
 
 
 clean:

@@ -8,13 +8,16 @@ type benchmark = {executable: string; name: string; runs: run list}
 
 let space_regexp = Str.regexp "[ ]+"
 
+let period_regexp = Str.regexp "\."
+
 let output_regexp = Str.regexp "%{output}"
 
 let command_regexp = Str.regexp "%{command}"
 
 let benchmarks_regexp = Str.regexp "benchmarks/"
 
-let replace_spaces_with_periods str = Str.global_replace space_regexp "." str
+let replace_spaces_with_underscores str = Str.global_replace space_regexp "_" str
+let replace_periods_with_underscores str = Str.global_replace period_regexp "_" str
 
 let parse_json build_dir =
   let open Yojson.Basic.Util in
@@ -32,14 +35,13 @@ let parse_json build_dir =
     ; runs= json |> member "runs" |> convert_each to_run }
   in
   let create_run (wrapper : wrapper) benchmark (run : run) =
-    let run_params = replace_spaces_with_periods run.params in
+    let run_params = replace_periods_with_underscores (replace_spaces_with_underscores run.params) in
     let run_name =
       match run.short_name with
       | Some x ->
-          Printf.sprintf "%s.%s.%s.bench" wrapper.name benchmark.name x
+          Printf.sprintf "%s.%s.%s.bench" benchmark.name x wrapper.name
       | None ->
-          Printf.sprintf "%s.%s.%s.bench" wrapper.name benchmark.name
-            run_params
+          Printf.sprintf "%s.%s.%s.bench" benchmark.name run_params wrapper.name
     in
     let executable_dir, executable_name =
       let splits = List.rev (String.split_on_char '/' benchmark.executable) in
