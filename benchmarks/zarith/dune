@@ -3,24 +3,4 @@
 (executable (name zarith_pi) (modules zarith_pi) (libraries zarith))
 (executable (name zarith_tak) (modules zarith_tak) (libraries zarith num))
 
-(rule
- (targets zarith_fact.40.1000000.bench)
- (deps (:prog zarith_fact.exe))
- (action (ignore-outputs (run orun -o %{targets} -- %{prog} 40 1_000_000))))
-
-(rule
- (targets zarith_fib.40.bench)
- (deps (:prog zarith_fib.exe))
- (action (ignore-outputs (run orun -o %{targets} -- %{prog} Z 40))))
-
-(rule
- (targets zarith_pi.5000.bench)
- (deps (:prog zarith_pi.exe))
- (action (ignore-outputs (run orun -o %{targets} -- %{prog} 5000))))
-
-(rule
- (targets zarith_tak.2500.bench)
- (deps (:prog zarith_tak.exe))
- (action (ignore-outputs (run orun -o %{targets} -- %{prog} Z 2500))))
-
-(alias (name bench) (deps zarith_fib.40.bench zarith_fact.40.1000000.bench zarith_pi.5000.bench zarith_tak.2500.bench))
+(alias (name buildbench) (deps zarith_fact.exe zarith_fib.exe zarith_pi.exe zarith_tak.exe))

@@ -1,8 +1,0 @@
-;; Adapted from OCamlPro's ocamlbench-repo
-;; See https://github.com/OCamlPro/ocamlbench-repo
-(rule
- (targets js-of-ocaml.bench)
- (action (ignore-outputs (run
-   orun -o %{targets} -i %{bin:frama-c.byte} -- js_of_ocaml --disable=check-magic-number -))))
-
-(alias (name bench) (deps js-of-ocaml.bench))

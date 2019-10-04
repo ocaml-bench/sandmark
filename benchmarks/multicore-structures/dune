@@ -45,39 +45,4 @@
     (modules test_stack_sequential)
     (libraries treiber_stack unix))
 
-(rule
- (targets test_stack_sequential.bench)
- (deps (:prog test_stack_sequential.exe))
- (action (run orun -o %{targets} -- %{prog} 100000)))
-
-(rule
- (targets test_queue_sequential.bench)
- (deps (:prog test_queue_sequential.exe))
- (action (run orun -o %{targets} -- %{prog} 100000)))
-
-(rule
- (targets test_stack_parallel.bench)
- (deps (:prog test_stack_parallel.exe))
- (action (run orun -o %{targets} -- %{prog} 100000)))
-
-(rule
- (targets test_queue_parallel.bench)
- (deps (:prog test_queue_parallel.exe))
- (action (run orun -o %{targets} -- %{prog} 100000)))
-
-(rule
- (targets test_spsc_queue_sequential.bench)
- (deps (:prog test_spsc_queue_sequential.exe))
- (action (run orun -o %{targets} -- %{prog} 100000)))
-
- (rule
- (targets test_spsc_queue_parallel.bench)
- (deps (:prog test_spsc_queue_parallel.exe))
- (action (run orun -o %{targets} -- %{prog} 50000000)))
-
- (rule
- (targets test_spsc_queue_pingpong.bench)
- (deps (:prog test_spsc_queue_pingpong.exe))
- (action (run orun -o %{targets} -- %{prog} 4 10000)))
-
-(alias (name multibench) (deps test_stack_sequential.bench test_stack_parallel.bench test_queue_sequential.bench test_queue_parallel.bench test_spsc_queue_sequential.bench test_spsc_queue_parallel.bench test_spsc_queue_pingpong.bench))
+(alias (name buildmultibench) (deps test_spsc_queue_sequential.exe test_spsc_queue_parallel.exe test_spsc_queue_pingpong.exe test_queue_parallel.exe test_stack_parallel.exe test_stack_sequential.exe))

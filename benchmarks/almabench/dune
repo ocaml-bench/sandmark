@@ -3,9 +3,4 @@
 (executable
  (name almabench))
 
-(rule
- (targets almabench.bench)
- (deps (:prog almabench.exe))
- (action (run orun -o %{targets} -- %{prog})))
-
-(alias (name bench) (deps almabench.bench))
+(alias (name buildbench) (deps almabench.exe))

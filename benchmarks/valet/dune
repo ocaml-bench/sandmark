@@ -4,9 +4,4 @@
  (name test_lwt)
  (libraries uuidm ocplib-endian unix react lwt lwt.unix))
 
-(rule
- (targets valet-lwt.bench)
- (deps (:prog test_lwt.exe))
- (action (run orun -o %{targets} -- %{prog} 200)))
-
-(alias (name bench) (deps valet-lwt.bench))
+(alias (name buildbench) (deps test_lwt.exe))

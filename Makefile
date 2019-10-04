@@ -1,10 +1,13 @@
 # options for running the benchmarks
 
-# benchmark target type:
-#  - bench: single threaded
-#  - parallelbench: multiple process benchmarks that only work on stock OCaml
-#  - multibench: multicore threaded benchmarks that only work on OCaml multicore
-BENCH_TARGET ?= bench
+# benchmark build target type:
+#  - buildbench: build all single threaded tests
+BUILD_BENCH_TARGET ?= buildbench
+
+# benchmark run target type:
+#  - run_<wrapper> where wrapper is one of the wrappers defined in
+#    run_config.json (currently orun and perfstat)
+RUN_BENCH_TARGET ?= run_orun
 
 # number of benchmark iterations to run
 ITER ?= 5
@@ -18,9 +21,9 @@ CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
 PACKAGES = \
   cpdf menhir minilight camlimages yojson \
-  lwt ctypes orun cil frama-c alt-ergo zarith \
+  lwt ctypes orun rungen cil frama-c alt-ergo zarith \
   js_of_ocaml-compiler uuidm react ocplib-endian nbcodec \
-  checkseum decompress
+  checkseum decompress sexplib0
 
 # want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
 ifeq ($(findstring multibench,$(BENCH_TARGET)),multibench)
@@ -73,6 +76,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp setup_sys_dune
 	opam update
 	opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
+	opam pin add -n --yes --switch $* rungen rungen/
 
 
 .PHONY: .FORCE
@@ -89,8 +93,14 @@ ocaml-versions/%.bench: log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
            done } > ocaml-versions/.workspace.$*
-	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(BENCH_TARGET); \
-	  ex=$$?; find _build/$*_* -name '*.bench' | xargs cat > $@; exit $$ex
+	opam exec --switch $* -- rungen _build/$*_1 > runs_dune.inc;
+	opam exec --switch $* -- dune build --profile=release --workspace=ocaml-versions/.workspace.$* @$(BUILD_BENCH_TARGET);
+	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;
+	@{ for f in `find _build/$*_* -name '*.bench'`; do \
+	   d=`basename $$f | cut -d '.' -f 1,2`; \
+	   mkdir -p _results/$$d/ ; cp $$f _results/$$d/; \
+	done };
+	exit $$ex;
 
 
 clean:
@@ -100,6 +110,7 @@ clean:
 	rm -rf ocaml-versions/*.bench
 	rm -rf _build
 	rm -rf _opam
+	rm -rf _results
 
 
 list:

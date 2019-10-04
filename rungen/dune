@@ -1,0 +1,4 @@
+(executable
+ (name rungen)
+ (public_name rungen)
+ (libraries yojson sexplib0 str))

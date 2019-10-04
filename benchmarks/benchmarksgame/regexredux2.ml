@@ -22,13 +22,14 @@ let to_string = Str.global_replace re_bs ""
 let subst = ["tHa[Nt]", "<4>"; "aND\\|caN\\|Ha[DS]\\|WaS", "<3>";
              "a[NSt]\\|BY", "<2>"; "<[^>]*>", "|"; "|[^|][^|]*|", "-"] 
 
-(* Read all of a redirected FASTA format file from stdin. *)
+(* Read all of a redirected FASTA format file from knucleotide-input.txt. *)
 let file_data, file_length =
+  let kinput = open_in "knucleotide-input.txt" in
   let b = Buffer.create 0xFFFF in
   let s = Bytes.create 0xFFF in
   let r = ref 1 in
   while !r > 0 do
-    r := input stdin s 0 0xFFF;
+    r := input kinput s 0 0xFFF;
     Buffer.add_substring b (Bytes.unsafe_to_string s) 0 !r
   done;
   (Buffer.contents b, Buffer.length b)

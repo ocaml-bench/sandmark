@@ -16,24 +16,4 @@
     (modules ms_sched test_sched)
     (libraries lockfree))
 
-(rule
- (targets algorithmic_differentiation.150000.bench)
- (deps (:prog algorithmic_differentiation.exe))
- (action (run orun -o %{targets} -- %{prog} 150000)))
-
-(rule
- (targets queens.100000.bench)
- (deps (:prog queens.exe))
- (action (run orun -o %{targets} -- %{prog} 100000)))
-
-(rule
- (targets eratosthenes.bench)
- (deps (:prog eratosthenes.exe))
- (action (run orun -o %{targets} -- %{prog})))
-
-(rule
- (targets test_sched.16.10000.10000.bench)
- (deps (:prog test_sched.exe))
- (action (run orun -o %{targets} -- %{prog} 16 10000 10000)))
-
-(alias (name multibench) (deps algorithmic_differentiation.150000.bench queens.100000.bench eratosthenes.bench test_sched.16.10000.10000.bench))
+(alias (name buildmultibench) (deps algorithmic_differentiation.exe queens.exe eratosthenes.exe test_sched.exe))

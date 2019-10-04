@@ -1,13 +1,4 @@
 ;; Adapted from OCamlPro's ocamlbench-repo
 ;; See https://github.com/OCamlPro/ocamlbench-repo
-(rule
- (targets alt-ergo-fill.bench)
- (deps fill.why)
- (action (ignore-stdout (run orun -o %{targets} -- alt-ergo %{deps}))))
 
-(rule
- (targets alt-ergo-yyll.bench)
- (deps yyll.why)
- (action (ignore-stdout (run orun -o %{targets} -- alt-ergo %{deps}))))
-
-(alias (name bench) (deps alt-ergo-fill.bench alt-ergo-yyll.bench))
+(alias (name buildbench) (deps fill.why yyll.why))

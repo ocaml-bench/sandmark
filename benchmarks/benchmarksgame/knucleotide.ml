@@ -60,20 +60,21 @@ let write_count seq_str dna =
   let cnt = counts (Bytes.length seq) dna in
   Printf.printf "%d\t%s\n" (try !(H.find cnt seq) with Not_found -> 0) (Bytes.to_string seq)
 
-(* Extract DNA sequence "THREE" from stdin *)
+(* Extract DNA sequence "THREE" from knucleotide-input.txt *)
 let dna_three =
+  let kinput = open_in "knucleotide-input.txt" in
   let is_not_three s = try String.sub s 0 6 <> ">THREE" with _ -> true in
-  while is_not_three(input_line stdin) do () done;
+  while is_not_three(input_line kinput) do () done;
   let buf = Buffer.create 1000 in
   (* Skip possible comment *)
   (try while true do
-     let line = input_line stdin in
+     let line = input_line kinput in
      if line.[0] <> ';' then
        (Buffer.add_string buf (String.uppercase_ascii line); raise Exit)
    done with _ -> ());
   (* Read the DNA sequence *)
   (try while true do
-       let line = input_line stdin in
+       let line = input_line kinput in
        if line.[0] = '>' then raise End_of_file;
        Buffer.add_string buf (String.uppercase_ascii line)
    done with End_of_file -> ());

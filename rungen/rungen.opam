@@ -1,0 +1,12 @@
+opam-version: "2.0"
+name: "rungen"
+version: "0.1"
+synopsis: "Generates dune files to run benchmarks from centralised config"
+maintainer: "Sadiq Jaffer <sadiq@toao.com>"
+authors: "Sadiq Jaffer <sadiq@toao.com>"
+license: "MIT"
+dev-repo: ""
+depends: [ "ocaml" "yojson" "sexplib0" ]
+build: [
+  ["dune" "build" "-p" name]
+]

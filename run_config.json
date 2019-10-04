@@ -1,0 +1,918 @@
+{
+  "wrappers": [
+    {
+      "name": "orun",
+      "command": "orun -o %{output} -- %{command}"
+    },
+    {
+      "name": "perfstat",
+      "command": "perf stat -o %{output} -- %{command}"
+    }
+  ],
+  "benchmarks": [
+    {
+      "executable": "benchmarks/decompress/test_decompress.exe",
+      "name": "test_decompress",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/yojson/ydump.exe",
+      "name": "ydump",
+      "runs": [
+        {
+          "params": "-c sample.json",
+          "short_name": "sample.json"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/morestacks.exe",
+      "name": "morestacks",
+      "runs": [
+        {
+          "params": "1_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/alloc.exe",
+      "name": "alloc",
+      "runs": [
+        {
+          "params": "200_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/sequence/sequence_cps.exe",
+      "name": "sequence_cps",
+      "runs": [
+        {
+          "params": "10000"
+        }
+      ]
+    },
+    {
+      "executable": "setrip",
+      "name": "setrip",
+      "runs": [
+        {
+          "params": "-enc -rseed 1067894368"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/thread-lwt/thread_ring_lwt_mvar.exe",
+      "name": "thread_ring_lwt_mvar",
+      "runs": [
+        {
+          "params": "20_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/thread-lwt/thread_ring_lwt_stream.exe",
+      "name": "thread_ring_lwt_stream",
+      "runs": [
+        {
+          "params": "20_000"
+        }
+      ]
+    },
+    {
+      "executable": "cpdf",
+      "name": "cpdf",
+      "runs": [
+        {
+          "params": "-merge benchmarks/cpdf/metro_geo.pdf -o /dev/null",
+          "short_name": "merge"
+        }
+      ]
+    },
+    {
+      "executable": "cpdf",
+      "name": "cpdf",
+      "runs": [
+        {
+          "params": "scale-to-fit a4landscape -twoup benchmarks/cpdf/PDFReference16.pdf_toobig -o /dev/null",
+          "short_name": "scale"
+        },
+        {
+          "params": "-squeeze benchmarks/cpdf/PDFReference16.pdf_toobig -o /dev/null",
+          "short_name": "squeeze"
+        }
+      ]
+    },
+    {
+      "executable": "cpdf",
+      "name": "cpdf",
+      "runs": [
+        {
+          "params": "-blacktext benchmarks/cpdf/metro_geo.pdf -o /dev/null",
+          "short_name": "blacktext"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/binarytrees5.exe",
+      "name": "binarytrees5",
+      "runs": [
+        {
+          "params": "16"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/fannkuchredux2.exe",
+      "name": "fannkuchredux2",
+      "runs": [
+        {
+          "params": "10"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/fannkuchredux.exe",
+      "name": "fannkuchredux",
+      "runs": [
+        {
+          "params": "10"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/fasta3.exe",
+      "name": "fasta3",
+      "runs": [
+        {
+          "params": "2_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/fasta6.exe",
+      "name": "fasta6",
+      "runs": [
+        {
+          "params": "2_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/mandelbrot6.exe",
+      "name": "mandelbrot6",
+      "runs": [
+        {
+          "params": "2_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/nbody.exe",
+      "name": "nbody",
+      "runs": [
+        {
+          "params": "2_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/pidigits5.exe",
+      "name": "pidigits5",
+      "runs": [
+        {
+          "params": "8000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/spectralnorm2.exe",
+      "name": "spectralnorm2",
+      "runs": [
+        {
+          "params": "2_000"
+        }
+      ]
+    },
+    {
+      "executable": "minilight-ocaml",
+      "name": "minilight-ocaml",
+      "runs": [
+        {
+          "params": "benchmarks/minilight/roomfront.ml.txt",
+          "short_name": "roomfront.ml.txt"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/valet/test_lwt.exe",
+      "name": "test_lwt",
+      "runs": [
+        {
+          "params": "200"
+        }
+      ]
+    },
+    {
+      "executable": "frama-c",
+      "name": "frama-c",
+      "runs": [
+        {
+          "params": "-slevel 1000000000 -no-results -no-val-show-progress benchmarks/frama-c/t.c -val",
+          "short_name": "slevel"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/bdd/bdd.exe",
+      "name": "bdd",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "js_of_ocaml",
+      "name": "js_of_ocaml",
+      "runs": [
+        {
+          "params": "--disable=check-magic-number %{bin:frama-c.byte}",
+	  "short_name": "frama-c_byte"
+        }
+      ]
+    },
+    {
+      "executable": "alt-ergo",
+      "name": "alt-ergo",
+      "runs": [
+        {
+          "params": "benchmarks/alt-ergo/fill.why",
+          "short_name": "fill.why"
+        }
+      ]
+    },
+    {
+      "executable": "alt-ergo",
+      "name": "alt-ergo",
+      "runs": [
+        {
+          "params": "benchmarks/alt-ergo/yyll.why",
+          "short_name": "yyll.why"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/lexifi-g2pp/main.exe",
+      "name": "main",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/kb/kb.exe",
+      "name": "kb",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/kb/kb_no_exc.exe",
+      "name": "kb_no_exc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/zarith/zarith_fact.exe",
+      "name": "zarith_fact",
+      "runs": [
+        {
+          "params": "40 1_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/zarith/zarith_fib.exe",
+      "name": "zarith_fib",
+      "runs": [
+        {
+          "params": "Z 40"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/zarith/zarith_pi.exe",
+      "name": "zarith_pi",
+      "runs": [
+        {
+          "params": "5000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/zarith/zarith_tak.exe",
+      "name": "zarith_tak",
+      "runs": [
+        {
+          "params": "Z 2500"
+        }
+      ]
+    },
+    {
+      "executable": "menhir",
+      "name": "menhir",
+      "runs": [
+        {
+          "params": "benchmarks/menhir/ocaml.mly --list-errors -la 2 --no-stdlib --lalr",
+          "short_name": "ocamly.mly"
+        }
+      ]
+    },
+    {
+      "executable": "menhir",
+      "name": "menhir",
+      "runs": [
+        {
+          "params": "-v -t benchmarks/menhir/keywords.mly benchmarks/menhir/sql-parser.mly --base sql-parser",
+          "short_name": "sql-parser.mly"
+        }
+      ]
+    },
+    {
+      "executable": "menhir",
+      "name": "menhir",
+      "runs": [
+        {
+          "params": "-v --table benchmarks/menhir/sysver.mly",
+          "short_name": "sysver.mly"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/chameneos/chameneos_redux_lwt.exe",
+      "name": "chameneos_redux_lwt",
+      "runs": [
+        {
+          "params": "600000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/stress.exe",
+      "name": "stress",
+      "runs": [
+        {
+          "params": "1 10"
+        },
+        {
+          "params": "10000 10"
+        },
+        {
+          "params": "100000 10"
+        },
+        {
+          "params": "1 25"
+        },
+        {
+          "params": "10000 25"
+        },
+        {
+          "params": "100000 25"
+        },
+        {
+          "params": "1 50"
+        },
+        {
+          "params": "10000 50"
+        },
+        {
+          "params": "100000 50"
+        },
+        {
+          "params": "1 75"
+        },
+        {
+          "params": "10000 75"
+        },
+        {
+          "params": "100000 75"
+        },
+        {
+          "params": "1 100"
+        },
+        {
+          "params": "10000 100"
+        },
+        {
+          "params": "100000 100"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/capi.exe",
+      "name": "capi",
+      "runs": [
+        {
+          "params": "test_no_args_alloc 200_000_000"
+        },
+        {
+          "params": "test_no_args_noalloc 200_000_000"
+        },
+        {
+          "params": "test_few_args_alloc 200_000_000"
+        },
+        {
+          "params": "test_few_args_noalloc 200_000_000"
+        },
+        {
+          "params": "test_many_args_alloc 200_000_000"
+        },
+        {
+          "params": "test_many_args_noalloc 200_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/stacks.exe",
+      "name": "stacks",
+      "runs": [
+        {
+          "params": "100000 ints-small"
+        },
+        {
+          "params": "20000 ints-large"
+        },
+        {
+          "params": "100000 floats-small"
+        },
+        {
+          "params": "20000 floats-large"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/weakretain.exe",
+      "name": "weakretain",
+      "runs": [
+        {
+          "params": "25 1000"
+        },
+        {
+          "params": "25 100000"
+        },
+        {
+          "params": "25 10000000"
+        },
+        {
+          "params": "50 1000"
+        },
+        {
+          "params": "50 100000"
+        },
+        {
+          "params": "50 10000000"
+        },
+        {
+          "params": "75 1000"
+        },
+        {
+          "params": "75 100000"
+        },
+        {
+          "params": "75 10000000"
+        },
+        {
+          "params": "100 1000"
+        },
+        {
+          "params": "100 100000"
+        },
+        {
+          "params": "100 10000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/lazylist.exe",
+      "name": "lazylist",
+      "runs": [
+        {
+          "params": "100000 100"
+        },
+        {
+          "params": "10000 1000"
+        },
+        {
+          "params": "1000 10000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/lists.exe",
+      "name": "lists",
+      "runs": [
+        {
+          "params": "int 1"
+        },
+        {
+          "params": "int 10000"
+        },
+        {
+          "params": "int 100000"
+        },
+        {
+          "params": "float 1"
+        },
+        {
+          "params": "float 10000"
+        },
+        {
+          "params": "float 100000"
+        },
+        {
+          "params": "int-tuple 1"
+        },
+        {
+          "params": "int-tuple 10000"
+        },
+        {
+          "params": "int-tuple 100000"
+        },
+        {
+          "params": "float-tuple 1"
+        },
+        {
+          "params": "float-tuple 10000"
+        },
+        {
+          "params": "float-tuple 100000"
+        },
+        {
+          "params": "string 1"
+        },
+        {
+          "params": "string 10000"
+        },
+        {
+          "params": "string 100000"
+        },
+        {
+          "params": "record 1"
+        },
+        {
+          "params": "record 10000"
+        },
+        {
+          "params": "record 100000"
+        },
+        {
+          "params": "float-array 1"
+        },
+        {
+          "params": "float-array 10000"
+        },
+        {
+          "params": "float-array 100000"
+        },
+        {
+          "params": "int-array 1"
+        },
+        {
+          "params": "int-array 10000"
+        },
+        {
+          "params": "int-array 100000"
+        },
+        {
+          "params": "int-option-array 1"
+        },
+        {
+          "params": "int-option-array 10000"
+        },
+        {
+          "params": "int-option-array 100000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/finalise.exe",
+      "name": "finalise",
+      "runs": [
+        {
+          "params": "10"
+        },
+        {
+          "params": "20"
+        },
+        {
+          "params": "30"
+        },
+        {
+          "params": "40"
+        },
+        {
+          "params": "50"
+        },
+        {
+          "params": "60"
+        },
+        {
+          "params": "70"
+        },
+        {
+          "params": "80"
+        },
+        {
+          "params": "90"
+        },
+        {
+          "params": "100"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/stack_bench.exe",
+      "name": "stack_bench",
+      "runs": [
+        {
+          "params": "stack_fold 2500000"
+        },
+        {
+          "params": "stack_push_pop 100000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/array_bench.exe",
+      "name": "array_bench",
+      "runs": [
+        {
+          "params": "array_forall 1000 100000"
+        },
+        {
+          "params": "array_fold 1000 100000"
+        },
+        {
+          "params": "array_iter 1000 100000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/bytes_bench.exe",
+      "name": "bytes_bench",
+      "runs": [
+        {
+          "params": "bytes_get 100000000"
+        },
+        {
+          "params": "bytes_sub 100000000"
+        },
+        {
+          "params": "bytes_blit 2500000"
+        },
+        {
+          "params": "bytes_concat 2000000"
+        },
+        {
+          "params": "bytes_iter 1000000"
+        },
+        {
+          "params": "bytes_map 1000000"
+        },
+        {
+          "params": "bytes_trim 2500000"
+        },
+        {
+          "params": "bytes_index 10000000"
+        },
+        {
+          "params": "bytes_contains 100000000"
+        },
+        {
+          "params": "bytes_uppercase_ascii 1000000"
+        },
+        {
+          "params": "bytes_set 1000000000"
+        },
+        {
+          "params": "bytes_cat 1000000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/set_bench.exe",
+      "name": "set_bench",
+      "runs": [
+        {
+          "params": "set_fold 1000000"
+        },
+        {
+          "params": "set_add_rem 20000000"
+        },
+        {
+          "params": "set_mem 50000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/hashtbl_bench.exe",
+      "name": "hashtbl_bench",
+      "runs": [
+        {
+          "params": "int_replace1 10"
+        },
+        {
+          "params": "int_find1 10"
+        },
+        {
+          "params": "caml_hash_int 200"
+        },
+        {
+          "params": "caml_hash_tuple 200"
+        },
+        {
+          "params": "int_replace2 25"
+        },
+        {
+          "params": "int_find2 100"
+        },
+        {
+          "params": "hashtbl_iter 10"
+        },
+        {
+          "params": "hashtbl_fold 10"
+        },
+        {
+          "params": "hashtbl_add_resizing 2000000"
+        },
+        {
+          "params": "hashtbl_add_sized 2000000"
+        },
+        {
+          "params": "hashtbl_add_duplicate 1000000"
+        },
+        {
+          "params": "hashtbl_remove 1000000"
+        },
+        {
+          "params": "hashtbl_find 2000000"
+        },
+        {
+          "params": "hashtbl_filter_map 10"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/string_bench.exe",
+      "name": "string_bench",
+      "runs": [
+        {
+          "params": "string_get 50000000"
+        },
+        {
+          "params": "string_sub 50000000"
+        },
+        {
+          "params": "string_blit 25000000"
+        },
+        {
+          "params": "string_concat 20000000"
+        },
+        {
+          "params": "string_iter 1000000"
+        },
+        {
+          "params": "string_map 20000000"
+        },
+        {
+          "params": "string_trim 1000000"
+        },
+        {
+          "params": "string_index 25000000"
+        },
+        {
+          "params": "string_contains 25000000"
+        },
+        {
+          "params": "string_uppercase_ascii 1000000"
+        },
+        {
+          "params": "string_split_on_char 500000"
+        },
+        {
+          "params": "string_compare 10000"
+        },
+        {
+          "params": "string_equal 25000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/str_bench.exe",
+      "name": "str_bench",
+      "runs": [
+        {
+          "params": "str_regexp 1000000"
+        },
+        {
+          "params": "str_string_match 50000000"
+        },
+        {
+          "params": "str_search_forward 5000000"
+        },
+        {
+          "params": "str_string_partial_match 25000000"
+        },
+        {
+          "params": "str_global_replace 1000000"
+        },
+        {
+          "params": "str_split 2000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/pervasives_bench.exe",
+      "name": "pervasives_bench",
+      "runs": [
+        {
+          "params": "pervasives_equal_lists 1000000000"
+        },
+        {
+          "params": "pervasives_compare_lists 100000000"
+        },
+        {
+          "params": "pervasives_equal_ints 1000000000"
+        },
+        {
+          "params": "pervasives_compare_ints 1000000000"
+        },
+        {
+          "params": "pervasives_equal_floats 1000000000"
+        },
+        {
+          "params": "pervasives_compare_floats 200000000"
+        },
+        {
+          "params": "pervasives_equal_strings 20000000"
+        },
+        {
+          "params": "pervasives_compare_strings 20000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/map_bench.exe",
+      "name": "map_bench",
+      "runs": [
+        {
+          "params": "map_iter 10000"
+        },
+        {
+          "params": "map_add 1000000"
+        },
+        {
+          "params": "map_add_duplicate 1000000"
+        },
+        {
+          "params": "map_remove 1000000"
+        },
+        {
+          "params": "map_fold 10000"
+        },
+        {
+          "params": "map_for_all 10000"
+        },
+        {
+          "params": "map_find 1000000"
+        },
+        {
+          "params": "map_map 10000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/big_array_bench.exe",
+      "name": "big_array_bench",
+      "runs": [
+        {
+          "params": "big_array_int_rev 1024 50000"
+        },
+        {
+          "params": "big_array_int32_rev 1024 50000"
+        }
+      ]
+    }
+  ]
+}

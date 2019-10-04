@@ -1,25 +1,4 @@
 ;; Adapted from OCamlPro's ocamlbench-repo
 ;; See https://github.com/OCamlPro/ocamlbench-repo
-(rule
- (targets menhir-list-errors.bench)
- (deps ocaml.mly)
- (action (ignore-outputs (run orun -o %{targets} --
-   menhir %{deps} --list-errors -la 2 --no-stdlib --lalr))))
 
-(rule
- (targets menhir-sql.bench)
- (deps keywords.mly sql-parser.mly)
- (action (ignore-outputs (run orun -o %{targets} --
-   menhir -v -t %{deps} --base sql-parser))))
-
-(rule
- (targets menhir-sysver.bench)
- (deps sysver.mly)
- (action (ignore-outputs (run orun -o %{targets} --
-   menhir -v --table %{deps}))))
-
-(alias (name bench) (deps
-;; temporarily disabled because it takes so long
-;;  menhir-list-errors.bench
-  menhir-sql.bench
-  menhir-sysver.bench))
+(alias (name buildbench) (deps keywords.mly ocaml.mly sql-parser.mly sysver.mly))
