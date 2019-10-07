@@ -98,7 +98,7 @@ ocaml-versions/%.bench: log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;
 	@{ for f in `find _build/$*_* -name '*.bench'`; do \
 	   d=`basename $$f | cut -d '.' -f 1,2`; \
-	   mkdir -p _results/$$d/ ; cp $$f _results/$$d/; \
+	   mkdir -p _results/$*/$$d/ ; cp $$f _results/$*/$$d/; \
 	done };
 	exit $$ex;
 
