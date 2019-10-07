@@ -12,6 +12,14 @@ try `make ocaml-versions/4.06.0.bench`
 
 on Linux you need to have `libgmp-dev` installed for several of the benchmarks to work. 
 
+## running from a directory different than /home
+
+special care is needed if you happen to run sandmark from a directory different than home.
+
+if you get error like `# bwrap: execvp dune: No such file or directory`, it may be because opam's sandboxing prevent executables to be run from non-standard locations.
+
+to get around this issue, you may specify `OPAM_USER_PATH_RO=/directory/to/sandmark` in order to whitelist this location from sandboxing.
+
 ## Multicore notes
 
 ### running multicore specific benchmarks
