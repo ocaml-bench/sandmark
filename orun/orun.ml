@@ -191,11 +191,13 @@ let run output input cmdline =
       | None ->
           Unix.stdin
     in
-    let name =
-      if Filename.check_suffix output ".bench" then
-        Filename.chop_suffix output ".bench"
-      else output
+    let strip_suffix fname suffix =
+      if Filename.check_suffix fname suffix then
+        Filename.chop_suffix fname suffix
+      else fname
     in
+    let name = strip_suffix (Filename.basename output) ".bench" in
+    let name = strip_suffix name ".orun" in
     let environ =
       "OCAMLRUNPARAM=v=0x400"
       :: "OCAML_EVENTLOG_ENABLED=1" (* enable tracing on eventlog branches *)
