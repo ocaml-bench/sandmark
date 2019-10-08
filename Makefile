@@ -100,6 +100,7 @@ ocaml-versions/%.bench: log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	   d=`basename $$f | cut -d '.' -f 1,2`; \
 	   mkdir -p _results/$*/$$d/ ; cp $$f _results/$*/$$d/; \
 	done };
+	@{ find _build/$*_* -name '*.bench' | xargs cat > _results/$*/$*.bench; };
 	exit $$ex;
 
 
