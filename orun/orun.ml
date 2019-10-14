@@ -259,7 +259,7 @@ open Cmdliner
 
 let output =
   let doc = "Output location for run statistics" in
-  Arg.(value & opt string "" & info ["o"; "output"] ~docv:"FILE" ~doc)
+  Arg.(required & value & opt string "" & info ["o"; "output"] ~docv:"FILE" ~doc)
 
 let input =
   let doc = "Optional file to use as stdin" in
