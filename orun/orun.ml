@@ -245,7 +245,7 @@ let run output input cmdline =
     in
     let stats = `Assoc (stats @ extra_config) in
     Sys.remove captured_stderr_filename ;
-    let oc = open_out output in
+    let oc = if output = "" then stderr else open_out output in
     Yojson.Basic.to_channel oc stats ;
     output_string oc "\n" ;
     close_out oc ;
@@ -258,7 +258,7 @@ let run output input cmdline =
 open Cmdliner
 
 let output =
-  let doc = "Output location for run statistics" in
+  let doc = "Output location for run statistics file (if omitted then will print to stderr)" in
   Arg.(value & opt string "" & info ["o"; "output"] ~docv:"FILE" ~doc)
 
 let input =
