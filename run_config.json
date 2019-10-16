@@ -730,46 +730,46 @@
       "name": "hashtbl_bench",
       "runs": [
         {
-          "params": "int_replace1 10"
+          "params": "int_replace1 10000"
         },
         {
-          "params": "int_find1 10"
+          "params": "int_find1 20000"
         },
         {
-          "params": "caml_hash_int 200"
+          "params": "caml_hash_int 200000"
         },
         {
-          "params": "caml_hash_tuple 200"
+          "params": "caml_hash_tuple 100000"
         },
         {
-          "params": "int_replace2 25"
+          "params": "int_replace2 100000"
         },
         {
-          "params": "int_find2 100"
+          "params": "int_find2 300000"
         },
         {
-          "params": "hashtbl_iter 10"
+          "params": "hashtbl_iter 200000"
         },
         {
-          "params": "hashtbl_fold 10"
+          "params": "hashtbl_fold 200000"
         },
         {
-          "params": "hashtbl_add_resizing 2000000"
+          "params": "hashtbl_add_resizing 4000000"
         },
         {
-          "params": "hashtbl_add_sized 2000000"
+          "params": "hashtbl_add_sized 6000000"
         },
         {
-          "params": "hashtbl_add_duplicate 1000000"
+          "params": "hashtbl_add_duplicate 2000000"
         },
         {
-          "params": "hashtbl_remove 1000000"
+          "params": "hashtbl_remove 4000000"
         },
         {
-          "params": "hashtbl_find 2000000"
+          "params": "hashtbl_find 6000000"
         },
         {
-          "params": "hashtbl_filter_map 10"
+          "params": "hashtbl_filter_map 100000"
         }
       ]
     },
