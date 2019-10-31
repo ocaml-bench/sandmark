@@ -145,6 +145,30 @@
       ]
     },
     {
+      "executable": "benchmarks/benchmarksgame/knucleotide.exe",
+      "name": "knucleotide",
+      "runs": [
+        {
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/regexredux2.exe",
+      "name": "regexredux2.exe",
+      "runs": [
+        {
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/revcomp2.exe",
+      "name": "revcomp2",
+      "runs": [
+        {
+        }
+      ]
+    },
+    {
       "executable": "benchmarks/benchmarksgame/fasta3.exe",
       "name": "fasta3",
       "runs": [
@@ -242,7 +266,7 @@
       "runs": [
         {
           "params": "--disable=check-magic-number %{bin:frama-c.byte}",
-	  "short_name": "frama-c_byte"
+          "short_name": "frama-c_byte"
         }
       ]
     },
