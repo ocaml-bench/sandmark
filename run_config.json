@@ -149,6 +149,7 @@
       "name": "knucleotide",
       "runs": [
         {
+          "params": ""
         }
       ]
     },
@@ -157,6 +158,7 @@
       "name": "regexredux2.exe",
       "runs": [
         {
+          "params": ""
         }
       ]
     },
@@ -165,6 +167,7 @@
       "name": "revcomp2",
       "runs": [
         {
+          "params": ""
         }
       ]
     },
