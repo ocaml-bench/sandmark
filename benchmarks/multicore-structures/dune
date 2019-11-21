@@ -9,8 +9,8 @@
     (libraries spsc_queue unix))
 
 (executables
-    (names test_spsc_queue_pingpong)
-    (modules test_spsc_queue_pingpong)
+    (names test_spsc_queue_pingpong_parallel)
+    (modules test_spsc_queue_pingpong_parallel)
     (libraries spsc_queue unix))
 
 (executables
@@ -27,11 +27,11 @@
     (name spsc_queue)
     (modules spsc_queue))
 
-(library 
+(library
     (name ms_queue)
     (modules ms_queue))
 
-(library 
+(library
     (name treiber_stack)
     (modules treiber_stack))
 
@@ -45,4 +45,5 @@
     (modules test_stack_sequential)
     (libraries treiber_stack unix))
 
-(alias (name buildmultibench) (deps test_spsc_queue_sequential.exe test_spsc_queue_parallel.exe test_spsc_queue_pingpong.exe test_queue_parallel.exe test_stack_parallel.exe test_stack_sequential.exe))
+(alias (name multibench_parallel) (deps test_stack_parallel.exe test_queue_parallel.exe test_spsc_queue_parallel.exe test_spsc_queue_pingpong_parallel.exe))
+(alias (name multibench_serial) (deps test_stack_sequential.exe test_queue_sequential.exe test_spsc_queue_sequential.exe test_spsc_queue_pingpong_sequential.exe))
