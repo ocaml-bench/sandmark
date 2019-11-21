@@ -1,3 +1,6 @@
-(executable (name test_hash) (modules test_hash) (libraries lockfree))
+(executable
+	(name test_hash)
+	(modules test_hash)
+	(libraries lockfree))
 
-(alias (name buildmultibench) (deps test_hash.exe))
+(alias (name multibench_parallel) (deps test_hash.exe))

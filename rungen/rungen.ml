@@ -1,5 +1,8 @@
 open Sexplib0
 
+let build_dir = Sys.argv.(1)
+let run_config = Sys.argv.(2)
+
 type wrapper = {name: string; command: string}
 
 type run = {params: string; short_name: string option}
@@ -73,7 +76,7 @@ let parse_json build_dir =
                         ; Sexp.List ([Sexp.Atom "run"] @ make_sexp_params_list)
                         ] ] ] ] ] )
   in
-  let config_json = Yojson.Basic.from_file "run_config.json" in
+  let config_json = Yojson.Basic.from_file run_config in
   let wrappers = config_json |> member "wrappers" |> convert_each to_wrapper in
   let benchmarks =
     config_json |> member "benchmarks" |> convert_each to_benchmark
@@ -108,6 +111,5 @@ let parse_json build_dir =
       wrappers
 
 let () =
-  let build_dir = Sys.argv.(1) in
   print_endline
     (String.concat "\n\n" (List.map Sexp.to_string_hum (parse_json build_dir)))

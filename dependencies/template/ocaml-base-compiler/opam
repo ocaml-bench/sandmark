@@ -12,6 +12,6 @@ flags: compiler
 build: [
   ["sh" "invoke-configure.sh" prefix os]
   [make "-j" jobs "world"]
-  [make "world.opt"]
+  [make "-j" jobs "world.opt"]
 ]
 install: [make "install"]

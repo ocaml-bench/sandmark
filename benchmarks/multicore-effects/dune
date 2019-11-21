@@ -16,4 +16,6 @@
     (modules ms_sched test_sched)
     (libraries lockfree))
 
-(alias (name buildmultibench) (deps algorithmic_differentiation.exe queens.exe eratosthenes.exe test_sched.exe))
+(alias
+		(name multibench_serial)
+		(deps algorithmic_differentiation.exe queens.exe eratosthenes.exe test_sched.exe))

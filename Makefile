@@ -4,13 +4,18 @@
 #  - buildbench: build all single threaded tests
 BUILD_BENCH_TARGET ?= buildbench
 
+# The run configuration json file that describes the benchmarks and
+# configurations.
+RUN_CONFIG_JSON ?= run_config.json
+
 # benchmark run target type:
-#  - run_<wrapper> where wrapper is one of the wrappers defined in
-#    run_config.json (currently orun and perfstat)
+#  run_<wrapper> where wrapper is one of the wrappers defined in
+#  RUN_CONFIG_JSON. The default RUN_CONFIG_JSON defines two wrappers: perf and
+#  orun
 RUN_BENCH_TARGET ?= run_orun
 
 # number of benchmark iterations to run
-ITER ?= 5
+ITER ?= 1
 
 # setup default for pre benchmark wrappers
 # for example PRE_BENCH_EXEC='taskset --cpu-list 3 setarch `uname -m` --addr-no-randomize'
@@ -20,14 +25,15 @@ PRE_BENCH_EXEC ?=
 CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
 PACKAGES = \
-  cpdf menhir minilight camlimages yojson \
-  lwt ctypes orun rungen frama-c alt-ergo zarith \
-  js_of_ocaml-compiler uuidm react ocplib-endian nbcodec \
-  checkseum decompress sexplib0
+	cpdf menhir minilight camlimages yojson lwt orun rungen alt-ergo zarith \
+	js_of_ocaml-compiler uuidm react ocplib-endian nbcodec checkseum decompress \
+	sexplib0
 
 # want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
-ifeq ($(findstring multibench,$(BENCH_TARGET)),multibench)
+ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += lockfree kcas
+else ## ctypes and frama-c do not build under multicore
+	PACKAGES += ctypes frama-c
 endif
 
 .SECONDARY:
@@ -86,6 +92,10 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp setup_sys_dune
 log_sandmark_hash:
 	-git log -n 1
 
+.PHONY: blah
+blah:
+	@echo ${PACKAGES}
+
 ocaml-versions/%.bench: log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	@opam update
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
@@ -93,7 +103,7 @@ ocaml-versions/%.bench: log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
            done } > ocaml-versions/.workspace.$*
-	opam exec --switch $* -- rungen _build/$*_1 > runs_dune.inc;
+	opam exec --switch $* -- rungen _build/$*_1 $(RUN_CONFIG_JSON) > runs_dune.inc;
 	opam exec --switch $* -- dune build --profile=release --workspace=ocaml-versions/.workspace.$* @$(BUILD_BENCH_TARGET);
 	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;
 	@{ for f in `find _build/$*_* -name '*.bench'`; do \
@@ -112,7 +122,6 @@ clean:
 	rm -rf _build
 	rm -rf _opam
 	rm -rf _results
-
 
 list:
 	@echo $(ocamls)

@@ -7,5 +7,4 @@
  (modules mandelbrot_vanilla)
  (libraries unix))
 
- (alias (name buildparallelbench) (deps mandelbrot_vanilla.exe))
- (alias (name buildmultibench) (deps mandelbrot_multicore.exe))
+(alias (name multibench_parallel) (deps mandelbrot_multicore.exe))

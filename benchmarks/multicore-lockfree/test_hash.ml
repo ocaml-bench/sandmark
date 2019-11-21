@@ -2,13 +2,14 @@ module Hash = Lockfree.Hash
 
 let threads = int_of_string Sys.argv.(1)
 let read_percent = int_of_string Sys.argv.(2)
+let num_opers = int_of_string Sys.argv.(3)
 
 let () = Random.init 42
 
 let h = Hash.create()
 
-let do_stuff_with_hash () = 
-  for _ = 1 to 100_000 do
+let do_stuff_with_hash () =
+  for _ = 1 to num_opers do
     if Random.int 100 > read_percent then
         Hash.add h (Random.int 1000) 0
     else
