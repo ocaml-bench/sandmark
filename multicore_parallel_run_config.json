@@ -10,101 +10,101 @@
     }
   ],
   "benchmarks": [
-		{
-			"executable": "benchmarks/multicore-numerical/spectralnorm2_multicore.exe",
-			"name": "spectralnorm2_multicore",
-			"runs": [
-				{
-					"params": "2000 1"
-				}
-			]
-		},
-		{
-			"executable": "benchmarks/multicore-numerical/mandelbrot_multicore.exe",
-			"name": "mandelbrot_multicore",
-			"runs": [
-				{
-					"params": "16000 1"
-				},
-				{
-					"params": "16000 2"
-				},
-				{
-					"params": "16000 4"
-				}
-			]
-		},
-		{
-			"executable": "benchmarks/multicore-structures/test_queue_parallel.exe",
-			"name": "mpmc_queue_parallel",
-			"runs": [
-				{
-					"params": "10000000"
-				}
-			]
-		},
-		{
-			"executable": "benchmarks/multicore-structures/test_spsc_queue_parallel.exe",
-			"name": "spsc_queue_parallel",
-			"runs": [
-				{
-					"params": "10000000"
-				}
-			]
-		},
-		{
-			"executable": "benchmarks/multicore-structures/test_spsc_queue_pingpong_parallel.exe",
-			"name": "spsc_queue_pingpong_parallel",
-			"runs": [
-				{
-					"params": "1 10000000"
-				},
-				{
-					"params": "2 10000000"
-				},
-				{
-					"params": "4 10000000"
-				}
-			]
-		},
-		{
-			"executable": "benchmarks/multicore-lockfree/test_wsqueue.exe",
-			"name": "lockfree-wsqueue",
-			"runs": [
-				{
-					"params": "1 100000"
-				},
-				{
-					"params": "2 100000"
-				},
-				{
-					"params": "4 100000"
-				}
-			]
-		},
-		{
-			"executable": "benchmarks/multicore-lockfree/test_hash.exe",
-			"name": "lockfree-hash",
-			"runs": [
-				{
-					"params": "1 80 1000000"
-				},
-				{
-					"params": "2 80 1000000"
-				},
-				{
-					"params": "4 80 1000000"
-				}
-			]
-		},
-		{
-			"executable": "benchmarks/multicore-structures/test_stack_parallel.exe",
-			"name": "stack_parallel",
-			"runs": [
-				{
-					"params": "100000"
-				}
-			]
-		}
+    {
+      "executable": "benchmarks/multicore-numerical/spectralnorm2_multicore.exe",
+      "name": "spectralnorm2_multicore",
+      "runs": [
+        {
+          "params": "2000 1"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/mandelbrot_multicore.exe",
+      "name": "mandelbrot_multicore",
+      "runs": [
+        {
+          "params": "16000 1"
+        },
+        {
+          "params": "16000 2"
+        },
+        {
+          "params": "16000 4"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-structures/test_queue_parallel.exe",
+      "name": "mpmc_queue_parallel",
+      "runs": [
+        {
+          "params": "10000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-structures/test_spsc_queue_parallel.exe",
+      "name": "spsc_queue_parallel",
+      "runs": [
+        {
+          "params": "10000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-structures/test_spsc_queue_pingpong_parallel.exe",
+      "name": "spsc_queue_pingpong_parallel",
+      "runs": [
+        {
+          "params": "1 10000000"
+        },
+        {
+          "params": "2 10000000"
+        },
+        {
+          "params": "4 10000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_wsqueue.exe",
+      "name": "lockfree-wsqueue",
+      "runs": [
+        {
+          "params": "1 100000"
+        },
+        {
+          "params": "2 100000"
+        },
+        {
+          "params": "4 100000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_hash.exe",
+      "name": "lockfree-hash",
+      "runs": [
+        {
+          "params": "1 80 1000000"
+        },
+        {
+          "params": "2 80 1000000"
+        },
+        {
+          "params": "4 80 1000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-structures/test_stack_parallel.exe",
+      "name": "stack_parallel",
+      "runs": [
+        {
+          "params": "100000"
+        }
+      ]
+    }
   ]
 }
