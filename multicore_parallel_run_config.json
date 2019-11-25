@@ -11,7 +11,16 @@
   ],
   "benchmarks": [
 		{
-			"executable": "benchmarks/mandelbrot/mandelbrot_multicore.exe",
+			"executable": "benchmarks/multicore-numerical/spectralnorm2_multicore.exe",
+			"name": "spectralnorm2_multicore",
+			"runs": [
+				{
+					"params": "2000 1"
+				}
+			]
+		},
+		{
+			"executable": "benchmarks/multicore-numerical/mandelbrot_multicore.exe",
 			"name": "mandelbrot_multicore",
 			"runs": [
 				{

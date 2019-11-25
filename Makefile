@@ -31,7 +31,7 @@ PACKAGES = \
 
 # want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
-	PACKAGES += lockfree kcas
+	PACKAGES += lockfree kcas domainslib
 else ## ctypes and frama-c do not build under multicore
 	PACKAGES += ctypes frama-c
 endif

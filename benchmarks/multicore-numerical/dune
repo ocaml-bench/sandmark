@@ -3,8 +3,13 @@
  (modules mandelbrot_multicore))
 
 (executable
+ (name spectralnorm2_multicore)
+ (modules spectralnorm2_multicore)
+ (libraries domainslib))
+
+(executable
  (name mandelbrot_vanilla)
  (modules mandelbrot_vanilla)
  (libraries unix))
 
-(alias (name multibench_parallel) (deps mandelbrot_multicore.exe))
+(alias (name multibench_parallel) (deps mandelbrot_multicore.exe spectralnorm2_multicore.exe))

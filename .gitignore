@@ -4,3 +4,4 @@ _results
 .merlin
 runs_dune.inc
 *~
+*.swp
