@@ -1,0 +1,6 @@
+(executable
+ (name stringext_ex1)
+ (modules stringext_ex1)
+ (libraries stringext))
+
+(alias (name mybench) (deps stringext_ex1.exe))

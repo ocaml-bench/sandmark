@@ -1,0 +1,33 @@
+{
+  "wrappers": [
+    {
+      "name": "orun",
+      "command": "orun -o %{output} -- %{command}"
+    },
+    {
+      "name": "perfstat",
+      "command": "perf stat -o %{output} -- %{command}"
+    }
+  ],
+  "benchmarks": [
+    {
+      "executable": "benchmarks/n-body/qs_list_para.exe",
+      "name": "test_qs_list_para",
+      "runs": [
+        {
+          "params": "200000 2"
+        }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/n-body/qs_list_para.exe",
+      "name": "test_qs_list_para",
+      "runs": [
+        {
+          "params": "200000 4"
+        }
+      ]
+    }
+   ]
+}

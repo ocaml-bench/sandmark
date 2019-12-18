@@ -1,0 +1,98 @@
+{
+  "wrappers": [
+    {
+      "name": "orun",
+      "command": "orun -o %{output} -- %{command}"
+    },
+    {
+      "name": "perfstat",
+      "command": "perf stat -o %{output} -- %{command}"
+    }
+  ],
+  "benchmarks": [
+
+    {    
+      "executable": "benchmarks/spectralnorm2/spectralnorm2_multicore.exe",
+      "name": "spectralnorm2_multicore",
+      "runs": [
+        // {
+        //   "params": "5500 4"
+      
+        // },
+        // {
+        //   "params": "6000 4"
+         
+        // },
+        // {
+        //   "params": "6500 4"
+         
+        // },
+        // {
+        //   "params": "7000 4"
+         
+        // },
+        // {
+        //   "params": "7500 4"
+         
+        // },
+        // {
+        //   "params": "8000 4"
+         
+        // },
+        // {
+        //   "params": "8500 4"
+         
+        // },
+        // {
+        //   "params": "9000 4"
+         
+        // },
+        // {
+        //   "params": "9500 4"
+         
+        // },
+        {
+          "params": "10000 4"
+         
+        },
+        {
+          "params": "10500 4"
+         
+        }
+        // {
+        //   "params": "11000 4"
+         
+        // },
+        // {
+        //   "params": "11500 4"
+         
+        // },
+        // {
+        //   "params": "12500 4"
+         
+        // },
+        // {
+        //   "params": "13000 4"
+         
+        // },
+        // {
+        //   "params": "13500 4"
+         
+        // },
+        // {
+        //   "params": "14000 4"
+         
+        // },
+        // {
+        //   "params": "14500 4"
+         
+        // },
+        // {
+        //   "params": "15000 4"
+         
+        // }
+      ]   
+    } 
+   ]
+}
+

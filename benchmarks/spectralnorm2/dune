@@ -1,0 +1,6 @@
+(executable
+ (name spectralnorm2_multicore)
+ (modules spectralnorm2_multicore)
+ (libraries domainslib))
+
+(alias (name spectralnorm2_multicore) (deps spectralnorm2_multicore.exe))

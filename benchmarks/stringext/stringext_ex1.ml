@@ -1,0 +1,1 @@
+let _ = Stringext.split "test:one:two" ~on:':'

@@ -1,0 +1,4 @@
+(executable
+ (name qs_list_para))
+
+(alias (name n-body-bench) (deps qs_list_para.exe))
