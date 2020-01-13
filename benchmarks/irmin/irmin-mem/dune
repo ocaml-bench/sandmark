@@ -1,0 +1,6 @@
+(executable
+	(name mergeable_logs)
+	(modules mergeable_logs)
+	(libraries lwt irmin irmin-mem irmin-unix irmin-git fmt astring))
+
+(alias (name merge) (deps mergeable_logs.exe))
