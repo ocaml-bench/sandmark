@@ -4,7 +4,7 @@
 
 * Merging 2 text files
   * Start with 2 considerably large files and try to merge them.
-  * Build a random text generator.
+  * Build a random text generator, just to create files which has some control over the variations in the text generated. Right now it would be using just a large text in a variable
   * The degree of how different the documents are, variations in the differences between the files can be accounted to test the merging capabilities.
 
 
