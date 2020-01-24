@@ -7,5 +7,6 @@
 	(name simple_merge_example)
 	(modules simple_merge_example)
 	(libraries lwt irmin irmin-mem irmin-unix irmin-git fmt astring))
+
 (alias (name merge) (deps n_simple_merge_example.exe))
 (alias (name simple_merge) (deps simple_merge_example.exe))

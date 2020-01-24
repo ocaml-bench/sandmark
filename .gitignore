@@ -5,4 +5,3 @@ _results
 runs_dune.inc
 *~
 *.swp
-node_modules/.lsp/debug.log
