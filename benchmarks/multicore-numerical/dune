@@ -22,4 +22,8 @@
  (modules spectralnorm2_multicore)
  (libraries domainslib))
 
+(executable
+ (name quicksort_multicore)
+ (modules quicksort_multicore))
+
 (alias (name multibench_parallel) (deps mandelbrot_multicore.exe spectralnorm2_multicore.exe))

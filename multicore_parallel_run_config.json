@@ -35,6 +35,22 @@
       ]
     },
 
+{
+      "executable": "benchmarks/multicore-numerical/quicksort_multicore.exe",
+      "name": "quicksort_multicore",
+      "runs": [
+        {
+          "params": "40000000 1"
+        },
+        {
+          "params": "40000000 2"
+        },
+        {
+          "params": "40000000 4"
+        }
+      ]
+    },
+
     {
       "executable": "benchmarks/multicore-numerical/binary_trees_multicore.exe",
       "name": "binary_trees_multicore",
