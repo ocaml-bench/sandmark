@@ -34,6 +34,27 @@
         }
       ]
     },
+
+    {
+      "executable": "benchmarks/multicore-numerical/binary_trees_multicore.exe",
+      "name": "binary_trees_multicore",
+      "runs": [
+        {
+          "params": "22 2"
+        }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/binary_trees_multicore.exe",
+      "name": "binary_trees_multicore",
+      "runs": [
+        {
+          "params": "2"
+        }
+      ]
+    },
+
     {
       "executable": "benchmarks/multicore-structures/test_queue_parallel.exe",
       "name": "mpmc_queue_parallel",
