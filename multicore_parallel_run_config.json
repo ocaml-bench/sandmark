@@ -105,6 +105,19 @@
           "params": "100000"
         }
       ]
+    },
+     {
+      "executable": "benchmarks/decompress/test_parallel_decompress.exe",
+      "name": "parallel_decompress",
+      "runs": [
+        {
+          "params": "2 2"
+        },
+	{ 
+	  "params": "2 3" 
+	}
+      ]
     }
+   
   ]
 }
