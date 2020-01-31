@@ -34,7 +34,7 @@ end
 let info = Irmin_unix.info
 
 
-module Store = Irmin_unix.Git.FS.KV (Irmin.Contents.String)
+module Store = Irmin_mem.KV (Irmin.Contents.String)
 
 let update t k v =
   let msg = sprintf "Updating /%s" (String.concat "/" k) in

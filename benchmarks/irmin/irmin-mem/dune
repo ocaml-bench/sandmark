@@ -8,5 +8,11 @@
 	(modules simple_merge_example)
 	(libraries lwt irmin irmin-mem irmin-unix irmin-git fmt astring))
 
+(executable
+	(name n_simple_merge_example_2)
+	(modules n_simple_merge_example_2)
+	(libraries lwt irmin irmin-mem irmin-unix irmin-git fmt astring))
+
 (alias (name n_simple_merge) (deps n_simple_merge_example.exe))
 (alias (name simple_merge) (deps simple_merge_example.exe))
+(alias (name n_simple_merge_2) (deps n_simple_merge_example_2.exe))
