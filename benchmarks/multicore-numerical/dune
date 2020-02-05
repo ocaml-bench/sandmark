@@ -12,4 +12,13 @@
  (modules mandelbrot_vanilla)
  (libraries unix))
 
-(alias (name multibench_parallel) (deps mandelbrot_multicore.exe spectralnorm2_multicore.exe))
+(executable
+  (name binary_trees_multicore)
+  (modules binary_trees_multicore)
+  (libraries domainslib))
+
+(executable
+  (name binary_trees_vanilla)
+  (modules binary_trees_vanilla))
+
+(alias (name multibench_parallel) (deps mandelbrot_multicore.exe spectralnorm2_multicore.exe binary_trees_multicore))
