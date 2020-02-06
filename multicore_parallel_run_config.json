@@ -39,10 +39,10 @@
       "name": "binary_trees_multicore",
       "runs": [
         {
-          "params": "20 1"
+          "params": "21 1"
         },
         {
-          "params": "20 2"
+          "params": "21 2"
         },
         {
           "params": "21 4"

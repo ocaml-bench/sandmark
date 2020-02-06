@@ -17,4 +17,4 @@
   (modules binary_trees_multicore)
   (libraries domainslib))
 
-(alias (name multibench_parallel) (deps mandelbrot_multicore.exe spectralnorm2_multicore.exe binary_trees_multicore))
+(alias (name multibench_parallel) (deps mandelbrot_multicore.exe spectralnorm2_multicore.exe binary_trees_multicore.exe))
