@@ -4,9 +4,9 @@ type message = Do of (unit -> unit) | Quit
 
 type chan = {req: message C.t; resp: unit C.t}
 
-(* let n_times = try int_of_string Sys.argv.(1) with _ -> 2 *)
+let size = try int_of_string Sys.argv.(1) with _ -> 1024
 
-let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
+let num_domains = try int_of_string Sys.argv.(2) with _ -> 1
 
 let channels =
   Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})
@@ -65,8 +65,8 @@ let rec worker c () =
 
 let () =
   let domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
-  let m1 = Array.init 1024 (fun _ -> Array.init 1024 (fun _ -> Random.int 100))
-  and m2 = Array.init 1024 (fun _ -> Array.init 1024 (fun _ -> Random.int 100)) in
+  let m1 = Array.init size (fun _ -> Array.init size (fun _ -> Random.int 100))
+  and m2 = Array.init size (fun _ -> Array.init size (fun _ -> Random.int 100)) in
   (* let mat=aux [|[|1;2|];[|3;4|]|] [|[|-3;-8;3|];[|-2;1;4|]|] in *)
   let mat=aux m1 m2 in
   let x = Array.length mat

@@ -10,7 +10,9 @@ type chan = {req: message C.t; resp: unit C.t}
 
 let n = try int_of_string Sys.argv.(1) with _ -> 50000000
 
-let num_domains = try int_of_string Sys.argv.(2) with _ -> 1
+let num_bodies = try int_of_string Sys.argv.(2) with _ -> 1024
+
+let num_domains = try int_of_string Sys.argv.(3) with _ -> 1
 
 let channels =
   Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})
@@ -140,7 +142,7 @@ let rec worker c () =
 (* let bodies = [| sun; jupiter; saturn; uranus; neptune |] *)
 
 let bodies =
-  Array.init 1024 (fun _ -> { x = (Random.float  10.); 
+  Array.init num_bodies (fun _ -> { x = (Random.float  10.); 
                               y = (Random.float 10.);
                               z = (Random.float 10.); 
                               vx= (Random.float 5.)*. days_per_year;
