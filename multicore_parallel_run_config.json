@@ -35,6 +35,103 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-numerical/matrix_multiplication_multicore.exe",
+      "name": "matrix_multiplication_multicore",
+      "runs": [
+        {
+          "params": "1024 1"
+        },
+        {
+          "params": "1024 2"
+        },
+        {
+          "params": "1024 4"
+        },
+        {
+          "params": "1024 8"
+        },
+        {
+          "params": "1024 16"
+        }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/matrix_multiplication_multicore_tilling.exe",
+      "name": "matrix_multiplication_multicore_tilling",
+      "runs": [
+        {
+          "params": "1024 1"
+        },
+        {
+          "params": "1024 2"
+        },
+        {
+          "params": "1024 4"
+        },
+        {
+          "params": "1024 8"
+        },
+        {
+          "params": "1024 16"
+        }
+      ]
+    },
+
+
+    {
+      "executable": "benchmarks/multicore-numerical/quicksort_multicore.exe",
+      "name": "quicksort_multicore",
+      "runs": [
+        {
+          "params": "40000000 1"
+        },
+        {
+          "params": "40000000 2"
+        },
+        {
+          "params": "40000000 4"
+        }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/binary_trees_multicore.exe",
+      "name": "binary_trees_multicore",
+      "runs": [
+        {
+          "params": "22 2"
+        }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/binary_trees_multicore.exe",
+      "name": "binary_trees_multicore",
+      "runs": [
+        {
+          "params": "2"
+        }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/nbody_multicore.exe",
+      "name": "nbody_multicore",
+      "runs": [
+        {
+          "params": "500 1024 1"
+        },
+        {
+          "params": "500 1024 2"
+        },
+        {
+          "params": "500 1024 4"
+        }
+      ]
+    },
+
+    {
       "executable": "benchmarks/multicore-structures/test_queue_parallel.exe",
       "name": "mpmc_queue_parallel",
       "runs": [
