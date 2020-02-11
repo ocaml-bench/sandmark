@@ -13,6 +13,7 @@
     {
       "executable": "benchmarks/multicore-numerical/spectralnorm2_multicore.exe",
       "name": "spectralnorm2_multicore",
+      "ismacrobench": true,
       "runs": [
         {
           "params": "2000 1"
@@ -22,6 +23,7 @@
     {
       "executable": "benchmarks/multicore-numerical/mandelbrot_multicore.exe",
       "name": "mandelbrot_multicore",
+      "ismacrobench": true,
       "runs": [
         {
           "params": "16000 1"
@@ -37,6 +39,7 @@
     {
       "executable": "benchmarks/multicore-structures/test_queue_parallel.exe",
       "name": "mpmc_queue_parallel",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "10000000"
@@ -46,6 +49,7 @@
     {
       "executable": "benchmarks/multicore-structures/test_spsc_queue_parallel.exe",
       "name": "spsc_queue_parallel",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "10000000"
@@ -55,6 +59,7 @@
     {
       "executable": "benchmarks/multicore-structures/test_spsc_queue_pingpong_parallel.exe",
       "name": "spsc_queue_pingpong_parallel",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "1 10000000"
@@ -70,6 +75,7 @@
     {
       "executable": "benchmarks/multicore-lockfree/test_wsqueue.exe",
       "name": "lockfree-wsqueue",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "1 100000"
@@ -85,6 +91,7 @@
     {
       "executable": "benchmarks/multicore-lockfree/test_hash.exe",
       "name": "lockfree-hash",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "1 80 1000000"
@@ -100,6 +107,7 @@
     {
       "executable": "benchmarks/multicore-structures/test_stack_parallel.exe",
       "name": "stack_parallel",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "100000"
