@@ -129,3 +129,6 @@ list:
 bash:
 	bash
 	@echo "[opam subshell completed]"
+
+%_macro.json: %.json
+	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.ismacrobench == true)]}' < $< > $@
