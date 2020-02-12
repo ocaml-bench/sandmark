@@ -3,19 +3,9 @@
  (modules mandelbrot_multicore))
 
 (executable
- (name spectralnorm2_multicore)
- (modules spectralnorm2_multicore)
- (libraries domainslib))
-
-(executable
  (name mandelbrot_vanilla)
  (modules mandelbrot_vanilla)
  (libraries unix))
-
-(executable
- (name spectralnorm2_multicore)
- (modules spectralnorm2_multicore)
- (libraries domainslib))
 
 (executable
  (name spectralnorm2_multicore)
