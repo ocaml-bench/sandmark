@@ -107,17 +107,23 @@
       "runs": [
         {
           "params": "22 2"
+        },
+        {
+          "params": "22 4"
         }
       ]
     },
 
     {
-      "executable": "benchmarks/multicore-numerical/binary_trees_multicore.exe",
+      "executable": "benchmarks/multicore-numerical/game_of_life_multicore.exe",
       "name": "binary_trees_multicore",
       "ismacrobench": true,
       "runs": [
         {
-          "params": "2"
+          "params": "1000 2"
+        },
+        {
+          "params": "1000 4"
         }
       ]
     },
