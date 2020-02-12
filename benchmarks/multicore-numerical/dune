@@ -3,13 +3,44 @@
  (modules mandelbrot_multicore))
 
 (executable
+ (name mandelbrot_vanilla)
+ (modules mandelbrot_vanilla)
+ (libraries unix))
+
+(executable
  (name spectralnorm2_multicore)
  (modules spectralnorm2_multicore)
  (libraries domainslib))
 
 (executable
- (name mandelbrot_vanilla)
- (modules mandelbrot_vanilla)
- (libraries unix))
+ (name quicksort_multicore)
+ (modules quicksort_multicore))
 
-(alias (name multibench_parallel) (deps mandelbrot_multicore.exe spectralnorm2_multicore.exe))
+(executable
+ (name binary_trees_multicore)
+ (modules binary_trees_multicore)
+ (libraries domainslib))
+
+(executable
+ (name game_of_life_multicore)
+ (modules game_of_life_multicore)
+ (libraries domainslib))
+
+(executable
+ (name matrix_multiplication_multicore)
+ (modules matrix_multiplication_multicore)
+ (libraries domainslib))
+
+(executable
+ (name matrix_multiplication_multicore_tilling)
+ (modules matrix_multiplication_multicore_tilling)
+ (libraries domainslib))
+
+(executable
+ (name nbody_multicore)
+ (modules nbody_multicore)
+ (libraries domainslib))
+
+(alias (name multibench_parallel) (deps mandelbrot_multicore.exe spectralnorm2_multicore.exe quicksort_multicore.exe
+        binary_trees_multicore.exe game_of_life_multicore.exe matrix_multiplication_multicore.exe matrix_multiplication_multicore_tilling.exe
+        nbody_multicore.exe))

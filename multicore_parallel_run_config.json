@@ -13,6 +13,7 @@
     {
       "executable": "benchmarks/multicore-numerical/spectralnorm2_multicore.exe",
       "name": "spectralnorm2_multicore",
+      "ismacrobench": true,
       "runs": [
         {
           "params": "2000 1"
@@ -22,6 +23,7 @@
     {
       "executable": "benchmarks/multicore-numerical/mandelbrot_multicore.exe",
       "name": "mandelbrot_multicore",
+      "ismacrobench": true,
       "runs": [
         {
           "params": "16000 1"
@@ -35,8 +37,118 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-numerical/matrix_multiplication_multicore.exe",
+      "name": "matrix_multiplication_multicore",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "1024 1"
+        },
+        {
+          "params": "1024 2"
+        },
+        {
+          "params": "1024 4"
+        },
+        {
+          "params": "1024 8"
+        },
+        {
+          "params": "1024 16"
+        }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/matrix_multiplication_multicore_tilling.exe",
+      "name": "matrix_multiplication_multicore_tilling",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "1024 1"
+        },
+        {
+          "params": "1024 2"
+        },
+        {
+          "params": "1024 4"
+        },
+        {
+          "params": "1024 8"
+        },
+        {
+          "params": "1024 16"
+        }
+      ]
+    },
+
+
+    {
+      "executable": "benchmarks/multicore-numerical/quicksort_multicore.exe",
+      "name": "quicksort_multicore",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "40000000 1"
+        },
+        {
+          "params": "40000000 2"
+        },
+        {
+          "params": "40000000 4"
+        }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/binary_trees_multicore.exe",
+      "name": "binary_trees_multicore",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "22 2"
+        },
+        {
+          "params": "22 4"
+        }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/game_of_life_multicore.exe",
+      "name": "binary_trees_multicore",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "1000 2"
+        },
+        {
+          "params": "1000 4"
+        }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/nbody_multicore.exe",
+      "name": "nbody_multicore",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "500 1024 1"
+        },
+        {
+          "params": "500 1024 2"
+        },
+        {
+          "params": "500 1024 4"
+        }
+      ]
+    },
+
+    {
       "executable": "benchmarks/multicore-structures/test_queue_parallel.exe",
       "name": "mpmc_queue_parallel",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "10000000"
@@ -46,6 +158,7 @@
     {
       "executable": "benchmarks/multicore-structures/test_spsc_queue_parallel.exe",
       "name": "spsc_queue_parallel",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "10000000"
@@ -55,6 +168,7 @@
     {
       "executable": "benchmarks/multicore-structures/test_spsc_queue_pingpong_parallel.exe",
       "name": "spsc_queue_pingpong_parallel",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "1 10000000"
@@ -70,6 +184,7 @@
     {
       "executable": "benchmarks/multicore-lockfree/test_wsqueue.exe",
       "name": "lockfree-wsqueue",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "1 100000"
@@ -85,6 +200,7 @@
     {
       "executable": "benchmarks/multicore-lockfree/test_hash.exe",
       "name": "lockfree-hash",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "1 80 1000000"
@@ -100,6 +216,7 @@
     {
       "executable": "benchmarks/multicore-structures/test_stack_parallel.exe",
       "name": "stack_parallel",
+      "ismacrobench": false,
       "runs": [
         {
           "params": "100000"
@@ -109,15 +226,15 @@
      {
       "executable": "benchmarks/decompress/test_parallel_decompress.exe",
       "name": "parallel_decompress",
+      "ismacrobench": true,
       "runs": [
         {
           "params": "2 2"
         },
-	{ 
-	  "params": "2 3" 
-	}
+        {
+          "params": "2 3"
+        }
       ]
     }
-   
   ]
 }

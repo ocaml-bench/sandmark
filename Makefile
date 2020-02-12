@@ -25,7 +25,7 @@ PRE_BENCH_EXEC ?=
 CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
 PACKAGES = \
-	cpdf menhir minilight camlimages yojson lwt orun rungen alt-ergo zarith \
+	cpdf menhir minilight camlimages yojson lwt alt-ergo zarith \
 	js_of_ocaml-compiler uuidm react ocplib-endian nbcodec checkseum decompress \
 	sexplib0
 
@@ -98,6 +98,7 @@ blah:
 
 ocaml-versions/%.bench: log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	@opam update
+	opam install --switch=$* --keep-build-dir --yes rungen orun
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
@@ -129,3 +130,6 @@ list:
 bash:
 	bash
 	@echo "[opam subshell completed]"
+
+%_macro.json: %.json
+	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.ismacrobench == true)]}' < $< > $@
