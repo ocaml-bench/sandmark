@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export OCAML_INSTR_FILE=instrlog
+OUTFILE=$1
+shift
+eval $@
+python3 $OPAM_SWITCH_PREFIX/bin/process_instr_log.py instrlog > $OUTFILE
+rm instrlog

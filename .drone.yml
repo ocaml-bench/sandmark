@@ -12,7 +12,7 @@ steps:
   - sudo apt-get update && sudo apt-get -y install libgmp-dev m4 libdw-dev
   - sudo chown -R opam .
   - eval $(opam env)
-  - opam install jbuilder.1.0+beta14 dune
+  - opam install dune.1.11.4
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - make ocaml-versions/4.07.1.bench
