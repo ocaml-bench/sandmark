@@ -559,10 +559,10 @@ let main num_writes num_reads =
   n_c_update src_dst_tuple_list branch_list log_list >>= fun src_dst ->
   write_time := Unix.gettimeofday ();
   n_c_update (left src_dst num_writes) (left branch_list num_writes) (left log_list num_writes) >>= fun _ ->
-  write_time := (Unix.gettimeofday ()) -. !write_time; 
+  write_time := (Unix.gettimeofday ()) -. !write_time;
   read_time := Unix.gettimeofday ();
   n_c_read (left src_dst num_reads) (left branch_list num_reads) >>= fun _ -> 
-  read_time := (Unix.gettimeofday ()) -. !read_time;
+  read_time := (Unix.gettimeofday ()) -. !read_time; 
   (* n_c_read src_dst branch_list >>= fun src_dst -> writes and reads encountered after updates *)
   Lwt_list.map_p (fun (x,y) -> c_merge x y) src_dst >>= fun _ -> Lwt.return (write_time, read_time)
 
@@ -572,7 +572,11 @@ let () =
      and write data:\n"
     Config.root;
   let _ = Sys.command (Printf.sprintf "rm -rf %s" Config.root) in
-  let (num_writes, num_reads) = (Sys.argv.(1), Sys.argv.(2)) |> fun (x, y) -> (((int_of_string x) /100) * log_list_len, ((int_of_string y) /100) * log_list_len) in
+  let num_writes = Sys.argv.(1) 
+   |> fun x -> ((int_of_string x) * log_list_len) / 100 in
+  let num_reads = Sys.argv.(2)
+  |> fun x -> ((int_of_string x) * log_list_len) / 100 in
+  Printf.printf "number-reads == %d\n number-writes == %d\n" (num_writes) (num_reads);
   Lwt_main.run (main num_writes num_reads) |> fun (write_time, read_time) -> Printf.printf "WRITE : %f\nREAD : %f\n" !write_time !read_time;
 
   Printf.printf "You can now run `cd %s && tig` to inspect the store (if using git filesystem).\n"
