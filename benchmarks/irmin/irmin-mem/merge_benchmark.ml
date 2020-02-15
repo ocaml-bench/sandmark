@@ -572,8 +572,7 @@ let () =
      and write data:\n"
     Config.root;
   let _ = Sys.command (Printf.sprintf "rm -rf %s" Config.root) in
-  let num_writes = Sys.argv.(1) |> int_of_string |> fun x -> (x/100) * log_list_len in
-  let num_reads  = Sys.argv.(2) |> int_of_string |> fun x -> (x/100) * log_list_len in 
+  let (num_writes, num_reads) = (Sys.argv.(1), Sys.argv.(2)) |> fun (x, y) -> (((int_of_string x) /100) * log_list_len, ((int_of_string y) /100) * log_list_len) in
   Lwt_main.run (main num_writes num_reads) |> fun (write_time, read_time) -> Printf.printf "WRITE : %f\nREAD : %f\n" !write_time !read_time;
 
   Printf.printf "You can now run `cd %s && tig` to inspect the store (if using git filesystem).\n"
