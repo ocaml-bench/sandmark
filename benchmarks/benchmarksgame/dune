@@ -1,8 +1,8 @@
-(executables (names binarytrees5 fannkuchredux2 fannkuchredux fasta3 fasta6 knucleotide mandelbrot6 nbody pidigits5 regexredux2 revcomp2 spectralnorm2) (libraries unix str zarith))
+(executables (names binarytrees5 fannkuchredux2 fannkuchredux fasta3 fasta6 floyd knucleotide mandelbrot6 matrix-multiplication_serial matrix-multiplication_serial_tilling nbody nbody_random_bodies game_of_life_serial pidigits5 regexredux2 revcomp2 spectralnorm2) (libraries unix str zarith))
 
 (rule
      (targets knucleotide-input.txt)
      (deps (:prog fasta3.exe))
      (action (with-stdout-to %{targets} (run %{prog} 1_000_000 > %{targets}))))
 
-(alias (name buildbench) (deps binarytrees5.exe fannkuchredux2.exe fannkuchredux.exe fasta3.exe fasta6.exe knucleotide.exe mandelbrot6.exe nbody.exe pidigits5.exe regexredux2.exe revcomp2.exe spectralnorm2.exe knucleotide-input.txt))
+(alias (name buildbench) (deps binarytrees5.exe fannkuchredux2.exe  floyd.exe  fannkuchredux.exe fasta3.exe fasta6.exe knucleotide.exe  game_of_life_serial.exe  matrix-multiplication_serial.exe  matrix-multiplication_serial_tilling.exe   mandelbrot6.exe nbody.exe  nbody_random_bodies.exe  pidigits5.exe regexredux2.exe revcomp2.exe spectralnorm2.exe knucleotide-input.txt))
