@@ -572,10 +572,8 @@ let () =
      and write data:\n"
     Config.root;
   let _ = Sys.command (Printf.sprintf "rm -rf %s" Config.root) in
-  let num_writes = Sys.argv.(1) 
-   |> fun x -> ((int_of_string x) * log_list_len) / 100 in
-  let num_reads = Sys.argv.(2)
-  |> fun x -> ((int_of_string x) * log_list_len) / 100 in
+  let num_writes = Sys.argv.(1) |> fun x -> ((int_of_string x) * log_list_len) / 100 in
+  let num_reads = Sys.argv.(2)  |> fun x -> ((int_of_string x) * log_list_len) / 100 in
   Printf.printf "number-reads == %d\n number-writes == %d\n" (num_writes) (num_reads);
   Lwt_main.run (main num_writes num_reads) |> fun (write_time, read_time) -> Printf.printf "WRITE : %f\nREAD : %f\n" !write_time !read_time;
 
