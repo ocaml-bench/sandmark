@@ -116,7 +116,7 @@
 
     {
       "executable": "benchmarks/multicore-numerical/game_of_life_multicore.exe",
-      "name": "binary_trees_multicore",
+      "name": "game_of_life_multicore",
       "ismacrobench": true,
       "runs": [
         {
