@@ -2,19 +2,19 @@
   "wrappers": [
     {
       "name": "orun",
-      "command": "orun -o %{output} -- %{command}"
+      "command": "orun -o %{output} -- taskset --cpu-list 2-13,16-27 %{command}"
     },
     {
       "name": "perfstat",
-      "command": "perf stat -o %{output} -- %{command}"
+      "command": "perf stat -o %{output} -- taskset --cpu-list 2-13,16-27 %{command}"
     },
     {
       "name": "pausetimes_trunk",
-      "command": "bash pausetimes_trunk %{output} %{command}"
+      "command": "bash pausetimes_trunk %{output} taskset --cpu-list 2-13,16-27 %{command}"
     },
     {
       "name": "pausetimes_multicore",
-      "command": "bash pausetimes_multicore %{output} %{command}"
+      "command": "bash pausetimes_multicore %{output} taskset --cpu-list 2-13,16-27 %{command}"
     }
   ],
   "benchmarks": [
@@ -30,7 +30,7 @@
     },
     {
       "executable": "benchmarks/yojson/ydump.exe",
-      "name": "ydump",
+      "name": "yojson_ydump",
       "ismacrobench": true,
       "runs": [
         {
@@ -158,7 +158,7 @@
     },
     {
       "executable": "benchmarks/benchmarksgame/regexredux2.exe",
-      "name": "regexredux2.exe",
+      "name": "regexredux2",
       "ismacrobench": true,
       "runs": [
         {
@@ -243,7 +243,7 @@
       "runs": [
         {
           "params": "benchmarks/minilight/roomfront.ml.txt",
-          "short_name": "roomfront.ml.txt"
+          "short_name": "roomfront"
         }
       ]
     },
@@ -388,7 +388,7 @@
       "runs": [
         {
           "params": "benchmarks/menhir/ocaml.mly --list-errors -la 2 --no-stdlib --lalr",
-          "short_name": "ocamly.mly"
+          "short_name": "ocamly"
         }
       ]
     },
@@ -399,7 +399,7 @@
       "runs": [
         {
           "params": "-v -t benchmarks/menhir/keywords.mly benchmarks/menhir/sql-parser.mly --base sql-parser",
-          "short_name": "sql-parser.mly"
+          "short_name": "sql-parser"
         }
       ]
     },
@@ -410,7 +410,7 @@
       "runs": [
         {
           "params": "-v --table benchmarks/menhir/sysver.mly",
-          "short_name": "sysver.mly"
+          "short_name": "sysver"
         }
       ]
     },
