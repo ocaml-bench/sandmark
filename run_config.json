@@ -313,7 +313,7 @@
     },
     {
       "executable": "benchmarks/lexifi-g2pp/main.exe",
-      "name": "main",
+      "name": "lexifi-g2pp",
       "ismacrobench": true,
       "runs": [
         {
