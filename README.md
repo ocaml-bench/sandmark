@@ -8,7 +8,10 @@ then look for the results in `_results/`
 
 ## pre-requisites
 
-on Linux you need to have `libgmp-dev` installed for several of the benchmarks
+It is necessary that the system dune version is `< 2.0`. The development uses
+`ocaml-base-compiler.4.09.0` with `dune.1.11.4` and `jbuilder.transition`.
+
+On Linux you need to have `libgmp-dev` installed for several of the benchmarks
 to work. You also need to have `libdw-dev` installed for the profiling
 functionality of orun to work on Linux.
 

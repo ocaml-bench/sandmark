@@ -7,6 +7,14 @@
     {
       "name": "perfstat",
       "command": "perf stat -o %{output} -- %{command}"
+    },
+    {
+      "name": "pausetimes_trunk",
+      "command": "bash pausetimes_trunk %{output} %{command}"
+    },
+    {
+      "name": "pausetimes_multicore",
+      "command": "bash pausetimes_multicore %{output} %{command}"
     }
   ],
   "benchmarks": [
