@@ -1,8 +1,9 @@
 #!/bin/bash
 
 export OCAML_INSTR_FILE=instrlog
+export OCAMLRUNPARAM="O=1000000,a=2"
 OUTFILE=$1
 shift
 eval $@
-python3 $OPAM_SWITCH_PREFIX/bin/process_instr_log.py instrlog > $OUTFILE
+python3 $OPAM_SWITCH_PREFIX/bin/process_instrlog.py instrlog > $OUTFILE
 rm instrlog
