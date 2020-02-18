@@ -2,8 +2,10 @@ from intervaltree import IntervalTree, Interval
 import sys
 import subprocess
 import json
+import os
 
-json_file = sys.argv[1]
+bench_name = os.path.basename(sys.argv[1]).replace('.pausetimes_multicore.bench','')
+json_file = sys.argv[2]
 
 def distribution(l):
   to_indices = []
@@ -58,6 +60,7 @@ def main():
   distr = distribution(sorted_latencies)
 
   out = {}
+  out["name"] = bench_name
   out["mean_latency"] = avg_latency
   out["max_latency"] = max_latency
   out["distr_latency"] = distr
