@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Run `make run_config_macro.json` before running this script.
+
 # Serial pausetime numbers: these instrumented compilers should not be considered for throughput
 RUN_BENCH_TARGET=run_pausetimes_trunk RUN_CONFIG_JSON=run_config_macro.json make ocaml-versions/4.11.0+trunk+instrumented.bench
 # `pausetimes_trunk` sets OCAMLRUNPARAM="O=1000000,a=2"
