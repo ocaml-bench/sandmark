@@ -82,7 +82,7 @@
     {
       "executable": "cpdf",
       "name": "cpdf",
-      "ismacrobench": true,
+      "ismacrobench": false,
       "runs": [
         {
           "params": "-merge benchmarks/cpdf/metro_geo.pdf -o /dev/null",
