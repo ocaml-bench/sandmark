@@ -122,7 +122,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "16"
+          "params": "21"
         }
       ]
     },
@@ -132,7 +132,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "10"
+          "params": "12"
         }
       ]
     },
@@ -142,13 +142,23 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "10"
+          "params": "12"
         }
       ]
     },
     {
       "executable": "benchmarks/benchmarksgame/knucleotide.exe",
       "name": "knucleotide",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/knucleotide3.exe",
+      "name": "knucleotide3",
       "ismacrobench": true,
       "runs": [
         {
@@ -182,7 +192,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "2_000_000"
+          "params": "25_000_000"
         }
       ]
     },
@@ -192,7 +202,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "2_000_000"
+          "params": "25_000_000"
         }
       ]
     },
@@ -202,7 +212,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "2_000"
+          "params": "16_000"
         }
       ]
     },
@@ -212,7 +222,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "2_000_000"
+          "params": "50_000_000"
         }
       ]
     },
@@ -222,7 +232,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "8000"
+          "params": "10_000"
         }
       ]
     },
@@ -232,7 +242,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "2_000"
+          "params": "5_500"
         }
       ]
     },
@@ -274,7 +284,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": ""
+          "params": "26"
         }
       ]
     },
