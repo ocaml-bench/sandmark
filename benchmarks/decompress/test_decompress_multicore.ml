@@ -123,13 +123,15 @@ let work i () =
     ignore original
   done
 
-let distribute iters num_doms doms =
-  if nd = 1 then
-    work iters;
-    List.map Domain.join doms
+let rec distribute iters num_doms doms =
+  if num_doms = 1 then
+    begin
+      work iters ();
+      List.map Domain.join doms
+    end
   else
     let w = iters / num_doms in
     distribute (iters - w) (num_doms - 1)
-      ((Domain.spawn (work i))::doms)
+      ((Domain.spawn (work w))::doms)
 
 let _ = distribute iterations num_domains []
