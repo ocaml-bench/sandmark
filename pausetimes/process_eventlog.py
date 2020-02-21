@@ -65,6 +65,6 @@ def main():
   out["max_latency"] = max_latency
   out["distr_latency"] = distr
 
-  print(out)
+  print(json.dumps(out))
 
 main()

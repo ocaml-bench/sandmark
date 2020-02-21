@@ -1,8 +1,8 @@
 #!/bin/bash
 
 export OCAML_INSTR_FILE=instrlog
-#O=1000000 disables compaction, a=2 is best-fit policy
-export OCAMLRUNPARAM="O=1000000,a=2"
+#O=1000000 disables compaction, a=1 is first-fit policy
+#export OCAMLRUNPARAM="O=1000000,a=1"
 OUTFILE=$1
 shift
 eval $@
