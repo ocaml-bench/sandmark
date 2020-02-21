@@ -1,5 +1,9 @@
 open Decompress
 
+let num_domains = try int_of_string(Sys.argv.(1)) with _ -> 1
+let iterations = try int_of_string(Sys.argv.(2)) with _ -> 64
+let data_size = try int_of_string(Sys.argv.(3) with _ -> 32 * 1024
+
 exception Deflate_error of Zlib_deflate.error
 exception Inflate_error of Zlib_inflate.error
 
@@ -26,7 +30,7 @@ let compress ?(level = 4) data =
      that (like if the output is too big). You need to keep in your mind that
      is insecure to let a buffer to grow automatically (an attacker can use
      this behaviour). *)
-  
+
   (* This is the same interface as [caml-zip]. A refiller and a flusher. The
      refiller send you the maximum byte than you can [blit] inside the input
      buffer.
@@ -100,12 +104,10 @@ let uncompress data =
       0xFFFF )
     (Zlib_inflate.default ~witness:B.bytes window)
   |> function
-  | Ok _ -> Buffer.contents res 
+  | Ok _ -> Buffer.contents res
   | Error exn -> raise (Inflate_error exn)
 
 let () = Random.init(42)
-
-let data_size = 1024 * 1024
 
 let data_to_compress =
   let buf = Bytes.create data_size in
@@ -114,16 +116,20 @@ let data_to_compress =
   done ;
   Bytes.to_string buf
 
-let iterations =
-  try int_of_string(Sys.argv.(1)) with _ -> 8
-
-let num_domains = 
-  try int_of_string(Sys.argv.(2)) with _ -> 3
-
-let () =
-  for run = 0 to iterations do
-    let l = List.map (fun l -> Domain.spawn (fun () -> let result = compress data_to_compress in
-      let original = uncompress result in
-      ignore original)) (List.init num_domains (fun i -> 0)) in
-      List.iter (fun d -> Domain.join d) l
+let work i () =
+  for run = 0 to i do
+    let result = compress data_to_compress in
+    let original = uncompress result in
+    ignore original
   done
+
+let distribute iters num_doms doms =
+  if nd = 1 then
+    work iters;
+    List.map Domain.join doms
+  else
+    let w = iters / num_doms in
+    distribute (iters - w) (num_doms - 1)
+      ((Domain.spawn (work i))::doms)
+
+let _ = distribute iterations num_domains []

@@ -1,4 +1,6 @@
-(executables (names binarytrees5 fannkuchredux fannkuchredux2 fannkuchredux3 fasta3 fasta6 knucleotide knucleotide3 mandelbrot6 nbody pidigits5 regexredux2 revcomp2 spectralnorm2)
+(executables (names binarytrees5 fannkuchredux fannkuchredux2 fasta3 fasta6
+										knucleotide knucleotide3 mandelbrot6 nbody pidigits5
+										regexredux2 revcomp2 spectralnorm2)
 						 (libraries unix str zarith))
 
 (rule
@@ -11,4 +13,8 @@
      (deps (:prog fasta3.exe))
      (action (with-stdout-to %{targets} (run %{prog} 5_000_000 > %{targets}))))
 
-(alias (name buildbench) (deps binarytrees5.exe fannkuchredux.exe fannkuchredux2.exe fannkuchredux3.exe fasta3.exe fasta6.exe knucleotide.exe knucleotide3.exe mandelbrot6.exe nbody.exe pidigits5.exe regexredux2.exe revcomp2.exe spectralnorm2.exe input25000000.txt input5000000.txt))
+(alias (name buildbench)
+       (deps binarytrees5.exe fannkuchredux.exe fannkuchredux2.exe fasta3.exe
+						 fasta6.exe knucleotide.exe knucleotide3.exe mandelbrot6.exe
+						 nbody.exe pidigits5.exe regexredux2.exe revcomp2.exe
+						 spectralnorm2.exe input25000000.txt input5000000.txt))
