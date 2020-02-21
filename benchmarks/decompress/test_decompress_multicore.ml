@@ -2,7 +2,7 @@ open Decompress
 
 let num_domains = try int_of_string(Sys.argv.(1)) with _ -> 1
 let iterations = try int_of_string(Sys.argv.(2)) with _ -> 64
-let data_size = try int_of_string(Sys.argv.(3) with _ -> 32 * 1024
+let data_size = try int_of_string(Sys.argv.(3)) with _ -> 32 * 1024
 
 exception Deflate_error of Zlib_deflate.error
 exception Inflate_error of Zlib_inflate.error
