@@ -62,7 +62,7 @@
 						 quicksort_multicore.exe binarytrees5_multicore.exe
 						 game_of_life.exe game_of_life_multicore.exe
 						 matrix_multiplication.exe matrix_multiplication_multicore.exe
-						 matrix_multiplication_multicore_tiling.exe nbody.exe
+						 matrix_multiplication_tiling_multicore.exe nbody.exe
 						 nbody_multicore.exe))
 
 (alias (name buildbench)

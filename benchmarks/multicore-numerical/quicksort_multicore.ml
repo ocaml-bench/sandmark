@@ -1,5 +1,6 @@
 open Domain
 
+let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
 let n = try int_of_string Sys.argv.(2) with _ -> 2000
 
 let swap arr i j =
@@ -41,8 +42,8 @@ let rec quicksort arr low high d =
     Domain.join c
 	else begin
     let q = partition arr low high in
-    quicksort_o arr low (q-1) d;
-    quicksort_o arr (q+1) high d
+      quicksort arr low (q-1) d;
+      quicksort arr (q+1) high d
 	end
 
 let () =
