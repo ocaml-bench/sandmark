@@ -267,6 +267,28 @@
 				}
 			]
 		},
+ 		{
+			"executable": "benchmarks/simple-tests/alloc_multicore.exe",
+			"name": "alloc_multicore",
+			"ismacrobench": false,
+			"runs": [
+				{
+					"params": "1 1000000"
+				},
+				{
+					"params": "2 1000000"
+				},
+			  {
+					"params": "4 1000000"
+				},
+  			{
+					"params": "8 1000000"
+				},
+				{
+					"params": "16 1000000"
+				}
+			]
+		},  
 		{
 			"executable": "benchmarks/multicore-structures/test_stack_parallel.exe",
 			"name": "stack_parallel",
