@@ -8,13 +8,11 @@
 
 module C = Domainslib.Chan
 
+let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
+let n = try int_of_string Sys.argv.(2) with _ -> 2000
+
 type message = Do of (unit -> unit) | Quit
-
 type chan = {req: message C.t; resp: unit C.t}
-
-let n = try int_of_string Sys.argv.(1) with _ -> 2000
-
-let num_domains = try int_of_string Sys.argv.(2) with _ -> 1
 
 let channels =
   Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})

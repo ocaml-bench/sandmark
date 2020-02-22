@@ -1,10 +1,10 @@
 (executable
- (name mandelbrot_multicore)
- (modules mandelbrot_multicore))
+ (name mandelbrot6_multicore)
+ (modules mandelbrot6_multicore))
 
 (executable
- (name mandelbrot_vanilla)
- (modules mandelbrot_vanilla)
+ (name mandelbrot6_multiprocess)
+ (modules mandelbrot6_multiprocess)
  (libraries unix))
 
 (executable
@@ -13,13 +13,21 @@
  (libraries domainslib))
 
 (executable
+ (name quicksort)
+ (modules quicksort))
+
+(executable
  (name quicksort_multicore)
  (modules quicksort_multicore))
 
 (executable
- (name binary_trees_multicore)
- (modules binary_trees_multicore)
+ (name binarytrees5_multicore)
+ (modules binarytrees5_multicore)
  (libraries domainslib))
+
+(executable
+ (name game_of_life)
+ (modules game_of_life))
 
 (executable
  (name game_of_life_multicore)
@@ -27,20 +35,35 @@
  (libraries domainslib))
 
 (executable
+ (name matrix_multiplication)
+ (modules matrix_multiplication))
+
+(executable
  (name matrix_multiplication_multicore)
  (modules matrix_multiplication_multicore)
  (libraries domainslib))
 
 (executable
- (name matrix_multiplication_multicore_tilling)
- (modules matrix_multiplication_multicore_tilling)
+ (name matrix_multiplication_tiling_multicore)
+ (modules matrix_multiplication_tiling_multicore)
  (libraries domainslib))
+
+(executable
+ (name nbody)
+ (modules nbody))
 
 (executable
  (name nbody_multicore)
  (modules nbody_multicore)
  (libraries domainslib))
 
-(alias (name multibench_parallel) (deps mandelbrot_multicore.exe spectralnorm2_multicore.exe quicksort_multicore.exe
-        binary_trees_multicore.exe game_of_life_multicore.exe matrix_multiplication_multicore.exe matrix_multiplication_multicore_tilling.exe
-        nbody_multicore.exe))
+(alias (name multibench_parallel)
+			 (deps mandelbrot6_multicore.exe spectralnorm2_multicore.exe quicksort.exe
+						 quicksort_multicore.exe binarytrees5_multicore.exe
+						 game_of_life.exe game_of_life_multicore.exe
+						 matrix_multiplication.exe matrix_multiplication_multicore.exe
+						 matrix_multiplication_multicore_tiling.exe nbody.exe
+						 nbody_multicore.exe))
+
+(alias (name buildbench)
+       (deps game_of_life.exe matrix_multiplication.exe quicksort.exe))

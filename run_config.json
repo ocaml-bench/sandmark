@@ -24,7 +24,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": ""
+          "params": "64 524_288"
         }
       ]
     },
@@ -127,6 +127,14 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-numerical/game_of_life.exe",
+      "name": "game_of_life",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "256" }
+      ]
+    },
+    {
       "executable": "benchmarks/benchmarksgame/fannkuchredux2.exe",
       "name": "fannkuchredux2",
       "ismacrobench": true,
@@ -214,6 +222,22 @@
         {
           "params": "16_000"
         }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/matrix_multiplication.exe",
+      "name": "matrix_multiplication",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "1024" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/quicksort.exe",
+      "name": "quicksort",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "4000000" }
       ]
     },
     {
