@@ -1,7 +1,8 @@
 open Decompress
 
-let iterations = try int_of_string(Sys.argv.(1)) with _ -> 64
-let data_size = try int_of_string(Sys.argv.(2)) with _ -> 32 * 1024
+let num_domains = try int_of_string(Sys.argv.(1)) with _ -> 1
+let iterations = try int_of_string(Sys.argv.(2)) with _ -> 64
+let data_size = try int_of_string(Sys.argv.(3)) with _ -> 32 * 1024
 
 exception Deflate_error of Zlib_deflate.error
 exception Inflate_error of Zlib_inflate.error
@@ -115,9 +116,22 @@ let data_to_compress =
   done ;
   Bytes.to_string buf
 
-let () =
-  for run = 0 to iterations do
+let work i () =
+  for run = 0 to i do
     let result = compress data_to_compress in
     let original = uncompress result in
     ignore original
   done
+
+let rec distribute iters num_doms doms =
+  if num_doms = 1 then
+    begin
+      work iters ();
+      List.map Domain.join doms
+    end
+  else
+    let w = iters / num_doms in
+    distribute (iters - w) (num_doms - 1)
+      ((Domain.spawn (work w))::doms)
+
+let _ = distribute iterations num_domains []

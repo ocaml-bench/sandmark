@@ -196,14 +196,33 @@ let run output input cmdline =
         Filename.chop_suffix fname suffix
       else fname
     in
+    let strip_prefix s prefix =
+      if starts_with prefix s then
+        chop_prefix prefix s
+      else s
+    in
     let name = strip_suffix (Filename.basename output) ".bench" in
     let name = strip_suffix name ".orun" in
+    let ocamlrunparam = 
+      let params = 
+        match List.filter 
+                (fun s -> starts_with "OCAMLRUNPARAM=" s) 
+                (Array.to_list (Unix.environment ())) 
+        with
+        | [] -> "v=0x400" (* print stats at termination *)
+        | x::_ ->
+            let params = strip_prefix x "OCAMLRUNPARAM=" in
+            if params = "" then "v=0x400"
+            else params ^ ",v=0x400"
+      in
+      "OCAMLRUNPARAM=" ^ params
+    in
     let environ =
-      "OCAMLRUNPARAM=v=0x400"
+      ocamlrunparam
       :: "OCAML_EVENTLOG_ENABLED=1" (* enable tracing on eventlog branches *)
       :: Printf.sprintf "OCAML_EVENTLOG_FILE=%s.trace" name
       :: List.filter
-           (fun s -> not (starts_with s "OCAMLRUNPARAM="))
+           (fun s -> not (starts_with "OCAMLRUNPARAM=" s))
            (Array.to_list (Unix.environment ()))
     in
     let pid =

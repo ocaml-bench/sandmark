@@ -42,4 +42,3 @@ let () =
   loop_depths min_depth;
   Printf.printf "long lived tree of depth %i\t check: %i\n"
     max_depth (check long_lived_tree)
-
