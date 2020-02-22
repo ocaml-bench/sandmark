@@ -18,3 +18,6 @@
              fasta6.exe knucleotide.exe knucleotide3.exe mandelbrot6.exe
              nbody.exe pidigits5.exe regexredux2.exe revcomp2.exe
              spectralnorm2.exe input25000000.txt input5000000.txt))
+
+(alias (name multibench_parallel)
+       (deps binarytrees5.exe mandelbrot6.exe spectralnorm2.exe))
