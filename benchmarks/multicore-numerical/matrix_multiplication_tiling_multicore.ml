@@ -6,7 +6,7 @@ let size = try int_of_string Sys.argv.(2) with _ -> 1024
 type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
 let channels =
-  Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})
+  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
 
 let ts=64
 
@@ -46,6 +46,7 @@ let aux x y =
     matrix_multiply z x y (i * temp)  ((i + 1) * temp)
   in
   Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
+  job (num_domains - 1) ();
   Array.iter (fun c -> C.recv c.resp) channels;
   z
 

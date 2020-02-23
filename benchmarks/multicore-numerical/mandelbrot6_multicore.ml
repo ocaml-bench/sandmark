@@ -65,11 +65,10 @@ let worker w h_lo h_hi =
 let _ =
   let rows = w / num_domains and rem = w mod num_domains in
   Printf.printf "P4\n%i %i\n%!" w w;
-  let rec spawn i =
-    if i > 0 then
-      let red_i = i -1 in
-        (Domain.spawn (fun () -> worker w (red_i * rows + min red_i rem) (i * rows + min i rem))) :: spawn red_i
-    else
-      []
-    in
-      List.iter (fun d -> Printf.printf "%a%!" output_bytes (Domain.join d)) (List.rev (spawn num_domains))
+  let work i () =
+    worker w (i * rows + min i rem) ((i+1) * rows + min (i+1) rem)
+  in
+  let doms = Array.init (num_domains - 1) (fun i -> Domain.spawn (work i)) in
+  let r = work (num_domains-1) () in
+  Array.iter (fun d -> Printf.printf "%a%!" output_bytes (Domain.join d)) doms;
+  Printf.printf "%a%!" output_bytes r
