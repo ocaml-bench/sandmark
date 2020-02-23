@@ -7,6 +7,14 @@
     {
       "name": "perfstat",
       "command": "perf stat -o %{output} -- %{command}"
+    },
+    {
+      "name": "pausetimes_trunk",
+      "command": "bash pausetimes_trunk %{output} %{command}"
+    },
+    {
+      "name": "pausetimes_multicore",
+      "command": "bash pausetimes_multicore %{output} %{command}"
     }
   ],
   "benchmarks": [
@@ -16,13 +24,13 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": ""
+          "params": "64 524_288"
         }
       ]
     },
     {
       "executable": "benchmarks/yojson/ydump.exe",
-      "name": "ydump",
+      "name": "yojson_ydump",
       "ismacrobench": true,
       "runs": [
         {
@@ -74,7 +82,7 @@
     {
       "executable": "cpdf",
       "name": "cpdf",
-      "ismacrobench": true,
+      "ismacrobench": false,
       "runs": [
         {
           "params": "-merge benchmarks/cpdf/metro_geo.pdf -o /dev/null",
@@ -114,8 +122,16 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "16"
+          "params": "21"
         }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/game_of_life.exe",
+      "name": "game_of_life",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "256" }
       ]
     },
     {
@@ -124,7 +140,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "10"
+          "params": "12"
         }
       ]
     },
@@ -134,7 +150,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "10"
+          "params": "12"
         }
       ]
     },
@@ -149,8 +165,18 @@
       ]
     },
     {
+      "executable": "benchmarks/benchmarksgame/knucleotide3.exe",
+      "name": "knucleotide3",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
       "executable": "benchmarks/benchmarksgame/regexredux2.exe",
-      "name": "regexredux2.exe",
+      "name": "regexredux2",
       "ismacrobench": true,
       "runs": [
         {
@@ -174,7 +200,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "2_000_000"
+          "params": "25_000_000"
         }
       ]
     },
@@ -184,7 +210,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "2_000_000"
+          "params": "25_000_000"
         }
       ]
     },
@@ -194,8 +220,24 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "2_000"
+          "params": "16_000"
         }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/matrix_multiplication.exe",
+      "name": "matrix_multiplication",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "1024" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/quicksort.exe",
+      "name": "quicksort",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "4000000" }
       ]
     },
     {
@@ -204,7 +246,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "2_000_000"
+          "params": "50_000_000"
         }
       ]
     },
@@ -214,7 +256,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "8000"
+          "params": "10_000"
         }
       ]
     },
@@ -224,7 +266,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": "2_000"
+          "params": "5_500"
         }
       ]
     },
@@ -235,7 +277,7 @@
       "runs": [
         {
           "params": "benchmarks/minilight/roomfront.ml.txt",
-          "short_name": "roomfront.ml.txt"
+          "short_name": "roomfront"
         }
       ]
     },
@@ -266,7 +308,7 @@
       "ismacrobench": true,
       "runs": [
         {
-          "params": ""
+          "params": "26"
         }
       ]
     },
@@ -305,7 +347,7 @@
     },
     {
       "executable": "benchmarks/lexifi-g2pp/main.exe",
-      "name": "main",
+      "name": "lexifi-g2pp",
       "ismacrobench": true,
       "runs": [
         {
@@ -380,7 +422,7 @@
       "runs": [
         {
           "params": "benchmarks/menhir/ocaml.mly --list-errors -la 2 --no-stdlib --lalr",
-          "short_name": "ocamly.mly"
+          "short_name": "ocamly"
         }
       ]
     },
@@ -391,7 +433,7 @@
       "runs": [
         {
           "params": "-v -t benchmarks/menhir/keywords.mly benchmarks/menhir/sql-parser.mly --base sql-parser",
-          "short_name": "sql-parser.mly"
+          "short_name": "sql-parser"
         }
       ]
     },
@@ -402,7 +444,7 @@
       "runs": [
         {
           "params": "-v --table benchmarks/menhir/sysver.mly",
-          "short_name": "sysver.mly"
+          "short_name": "sysver"
         }
       ]
     },

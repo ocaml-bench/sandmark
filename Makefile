@@ -24,6 +24,8 @@ PRE_BENCH_EXEC ?=
 # option to allow benchmarks to continue even if the opam package install errored
 CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
+WRAPPER = $(subst run_,,$(RUN_BENCH_TARGET))
+
 PACKAGES = \
 	cpdf menhir minilight camlimages yojson lwt alt-ergo zarith \
 	js_of_ocaml-compiler uuidm react ocplib-endian nbcodec checkseum decompress \
@@ -104,6 +106,7 @@ ocaml-versions/%.bench: log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
            done } > ocaml-versions/.workspace.$*
+	opam exec --switch $* -- cp pausetimes/* $$(opam config var bin)
 	opam exec --switch $* -- rungen _build/$*_1 $(RUN_CONFIG_JSON) > runs_dune.inc;
 	opam exec --switch $* -- dune build --profile=release --workspace=ocaml-versions/.workspace.$* @$(BUILD_BENCH_TARGET);
 	$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;
@@ -111,7 +114,7 @@ ocaml-versions/%.bench: log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	   d=`basename $$f | cut -d '.' -f 1,2`; \
 	   mkdir -p _results/$*/$$d/ ; cp $$f _results/$*/$$d/; \
 	done };
-	@{ find _build/$*_* -name '*.orun.bench' | xargs cat > _results/$*/$*.orun.bench; };
+	@{ find _build/$*_* -name '*.$(WRAPPER).bench' | xargs cat > _results/$*/$*.$(WRAPPER).bench; };
 	exit $$ex;
 
 

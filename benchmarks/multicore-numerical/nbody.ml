@@ -4,9 +4,6 @@
  * Contributed by Troestler Christophe
  *)
 
-module C = Domainslib.Chan
-
-let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
 let n = try int_of_string Sys.argv.(2) with _ -> 500
 let num_bodies = try int_of_string Sys.argv.(3) with _ -> 1024
 
@@ -14,62 +11,35 @@ let pi = 3.141592653589793
 let solar_mass = 4. *. pi *. pi
 let days_per_year = 365.24
 
-type message = Do of (unit -> unit) | Quit
-type chan = {req: message C.t; resp: unit C.t}
-let channels =
-  Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})
-
 type planet = { mutable x : float;  mutable y : float;  mutable z : float;
                 mutable vx: float;  mutable vy: float;  mutable vz: float;
                 mass : float }
 
-let advance bodies dt s e =
-  (* let n = Array.length bodies - 1 in *)
-  for i = s to (pred e) do
+let advance bodies dt =
+  let n = Array.length bodies - 1 in
+  for i = 0 to Array.length bodies - 1 do
     let b = bodies.(i) in
-    for j = 0 to Array.length bodies - 1 do
+    for j = i+1 to Array.length bodies - 1 do
       let b' = bodies.(j) in
-      if (i!=j) then
-      begin
-        let dx = b.x -. b'.x  and dy = b.y -. b'.y  and dz = b.z -. b'.z in
-        let dist2 = dx *. dx +. dy *. dy +. dz *. dz in
-        let mag = dt /. (dist2 *. sqrt(dist2)) in
-        b.vx <- b.vx -. dx *. b'.mass *. mag;
-        b.vy <- b.vy -. dy *. b'.mass *. mag;
-        b.vz <- b.vz -. dz *. b'.mass *. mag;
-      end
+      let dx = b.x -. b'.x  and dy = b.y -. b'.y  and dz = b.z -. b'.z in
+      let dist2 = dx *. dx +. dy *. dy +. dz *. dz in
+      let mag = dt /. (dist2 *. sqrt(dist2)) in
 
+      b.vx <- b.vx -. dx *. b'.mass *. mag;
+      b.vy <- b.vy -. dy *. b'.mass *. mag;
+      b.vz <- b.vz -. dz *. b'.mass *. mag;
 
-      (* b'.vx <- b'.vx +. dx *. b.mass *. mag;
+      b'.vx <- b'.vx +. dx *. b.mass *. mag;
       b'.vy <- b'.vy +. dy *. b.mass *. mag;
-      b'.vz <- b'.vz +. dz *. b.mass *. mag; *)
+      b'.vz <- b'.vz +. dz *. b.mass *. mag;
     done
-  done
-
-let second_loop bodies dt s e =
-  for i = s to (pred e) do
+  done;
+  for i = 0 to n do
     let b = bodies.(i) in
     b.x <- b.x +. dt *. b.vx;
     b.y <- b.y +. dt *. b.vy;
     b.z <- b.z +. dt *. b.vz;
   done
-
-
-let aux_1 bodies dt =
-  let till_n = Array.length bodies - 1 in
-  let temp = ((till_n)+1)/num_domains in
-  let job i () =
-    advance bodies dt  (i * temp) ((i + 1) * temp)
-  in
-  Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
-  Array.iter (fun c -> C.recv c.resp) channels;
-
-  let temp = ((till_n)+1)/num_domains in
-  let job_1 i () =
-    second_loop bodies dt (i * temp) ((i + 1) * temp)
-  in
-  Array.iteri (fun i c -> C.send c.req (Do (job_1 i))) channels ;
-  Array.iter (fun c -> C.recv c.resp) channels
 
 
 let energy bodies =
@@ -98,13 +68,6 @@ let offset_momentum bodies =
   bodies.(0).vy <- -. !py /. solar_mass;
   bodies.(0).vz <- -. !pz /. solar_mass
 
-let rec worker c () =
-  match C.recv c.req with
-  | Do f ->
-      f () ; C.send c.resp () ; worker c ()
-  | Quit ->
-      ()
-
 let bodies =
   Array.init num_bodies (fun _ ->
     { x = (Random.float  10.);
@@ -116,10 +79,7 @@ let bodies =
       mass=(Random.float 10.) *. solar_mass; })
 
 let () =
-  let domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
   offset_momentum bodies;
   Printf.printf "%.9f\n" (energy bodies);
-  for _i = 1 to n do aux_1 bodies 0.01 done;
-  Printf.printf "%.9f\n" (energy bodies);
-  Array.iter (fun c -> C.send c.req Quit) channels;
-  Array.iter Domain.join domains
+  for i = 1 to n do advance bodies 0.01 done;
+  Printf.printf "%.9f\n" (energy bodies)

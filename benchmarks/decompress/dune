@@ -4,9 +4,11 @@
   (libraries checkseum.ocaml decompress))
 
 (executable
- (name test_parallel_decompress)
-  (modules test_parallel_decompress)
+ (name test_decompress_multicore)
+  (modules test_decompress_multicore)
   (libraries checkseum.ocaml decompress))
 
-(alias (name buildbench) (deps test_decompress.exe))
-(alias (name multibench_parallel) (deps test_parallel_decompress.exe))
+(alias (name buildbench)
+       (deps test_decompress.exe))
+(alias (name multibench_parallel)
+       (deps test_decompress.exe test_decompress_multicore.exe))

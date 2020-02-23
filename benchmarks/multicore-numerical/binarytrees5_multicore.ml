@@ -1,10 +1,19 @@
+(* The Computer Language Benchmarks Game
+ * https://salsa.debian.org/benchmarksgame-team/benchmarksgame/
+ *
+ * Contributed by Troestler Christophe
+ * Modified by Fabrice Le Fessant
+ * *reset*
+ *)
+
 module C = Domainslib.Chan
 
 type message = Do of (unit -> unit) | Quit
 
 type chan = {req: message C.t; resp: unit C.t}
 
-let num_domains = try int_of_string Sys.argv.(2) with _ -> 1
+let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
+let max_depth = try int_of_string Sys.argv.(2) with _ -> 10
 
 let channels =
   Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})
@@ -19,8 +28,7 @@ let rec make d =
 let rec check = function Empty -> 0 | Node(l, r) -> 1 + check l + check r
 
 let min_depth = 4
-let max_depth = (let n = try int_of_string(Array.get Sys.argv 1) with _ -> 10 in
-                 max (min_depth + 2) n)
+let max_depth = max (min_depth + 2) max_depth
 let stretch_depth = max_depth + 1
 
 let () =

@@ -16,6 +16,9 @@
 let niter = 50
 let limit = 4.
 
+let num_domains = int_of_string (Array.get Sys.argv 1)
+let w = int_of_string (Array.get Sys.argv 2)
+
 let worker w h_lo h_hi =
   let buf =
     Bytes.create ((w / 8 + (if w mod 8 > 0 then 1 else 0)) * (h_hi - h_lo))
@@ -60,9 +63,7 @@ let worker w h_lo h_hi =
   buf
 
 let _ =
-  let w = int_of_string (Array.get Sys.argv 1) in
-  let workers = int_of_string (Array.get Sys.argv 2) in
-  let rows = w / workers and rem = w mod workers in
+  let rows = w / num_domains and rem = w mod num_domains in
   Printf.printf "P4\n%i %i\n%!" w w;
   let rec spawn i =
     if i > 0 then
@@ -70,5 +71,5 @@ let _ =
         (Domain.spawn (fun () -> worker w (red_i * rows + min red_i rem) (i * rows + min i rem))) :: spawn red_i
     else
       []
-    in 
-      List.iter (fun d -> Printf.printf "%a%!" output_bytes (Domain.join d)) (List.rev (spawn workers))
+    in
+      List.iter (fun d -> Printf.printf "%a%!" output_bytes (Domain.join d)) (List.rev (spawn num_domains))
