@@ -1,18 +1,6 @@
 (executable
-	(name n_simple_merge_example)
-	(modules n_simple_merge_example)
-	(libraries lwt irmin irmin-mem irmin-unix irmin-git fmt astring))
-
-(executable
-	(name simple_merge_example)
-	(modules simple_merge_example)
-	(libraries lwt irmin irmin-mem irmin-unix irmin-git fmt astring))
-
-(executable
 	(name merge_benchmark)
 	(modules merge_benchmark)
 	(libraries lwt irmin irmin-mem irmin-unix irmin-git fmt astring unix))
 
-(alias (name n_simple_merge) (deps n_simple_merge_example.exe))
-(alias (name simple_merge) (deps simple_merge_example.exe))
 (alias (name merge_bench) (deps merge_benchmark.exe))
