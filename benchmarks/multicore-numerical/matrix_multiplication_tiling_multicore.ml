@@ -24,6 +24,7 @@ let matrix_multiply z x y s e =
       for i= 0 to (pred ts) do
         for j= 0 to (pred ts) do
           for k=0 to (pred ts) do
+            Domain.Sync.poll();
             z.(!bi+i).(!bj+j) <- z.(!bi+i).(!bj+j) + x.(!bi+i).(!bk+k) * y.(!bk+k).(!bj+j)
           done
         done
