@@ -1,0 +1,102 @@
+module C = Domainslib.Chan
+
+open Format
+
+type message = Do of (unit -> unit) | Quit
+
+type chan = {req: message C.t; resp: unit C.t}
+
+let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
+
+let mat_size = try int_of_string Sys.argv.(2) with _ -> 1200
+
+let channels = 
+Array.init (num_domains -1) (fun _ -> {req= C.make 1; resp= C.make 0})
+
+module Array = struct
+  include Array
+
+  let init_matrix m n f = init m (fun i -> init n (f i))
+
+  let matrix_size a =
+    let m = length a in
+    let n = if m = 0 then 0 else length a.(0) in
+    (m, n)
+
+  (** [swap x i j] swaps [x.(i)] and [x.(j)]. *)
+  let swap x i j =
+    let tmp = x.(i) in
+    x.(i) <- x.(j);
+    x.(j) <- tmp
+end
+
+let aux a k size s e =
+  for row = s to (pred e) do
+      match row >= k + 1  with
+      | true -> 
+        let factor = (a.(row).(k)) /. (a.(k).(k)) in
+        for col = k + 1 to size-1 do
+            Domain.Sync.poll();
+            a.(row).(col) <- a.(row).(col) -. factor *. a.(k).(col)
+        done;
+        a.(row).(k) <- factor
+      | false -> ()  
+  done 
+
+let lup a0 =
+let a = Array.copy a0 in
+  let size, n = Array.matrix_size a in 
+  for k = 0 to size-2 do 
+    let temp = (size)/num_domains in
+    let job i () =
+      aux a k size (i * temp )  ((i + 1) * temp)
+    in
+    Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
+    job (num_domains - 1) ();
+    Array.iter (fun c -> C.recv c.resp) channels
+  done ;
+  ignore n;
+  a 
+
+
+
+
+let print_mat label x =
+  printf "%s =@\n" label;
+  Array.iter (fun xi ->
+      Array.iter (printf "  %10g") xi;
+      print_newline ()) x
+
+
+let rec worker c () =
+  match C.recv c.req with
+  | Do f ->
+      f () ; C.send c.resp () ; worker c ()
+  | Quit ->
+      () 
+
+
+let () =
+  let domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
+  (* let a = 
+  [|
+    [| 1.; -2.; -2.; -3.|];
+    [|3.; -9.; 0.; -9.|];
+    [| -1.; 2.;4.; 7.|];
+    [| -3.; -6.; 26.; 2.|];
+    
+  |]  in *)
+  let a = Array.init mat_size 
+  (fun _ -> Array.init mat_size (fun _ -> (Random.float 100.0)+.1.0)) in
+  print_mat "matrix A" a ;
+  let lu = lup a in
+  let m, n = Array.matrix_size lu in
+  let r = min m n in
+  let l = Array.init_matrix m r
+      (fun i j -> if i > j then lu.(i).(j) else if i = j then 1.0 else 0.0) in
+  let u = Array.init_matrix r n
+      (fun i j -> if i <= j then lu.(i).(j) else 0.0) in
+  print_mat "matrix L" l;
+  print_mat "matrix U" u;
+  Array.iter (fun c -> C.send c.req Quit) channels ;
+  Array.iter Domain.join domains 
