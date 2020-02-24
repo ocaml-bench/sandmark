@@ -4,9 +4,8 @@ type message = Do of (unit -> unit) | Quit
 
 type chan = {req: message C.t; resp: unit C.t}
 
-let n_times = try int_of_string Sys.argv.(1) with _ -> 2
-
-let num_domains = try int_of_string Sys.argv.(2) with _ -> 1
+let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
+let n_times = try int_of_string Sys.argv.(2) with _ -> 2
 
 let channels =
   Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})
