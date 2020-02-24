@@ -17,4 +17,6 @@
    durand_kerner_aberth.exe
    fft.exe
    lu_decomposition.exe
-   qr_decomposition.exe))
+   qr_decomposition.exe
+   levinson_durbin.exe
+   naive_multilayer.exe))

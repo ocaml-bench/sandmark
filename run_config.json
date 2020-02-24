@@ -1040,6 +1040,66 @@
           "params": "200_000"
         }
       ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/durand_kerner_aberth.exe",
+      "name": "numal-durand-kerner-aberth",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/fft.exe",
+      "name": "numal-fft",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/levinson_durbin.exe",
+      "name": "numal-levinson-durbin",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/lu_decomposition.exe",
+      "name": "numal-lu-decomposition",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/naive_multilayer.exe",
+      "name": "numal-naive-multilayer",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+      {
+      "executable": "benchmarks/numerical-analysis/qr_decomposition.exe",
+      "name": "numal-qr-decomposition",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
     }
   ]
 }
