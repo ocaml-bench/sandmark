@@ -8,7 +8,7 @@ let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
 let n_times = try int_of_string Sys.argv.(2) with _ -> 2
 
 let channels =
-  Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})
+  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
 
 
 let get g x y =
@@ -52,6 +52,7 @@ let next g =
     evaluate g new_g (i * (pred width) / num_domains)  (((i + 1) * (pred width)/num_domains))
   in
   Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
+  job (num_domains - 1) ();
   Array.iter (fun c -> C.recv c.resp) channels;
   new_g
 

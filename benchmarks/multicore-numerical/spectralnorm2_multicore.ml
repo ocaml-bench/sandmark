@@ -15,7 +15,7 @@ type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
 
 let channels =
-  Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})
+  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
 
 let eval_A i j = 1. /. float (((i + j) * (i + j + 1) / 2) + i + 1)
 
@@ -34,6 +34,7 @@ let divvy_up1 u v =
     eval_A_times_u u v (i * n / num_domains) (((i + 1) * n / num_domains) - 1)
   in
   Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
+  job (num_domains - 1) ();
   Array.iter (fun c -> C.recv c.resp) channels
 
 let eval_At_times_u u v s e =
@@ -51,6 +52,7 @@ let divvy_up2 u v =
     eval_At_times_u u v (i * n / num_domains) (((i + 1) * n / num_domains) - 1)
   in
   Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
+  job (num_domains - 1) ();
   Array.iter (fun c -> C.recv c.resp) channels
 
 let eval_AtA_times_u u v =
@@ -67,7 +69,7 @@ let rec worker c () =
 let () =
   let domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
   let u = Array.make n 1.0 and v = Array.make n 0.0 in
-  for i = 0 to 9 do
+  for _i = 0 to 9 do
     eval_AtA_times_u u v ; eval_AtA_times_u v u
   done ;
   let vv = ref 0.0 and vBv = ref 0.0 in
