@@ -378,7 +378,7 @@
     {
       "executable": "benchmarks/zarith/zarith_fact.exe",
       "name": "zarith_fact",
-      "ismacrobench": true,
+      "ismacrobench": false,
       "runs": [
         {
           "params": "40 1_000_000"
@@ -388,7 +388,7 @@
     {
       "executable": "benchmarks/zarith/zarith_fib.exe",
       "name": "zarith_fib",
-      "ismacrobench": true,
+      "ismacrobench": false,
       "runs": [
         {
           "params": "Z 40"
@@ -408,7 +408,7 @@
     {
       "executable": "benchmarks/zarith/zarith_tak.exe",
       "name": "zarith_tak",
-      "ismacrobench": true,
+      "ismacrobench": false,
       "runs": [
         {
           "params": "Z 2500"
