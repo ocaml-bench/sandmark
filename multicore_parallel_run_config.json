@@ -122,6 +122,21 @@
         { "params": "24 40_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" }
       ]
     },
+    {
+      "executable": "benchmarks/multicore-numerical/quicksort_median_multicore.exe",
+      "name": "quicksort_median_multicore",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "1 40_000_000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1"},
+        { "params": "2 40_000_000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "4 40_000_000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "8 40_000_000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "12 40_000_000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "16 40_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "20 40_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "24 40_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" }
+      ]
+    },
 
     {
       "executable": "benchmarks/benchmarksgame/binarytrees5.exe",
@@ -308,7 +323,7 @@
           "params": "16 1000000"
         }
       ]
-    },  
+    },
     {
       "executable": "benchmarks/multicore-structures/test_stack_parallel.exe",
       "name": "stack_parallel",
