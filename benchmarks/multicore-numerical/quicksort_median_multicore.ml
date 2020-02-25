@@ -67,7 +67,7 @@ let rec quicksort arr low high d =
   end
 
 let () =
-  let arr = Array.init n (fun _ -> Random.int (n / 2) + Random.int (n / 2) ) in
+  let arr = Array.init n (fun _ -> Random.int n ) in
   (* for i = 0 to  Array.length arr - 1 do
     print_int arr.(i);
     print_string "  "
