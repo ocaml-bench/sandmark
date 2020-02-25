@@ -21,8 +21,8 @@
  (modules quicksort_multicore))
 
 (executable
- (name quicksort_multicore)
- (modules quicksort_multicore))
+ (name quicksort_median_multicore)
+ (modules quicksort_median_multicore))
 
 (executable
  (name binarytrees5_multicore)
