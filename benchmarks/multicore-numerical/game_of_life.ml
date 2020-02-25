@@ -1,4 +1,11 @@
 let n_times = try int_of_string Sys.argv.(1) with _ -> 2
+let board_size = 1024
+
+let rg = 
+  ref (Array.init board_size (fun _ -> Array.init board_size (fun _ -> Random.int 2)))
+let rg' = 
+  ref (Array.init board_size (fun _ -> Array.init board_size (fun _ -> Random.int 2)))
+let buf = Bytes.create board_size
 
 let get g x y =
   try g.(x).(y)
@@ -23,37 +30,34 @@ let next_cell g x y =
   | 0, 3                             -> 1  (* get birth *)
   | _ (* 0, (0|1|2|4|5|6|7|8) *)     -> 0  (* barren *)
 
-let copy g = Array.map Array.copy g
+let print g =
+  for x = 0 to board_size - 1 do
+    for y = 0 to board_size - 1 do
+      if g.(x).(y) = 0
+      then Bytes.set buf y '.' 
+      else Bytes.set buf y 'o'
+    done;
+    print_endline (Bytes.unsafe_to_string buf)
+  done;
+  print_endline ""
 
-let next g =
-  let width = Array.length g
-  and height = Array.length g.(0)
-  and new_g = copy g in
-  for x = 0 to pred width do
-    for y = 0 to pred height do
-      new_g.(x).(y) <- (next_cell g x y)
+let next () =
+  let g = !rg in
+  let new_g = !rg' in
+  for x = 0 to board_size - 1 do
+    for y = 0 to board_size - 1 do
+      new_g.(x).(y) <- next_cell g x y
     done
   done;
-  (new_g)
+  rg := new_g;
+  rg' := g
 
-let print g =
-  let width = Array.length g
-  and height = Array.length g.(0) in
-  for x = 0 to pred width do
-    for y = 0 to pred height do
-      if g.(x).(y) = 0
-      then print_char '.'
-      else print_char 'o'
-    done;
-    print_newline()
-  done
-
-let rec repeat n g =
+let rec repeat n =
   match n with
-  | 0 -> g
-  | _ -> repeat (n-1) (next g)
+  | 0 -> ()
+  | _ -> next (); repeat (n-1)
 
 let ()=
-  let g = Array.init 1024 (fun _ -> Array.init 1024 (fun _ -> Random.int 2)) in
-  print g;
-  print (repeat n_times g)
+  print !rg;
+  repeat n_times;
+  print !rg
