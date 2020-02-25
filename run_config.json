@@ -2,19 +2,19 @@
   "wrappers": [
     {
       "name": "orun",
-      "command": "orun -o %{output} -- %{command}"
+      "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
     },
     {
       "name": "perfstat",
-      "command": "perf stat -o %{output} -- %{command}"
+      "command": "perf stat -o %{output} -- taskset --cpu-list 5 %{command}"
     },
     {
       "name": "pausetimes_trunk",
-      "command": "bash pausetimes_trunk %{output} %{command}"
+      "command": "bash pausetimes_trunk %{output} taskset --cpu-list 5 %{command}"
     },
     {
       "name": "pausetimes_multicore",
-      "command": "bash pausetimes_multicore %{output} %{command}"
+      "command": "bash pausetimes_multicore %{output} taskset --cpu-list 5 %{command}"
     }
   ],
   "benchmarks": [
