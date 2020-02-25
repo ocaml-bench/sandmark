@@ -59,11 +59,11 @@
 
 (executable
  (name mergesort_multicore)
- (modules mergesort_multicore)
+ (modules mergesort_multicore))
 
 (executable
  (name mergesort)
- (modules mergesort)
+ (modules mergesort))
 
 (alias (name multibench_parallel)
 			 (deps mandelbrot6_multicore.exe spectralnorm2_multicore.exe quicksort.exe
