@@ -27,7 +27,7 @@ CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 PACKAGES = \
 	cpdf menhir minilight camlimages yojson lwt orun rungen alt-ergo zarith \
 	js_of_ocaml-compiler uuidm react ocplib-endian nbcodec checkseum decompress \
-	sexplib0
+	sexplib0 irmin irmin-unix
 
 # want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
