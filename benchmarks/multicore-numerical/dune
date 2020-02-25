@@ -21,6 +21,10 @@
  (modules quicksort_multicore))
 
 (executable
+ (name quicksort_multicore)
+ (modules quicksort_multicore))
+
+(executable
  (name binarytrees5_multicore)
  (modules binarytrees5_multicore)
  (libraries domainslib))
@@ -59,7 +63,7 @@
 
 (alias (name multibench_parallel)
 			 (deps mandelbrot6_multicore.exe spectralnorm2_multicore.exe quicksort.exe
-						 quicksort_multicore.exe binarytrees5_multicore.exe
+						 quicksort_multicore.exe quicksort_median_multicore.exe binarytrees5_multicore.exe
 						 game_of_life.exe game_of_life_multicore.exe
 						 matrix_multiplication.exe matrix_multiplication_multicore.exe
 						 matrix_multiplication_tiling_multicore.exe nbody.exe
