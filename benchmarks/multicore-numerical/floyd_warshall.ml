@@ -1,4 +1,4 @@
-let n = try int_of_string Sys.argv.(2) with _ -> 4
+let n = try int_of_string Sys.argv.(1) with _ -> 4
 
 type e =
       | None
