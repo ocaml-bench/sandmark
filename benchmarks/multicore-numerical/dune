@@ -44,6 +44,15 @@
  (libraries domainslib))
 
 (executable
+ (name floyd_warshall_multicore)
+ (modules floyd_warshall_multicore)
+ (libraries domainslib))
+
+(executable
+ (name floyd_warshall)
+ (modules floyd_warshall))
+
+(executable
  (name matrix_multiplication_tiling_multicore)
  (modules matrix_multiplication_tiling_multicore)
  (libraries domainslib))
