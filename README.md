@@ -6,6 +6,12 @@ try `make ocaml-versions/4.06.0.bench`
 
 then look for the results in `_results/`
 
+## quikstart multicore
+```
+    make multicore_parallel_run_config_macro.json
+    bash run_all_parallel.sh
+```
+
 ## pre-requisites
 
 It is necessary that the system dune version is `< 2.0`. The development uses
