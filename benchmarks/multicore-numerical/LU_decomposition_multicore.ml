@@ -18,17 +18,32 @@ module Array = struct
 
   let init_matrix m n f = init m (fun i -> init n (f i))
 
-  let matrix_size a =
-    let m = length a in
-    let n = if m = 0 then 0 else length a.(0) in
-    (m, n)
-
   (** [swap x i j] swaps [x.(i)] and [x.(j)]. *)
   let swap x i j =
     let tmp = x.(i) in
     x.(i) <- x.(j);
     x.(j) <- tmp
 end
+
+let distribution = 
+  let rec loop n d acc = 
+    if d = 1 then n::acc
+    else 
+      let w = n / d in
+      loop (n - w) (d - 1) (w::acc)
+  in
+  Array.of_list (loop mat_size num_domains [])
+
+let run_iter job = 
+  let sum = ref 0 in
+  Array.iteri (fun i c ->
+    let begin_ = !sum in
+    sum := !sum + distribution.(i);
+    let end_ = !sum in
+    C.send c.req (Do (job begin_ end_))) channels;
+  job !sum (!sum + distribution.(num_domains - 1)) ();
+  Array.iter (fun c -> C.recv c.resp) channels
+
 
 let aux a k size s e =
   for row = s to (pred e) do
@@ -45,17 +60,9 @@ let aux a k size s e =
 
 let lup a0 =
 let a = Array.copy a0 in
-  let size, n = Array.matrix_size a in 
-  for k = 0 to size-2 do 
-    let temp = (size)/num_domains in
-    let job i () =
-      aux a k size (i * temp )  ((i + 1) * temp)
-    in
-    Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
-    job (num_domains - 1) ();
-    Array.iter (fun c -> C.recv c.resp) channels
+  for k = 0 to (mat_size - 2) do
+    run_iter (fun s e () -> aux a k mat_size s e)
   done ;
-  ignore n;
   a 
 
 
@@ -78,7 +85,7 @@ let rec worker c () =
 
 let () =
   let domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
-  (* let a = 
+ (*  let a = 
   [|
     [| 1.; -2.; -2.; -3.|];
     [|3.; -9.; 0.; -9.|];
@@ -90,11 +97,9 @@ let () =
   (fun _ -> Array.init mat_size (fun _ -> (Random.float 100.0)+.1.0)) in
   print_mat "matrix A" a ;
   let lu = lup a in
-  let m, n = Array.matrix_size lu in
-  let r = min m n in
-  let l = Array.init_matrix m r
+  let l = Array.init_matrix mat_size mat_size
       (fun i j -> if i > j then lu.(i).(j) else if i = j then 1.0 else 0.0) in
-  let u = Array.init_matrix r n
+  let u = Array.init_matrix mat_size mat_size
       (fun i j -> if i <= j then lu.(i).(j) else 0.0) in
   print_mat "matrix L" l;
   print_mat "matrix U" u;
