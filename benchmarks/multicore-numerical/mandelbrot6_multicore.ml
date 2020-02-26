@@ -16,6 +16,9 @@
 let niter = 50
 let limit = 4.
 
+let num_domains = int_of_string (Array.get Sys.argv 1)
+let w = int_of_string (Array.get Sys.argv 2)
+
 let worker w h_lo h_hi =
   let buf =
     Bytes.create ((w / 8 + (if w mod 8 > 0 then 1 else 0)) * (h_hi - h_lo))
@@ -30,6 +33,7 @@ let worker w h_lo h_hi =
       and zr = ref 0. and zi = ref 0. and trmti = ref 0. and n = ref 0 in
       begin try
 	while true do
+          Domain.Sync.poll ();
 	  zi := 2. *. !zr *. !zi +. ci;
 	  zr := !trmti +. cr;
 	  let tr = !zr *. !zr and ti = !zi *. !zi in
@@ -60,15 +64,12 @@ let worker w h_lo h_hi =
   buf
 
 let _ =
-  let w = int_of_string (Array.get Sys.argv 1) in
-  let workers = int_of_string (Array.get Sys.argv 2) in
-  let rows = w / workers and rem = w mod workers in
+  let rows = w / num_domains and rem = w mod num_domains in
   Printf.printf "P4\n%i %i\n%!" w w;
-  let rec spawn i =
-    if i > 0 then
-      let red_i = i -1 in
-        (Domain.spawn (fun () -> worker w (red_i * rows + min red_i rem) (i * rows + min i rem))) :: spawn red_i
-    else
-      []
-    in 
-      List.iter (fun d -> Printf.printf "%a%!" output_bytes (Domain.join d)) (List.rev (spawn workers))
+  let work i () =
+    worker w (i * rows + min i rem) ((i+1) * rows + min (i+1) rem)
+  in
+  let doms = Array.init (num_domains - 1) (fun i -> Domain.spawn (work i)) in
+  let r = work (num_domains-1) () in
+  Array.iter (fun d -> Printf.printf "%a%!" output_bytes (Domain.join d)) doms;
+  Printf.printf "%a%!" output_bytes r

@@ -20,11 +20,11 @@ let re_bs = Str.regexp_string "\\"
 let to_string = Str.global_replace re_bs ""
 
 let subst = ["tHa[Nt]", "<4>"; "aND\\|caN\\|Ha[DS]\\|WaS", "<3>";
-             "a[NSt]\\|BY", "<2>"; "<[^>]*>", "|"; "|[^|][^|]*|", "-"] 
+             "a[NSt]\\|BY", "<2>"; "<[^>]*>", "|"; "|[^|][^|]*|", "-"]
 
 (* Read all of a redirected FASTA format file from knucleotide-input.txt. *)
 let file_data, file_length =
-  let kinput = open_in "knucleotide-input.txt" in
+  let kinput = open_in "input5000000.txt" in
   let b = Buffer.create 0xFFFF in
   let s = Bytes.create 0xFFF in
   let r = ref 1 in

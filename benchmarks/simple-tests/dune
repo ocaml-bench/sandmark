@@ -9,6 +9,10 @@
 (executables
  (names alloc) (modules alloc))
 
- (executables (names morestacks) (modules morestacks))
+(executables
+ (names alloc_multicore) (modules alloc_multicore))
+
+(executables (names morestacks) (modules morestacks))
 
 (alias (name buildbench) (deps alloc.exe morestacks.exe))
+(alias (name multibench_parallel) (deps alloc_multicore.exe))

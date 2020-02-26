@@ -1,4 +1,4 @@
-(* 
+(*
  * The Computer Language Benchmarks Game
  * https://salsa.debian.org/benchmarksgame-team/benchmarksgame/
  *
@@ -62,7 +62,7 @@ let write_count seq_str dna =
 
 (* Extract DNA sequence "THREE" from knucleotide-input.txt *)
 let dna_three =
-  let kinput = open_in "knucleotide-input.txt" in
+  let kinput = open_in "input25000000.txt" in
   let is_not_three s = try String.sub s 0 6 <> ">THREE" with _ -> true in
   while is_not_three(input_line kinput) do () done;
   let buf = Buffer.create 1000 in
