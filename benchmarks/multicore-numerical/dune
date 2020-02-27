@@ -50,8 +50,7 @@
 
 (executable
  (name LU_decomposition_serial)
- (modules LU_decomposition_serial)
- (libraries domainslib))
+ (modules LU_decomposition_serial))
 
 (executable
  (name floyd_warshall_multicore)
