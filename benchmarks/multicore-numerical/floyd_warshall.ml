@@ -54,5 +54,5 @@ let columns = Array.length adjacency.(0) in
 
 let ()=
   edit_diagonal adj;
-  f_w adj;
-  print_mat adj 
+  f_w adj
+ (* print_mat adj*) 

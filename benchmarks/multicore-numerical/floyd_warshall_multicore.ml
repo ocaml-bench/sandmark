@@ -108,6 +108,6 @@ let ()=
   edit_diagonal adj;
   let domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
   aux() ;
-  print_mat adj ;
+(*  print_mat adj ;*)
   Array.iter (fun c -> C.send c.req Quit) channels ;
   Array.iter Domain.join domains
