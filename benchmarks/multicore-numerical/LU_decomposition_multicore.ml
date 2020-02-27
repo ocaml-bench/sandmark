@@ -95,13 +95,14 @@ let () =
   |]  in *)
   let a = Array.init mat_size 
   (fun _ -> Array.init mat_size (fun _ -> (Random.float 100.0)+.1.0)) in
-  print_mat "matrix A" a ;
-  let lu = lup a in
+  (* print_mat "matrix A" a ; *)
+  let lu = lup a in (* in
   let l = Array.init_matrix mat_size mat_size
       (fun i j -> if i > j then lu.(i).(j) else if i = j then 1.0 else 0.0) in
   let u = Array.init_matrix mat_size mat_size
-      (fun i j -> if i <= j then lu.(i).(j) else 0.0) in
-  print_mat "matrix L" l;
-  print_mat "matrix U" u;
+      (fun i j -> if i <= j then lu.(i).(j) else 0.0) in *)
+  (* print_mat "matrix L" l;
+  print_mat "matrix U" u; *)
+  ignore lu ;
   Array.iter (fun c -> C.send c.req Quit) channels ;
   Array.iter Domain.join domains 

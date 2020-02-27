@@ -45,11 +45,11 @@ let () =
   |]  in *)
   let a = Array.init mat_size 
   (fun _ -> Array.init mat_size (fun _ -> (Random.float 100.0)+.1.0)) in
-  print_mat "matrix A" a ;
-  let lu = lup a in
-  let l = Array.init_matrix mat_size mat_size
+  (* print_mat "matrix A" a ; *)
+   let  lu = lup a in ()
+ (*  let l = Array.init_matrix mat_size mat_size
       (fun i j -> if i > j then lu.(i).(j) else if i = j then 1.0 else 0.0) in
   let u = Array.init_matrix mat_size mat_size
       (fun i j -> if i <= j then lu.(i).(j) else 0.0) in
-  print_mat "matrix L" l;
-  print_mat "matrix U" u 
+  (* print_mat "matrix L" l; *)
+  print_mat "matrix U" u  *)
