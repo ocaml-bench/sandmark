@@ -17,7 +17,7 @@ let days_per_year = 365.24
 type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
 let channels =
-  Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})
+  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
 
 type planet = { mutable x : float;  mutable y : float;  mutable z : float;
                 mutable vx: float;  mutable vy: float;  mutable vz: float;
@@ -54,23 +54,28 @@ let second_loop bodies dt s e =
     b.z <- b.z +. dt *. b.vz;
   done
 
-
-let aux_1 bodies dt =
-  let till_n = Array.length bodies - 1 in
-  let temp = ((till_n)+1)/num_domains in
-  let job i () =
-    advance bodies dt  (i * temp) ((i + 1) * temp)
+let distribution = 
+  let rec loop n d acc = 
+    if d = 1 then n::acc
+    else 
+      let w = n / d in
+      loop (n - w) (d - 1) (w::acc)
   in
-  Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
-  Array.iter (fun c -> C.recv c.resp) channels;
+  Array.of_list (loop num_bodies num_domains [])
 
-  let temp = ((till_n)+1)/num_domains in
-  let job_1 i () =
-    second_loop bodies dt (i * temp) ((i + 1) * temp)
-  in
-  Array.iteri (fun i c -> C.send c.req (Do (job_1 i))) channels ;
+let run_iter job = 
+  let sum = ref 0 in
+  Array.iteri (fun i c ->
+    let begin_ = !sum in
+    sum := !sum + distribution.(i);
+    let end_ = !sum in
+    C.send c.req (Do (job begin_ end_))) channels;
+  job !sum (!sum + distribution.(num_domains - 1)) ();
   Array.iter (fun c -> C.recv c.resp) channels
 
+let aux_1 bodies dt =
+  run_iter (fun s e () -> advance bodies dt s e);
+  run_iter (fun s e () -> second_loop bodies dt s e)
 
 let energy bodies =
   let e = ref 0. in
@@ -85,7 +90,6 @@ let energy bodies =
     done
   done;
   !e
-
 
 let offset_momentum bodies =
   let px = ref 0. and py = ref 0. and pz = ref 0. in

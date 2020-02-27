@@ -28,7 +28,7 @@ let rec quicksort_o arr low high =
 		quicksort_o arr low (q-1);
 		quicksort_o arr (q+1) high
 
-let rec quicksort arr low high =
+let quicksort arr low high =
 	match (high - low) <= 0 with
 	| true  -> ()
 	| false   ->

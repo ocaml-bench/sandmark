@@ -16,7 +16,7 @@ let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
 let max_depth = try int_of_string Sys.argv.(2) with _ -> 10
 
 let channels =
-  Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})
+  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
 
 type 'a tree = Empty | Node of 'a tree * 'a tree
 
@@ -52,6 +52,7 @@ let loop_depths d =
   let job i () = eva d (i * e / num_domains) (((i + 1) * e / num_domains) - 1)
   in
   Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
+  job (num_domains - 1) ();
   Array.iter (fun c -> C.recv c.resp) channels
 
 let rec worker c () =

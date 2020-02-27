@@ -5,7 +5,7 @@ let run_config = Sys.argv.(2)
 
 type wrapper = {name: string; command: string}
 
-type run = {params: string; short_name: string option}
+type run = {params: string; short_name: string option; paramwrapper: string option}
 
 type benchmark = {executable: string; name: string; runs: run list}
 
@@ -19,6 +19,8 @@ let command_regexp = Str.regexp "%{command}"
 
 let benchmarks_regexp = Str.regexp "benchmarks/"
 
+let paramwrapper_regexp = Str.regexp "%{paramwrapper}"
+
 let replace_spaces_with_underscores str = Str.global_replace space_regexp "_" str
 let replace_periods_with_underscores str = Str.global_replace period_regexp "_" str
 
@@ -26,7 +28,8 @@ let parse_json build_dir =
   let open Yojson.Basic.Util in
   let to_run json =
     { params= json |> member "params" |> to_string
-    ; short_name= json |> member "short_name" |> to_string_option }
+    ; short_name= json |> member "short_name" |> to_string_option 
+    ; paramwrapper= json |> member "paramwrapper" |> to_string_option }
   in
   let to_wrapper json =
     { name= json |> member "name" |> to_string
@@ -51,11 +54,13 @@ let parse_json build_dir =
       (String.concat "/" (List.rev (List.tl splits)), List.hd splits)
     in
     let subst_wrapper =
-      Str.global_replace command_regexp
-        ((if executable_dir <> "" then "./" else "") ^ executable_name ^ " " ^ run.params)
-        (Str.global_replace output_regexp
-           ("%{workspace_root}/" ^ run_name)
-           wrapper.command)
+      Str.global_replace paramwrapper_regexp
+        (match run.paramwrapper with None -> "" | Some s -> s)
+        (Str.global_replace command_regexp
+           ((if executable_dir <> "" then "./" else "") ^ executable_name ^ " " ^ run.params)
+           (Str.global_replace output_regexp
+              ("%{workspace_root}/" ^ run_name)
+              wrapper.command))
     in
     let make_sexp_params_list =
       List.map (fun s -> Sexp.Atom s) (Str.split space_regexp subst_wrapper)

@@ -5,7 +5,7 @@ let size = try int_of_string Sys.argv.(2) with _ -> 1024
 
 type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
-let channels = Array.init num_domains (fun _ -> {req= C.make 1; resp= C.make 0})
+let channels = Array.init (num_domains -1) (fun _ -> {req= C.make 1; resp= C.make 0})
 
 let matrix_multiply z x y s e =
   (* let x0 = Array.length x  in *)
@@ -14,6 +14,7 @@ let matrix_multiply z x y s e =
   for i = s to (pred e) do
     for j = 0 to y1-1 do
       for k = 0 to y0-1 do
+        Domain.Sync.poll();
         z.(i).(j) <- z.(i).(j) + x.(i).(k) * y.(k).(j)
       done
     done
@@ -29,6 +30,7 @@ let aux x y =
     matrix_multiply z x y (i * temp)  ((i + 1) * temp)
   in
   Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
+  job (num_domains - 1) ();
   Array.iter (fun c -> C.recv c.resp) channels;
   z
 

@@ -25,8 +25,7 @@ def distribution(l):
   return distr
 
 def main():
-  t = IntervalTree()
-
+  trees = {}
   with open(json_file) as f:
     data = json.load(f)
     stacks = {}
@@ -36,19 +35,32 @@ def main():
         ts = int(float(event["ts"])*1000.0)
         name = event["name"]
         if key in stacks:
-          stacks[key].append((name,ts))
+          stacks[key].append((name,ts,0))
         else:
-          stacks[key] = [(name, ts)]
+          stacks[key] = [(name,ts,0)]
       elif (event["ph"] == "E"):
         key = str(event["pid"])+":"+str(event["tid"])
         ts = int(float(event["ts"])*1000.0)
         name = event["name"]
-        (nameStart, startTs) = stacks[key].pop()
+        (nameStart, startTs, overhead) = stacks[key].pop()
         assert (nameStart == name)
-        t[startTs:ts] = 0
+        if not key in trees:
+          trees[key] = IntervalTree()
+        trees[key].addi(startTs, ts, overhead)
+      elif (event["ph"] == "C" and event["name"] == "overhead#"):
+        key = str(event["pid"])+":"+str(event["tid"])
+        overhead = int(event["args"]["value"])
+        l = []
+        for e in stacks[key]:
+          (name,ts,o) = e
+          l.append((name,ts,o+overhead))
+        stacks[key] = l
 
-  t.merge_overlaps()
-  sorted_latencies = sorted(list(map(lambda x: x.end - x.begin, sorted(t))))
+  latencies = []
+  for t in trees.values():
+    t.merge_overlaps((lambda acc,v: acc))
+    latencies = latencies + list(map(lambda x: x.end - x.begin - x.data, sorted(t)))
+  sorted_latencies = sorted(latencies)
 
   if (len(sorted_latencies) > 0):
     max_latency = sorted_latencies[len(sorted_latencies) - 1]
