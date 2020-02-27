@@ -272,7 +272,7 @@
     },
     {
       "executable": "minilight-ocaml",
-      "name": "minilight-ocaml",
+      "name": "minilight",
       "ismacrobench": true,
       "runs": [
         {

@@ -28,6 +28,7 @@ let advance bodies dt s e =
   for i = s to (pred e) do
     let b = bodies.(i) in
     for j = 0 to Array.length bodies - 1 do
+      Domain.Sync.poll();
       let b' = bodies.(j) in
       if (i!=j) then
       begin
@@ -48,6 +49,7 @@ let advance bodies dt s e =
 
 let second_loop bodies dt s e =
   for i = s to (pred e) do
+    Domain.Sync.poll ();
     let b = bodies.(i) in
     b.x <- b.x +. dt *. b.vx;
     b.y <- b.y +. dt *. b.vy;
@@ -104,10 +106,8 @@ let offset_momentum bodies =
 
 let rec worker c () =
   match C.recv c.req with
-  | Do f ->
-      f () ; C.send c.resp () ; worker c ()
-  | Quit ->
-      ()
+  | Do f -> f () ; C.send c.resp () ; worker c ()
+  | Quit -> ()
 
 let bodies =
   Array.init num_bodies (fun _ ->
