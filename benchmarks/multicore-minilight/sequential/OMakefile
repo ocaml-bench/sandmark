@@ -1,0 +1,13 @@
+
+NATIVE_ENABLED = true
+
+OCAMLOPTFLAGS += -nodynlink -inline 1000 -unsafe -annot
+
+OCamlProgram(minilight, vector3f triangle spatialIndex scene surfacePoint rayTracer image camera minilight)
+
+.DEFAULT: minilight$(EXE)
+
+.PHONY: clean
+	
+clean:
+	rm -f $(filter-proper-targets $(ls R, .))

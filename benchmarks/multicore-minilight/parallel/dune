@@ -1,0 +1,7 @@
+(executable
+  (name minilight_multicore)
+  (modules camera image  minilight_multicore  rayTracer  scene  spatialIndex  surfacePoint  triangle  vector3f)
+  (libraries domainslib))
+
+(alias (name multibench_parallel)
+       (deps minilight_multicore.exe roomfront.ml.txt))

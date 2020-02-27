@@ -15,7 +15,7 @@ type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
 
 let channels =
-  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
+  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 1})
 
 let eval_A i j = 1. /. float (((i + j) * (i + j + 1) / 2) + i + 1)
 
