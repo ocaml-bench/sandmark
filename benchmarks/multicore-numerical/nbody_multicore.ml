@@ -17,7 +17,7 @@ let days_per_year = 365.24
 type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
 let channels =
-  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
+  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 1})
 
 type planet = { mutable x : float;  mutable y : float;  mutable z : float;
                 mutable vx: float;  mutable vy: float;  mutable vz: float;
