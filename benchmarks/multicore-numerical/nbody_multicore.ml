@@ -17,17 +17,17 @@ let days_per_year = 365.24
 type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
 let channels =
-  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
+  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 1})
 
 type planet = { mutable x : float;  mutable y : float;  mutable z : float;
                 mutable vx: float;  mutable vy: float;  mutable vz: float;
                 mass : float }
 
 let advance bodies dt s e =
-  (* let n = Array.length bodies - 1 in *)
+  let n = Array.length bodies - 1 in
   for i = s to (pred e) do
     let b = bodies.(i) in
-    for j = 0 to Array.length bodies - 1 do
+    for j = 0 to n do
       let b' = bodies.(j) in
       if (i!=j) then
       begin
@@ -38,11 +38,6 @@ let advance bodies dt s e =
         b.vy <- b.vy -. dy *. b'.mass *. mag;
         b.vz <- b.vz -. dz *. b'.mass *. mag;
       end
-
-
-      (* b'.vx <- b'.vx +. dx *. b.mass *. mag;
-      b'.vy <- b'.vy +. dy *. b.mass *. mag;
-      b'.vz <- b'.vz +. dz *. b.mass *. mag; *)
     done
   done
 
@@ -54,28 +49,28 @@ let second_loop bodies dt s e =
     b.z <- b.z +. dt *. b.vz;
   done
 
-let distribution = 
-  let rec loop n d acc = 
+let distribution =
+  let rec loop n d acc =
     if d = 1 then n::acc
-    else 
+    else
       let w = n / d in
       loop (n - w) (d - 1) (w::acc)
   in
   Array.of_list (loop num_bodies num_domains [])
 
-let run_iter job = 
+let run_iter job =
   let sum = ref 0 in
   Array.iteri (fun i c ->
     let begin_ = !sum in
-    sum := !sum + distribution.(i);
-    let end_ = !sum in
-    C.send c.req (Do (job begin_ end_))) channels;
+    let end_ = begin_ + distribution.(i) in
+    sum := end_;
+    C.send c.req (Do (job begin_ end_));) channels;
   job !sum (!sum + distribution.(num_domains - 1)) ();
   Array.iter (fun c -> C.recv c.resp) channels
 
 let aux_1 bodies dt =
   run_iter (fun s e () -> advance bodies dt s e);
-  run_iter (fun s e () -> second_loop bodies dt s e)
+  second_loop bodies dt 0 num_bodies
 
 let energy bodies =
   let e = ref 0. in
@@ -104,10 +99,8 @@ let offset_momentum bodies =
 
 let rec worker c () =
   match C.recv c.req with
-  | Do f ->
-      f () ; C.send c.resp () ; worker c ()
-  | Quit ->
-      ()
+  | Do f -> f () ; C.send c.resp () ; worker c ()
+  | Quit -> ()
 
 let bodies =
   Array.init num_bodies (fun _ ->
@@ -121,7 +114,9 @@ let bodies =
 
 let () =
   let domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
+  (*Array.iteri (fun i x -> Printf.printf "distribution[%d] = %d\n" i x) distribution;*)
   offset_momentum bodies;
+
   Printf.printf "%.9f\n" (energy bodies);
   for _i = 1 to n do aux_1 bodies 0.01 done;
   Printf.printf "%.9f\n" (energy bodies);
