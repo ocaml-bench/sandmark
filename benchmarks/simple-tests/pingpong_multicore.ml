@@ -4,7 +4,9 @@ module C = Domainslib.Chan
 
 let num_domains = try int_of_string Sys.argv.(1) with _ -> 2
 let chan_size = try int_of_string Sys.argv.(2) with _ -> 1
-let messages = try int_of_string Sys.argv.(3) with _ -> 1000000
+let total_messages = try int_of_string Sys.argv.(3) with _ -> 1000000
+
+let messages_per_domain = total_messages / num_domains
 
 type message = int ref
 
@@ -19,7 +21,7 @@ let worker (in_queue : message C.t) (out_queue : message C.t) () =
                 loop (iterations-1)
         else
             ()
-    in loop messages
+    in loop messages_per_domain
 
 let intermediate_consumers = Array.init (num_domains-2) (fun i -> Domain.spawn (worker queues.(i) queues.(i+1)))
 
@@ -35,7 +37,7 @@ let end_consumer () =
             else
                 ()
         in
-            consume_loop messages
+            consume_loop messages_per_domain
 
 
 let () =
@@ -52,7 +54,7 @@ let () =
             
             begin
                 let end_consumer_domain = Domain.spawn end_consumer in
-                    produce_loop messages;
+                    produce_loop messages_per_domain;
                     Array.iter Domain.join intermediate_consumers;
                     Domain.join end_consumer_domain;
             end
