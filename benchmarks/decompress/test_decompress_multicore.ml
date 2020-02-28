@@ -57,7 +57,9 @@ let compress ?(level = 4) data =
      If [meth] is specified, the refiller has a [Some] as the second parameter.
      Otherwise, it is [None]. *)
   Zlib_deflate.bytes input_buffer output_buffer
-    (fun input_buffer -> function
+    (fun input_buffer i -> 
+      Domain.Sync.poll();
+      match i with 
       | Some max ->
           let n = min max (min 0xFFFF (String.length data - !pos)) in
           Bytes.blit_string data !pos input_buffer 0 n ;
@@ -95,11 +97,13 @@ let uncompress data =
   Zlib_inflate.bytes input_buffer output_buffer
     (* Same logic as [compress]. *)
       (fun input_buffer ->
+      Domain.Sync.poll ();
       let n = min 0xFFFF (String.length data - !pos) in
       Bytes.blit_string data !pos input_buffer 0 n ;
       pos := !pos + n ;
       n )
     (fun output_buffer len ->
+      Domain.Sync.poll ();
       Buffer.add_subbytes res output_buffer 0 len ;
       0xFFFF )
     (Zlib_inflate.default ~witness:B.bytes window)
@@ -117,7 +121,7 @@ let data_to_compress =
   Bytes.to_string buf
 
 let work i () =
-  for run = 0 to i do
+  for _run = 0 to i do
     let result = compress data_to_compress in
     let original = uncompress result in
     ignore original
