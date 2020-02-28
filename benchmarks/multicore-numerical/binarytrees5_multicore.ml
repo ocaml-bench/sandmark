@@ -16,7 +16,7 @@ let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
 let max_depth = try int_of_string Sys.argv.(2) with _ -> 10
 
 let channels =
-  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
+  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 1})
 
 type 'a tree = Empty | Node of 'a tree * 'a tree
 
