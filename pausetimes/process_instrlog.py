@@ -34,10 +34,13 @@ def main():
         continue
       words = l.split()
       if (words[1] != words[2]):
-        t[int(words[1]):int(words[2])] = 0
+        overhead = 0
+        if (words[-1] == "overhead"):
+          overhead = int(words[2]) - int(words[1])
+        t[int(words[1]):int(words[2])] = overhead
 
-  t.merge_overlaps()
-  sorted_latencies = sorted(list(map(lambda x: x.end - x.begin, sorted(t))))
+  t.merge_overlaps(lambda acc,v: acc + v)
+  sorted_latencies = sorted(list(map(lambda x: x.end - x.begin - x.data, sorted(t))))
 
   if (len(sorted_latencies) > 0):
     max_latency = sorted_latencies[len(sorted_latencies) - 1]

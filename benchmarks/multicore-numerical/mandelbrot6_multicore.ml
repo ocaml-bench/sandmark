@@ -33,6 +33,7 @@ let worker w h_lo h_hi =
       and zr = ref 0. and zi = ref 0. and trmti = ref 0. and n = ref 0 in
       begin try
 	while true do
+          Domain.Sync.poll ();
 	  zi := 2. *. !zr *. !zi +. ci;
 	  zr := !trmti +. cr;
 	  let tr = !zr *. !zr and ti = !zi *. !zi in

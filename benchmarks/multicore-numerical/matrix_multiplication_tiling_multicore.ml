@@ -6,7 +6,7 @@ let size = try int_of_string Sys.argv.(2) with _ -> 1024
 type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
 let channels =
-  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
+  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 1})
 
 let ts=64
 
@@ -24,6 +24,7 @@ let matrix_multiply z x y s e =
       for i= 0 to (pred ts) do
         for j= 0 to (pred ts) do
           for k=0 to (pred ts) do
+            Domain.Sync.poll();
             z.(!bi+i).(!bj+j) <- z.(!bi+i).(!bj+j) + x.(!bi+i).(!bk+k) * y.(!bk+k).(!bj+j)
           done
         done
