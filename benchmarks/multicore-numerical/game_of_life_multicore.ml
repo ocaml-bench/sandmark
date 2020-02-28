@@ -4,15 +4,15 @@ let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
 let n_times = try int_of_string Sys.argv.(2) with _ -> 2
 let board_size = 1024
 
-let rg = 
+let rg =
   ref (Array.init board_size (fun _ -> Array.init board_size (fun _ -> Random.int 2)))
-let rg' = 
+let rg' =
   ref (Array.init board_size (fun _ -> Array.init board_size (fun _ -> Random.int 2)))
 let buf = Bytes.create board_size
 
 type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
-let channels = Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
+let channels = Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 1})
 
 let get g x y =
   try g.(x).(y)
@@ -49,8 +49,8 @@ let next () =
   let g = !rg in
   let new_g = !rg' in
   let job i () =
-    evaluate g new_g 
-      (i * (board_size - 1) / num_domains) 
+    evaluate g new_g
+      (i * (board_size - 1) / num_domains)
       ((i + 1) * (board_size - 1) / num_domains)
   in
   Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
@@ -63,7 +63,7 @@ let print g =
   for x = 0 to board_size - 1 do
     for y = 0 to board_size - 1 do
       if g.(x).(y) = 0
-      then Bytes.set buf y '.' 
+      then Bytes.set buf y '.'
       else Bytes.set buf y 'o'
     done;
     print_endline (Bytes.unsafe_to_string buf)

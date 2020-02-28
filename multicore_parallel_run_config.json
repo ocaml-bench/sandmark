@@ -237,7 +237,7 @@
       "name": "nbody",
       "ismacrobench": true,
       "runs": [
-        { "params": "500 1024", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" }
+        { "params": "512 2048", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" }
       ]
     },
     {
@@ -245,14 +245,14 @@
       "name": "nbody_multicore",
       "ismacrobench": true,
       "runs": [
-        { "params": "1 500 1024", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1"},
-        { "params": "2 500 1024", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
-        { "params": "4 500 1024", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
-        { "params": "8 500 1024", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
-        { "params": "12 500 1024", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
-        { "params": "16 500 1024", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
-        { "params": "20 500 1024", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
-        { "params": "24 500 1024", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" }
+        { "params": "1 512 2048", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1"},
+        { "params": "2 512 2048", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "4 512 2048", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "8 512 2048", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "12 512 2048", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "16 512 2048", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "20 512 2048", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "24 512 2048", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" }
       ]
     },
 
@@ -369,7 +369,7 @@
           "params": "16 1000000"
         }
       ]
-    },  
+    },
     {
       "executable": "benchmarks/multicore-structures/test_stack_parallel.exe",
       "name": "stack_parallel",
