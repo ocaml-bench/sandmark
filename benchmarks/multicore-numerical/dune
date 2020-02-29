@@ -44,6 +44,24 @@
  (libraries domainslib))
 
 (executable
+ (name LU_decomposition_multicore)
+ (modules LU_decomposition_multicore)
+ (libraries domainslib))
+
+(executable
+ (name LU_decomposition)
+ (modules LU_decomposition))
+
+(executable
+ (name floyd_warshall_multicore)
+ (modules floyd_warshall_multicore)
+ (libraries domainslib))
+
+(executable
+ (name floyd_warshall)
+ (modules floyd_warshall))
+
+(executable
  (name matrix_multiplication_tiling_multicore)
  (modules matrix_multiplication_tiling_multicore)
  (libraries domainslib))
@@ -57,13 +75,21 @@
  (modules nbody_multicore)
  (libraries domainslib))
 
+(executable
+ (name mergesort_multicore)
+ (modules mergesort_multicore))
+
+(executable
+ (name mergesort)
+ (modules mergesort))
+
 (alias (name multibench_parallel)
 			 (deps mandelbrot6_multicore.exe spectralnorm2_multicore.exe quicksort.exe
 						 quicksort_multicore.exe binarytrees5_multicore.exe
 						 game_of_life.exe game_of_life_multicore.exe
 						 matrix_multiplication.exe matrix_multiplication_multicore.exe
 						 matrix_multiplication_tiling_multicore.exe nbody.exe
-						 nbody_multicore.exe))
+						 nbody_multicore.exe mergesort_multicore.exe floyd_warshall_multicore.exe LU_decomposition_multicore.exe))
 
 (alias (name buildbench)
-       (deps game_of_life.exe matrix_multiplication.exe quicksort.exe))
+       (deps game_of_life.exe matrix_multiplication.exe quicksort.exe mergesort.exe floyd_warshall.exe LU_decomposition.exe))

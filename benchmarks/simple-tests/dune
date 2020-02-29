@@ -12,7 +12,10 @@
 (executables
  (names alloc_multicore) (modules alloc_multicore))
 
+(executables
+ (names pingpong_multicore) (libraries domainslib) (modules pingpong_multicore))
+
 (executables (names morestacks) (modules morestacks))
 
 (alias (name buildbench) (deps alloc.exe morestacks.exe))
-(alias (name multibench_parallel) (deps alloc_multicore.exe))
+(alias (name multibench_parallel) (deps alloc_multicore.exe pingpong_multicore.exe))

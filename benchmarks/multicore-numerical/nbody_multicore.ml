@@ -24,7 +24,7 @@ type planet = { mutable x : float;  mutable y : float;  mutable z : float;
                 mass : float }
 
 let advance bodies dt s e =
-  let n = Array.length bodies - 1 in
+  let _n = Array.length bodies - 1 in
   for i = s to (pred e) do
     let b = bodies.(i) in
     for j = 0 to Array.length bodies - 1 do
@@ -38,17 +38,12 @@ let advance bodies dt s e =
         b.vx <- b.vx -. dx *. b'.mass *. mag;
         b.vy <- b.vy -. dy *. b'.mass *. mag;
         b.vz <- b.vz -. dz *. b'.mass *. mag;
+
+        b'.vx <- b'.vx +. dx *. b.mass *. mag;
+        b'.vy <- b'.vy +. dy *. b.mass *. mag;
+        b'.vz <- b'.vz +. dz *. b.mass *. mag;
       end
     done
-  done
-
-let second_loop bodies dt s e =
-  for i = s to (pred e) do
-    Domain.Sync.poll ();
-    let b = bodies.(i) in
-    b.x <- b.x +. dt *. b.vx;
-    b.y <- b.y +. dt *. b.vy;
-    b.z <- b.z +. dt *. b.vz;
   done
 
 let distribution =
@@ -58,7 +53,8 @@ let distribution =
       let w = n / d in
       loop (n - w) (d - 1) (w::acc)
   in
-  Array.of_list (loop num_bodies num_domains [])
+  let l = loop num_bodies num_domains [] in
+  Array.of_list l
 
 let run_iter job =
   let sum = ref 0 in
@@ -72,7 +68,13 @@ let run_iter job =
 
 let aux_1 bodies dt =
   run_iter (fun s e () -> advance bodies dt s e);
-  second_loop bodies dt 0 num_bodies
+  for i = 0 to num_bodies - 1 do
+    Domain.Sync.poll();
+    let b = bodies.(i) in
+    b.x <- b.x +. dt *. b.vx;
+    b.y <- b.y +. dt *. b.vy;
+    b.z <- b.z +. dt *. b.vz;
+  done
 
 let energy bodies =
   let e = ref 0. in
