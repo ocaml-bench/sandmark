@@ -40,6 +40,7 @@ let evaluate g new_g s e =
   let height = Array.length g.(0) in
   for x = s to e do
     for y = 0 to pred height do
+      Domain.Sync.poll();
       new_g.(x).(y) <- (next_cell g x y)
     done
   done

@@ -1,11 +1,3 @@
-(* The Computer Language Benchmarks Game
- * https://salsa.debian.org/benchmarksgame-team/benchmarksgame/
- *
- * Contributed by Troestler Christophe
- * Modified by Fabrice Le Fessant
- * *reset*
- *)
-
 module C = Domainslib.Chan
 
 type message = Do of (unit -> unit) | Quit
@@ -16,7 +8,8 @@ let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
 let max_depth = try int_of_string Sys.argv.(2) with _ -> 10
 
 let channels =
-  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
+  Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 1})
+
 
 type 'a tree = Empty | Node of 'a tree * 'a tree
 
@@ -38,22 +31,15 @@ let () =
 
 let long_lived_tree = make max_depth
 
-let eva d st en =
-   for i = st to en do
-     let d = d + i * 2 in
-     let niter = 1 lsl (max_depth - d + min_depth) in
-     let c = ref 0 in
-       for _ = 1 to niter do c := !c + check (make d) done;
-       Printf.printf "%i\t trees of depth %i\t check: %i\t d = %i\n" niter d !c d;
-     done
+let values = Array.make num_domains 0
 
-let loop_depths d =
-  let  e = (max_depth - d)/2 + 1 in
-  let job i () = eva d (i * e / num_domains) (((i + 1) * e / num_domains) - 1)
-  in
-  Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
-  job (num_domains - 1) ();
-  Array.iter (fun c -> C.recv c.resp) channels
+let calculate d st en ind =
+  (* Printf.printf "st = %d en = %d\n" st en; *)
+  let c = ref 0 in
+  for _ = st to en do
+  c := !c + check (make d)
+  done;
+  values.(ind) <- !c
 
 let rec worker c () =
   match C.recv c.req with
@@ -62,11 +48,27 @@ let rec worker c () =
   | Quit ->
       ()
 
+let loop_depths d =
+  for i = 0 to  ((max_depth - d) / 2 + 1) - 1 do
+    let d = d + i * 2 in
+    let niter = 1 lsl (max_depth - d + min_depth) in
+    let job i () = calculate d (i * niter / num_domains) (((i + 1) * niter / num_domains) - 1) i in
+    Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
+    job (num_domains - 1) ();
+    Array.iter (fun c -> C.recv c.resp) channels;
+    let sum = Array.fold_left (+) 0 values in
+
+    (* let domains = worker d (num_domains) 1 (niter/num_domains) in
+    let sum = List.fold_left (+) 0 (List.map Domain.join domains) in *)
+    (* let sum = calculate d 1 niter in *)
+      Printf.printf "%i\t trees of depth %i\t check: %i\n" niter d sum ;
+  done
+
 let () =
   let domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
   flush stdout;
   loop_depths min_depth;
   Printf.printf "long lived tree of depth %i\t check: %i\n"
-      max_depth (check long_lived_tree);
-  Array.iter (fun c -> C.send c.req Quit) channels ;
-  Array.iter Domain.join domains
+    max_depth (check long_lived_tree);
+    Array.iter (fun c -> C.send c.req Quit) channels ;
+    Array.iter Domain.join domains
