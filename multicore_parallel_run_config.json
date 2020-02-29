@@ -324,7 +324,21 @@
         { "params": "24 64 1_048_576", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" }
       ]
     },
-
+    {
+      "executable": "benchmarks/simple-tests/pingpong_multicore.exe",
+      "name": "pingpong_multicore",
+      "ismacrobench": false,
+      "runs": [
+        { "params": "2 256 1000000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1"},
+        { "params": "4 256 1000000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "4 256 1000000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "8 256 1000000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "12 256 1000000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "16 256 1000000", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "20 256 1000000", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "24 256 1000000", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" }
+      ]
+    },
     {
       "executable": "benchmarks/multicore-structures/test_queue_parallel.exe",
       "name": "mpmc_queue_parallel",
