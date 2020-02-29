@@ -126,6 +126,22 @@
         }
       ]
     },
+		{
+      "executable": "benchmarks/multicore-numerical/LU_decomposition.exe",
+      "name": "LU_decomposition",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "1024" }
+      ]
+    },
+		{
+      "executable": "benchmarks/multicore-numerical/floyd_warshall.exe",
+      "name": "floyd_warshall",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "512"}
+      ]
+    },
     {
       "executable": "benchmarks/multicore-numerical/game_of_life.exe",
       "name": "game_of_life",
