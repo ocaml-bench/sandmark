@@ -1,6 +1,6 @@
 (executable
 	(name read_write_bench)
 	(modules read_write_bench)
-	(libraries lwt irmin irmin-mem irmin-unix irmin-git fmt astring unix))
+	(libraries lwt fmt irmin))
 
 (alias (name buildbench) (deps read_write_bench.exe))
