@@ -1,99 +1,92 @@
-module C = Domainslib.Chan
-
-open Format
-
-module Array = struct
-  include Array
-
-  let init_matrix m n f = init m (fun i -> init n (f i))
-end
-
-
-type message = Do of (unit -> unit) | Quit
-
-type chan = {req: message C.t; resp: unit C.t}
-
 let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
-
 let mat_size = try int_of_string Sys.argv.(2) with _ -> 1200
 
-let channels =
-Array.init (num_domains -1) (fun _ -> {req= C.make 1; resp= C.make 1})
+module SquareMatrix = struct
+  let create f : float array =
+    let fa = Array.create_float (mat_size * mat_size) in
+    for i = 0 to mat_size * mat_size - 1 do
+      fa.(i) <- f (i / mat_size) (i mod mat_size)
+    done;
+    fa
 
-let distribution =
+  let get (m : float array) r c = m.(r * mat_size + c)
+  let set (m : float array) r c v = m.(r * mat_size + c) <- v
+  let copy = Array.copy
+end
+
+open SquareMatrix
+
+module C = Domainslib.Chan
+type message = Do of (unit -> unit) | Quit
+type chan = {req: message C.t; resp: unit C.t}
+let channels =
+  Array.init (num_domains -1) (fun _ -> {req= C.make 1; resp= C.make 1})
+
+let chunk_size = 32
+
+let distribution size =
   let rec loop n d acc =
     if d = 1 then n::acc
+    else if n < chunk_size then n::acc
+    else if n/d < chunk_size then loop (n - chunk_size) (d-1) (chunk_size::acc)
     else
       let w = n / d in
       loop (n - w) (d - 1) (w::acc)
   in
-  Array.of_list (loop mat_size num_domains [])
+  List.rev (loop size num_domains [])
 
-let run_iter job =
-  let sum = ref 0 in
-  Array.iteri (fun i c ->
-    let begin_ = !sum in
-    sum := !sum + distribution.(i);
-    let end_ = !sum in
-    C.send c.req (Do (job begin_ end_))) channels;
-  job !sum (!sum + distribution.(num_domains - 1)) ();
-  Array.iter (fun c -> C.recv c.resp) channels
-
-
-let aux a k size s e =
-  for row = s to (pred e) do
-      match row >= k + 1  with
-      | true ->
-        let factor = (a.(row).(k)) /. (a.(k).(k)) in
-        for col = k + 1 to size-1 do
-            Domain.Sync.poll();
-            a.(row).(col) <- a.(row).(col) -. factor *. a.(k).(col)
-        done;
-        a.(row).(k) <- factor
-      | false -> ()
-  done
 
 let lup a0 =
-let a = Array.copy a0 in
+  let next_to_terminate = ref (num_domains - 1) in
+  let a = copy a0 in
+  let aux _d k s e () =
+    (* Printf.printf "[%d] aux k=%d s=%d e=%d\n%!" d k s e; *)
+    for row = s to (pred e) do
+      let factor = get a row k /. get a k k in
+      for col = k + 1 to mat_size-1 do
+          set a row col (get a row col -. factor *. (get a k col))
+      done;
+      set a row k factor
+    done
+  in
   for k = 0 to (mat_size - 2) do
-    run_iter (fun s e () -> aux a k mat_size s e)
+    let mine, rest =
+      match distribution (mat_size - 2 - k) with
+      | [] -> failwith "impossible"
+      | x::xs -> x,xs
+    in
+    (* Printf.printf "\nmine=%d " mine; *)
+    (* List.iter (fun r -> Printf.printf "%d " r) rest; *)
+    if List.length rest < !next_to_terminate then begin
+      (* Printf.printf "Terminating %d\n%!" !next_to_terminate; *)
+      C.send channels.(!next_to_terminate - 1).req Quit;
+      decr next_to_terminate
+    end;
+    let sum = ref (k + mine) in
+    let rc =
+      List.mapi (fun i size ->
+        let begin_ = !sum in
+        sum := !sum + size;
+        let end_ = !sum in
+        let c = channels.(i) in
+        C.send c.req (Do (aux (i+1) k begin_ end_));
+        c) rest
+    in
+    aux 0 k k (mine+k) ();
+    List.iter (fun c -> C.recv c.resp) rc
   done ;
   a
 
-let print_mat label x =
-  printf "%s =@\n" label;
-  Array.iter (fun xi ->
-      Array.iter (printf "  %10g") xi;
-      print_newline ()) x
-
-
 let rec worker c () =
   match C.recv c.req with
-  | Do f ->
-      f () ; C.send c.resp () ; worker c ()
-  | Quit ->
-      ()
+  | Do f -> f () ; C.send c.resp () ; worker c ()
+  | Quit -> ()
 
 
 let () =
-  let domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
- (*  let a =
-  [|
-    [| 1.; -2.; -2.; -3.|];
-    [|3.; -9.; 0.; -9.|];
-    [| -1.; 2.;4.; 7.|];
-    [| -3.; -6.; 26.; 2.|];
-
-  |]  in *)
-  let a : float array array = Array.init mat_size
-  (fun _ -> Array.init mat_size (fun _ -> (Random.float 100.0)+.1.0)) in
-  (* print_mat "matrix A" a ; *)
+  let _domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
+  let a = create (fun _ _ -> (Random.float 100.0)+.1.0) in
   let lu = lup a in
-  let _l = Array.init_matrix mat_size mat_size
-      (fun i j -> if i > j then lu.(i).(j) else if i = j then 1.0 else 0.0) in
-  let _u = Array.init_matrix mat_size mat_size
-      (fun i j -> if i <= j then lu.(i).(j) else 0.0) in
-  (* print_mat "matrix L" l;
-  print_mat "matrix U" u; *)
-  Array.iter (fun c -> C.send c.req Quit) channels ;
-  Array.iter Domain.join domains
+  let _l = create (fun i j -> if i > j then get lu i j else if i = j then 1.0 else 0.0) in
+  let _u = create (fun i j -> if i <= j then get lu i j else 0.0) in
+  ()

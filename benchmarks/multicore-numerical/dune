@@ -89,7 +89,10 @@
 						 game_of_life.exe game_of_life_multicore.exe
 						 matrix_multiplication.exe matrix_multiplication_multicore.exe
 						 matrix_multiplication_tiling_multicore.exe nbody.exe
-						 nbody_multicore.exe mergesort_multicore.exe floyd_warshall_multicore.exe LU_decomposition_multicore.exe))
+						 nbody_multicore.exe mergesort.exe mergesort_multicore.exe
+						 floyd_warshall.exe floyd_warshall_multicore.exe
+						 LU_decomposition.exe LU_decomposition_multicore.exe))
 
 (alias (name buildbench)
-       (deps game_of_life.exe matrix_multiplication.exe quicksort.exe mergesort.exe floyd_warshall.exe LU_decomposition.exe))
+       (deps game_of_life.exe matrix_multiplication.exe quicksort.exe
+			       mergesort.exe floyd_warshall.exe LU_decomposition.exe))
