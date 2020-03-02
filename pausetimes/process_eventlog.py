@@ -6,6 +6,7 @@ import os
 
 bench_name = os.path.basename(sys.argv[1]).replace('.pausetimes_multicore.bench','')
 json_file = sys.argv[2]
+summary = True if len(sys.argv) > 3 and sys.argv[3] == "summary" else False
 
 def distribution(l):
   to_indices = []
@@ -46,7 +47,7 @@ def main():
         assert (nameStart == name)
         if not key in trees:
           trees[key] = IntervalTree()
-        trees[key].addi(startTs, ts, overhead)
+        trees[key].addi(startTs, ts, {'name': name, 'overhead': overhead, 'tid': event["tid"]})
       elif (event["ph"] == "C" and event["name"] == "overhead#"):
         key = str(event["pid"])+":"+str(event["tid"])
         overhead = int(event["args"]["value"])
@@ -57,9 +58,13 @@ def main():
         stacks[key] = l
 
   latencies = []
+  intervals = []
+
   for t in trees.values():
-    t.merge_overlaps((lambda acc,v: acc))
-    latencies = latencies + list(map(lambda x: x.end - x.begin - x.data, sorted(t)))
+    domain_terminate_intervals = IntervalTree((i for i in t if i.data['name'].startswith("major_gc/finish_")))
+    t.merge_overlaps((lambda acc,v: {'name': acc['name'], 'overhead': acc['overhead'] + v['overhead'], 'tid': acc['tid']}))
+    latencies = latencies + list(map(lambda x: x.end - x.begin - x.data['overhead'], sorted(t - domain_terminate_intervals)))
+    intervals.extend(t)
   sorted_latencies = sorted(latencies)
 
   if (len(sorted_latencies) > 0):
@@ -78,5 +83,11 @@ def main():
   out["distr_latency"] = distr
 
   print(json.dumps(out))
+
+  if summary:
+    sorted_intervals = sorted(intervals, key=lambda i: -(i.end - i.begin))
+
+    for interval in sorted_intervals[0:32]:
+      print str(interval.end - interval.begin) + " " + str(interval)
 
 main()
