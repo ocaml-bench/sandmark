@@ -88,6 +88,6 @@ def main():
     sorted_intervals = sorted(intervals, key=lambda i: -(i.end - i.begin))
 
     for interval in sorted_intervals[0:32]:
-      print str(interval.end - interval.begin) + " " + str(interval)
+      print(str(interval.end - interval.begin) + " " + str(interval))
 
 main()
