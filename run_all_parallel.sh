@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Run `make multicore_parllel_run_config_macro.json` before running this script.
+make multicore_parallel_run_config_macro.json
 
 RUN_BENCH_TARGET=run_pausetimes_multicore BUILD_BENCH_TARGET=multibench_parallel \
 	RUN_CONFIG_JSON=multicore_parallel_run_config_macro.json \
