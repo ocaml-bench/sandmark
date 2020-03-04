@@ -38,3 +38,7 @@ variety of backends. Irmin is written in pure OCaml and does not
 depend on external C stubs; it aims to run everywhere, from Linux,
 to browsers and Xen unikernels.
 """
+url {
+	src : "https://github.com/mirage/irmin/releases/download/2.0.0/irmin-2.0.0.tbz"
+	checksum : "md5=31451e576a431051117ae31b5b42ca07"
+}
