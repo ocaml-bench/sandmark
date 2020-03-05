@@ -12,10 +12,12 @@ let init () =
   ()
 
 (* Install the FS listener. *)
-let () = Irmin_unix.set_listen_dir_hook ()
 end
 
-let info = Irmin_unix.info
+let info = 
+  let date = Int64.of_float (Unix.gettimeofday ()) in
+  let author = Printf.sprintf "TESTS" in
+  Irmin.Info.v ~date ~author msg
 
 module Store = Irmin_mem.KV (Irmin.Contents.String) 
 
