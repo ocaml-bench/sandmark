@@ -50,6 +50,5 @@ build: [
 dev-repo: "git+https://github.com/mirage/digestif.git"
 url {
   src:
-    "https://github.com/mirage/digestif/releases/download/v0.7.1/digestif-v0.7.1.tbz"
-  checksum: "md5=f13be3170563925a2b50a4769594a31d"
+    "https://github.com/mirage/digestif/releases/download/v0.8.0/digestif-v0.8.0.tbz"
 }
