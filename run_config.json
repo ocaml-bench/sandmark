@@ -1110,7 +1110,7 @@
     {
       "executable": "benchmarks/irmin/basic_read_write.exe",
       "name": "basic_read_write",
-      "ismacrobench": true,
+      "ismacrobench": false,
       "runs": [
         {
           "params": "hey"
