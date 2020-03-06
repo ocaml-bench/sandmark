@@ -33,6 +33,7 @@ depends: [
   "eqaf"
   "base-bytes"
   "base-bigarray"
+  "bigarray-compat"
   "fmt" {with-test}
   "alcotest" {with-test}
 ]
