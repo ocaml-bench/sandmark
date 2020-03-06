@@ -1107,6 +1107,16 @@
         }
       ]
     },
+    {
+      "executable": "benchmarks/irmin/basic_read_write.exe",
+      "name": "basic_read_write",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "hey"
+        }
+      ]
+    },
       {
       "executable": "benchmarks/numerical-analysis/qr_decomposition.exe",
       "name": "qr-decomposition",
