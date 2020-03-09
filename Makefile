@@ -35,7 +35,7 @@ PACKAGES = \
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += lockfree kcas domainslib ctypes.0.14.0+multicore
 else ## ctypes and frama-c do not build under multicore
-	PACKAGES += ctypes frama-c
+	PACKAGES += ctypes.0.14.0 frama-c
 endif
 
 .SECONDARY:
