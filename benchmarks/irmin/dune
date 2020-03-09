@@ -1,0 +1,5 @@
+(executable
+	(name basic_read_write)
+	(libraries irmin irmin-mem lwt.unix))
+
+(alias (name buildbench) (deps basic_read_write.exe))

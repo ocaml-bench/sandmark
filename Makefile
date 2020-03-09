@@ -29,13 +29,13 @@ WRAPPER = $(subst run_,,$(RUN_BENCH_TARGET))
 PACKAGES = \
 	cpdf menhir minilight camlimages yojson lwt alt-ergo zarith \
 	js_of_ocaml-compiler uuidm react ocplib-endian nbcodec checkseum decompress \
-	sexplib0
+	sexplib0 irmin-mem
 
 # want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
-	PACKAGES += lockfree kcas domainslib
+	PACKAGES += lockfree kcas domainslib ctypes.0.14.0+multicore
 else ## ctypes and frama-c do not build under multicore
-	PACKAGES += ctypes frama-c
+	PACKAGES += ctypes.0.14.0+stock frama-c
 endif
 
 .SECONDARY:
