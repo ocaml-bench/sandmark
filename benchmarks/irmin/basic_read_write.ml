@@ -3,7 +3,7 @@ open Lwt.Infix
 open Printf
 
 (* config for informing the system where the branches are created *)
-module Config = struct
+(* module Config = struct
 let root = "/tmp/irmin/test"
 
 let init () =
@@ -12,7 +12,7 @@ let init () =
   ()
 
 (* Install the FS listener. *)
-end
+end *)
 
 let info msg = 
   let date = Int64.of_float (Unix.gettimeofday ()) in
@@ -99,7 +99,6 @@ let benchmark_loop num_iter num_writes num_keys src_dst_tuple_list =
   repeat_stuff' 0 (get_random num_iter) num_iter src_dst_tuple_list
 
 let main num_branches num_keys num_writes num_iter =
-  Config.init ();
   let config = Irmin_mem.config () in
   Store.Repo.v config >>= fun repo ->
   (* print_endline "repo"; *)
@@ -111,7 +110,7 @@ let main num_branches num_keys num_writes num_iter =
   Lwt_list.map_p (fun (x,y) -> branch_merge x y) src_dst >>= fun _ -> Lwt.return_unit
 
 let () =
-  let _ = Sys.command (Printf.sprintf "rm -rf %s" Config.root) in
+  (* let _ = Sys.command (Printf.sprintf "rm -rf %s" Config.root) in *)
   let num_branches = Sys.argv.(1) |> int_of_string in
   let num_keys = Sys.argv.(2) |> int_of_string in
   let percent_writes = Sys.argv.(3) |> int_of_string in
