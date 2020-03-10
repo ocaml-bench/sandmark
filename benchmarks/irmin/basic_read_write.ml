@@ -2,7 +2,7 @@
 open Lwt.Infix
 open Printf
 
-(* config for informing the system where the branches are created *)
+(* config for informing the system where the branches are created in git FS*)
 (* module Config = struct
 let root = "/tmp/irmin/test"
 
