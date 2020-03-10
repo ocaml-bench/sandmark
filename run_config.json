@@ -1108,8 +1108,8 @@
       ]
     },
     {
-      "executable": "benchmarks/irmin/basic_read_write.exe",
-      "name": "basic_read_write",
+      "executable": "benchmarks/irmin/irmin_mem_rw.exe",
+      "name": "imrin_mem_rw",
       "ismacrobench": false,
       "runs": [
         {
