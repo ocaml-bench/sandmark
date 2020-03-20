@@ -1,0 +1,4 @@
+(executable
+ (name grammatrix)
+ (modules grammatrix)
+ (libraries  unix utls))
