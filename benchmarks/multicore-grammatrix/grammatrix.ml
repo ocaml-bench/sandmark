@@ -42,36 +42,13 @@ let parse_line line =
     ) int_strings;
   res
 
-let print_matrix mat =
-  let m = A.length mat in
-  let n = A.length mat.(0) in
-  let idots = ref false in
-  for i = 0 to m - 1 do
-    if i < 3 || i > m - 4 then
-      begin
-        let jdots = ref false in
-        for j = 0 to n - 1 do
-          if j < 3 || j > n - 4 then
-            printf (if j <> 0 then "\t%6.2f" else "%6.2f")
-              mat.(i).(j)
-          else if not !jdots then
-            (printf "\t..."; jdots := true)
-        done;
-        printf "\n"
-      end
-    else if not !idots then
-      (printf "\t\t\t...\n"; idots := true)
-  done;
-  flush stdout
-;;
 let input_fn = try Sys.argv.(2) with _ ->  "benchmarks/multicore-grammatrix/data/tox21_nrar_ligands_std_rand_01.csv"
 let ncores = try int_of_string Sys.argv.(1) with _ -> 4
 
 
 let _ =
-
   let samples = A.of_list (Utls.map_on_lines_of_file input_fn parse_line) in
   Printf.printf "samples: %d features: %d"
       (A.length samples) (A.length samples.(0));
   let r = compute_gram_matrix samples in
-  print_matrix r
+  Utls.print_matrix r

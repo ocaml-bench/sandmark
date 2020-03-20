@@ -2,3 +2,8 @@
  (name grammatrix)
  (modules grammatrix)
  (libraries  unix utls))
+;;
+(executable
+ (name grammatrix_multicore)
+ (modules grammatrix_multicore )
+ (libraries unix domainslib utls))

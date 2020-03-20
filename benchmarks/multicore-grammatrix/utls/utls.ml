@@ -5,8 +5,10 @@
    Faculty of Computer Science and Systems Engineering,
    Kyushu Institute of Technology,
    680-4 Kawazu, Iizuka, Fukuoka, 820-8502, Japan. *)
+open Printf
 
 module L = List
+module A = Array
 
 let with_in_file fn f =
   let input = open_in_bin fn in
@@ -60,3 +62,26 @@ let string_split_on_char sep str =
       else loop (sub str (ofs + 1) (limit - ofs - 1) :: acc) (ofs - 1) ofs
     in
     let len = length str in loop [] (len - 1) len
+;;
+
+let print_matrix mat =
+  let m = A.length mat in
+  let n = A.length mat.(0) in
+  let idots = ref false in
+  for i = 0 to m - 1 do
+    if i < 3 || i > m - 4 then
+      begin
+        let jdots = ref false in
+        for j = 0 to n - 1 do
+          if j < 3 || j > n - 4 then
+            printf (if j <> 0 then "\t%6.2f" else "%6.2f")
+              mat.(i).(j)
+          else if not !jdots then
+            (printf "\t..."; jdots := true)
+        done;
+        printf "\n"
+      end
+    else if not !idots then
+      (printf "\t\t\t...\n"; idots := true)
+  done;
+  flush stdout
