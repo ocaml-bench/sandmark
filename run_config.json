@@ -151,6 +151,14 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-grammatrix/grammatrix.exe",
+      "name": "grammatrix",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "" }
+      ]
+    },
+    {
       "executable": "benchmarks/benchmarksgame/fannkuchredux2.exe",
       "name": "fannkuchredux2",
       "ismacrobench": true,

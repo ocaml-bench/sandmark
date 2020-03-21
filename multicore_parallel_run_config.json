@@ -325,6 +325,29 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-grammatrix/grammatrix.exe",
+      "name": "grammatrix",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-grammatrix/grammatrix_multicore.exe",
+      "name": "grammatrix_multicore",
+      "ismacrobench": true,
+      "runs": [
+        { "params": "1", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1"},
+        { "params": "2", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "4", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "8", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "12", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "16", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "20", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "24", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" }
+      ]
+    },
+    {
       "executable": "benchmarks/simple-tests/pingpong_multicore.exe",
       "name": "pingpong_multicore",
       "ismacrobench": false,
