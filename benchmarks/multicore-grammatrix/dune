@@ -7,3 +7,9 @@
  (name grammatrix_multicore)
  (modules grammatrix_multicore )
  (libraries unix domainslib utls))
+
+ (alias (name multibench_parallel)
+ 			 (deps grammatrix_multicore.exe grammatrix.exe))
+
+ (alias (name buildbench)
+        (deps grammatrix.exe))

@@ -43,7 +43,7 @@ let num_domains = try int_of_string Sys.argv.(1) with _ -> 4
 type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
 let channels = Array.init (num_domains -1) (fun _ -> {req= C.make 1; resp= C.make 1})
-let input_fn = try Sys.argv.(2) with _ ->  "data/tox21_nrar_ligands_std_rand_01.csv"
+let input_fn = try Sys.argv.(2) with _ ->  "../../../../benchmarks/multicore-grammatrix/data/tox21_nrar_ligands_std_rand_01.csv"
 
 
 let compute_gram_matrix samples num_domains =

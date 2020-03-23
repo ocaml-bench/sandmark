@@ -42,7 +42,7 @@ let parse_line line =
     ) int_strings;
   res
 
-let input_fn = try Sys.argv.(2) with _ ->  "benchmarks/multicore-grammatrix/data/tox21_nrar_ligands_std_rand_01.csv"
+let input_fn = try Sys.argv.(2) with _ ->  "../../../../benchmarks/multicore-grammatrix/data/tox21_nrar_ligands_std_rand_01.csv"
 let ncores = try int_of_string Sys.argv.(1) with _ -> 4
 
 
