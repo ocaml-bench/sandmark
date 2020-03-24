@@ -40,13 +40,12 @@ let parse_line line =
     ) int_strings;
   res
 
-let input_fn = try Sys.argv.(2) with _ ->  "benchmarks/multicore-grammatrix/data/tox21_nrar_ligands_std_rand_01.csv"
-let ncores = try int_of_string Sys.argv.(1) with _ -> 4
-
+let input_fn = try Sys.argv.(2) with _ ->  "data/tox21_nrar_ligands_std_rand_01.csv"
+let ncores = try int_of_string Sys.argv.(1) with _ -> 1
 
 let _ =
   let samples = A.of_list (Utls.map_on_lines_of_file input_fn parse_line) in
-  Printf.printf "samples: %d features: %d"
+  Printf.printf "samples: %d features: %d\n"
       (A.length samples) (A.length samples.(0));
   let r = compute_gram_matrix samples in
   Utls.print_matrix r

@@ -10,9 +10,9 @@ module A = Array
 module L = List
 module C = Domainslib.Chan
 
-(* type message = Do of (unit -> unit) | Quit
-type chan = {req: message C.t; resp: unit C.t}
-let channels = Array.init (ncores -1) (fun _ -> {req= C.make 1; resp= C.make 1}) *)
+let num_domains = try int_of_string Sys.argv.(1) with _ -> 4
+let input_fn = try Sys.argv.(2) with _ ->  "data/tox21_nrar_ligands_std_rand_01.csv"
+let chunk_size = try int_of_string Sys.argv.(3) with _ -> 16
 
 let dot_product xs ys =
   let n = A.length xs in
@@ -23,50 +23,16 @@ let dot_product xs ys =
   done;
   !res
 
-let compute_gram_mat samples res s e =
+let compute_gram_matrix samples res s e =
   let n = A.length samples in
   assert(n > 0);
-  (* let res = A.init n (fun _ -> A.create_float n) in *)
-  Printf.printf "r: %d\t c: %d" (Array.length res) (Array.length res.(0));
-  for i = s to (pred e) do
-    for j = i to n - 1 do
-      (* Printf.printf "n: %d i: %d j: %d\n" n i j; *)
-      Domain.Sync.poll();
-      let x = dot_product samples.(i) samples.(j) in
-      res.(i).(j) <- x;
-      res.(j).(i) <- x; (* symmetric matrix *)
-      (* Printf.printf "back\n" *)
-    done
-  done
-
-let num_domains = try int_of_string Sys.argv.(1) with _ -> 4
-type message = Do of (unit -> unit) | Quit
-type chan = {req: message C.t; resp: unit C.t}
-let channels = Array.init (num_domains -1) (fun _ -> {req= C.make 1; resp= C.make 1})
-let input_fn = try Sys.argv.(2) with _ ->  "data/tox21_nrar_ligands_std_rand_01.csv"
-
-
-let compute_gram_matrix samples num_domains =
-  let n = A.length samples in
-  assert(n > 0);
-  let res = A.init n (fun _ -> A.create_float n) in
-  let temp = n / num_domains in
-  let job i () =
-    compute_gram_mat samples res (i * temp)  ((i + 1) * temp)
-  in
-  Array.iteri (fun i c -> C.send c.req (Do (job i))) channels ;
-  job (num_domains - 1) ();
-  Array.iter (fun c -> C.recv c.resp) channels;
-  res
-  (* for i = 0 to n - 1 do
+  for i = s to e do
     for j = i to n - 1 do
       let x = dot_product samples.(i) samples.(j) in
       res.(i).(j) <- x;
       res.(j).(i) <- x (* symmetric matrix *)
     done
-  done; *)
-  (* let r = compute_gram_mat samples res 1 n in
-  r *)
+  done
 
 let parse_line line =
   let int_strings = Utls.string_split_on_char ' ' line in
@@ -77,23 +43,47 @@ let parse_line line =
     ) int_strings;
   res
 
+type message =
+    Work of int * int
+  | Quit
 
+let rec create_work c start left =
+  if left < chunk_size then begin
+(*     Printf.printf "%d %d\n" start (start + left - 1); *)
+    C.send c (Work (start, start + left - 1));
+    for _i = 1 to num_domains do
+(*       print_endline "Quit"; *)
+      C.send c Quit
+    done
+  end else begin
+(*     Printf.printf "%d %d\n" start (start + chunk_size - 1); *)
+    C.send c (Work (start, start + chunk_size - 1));
+    create_work c (start + chunk_size) (left - chunk_size)
+  end
 
-let rec worker c () =
-  match C.recv c.req with
-  | Do f ->
-      f () ; C.send c.resp () ; worker c ()
-  | Quit ->
-      ()
+let rec worker samples res c =
+  match C.recv c with
+  | Work (s,e) ->
+(*       Printf.printf "work: %d %d\n" s e; *)
+      compute_gram_matrix samples res s e;
+      worker samples res c
+  | Quit -> ()
 
 let _ =
-
   let samples = A.of_list (Utls.map_on_lines_of_file input_fn parse_line) in
-  Printf.printf "samples: %d features: %d"
+  let n = A.length samples in
+  let c = C.make (n / chunk_size +
+                  1 (* remaining work *) +
+                  num_domains (* quit messages *))
+  in
+  create_work c 0 n;
+  let res = A.init n (fun _ -> A.create_float n) in
+  Printf.printf "samples: %d features: %d\n"
       (A.length samples) (A.length samples.(0));
-  let domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
-
-  let r = compute_gram_matrix samples num_domains in
-  Utls.print_matrix r;
-  Array.iter (fun c -> C.send c.req Quit) channels ;
-  Array.iter Domain.join domains
+  let domains =
+    Array.init (num_domains - 1) (fun _ ->
+      Domain.spawn (fun _ -> worker samples res c))
+  in
+  worker samples res c;
+  Array.iter Domain.join domains;
+  Utls.print_matrix res
