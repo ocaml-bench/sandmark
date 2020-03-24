@@ -6,8 +6,6 @@
    Kyushu Institute of Technology,
    680-4 Kawazu, Iizuka, Fukuoka, 820-8502, Japan. *)
 
-open Printf
-
 module A = Array
 module L = List
 

@@ -1,9 +1,18 @@
 (executable
  (name grammatrix)
  (modules grammatrix)
- (libraries  unix utls))
+ (libraries unix utls))
 ;;
 (executable
  (name grammatrix_multicore)
- (modules grammatrix_multicore )
+ (modules grammatrix_multicore)
  (libraries unix domainslib utls))
+
+(alias (name buildbench)
+       (deps grammatrix.exe data/tox21_nrar_ligands_std_rand_01.csv
+			       data/1k.csv data/4k.csv))
+
+(alias (name multibench_parallel)
+       (deps grammatrix.exe grammatrix_multicore.exe
+			       data/tox21_nrar_ligands_std_rand_01.csv
+						 data/1k.csv data/4k.csv))
