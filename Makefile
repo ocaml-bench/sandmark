@@ -31,6 +31,8 @@ PACKAGES = \
 	js_of_ocaml-compiler uuidm react ocplib-endian nbcodec checkseum decompress \
 	sexplib0 irmin-mem
 
+DEPENDENCIES = libgmp-dev libdw-dev # Ubuntu
+
 # want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += lockfree kcas domainslib ctypes.0.14.0+multicore
@@ -41,7 +43,7 @@ endif
 .SECONDARY:
 export OPAMROOT=$(CURDIR)/_opam
 
-.PHONY: bash list clean
+.PHONY: bash list depend clean
 
 # HACK: we are using the system installed dune to avoid breakages with
 # multicore and 4.09/trunk
@@ -98,7 +100,7 @@ log_sandmark_hash:
 blah:
 	@echo ${PACKAGES}
 
-ocaml-versions/%.bench: log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
+ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	@opam update
 	opam install --switch=$* --keep-build-dir --yes rungen orun
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
@@ -117,6 +119,16 @@ ocaml-versions/%.bench: log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	@{ find _build/$*_* -name '*.$(WRAPPER).bench' | xargs cat > _results/$*/$*.$(WRAPPER).bench; };
 	exit $$ex;
 
+
+depend:
+	@{ for d in $(DEPENDENCIES); do \
+		result=`dpkg -l | grep $$d | wc -l`; \
+		if [ $$result -eq 0 ]; then \
+			echo "Dependency $$d is missing. Install on Ubuntu using apt."; \
+			echo "List of dependencies are: $(DEPENDENCIES)"; \
+			break; \
+		fi \
+	done };
 
 clean:
 	rm -rf dependencies/packages/ocaml/*
