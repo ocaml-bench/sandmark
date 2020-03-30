@@ -31,7 +31,7 @@ PACKAGES = \
 	js_of_ocaml-compiler uuidm react ocplib-endian nbcodec checkseum decompress \
 	sexplib0 irmin-mem
 
-DEPENDENCIES = libgmp-dev libdw-dev # Ubuntu
+DEPENDENCIES = libgmp-dev libdw-dev jq # Ubuntu
 
 # want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
