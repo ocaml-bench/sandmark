@@ -31,7 +31,8 @@ PACKAGES = \
 	js_of_ocaml-compiler uuidm react ocplib-endian nbcodec checkseum decompress \
 	sexplib0 irmin-mem
 
-DEPENDENCIES = libgmp-dev libdw-dev jq # Ubuntu
+DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip # Ubuntu
+PIP_DEPENDENCIES = intervaltree
 
 # want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
@@ -107,7 +108,7 @@ ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.comp _opam/% .
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
-           done } > ocaml-versions/.workspace.$*
+	   done } > ocaml-versions/.workspace.$*
 	opam exec --switch $* -- cp pausetimes/* $$(opam config var bin)
 	opam exec --switch $* -- rungen _build/$*_1 $(RUN_CONFIG_JSON) > runs_dune.inc;
 	opam exec --switch $* -- dune build --profile=release --workspace=ocaml-versions/.workspace.$* @$(BUILD_BENCH_TARGET);
@@ -119,16 +120,14 @@ ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.comp _opam/% .
 	@{ find _build/$*_* -name '*.$(WRAPPER).bench' | xargs cat > _results/$*/$*.$(WRAPPER).bench; };
 	exit $$ex;
 
+define check_dependency
+	$(if $(filter $(shell $(2) | grep $(1) | wc -l), 0),
+		@echo "$(1) is not installed. $(3)")
+endef
 
 depend:
-	@{ for d in $(DEPENDENCIES); do \
-		result=`dpkg -l | grep $$d | wc -l`; \
-		if [ $$result -eq 0 ]; then \
-			echo "Dependency $$d is missing. Install on Ubuntu using apt."; \
-			echo "List of dependencies are: $(DEPENDENCIES)"; \
-			break; \
-		fi \
-	done };
+	$(foreach d, $(DEPENDENCIES),     $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
+	$(foreach d, $(PIP_DEPENDENCIES), $(call check_dependency, $(d), pip3 list, Install using pip3 install.))
 
 clean:
 	rm -rf dependencies/packages/ocaml/*
