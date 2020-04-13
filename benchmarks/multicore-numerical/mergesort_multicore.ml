@@ -1,6 +1,10 @@
-let n = try int_of_string (Array.get Sys.argv 1) with _ ->  10000
+module T = Domainslib.Task
 
-let num_domains = try int_of_string (Array.get Sys.argv 2) with _ -> 4
+let n = try int_of_string @@ Sys.argv.(1) with _ ->  10000
+
+let num_domains = try int_of_string @@ Sys.argv.(2) with _ -> 4
+
+let domain_pool = T.setup_pool ~num_domains:num_domains
 
 let rec take n = function
   | [] -> []
@@ -44,24 +48,45 @@ let rec msort l =
     (* Printf.printf "I'm merging\n"; *)
     merge (msort left) (msort right)
 
- let rec gen size l =
-  if size = 0 then
-     l
-  else
-    let n = Random.int 1000 in
-    let list = n :: l in
-    gen (size - 1) list
+let list_chunker = fun lst chunk ->
+    let (<.>) = List.nth in
+    let temp_lst = ref [] in
+    let new_lst = ref [] in
+    for i = 1 to (List.length lst) do
+        match (i mod chunk) = 0 with
+        | true -> begin new_lst := (List.rev @@ !temp_lst) :: !new_lst;
+                    temp_lst := [];
+                    end
+        | false -> temp_lst := (lst<.>(i - 1)) :: !temp_lst;
+        done;
+    
+    begin
+    match List.length !temp_lst = 0 with
+    | true -> 
+        new_lst := List.rev @@ !new_lst;
+    | false ->
+        new_lst := (List.rev @@ !temp_lst) :: !new_lst;
+        new_lst := List.rev @@ !new_lst;
+    end;
+    !new_lst
 
-let rec spawn n lst st incr =
-  if (n = 0) then []
-  else begin
-    Domain.spawn(fun _ -> halving (slice lst st incr)) :: spawn (n-1) lst (st + incr) incr
-  end
+(* let f = fun lst -> *)
 
-let _ =
-   let lst = gen n [] in
-   let domains = spawn num_domains lst 0 (n / num_domains) in
-   let res = List.map Domain.join domains in
-   let sorted = List.fold_left merge [] res in
-   List.iter (Printf.printf "%d\n") sorted;
-   Gc.print_stat stdout
+
+let main () =
+    let chunk = (n/num_domains) + 1 in
+    let lst = List.init n (fun _ -> Random.int (2*n)) in 
+    let lst = list_chunker lst chunk in
+    (* List.iter (fun el ->
+        List.iter (fun x -> Printf.printf " %d " x) el;
+        print_endline ""; ) new_lst *)
+    let _lst =
+        List.map (fun l -> T.async domain_pool (fun _ -> msort l)) lst |>
+        List.map (fun l -> T.await domain_pool l) |>
+        msort |>
+        List.fold_left (fun acc x -> acc @ x) [] in
+    (* List.iter (fun e -> Printf.printf " %d " e) lst;
+    print_endline "" *)
+        ()
+
+let _ = main ()
