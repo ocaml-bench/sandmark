@@ -1,10 +1,10 @@
 module T = Domainslib.Task
 
-let n = try int_of_string @@ Sys.argv.(1) with _ ->  10000
+let num_domains = try int_of_string @@ Sys.argv.(1) with _ -> 4
 
-let num_domains = try int_of_string @@ Sys.argv.(2) with _ -> 4
+let n = try int_of_string @@ Sys.argv.(2) with _ ->  10000
 
-let domain_pool = T.setup_pool ~num_domains:num_domains
+let domain_pool = T.setup_pool ~num_domains:(num_domains - 1)
 
 let rec take n = function
   | [] -> []
@@ -48,35 +48,9 @@ let rec msort l =
     (* Printf.printf "I'm merging\n"; *)
     merge (msort left) (msort right)
 
-let list_chunker = fun lst chunk ->
-    let (<.>) = List.nth in
-    let temp_lst = ref [] in
-    let new_lst = ref [] in
-    for i = 1 to (List.length lst) do
-        match (i mod chunk) = 0 with
-        | true -> begin new_lst := (List.rev @@ !temp_lst) :: !new_lst;
-                    temp_lst := [];
-                    end
-        | false -> temp_lst := (lst<.>(i - 1)) :: !temp_lst;
-        done;
-    
-    begin
-    match List.length !temp_lst = 0 with
-    | true -> 
-        new_lst := List.rev @@ !new_lst;
-    | false ->
-        new_lst := (List.rev @@ !temp_lst) :: !new_lst;
-        new_lst := List.rev @@ !new_lst;
-    end;
-    !new_lst
-
-(* let f = fun lst -> *)
-
 
 let main () =
-    let chunk = (n/num_domains) + 1 in
-    let lst = List.init n (fun _ -> Random.int (2*n)) in 
-    let lst = list_chunker lst chunk in
+    let arr = Array.init n (fun _ -> Random.int 100) in 
     (* List.iter (fun el ->
         List.iter (fun x -> Printf.printf " %d " x) el;
         print_endline ""; ) new_lst *)
