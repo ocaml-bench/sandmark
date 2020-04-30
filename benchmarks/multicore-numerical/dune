@@ -77,7 +77,8 @@
 
 (executable
  (name mergesort_multicore)
- (modules mergesort_multicore))
+ (modules mergesort_multicore)
+ (libraries domainslib))
 
 (executable
  (name mergesort)

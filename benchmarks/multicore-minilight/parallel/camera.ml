@@ -48,8 +48,8 @@ class obj inBuffer_i num_domains =
          let up = if viewDirection_c.(1) < 0.0 then vOneZ else ~-|vOneZ in
          (vUnitize (vCross up viewDirection_c), up) in
 
-    let channels_c = 
-      Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 0})
+    let channels_c =
+      Array.init (num_domains - 1) (fun _ -> {req= C.make_bounded 1; resp= C.make_bounded 0})
     in
 
     let rec worker i c () =
@@ -93,7 +93,7 @@ object (__)
       and width, height = (float image#width, float image#height) in
 
       (* do image sampling pixel loop *)
-      let work s e () = 
+      let work s e () =
         for y = e downto s do
          for x = image#width - 1 downto 0 do
 						Domain.Sync.poll ();
@@ -121,7 +121,7 @@ object (__)
             image#addToPixel x y radiance
 
          done
-        done 
+        done
       in
 
     let mine, theirs =
@@ -137,7 +137,7 @@ object (__)
 
       in
       let (s,e) = mine in
-      List.iteri (fun i (s,e) -> 
+      List.iteri (fun i (s,e) ->
         C.send channels_m.(i).req (Do (work s e))) theirs;
       work s e ();
       Array.iter (fun c -> C.recv c.resp) channels_m;

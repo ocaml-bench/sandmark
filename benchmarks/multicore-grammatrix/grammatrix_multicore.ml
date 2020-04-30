@@ -72,7 +72,7 @@ let rec worker samples res c =
 let _ =
   let samples = A.of_list (Utls.map_on_lines_of_file input_fn parse_line) in
   let n = A.length samples in
-  let c = C.make (n / chunk_size +
+  let c = C.make_bounded (n / chunk_size +
                   1 (* remaining work *) +
                   num_domains (* quit messages *))
   in

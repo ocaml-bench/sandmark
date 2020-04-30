@@ -10,7 +10,7 @@ let messages_per_domain = total_messages / num_domains
 
 type message = int ref
 
-let queues = Array.init (num_domains-1) (fun i -> C.make chan_size)
+let queues = Array.init (num_domains-1) (fun i -> C.make_bounded chan_size)
 
 let worker (in_queue : message C.t) (out_queue : message C.t) () =
     let rec loop iterations =
@@ -27,7 +27,7 @@ let intermediate_consumers = Array.init (num_domains-2) (fun i -> Domain.spawn (
 
 let end_consumer () =
     let consume_queue = queues.(num_domains-2) in
-        let rec consume_loop iterations = 
+        let rec consume_loop iterations =
             if iterations > 0 then
                 let msg = C.recv consume_queue in
                     if !msg == (num_domains-2) then
@@ -50,12 +50,11 @@ let () =
                 end
             else
                 ()
-        in 
-            
+        in
+
             begin
                 let end_consumer_domain = Domain.spawn end_consumer in
                     produce_loop messages_per_domain;
                     Array.iter Domain.join intermediate_consumers;
                     Domain.join end_consumer_domain;
             end
-    

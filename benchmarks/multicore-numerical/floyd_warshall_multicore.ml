@@ -27,7 +27,7 @@ module C = Domainslib.Chan
 type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
 let channels =
-  Array.init (num_domains -1) (fun _ -> {req= C.make 1; resp= C.make 1})
+  Array.init (num_domains -1) (fun _ -> {req= C.make_bounded 1; resp= C.make_bounded 1})
 
 let my_formula () =
   let r = Random.int 100 in

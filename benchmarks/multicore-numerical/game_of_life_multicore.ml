@@ -12,7 +12,7 @@ let buf = Bytes.create board_size
 
 type message = Do of (unit -> unit) | Quit
 type chan = {req: message C.t; resp: unit C.t}
-let channels = Array.init (num_domains - 1) (fun _ -> {req= C.make 1; resp= C.make 1})
+let channels = Array.init (num_domains - 1) (fun _ -> {req= C.make_bounded 1; resp= C.make_bounded 1})
 
 let get g x y =
   try g.(x).(y)

@@ -17,6 +17,6 @@ build: [
   "dune" "build" "-p" name
 ]
 url {
-	src: "https://github.com/ocaml-multicore/domainslib/archive/0.1.0.zip"
-  checksum: "md5=ebef2d7bbc33b11133cf1bc26c324947"
+  src: "https://github.com/ocaml-multicore/domainslib/archive/0.2.0.tar.gz"
+  checksum: "md5=1b86c64551275299aff5e505ada03e8d"
 }
