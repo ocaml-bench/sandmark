@@ -12,6 +12,7 @@ let matrix_multiply z x y =
   done
 
 let () =
+
   let m1 = Array.init size (fun _ -> Array.init size (fun _ -> Random.int 100)) in
   let m2 = Array.init size (fun _ -> Array.init size (fun _ -> Random.int 100)) in
   let res = Array.make_matrix size size 0 in

@@ -3,9 +3,9 @@ module T = Domainslib.Task
 let num_domains = try Sys.argv.(1) |> int_of_string with _ -> 1
 let n = try Sys.argv.(2) |> int_of_string with _ -> 1024
 let pool = T.setup_pool ~num_domains:(num_domains - 1)
-let m3 = Array.make n (fun _ -> Array.make n 0)
+let m3 = Array.make_matrix n n 0
 
-let mat_mul m1 m2 = 
+let mat_mul m1 m2 =
   let i_n = Array.length m1 in
   let j_n = Array.length m2.(0) in
   let k_n = Array.length m2 in
