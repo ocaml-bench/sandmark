@@ -57,6 +57,7 @@ let loop_depths d =
     
     loop [] 0 num_domains;
     let _ = Array.fold_left (+) 0 values in
+    ()
     (* Printf.printf "%i\t trees of depth %i\t check: %i\n" niter d sum *)
   done
 
