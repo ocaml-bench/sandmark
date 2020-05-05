@@ -20,7 +20,6 @@ let rec check t =
 let min_depth = 4
 let max_depth = max (min_depth + 2) max_depth
 let stretch_depth = max_depth + 1
-(* let channels = Array.make (num_domains - 1) 0 *)
 
 let () =
   (* Gc.set { (Gc.get()) with Gc.minor_heap_size = 1024 * 1024; max_overhead = -1; }; *)
@@ -31,7 +30,6 @@ let () =
 let long_lived_tree = make max_depth
 
 let values = Array.make num_domains 0
-(* let promise_list = ref [] *)
 
 let calculate d st en ind =
   (* Printf.printf "st = %d en = %d\n" st en; *)
@@ -47,14 +45,19 @@ let loop_depths d =
     let d = d + i * 2 in
     let niter = 1 lsl (max_depth - d + min_depth) in
     let rec loop acc i num_domains =
-      match i = num_domains with
-      | true  -> List.rev acc |> List.iter (fun pr -> T.await pool pr)
-      | false -> loop ((T.async pool (fun _ -> calculate d (i * niter / num_domains) (((i + 1) * niter / num_domains) - 1) i)) :: acc) (i + 1) num_domains in
+      if i = num_domains then begin
+        List.rev acc |> List.iter (fun pr -> T.await pool pr)
+      end else begin 
+        loop 
+          ((T.async pool (fun _ -> 
+            calculate d (i * niter / num_domains) (((i + 1) * niter / num_domains) - 1) i)) :: acc) 
+          (i + 1) 
+          num_domains 
+        end in
     
-    (* T.parallel_for pool ~chunk_size:(num_domains) ~start:0 ~finish:(num_domains - 1) ~body:(fun index -> calculate d ((index * niter) / num_domains) ((((index + 1) * niter) / num_domains) - 1) index); *)
-    f [] 0 num_domains;
-    let sum = Array.fold_left (+) 0 values in
-    Printf.printf "%i\t trees of depth %i\t check: %i\n" niter d sum
+    loop [] 0 num_domains;
+    let _ = Array.fold_left (+) 0 values in
+    (* Printf.printf "%i\t trees of depth %i\t check: %i\n" niter d sum *)
   done
 
 let () =
