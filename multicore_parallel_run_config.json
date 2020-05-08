@@ -329,7 +329,7 @@
       "name": "grammatrix",
       "ismacrobench": true,
       "runs": [
-        { "params": "0", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" }
+        { "params": "data/tox21_nrar_ligands_std_rand_01.csv", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" }
       ]
     },
     {
@@ -337,14 +337,14 @@
       "name": "grammatrix_multicore",
       "ismacrobench": true,
       "runs": [
-        { "params": "1 0", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1"},
-        { "params": "2 0", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
-        { "params": "4 0", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
-        { "params": "8 0", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
-        { "params": "12 0", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
-        { "params": "16 0", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
-        { "params": "20 0", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
-        { "params": "24 0", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" }
+        { "params": "1 data/tox21_nrar_ligands_std_rand_01.csv", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1"},
+        { "params": "2 data/tox21_nrar_ligands_std_rand_01.csv", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "4 data/tox21_nrar_ligands_std_rand_01.csv", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "8 data/tox21_nrar_ligands_std_rand_01.csv", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "12 data/tox21_nrar_ligands_std_rand_01.csv", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
+        { "params": "16 data/tox21_nrar_ligands_std_rand_01.csv", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "20 data/tox21_nrar_ligands_std_rand_01.csv", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "24 data/tox21_nrar_ligands_std_rand_01.csv", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" }
       ]
     },
     {

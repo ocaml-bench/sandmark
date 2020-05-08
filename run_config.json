@@ -155,7 +155,7 @@
       "name": "grammatrix",
       "ismacrobench": true,
       "runs": [
-        { "params": "0" }
+        { "params": "data/tox21_nrar_ligands_std_rand_01.csv" }
       ]
     },
     {
