@@ -155,7 +155,7 @@
       "name": "grammatrix",
       "ismacrobench": true,
       "runs": [
-        { "params": "" }
+        { "params": "0" }
       ]
     },
     {
