@@ -23,11 +23,8 @@ let columns = Array.length adjacency.(0) in
        print_endline " "
    done
 
-module C = Domainslib.Chan
-type message = Do of (unit -> unit) | Quit
-type chan = {req: message C.t; resp: unit C.t}
-let channels =
-  Array.init (num_domains -1) (fun _ -> {req= C.make_bounded 1; resp= C.make_bounded 1})
+module T = Domainslib.Task
+let pool = T.setup_pool ~num_domains:(num_domains - 1)
 
 let my_formula () =
   let r = Random.int 100 in
@@ -48,52 +45,27 @@ let edit_diagonal mat =
     [| None; Some 2; Some 9;Some 0 |];
   |] *)
 
-let distribution =
-  let rec loop n d acc =
-    if d = 1 then n::acc
-    else
-      let w = n / d in
-      loop (n - w) (d - 1) (w::acc)
-  in
-  Array.of_list (loop n num_domains [])
-
-let run_iter job =
-  let sum = ref 0 in
-  Array.iteri (fun i c ->
-    let begin_ = !sum in
-    sum := !sum + distribution.(i);
-    let end_ = !sum in
-    C.send c.req (Do (job begin_ end_))) channels;
-  job !sum (!sum + distribution.(num_domains - 1)) ();
-  Array.iter (fun c -> C.recv c.resp) channels
-
-let f_w s e k =
-    for i = s to (pred e) do
+let aux () =
+  for k = 0 to (pred n) do
+    (* run_iter (fun s e () -> f_w s e k) *)
+    T.parallel_for pool
+    ~chunk_size:(n/num_domains)
+    ~start:0
+    ~finish:(n - 1)
+    ~body:(fun i ->
       if adj.(i).(k) <> None then
         for j = 0 to n-1 do
           Domain.Sync.poll();
-          if adj.(k).(j) <> None && (adj.(i).(j) = None || ( sum  adj.(i).(k)   adj.(k).(j) ) <  adj.(i).(j) ) then
-            adj.(i).(j) <- (sum adj.(i).(k)  adj.(k).(j))
-        done
-    done;
-    ()
-
-let aux () =
-  for k = 0 to (pred n) do
-    run_iter (fun s e () -> f_w s e k )
+            if adj.(k).(j) 
+            <> None 
+            && (adj.(i).(j) = None 
+            || (sum adj.(i).(k) adj.(k).(j)) <  adj.(i).(j)) 
+            then adj.(i).(j) <- (sum adj.(i).(k)  adj.(k).(j))
+        done);
   done
-
-let rec worker c () =
-  match C.recv c.req with
-  | Do f ->
-      f () ; C.send c.resp () ; worker c ()
-  | Quit ->
-      ()
 
 let ()=
   edit_diagonal adj;
-  let domains = Array.map (fun c -> Domain.spawn (worker c)) channels in
-  aux() ;
-(*  print_mat adj ;*)
-  Array.iter (fun c -> C.send c.req Quit) channels ;
-  Array.iter Domain.join domains
+  aux();
+  (* print_mat adj ; *)
+  T.teardown_pool pool

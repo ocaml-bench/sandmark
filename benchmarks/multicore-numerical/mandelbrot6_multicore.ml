@@ -13,11 +13,14 @@
  * fix compile errors by using Bytes instead of String, by Tony Tavener
  *)
 
+module T = Domainslib.Task
+
 let niter = 50
 let limit = 4.
 
 let num_domains = int_of_string (Array.get Sys.argv 1)
 let w = int_of_string (Array.get Sys.argv 2)
+let pool = T.setup_pool ~num_domains:(num_domains - 1)
 
 let worker w h_lo h_hi =
   let buf =
@@ -32,26 +35,26 @@ let worker w h_lo h_hi =
       let cr = float x /. fw -. 1.5
       and zr = ref 0. and zi = ref 0. and trmti = ref 0. and n = ref 0 in
       begin try
-	while true do
+  while true do
           Domain.Sync.poll ();
-	  zi := 2. *. !zr *. !zi +. ci;
-	  zr := !trmti +. cr;
-	  let tr = !zr *. !zr and ti = !zi *. !zi in
-	  if tr +. ti > limit then begin
-	    byte := !byte lsl 1;
-	    raise Exit
-	  end else if incr n; !n = niter then begin
-	    byte := (!byte lsl 1) lor 0x01;
-	    raise Exit
-	  end else
-	    trmti := tr -. ti
-	done
+    zi := 2. *. !zr *. !zi +. ci;
+    zr := !trmti +. cr;
+    let tr = !zr *. !zr and ti = !zi *. !zi in
+    if tr +. ti > limit then begin
+      byte := !byte lsl 1;
+      raise Exit
+    end else if incr n; !n = niter then begin
+      byte := (!byte lsl 1) lor 0x01;
+      raise Exit
+    end else
+      trmti := tr -. ti
+  done
       with Exit -> ()
       end;
       if x mod 8 = 7 then begin
-	Bytes.set buf !ptr (Char.chr !byte);
-	incr ptr;
-	byte := 0
+  Bytes.set buf !ptr (Char.chr !byte);
+  incr ptr;
+  byte := 0
       end
     done;
     let rem = w mod 8 in
@@ -69,7 +72,9 @@ let _ =
   let work i () =
     worker w (i * rows + min i rem) ((i+1) * rows + min (i+1) rem)
   in
-  let doms = Array.init (num_domains - 1) (fun i -> Domain.spawn (work i)) in
+  let doms = 
+    Array.init (num_domains - 1) (fun i -> T.async pool (work i)) in
   let r = work (num_domains-1) () in
-  Array.iter (fun d -> Printf.printf "%a%!" output_bytes (Domain.join d)) doms;
-  Printf.printf "%a%!" output_bytes r
+  Array.iter (fun d -> Printf.printf "%a%!" output_bytes (T.await pool d)) doms;
+  Printf.printf "%a%!" output_bytes r;
+  T.teardown_pool pool
