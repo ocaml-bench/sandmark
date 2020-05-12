@@ -47,19 +47,17 @@ let edit_diagonal mat =
 
 let aux () =
   for k = 0 to (pred n) do
-    (* run_iter (fun s e () -> f_w s e k) *)
     T.parallel_for pool
-    ~chunk_size:(n/num_domains)
+    ~chunk_size:16
     ~start:0
     ~finish:(n - 1)
     ~body:(fun i ->
       if adj.(i).(k) <> None then
         for j = 0 to n-1 do
           Domain.Sync.poll();
-            if adj.(k).(j) 
-            <> None 
-            && (adj.(i).(j) = None 
-            || (sum adj.(i).(k) adj.(k).(j)) <  adj.(i).(j)) 
+            if adj.(k).(j) <> None 
+              && (adj.(i).(j) = None 
+              || (sum adj.(i).(k) adj.(k).(j)) <  adj.(i).(j)) 
             then adj.(i).(j) <- (sum adj.(i).(k)  adj.(k).(j))
         done);
   done

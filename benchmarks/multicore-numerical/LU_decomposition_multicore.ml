@@ -27,7 +27,7 @@ let lup a0 =
     T.parallel_for pool 
     ~chunk_size:chunk_size 
     ~start:(k + 1) 
-    ~finish:(mat_size  -1)
+    ~finish:(mat_size - 1)
     ~body:(fun row ->
       let factor = get a row k /. get a k k in
       for col = k + 1 to mat_size-1 do
