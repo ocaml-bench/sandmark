@@ -1,6 +1,6 @@
 # Sandmark Notebooks
 
-These notebooks are used to visulalize the results from the
+These notebooks are used to visualize the results from the
 benchmarking runs.
 
 ## Requirements
@@ -36,7 +36,7 @@ interactively in the GUI or from the command-line.
 ### GUI
 
 If you are running the notebook from the GUI, ensure that you set the
-`artifacs_dir` to point to the correct location of the artifacts/
+`artifacts_dir` to point to the correct location of the artifacts/
 folder.
 
 As you execute the cells in the notebook, you will be presented with
@@ -82,3 +82,6 @@ that uses the following syntax and semantics:
 
 You can specify a baseline variant in the `selected_baseline`
 variable.
+
+A sample test/artifacts/ folder with bench files is available that you
+you can try to execute using papermill.
