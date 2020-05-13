@@ -127,7 +127,7 @@ endef
 
 depend:
 	$(foreach d, $(DEPENDENCIES),     $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
-	$(foreach d, $(PIP_DEPENDENCIES), $(call check_dependency, $(d), pip3 list, Install using pip3 install.))
+	$(foreach d, $(PIP_DEPENDENCIES), $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
 
 clean:
 	rm -rf dependencies/packages/ocaml/*
