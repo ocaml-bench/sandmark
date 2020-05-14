@@ -11,8 +11,8 @@ module L = List
 module C = Domainslib.Chan
 
 let num_domains = try int_of_string Sys.argv.(1) with _ -> 4
-let input_fn = try Sys.argv.(2) with _ ->  "data/tox21_nrar_ligands_std_rand_01.csv"
-let chunk_size = try int_of_string Sys.argv.(3) with _ -> 16
+let input_fn = try Sys.argv.(3) with _ ->  "data/tox21_nrar_ligands_std_rand_01.csv"
+let chunk_size = try int_of_string Sys.argv.(2) with _ -> 16
 
 let dot_product xs ys =
   let n = A.length xs in

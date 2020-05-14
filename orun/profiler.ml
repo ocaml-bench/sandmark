@@ -103,7 +103,7 @@ module IntMap = Map.Make (struct
   let compare = Pervasives.compare
 end)
 
-let slash_regex = Str.regexp "[/\.]"
+let slash_regex = Str.regexp "[/\\.]"
 
 let add_to_line_list src_line counts l =
   match l with
