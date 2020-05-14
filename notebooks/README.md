@@ -43,9 +43,9 @@ As you execute the cells in the notebook, you will be presented with
 an option to select the number of bench comparisons, the individual
 bench files and a baseline variant for comparison as shown below:
 
-![Select comparisons and benches](images/sequential-select-comparisons.png)
+![Select comparisons and benches](interactive/images/sequential-select-comparisons.png)
 
-![Select baseline variant](images/sequential-select-baseline-variant.png)
+![Select baseline variant](interactive/images/sequential-select-baseline-variant.png)
 
 ### Command-line
 
