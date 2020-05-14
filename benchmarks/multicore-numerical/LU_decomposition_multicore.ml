@@ -20,13 +20,28 @@ module SquareMatrix = struct
 
   let get (m : float array) r c = m.(r * mat_size + c)
   let set (m : float array) r c v = m.(r * mat_size + c) <- v
-  let copy = Array.copy
+  let par_copy pool a = 
+    let n = Array.length a in
+    let part a b i = 
+      let s = (i * n / num_domains) in
+      let e = (i+1) * n / num_domains - 1 in
+      Array.blit a s b s (e - s + 1) in
+    let b = Array.create_float n in
+    let rec aux acc num_domains i =
+      if (i = num_domains) then
+        (List.iter (fun e -> T.await pool e) acc)
+      else begin
+        aux ((T.async pool (fun _ -> part a b i))::acc) num_domains (i+1)
+      end
+      in
+      aux [] num_domains 0;
+      b
 end
 
 open SquareMatrix
 
 let lup pool (a0 : float array) =
-  let a = copy a0 in
+  let a = par_copy pool a0 in
   for k = 0 to (mat_size - 2) do
   T.parallel_for pool ~chunk_size:chunk_size ~start:(k + 1) ~finish:(mat_size  -1)
   ~body:(fun row ->
