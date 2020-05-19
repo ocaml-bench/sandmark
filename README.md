@@ -90,6 +90,9 @@ You can execute both serial and parallel benchmarks using the
 Ensure that the respective .json configuration files have the
 appropriate settings.
 
+The run_all_parallel.sh script uses chrt and hence sudo permission is
+required for the user executing the script.
+
 ### Configuration
 
 The benchmarks which are executed are specified in
