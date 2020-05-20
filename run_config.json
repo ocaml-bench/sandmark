@@ -1137,6 +1137,22 @@
           "params": ""
         }
       ]
+    },
+    {
+      "executable": "benchmarks/data_encoding/de_basic.exe",
+      "name": "data_encoding_basic",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "100 100"
+        },
+        {
+          "params": "100000 100"
+        },
+        {
+          "params": "100 100000"
+        }
+      ]
     }
   ]
 }
