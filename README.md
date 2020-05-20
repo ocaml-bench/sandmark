@@ -10,7 +10,10 @@ On Ubuntu 18.04.4 LTS you can try the following commands:
 $ sudo apt-get install git libgmp-dev libdw-dev python3-pip jq bubblewrap m4 unzip
 $ pip3 install intervaltree
 
+# Install OPAM if not available already
 $ sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
+$ opam init
+
 $ opam install dune.1.11.4
 
 $ make ocaml-versions/4.06.0.bench
