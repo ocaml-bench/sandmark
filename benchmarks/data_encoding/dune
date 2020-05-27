@@ -1,0 +1,7 @@
+(executable
+  (name de_basic)
+  (modules de_basic)
+  (libraries data-encoding)
+)
+
+(alias (name buildbench) (deps data_encoding_basic.exe))
