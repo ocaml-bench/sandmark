@@ -1,7 +1,8 @@
 # options for running the benchmarks
 #
 # paramwrapper for passing taskset and chrt details
-PARAMWRAPPER ?= $(nullstring)
+PARAMWRAPPER_L ?= $(nullstring)
+PARAMWRAPPER_H ?= $(nullstring)
 
 # benchmark build target type:
 #  - buildbench: build all single threaded tests
