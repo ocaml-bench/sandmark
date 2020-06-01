@@ -473,6 +473,28 @@
       ]
     },
     {
+      "executable": "cubicle",
+      "name": "cubicle",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "benchmarks/cubicle/german_pfs.cub",
+          "short_name": "german_pfs.cub"
+        }
+      ]
+    },
+    {
+      "executable": "cubicle",
+      "name": "cubicle",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "benchmarks/cubicle/szymanski_at.cub",
+          "short_name": "szymanski_at.cub"
+        }
+      ]
+    },
+    {
       "executable": "benchmarks/chameneos/chameneos_redux_lwt.exe",
       "name": "chameneos_redux_lwt",
       "ismacrobench": true,
