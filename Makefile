@@ -1,8 +1,14 @@
 # options for running the benchmarks
 #
 # paramwrapper for passing taskset and chrt details
-PARAMWRAPPER_L ?= $(nullstring)
-PARAMWRAPPER_H ?= $(nullstring)
+# When passing arguments to PARAMWRAPPER do follow the syntax 
+# if params < {number of cores} then paramwrapper = {range of cores} else paramwrapper = {range of cores}
+# the above statement is a skeleton and can be replaced by the following example
+# Example : if params < 16 then paramwrapper = 2-15 else paramwrapper = 2-15,16-27
+PARAMWRAPPER=
+N1=0
+N2=0
+N3=0
 
 # benchmark build target type:
 #  - buildbench: build all single threaded tests
