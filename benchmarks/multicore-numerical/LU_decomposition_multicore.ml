@@ -3,8 +3,6 @@ let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
 let mat_size = try int_of_string Sys.argv.(2) with _ -> 1200
 let chunk_size = try int_of_string Sys.argv.(3) with _ -> 16
 
-module T = Domainslib.Task
-
 module SquareMatrix = struct
 
   let create f : float array =
