@@ -19,9 +19,8 @@ end
 open SquareMatrix
 
 let chunk_size = 32
-let pool = T.setup_pool ~num_domains:(num_domains - 1)
 
-let lup a0 =
+let lup a0 pool =
   let a = copy a0 in
   for k = 0 to (mat_size - 2) do
     T.parallel_for pool 
@@ -37,8 +36,9 @@ let lup a0 =
   done;
   a
 let () =
+  let pool = T.setup_pool ~num_domains:(num_domains - 1) in
   let a = create (fun _ _ -> (Random.float 100.0)+.1.0) in
-  let lu = lup a in
+  let lu = lup a pool in
   let _l = create (fun i j -> if i > j then get lu i j else if i = j then 1.0 else 0.0) in
   let _u = create (fun i j -> if i <= j then get lu i j else 0.0) in
   T.teardown_pool pool

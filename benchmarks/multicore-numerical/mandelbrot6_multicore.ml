@@ -20,7 +20,6 @@ let limit = 4.
 
 let num_domains = int_of_string (Array.get Sys.argv 1)
 let w = int_of_string (Array.get Sys.argv 2)
-let pool = T.setup_pool ~num_domains:(num_domains - 1)
 
 let worker w h_lo h_hi =
   let buf =
@@ -67,6 +66,7 @@ let worker w h_lo h_hi =
   buf
 
 let _ =
+  let pool = T.setup_pool ~num_domains:(num_domains - 1) in
   let rows = w / num_domains and rem = w mod num_domains in
   Printf.printf "P4\n%i %i\n%!" w w;
   let work i () =

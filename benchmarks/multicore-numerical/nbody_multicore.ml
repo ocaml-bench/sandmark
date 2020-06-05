@@ -9,7 +9,6 @@ module T = Domainslib.Task
 let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
 let n = try int_of_string Sys.argv.(2) with _ -> 500
 let num_bodies = try int_of_string Sys.argv.(3) with _ -> 1024
-let pool = T.setup_pool ~num_domains:(num_domains - 1)
 
 let pi = 3.141592653589793
 let solar_mass = 4. *. pi *. pi
@@ -19,7 +18,7 @@ type planet = { mutable x : float;  mutable y : float;  mutable z : float;
                 mutable vx: float;  mutable vy: float;  mutable vz: float;
                 mass : float }
 
-let aux_1 bodies dt =
+let aux_1 bodies dt pool =
   T.parallel_for pool
     ~chunk_size:(num_bodies/num_domains)
     ~start:0
@@ -86,8 +85,9 @@ let bodies =
       mass=(Random.float 10.) *. solar_mass; })
 
 let () =
+  let pool = T.setup_pool ~num_domains:(num_domains - 1) in 
   offset_momentum bodies;
   Printf.printf "%.9f\n" (energy bodies);
-  for _i = 1 to n do aux_1 bodies 0.01 done;
+  for _i = 1 to n do aux_1 bodies 0.01 pool done;
   Printf.printf "%.9f\n" (energy bodies);
   T.teardown_pool pool
