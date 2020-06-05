@@ -1,0 +1,168 @@
+(*
+
+SOURCE: pfs distribution
+ 
+*)
+
+type state = Invalid | Shared | Exclusive
+
+type msg1 = Empty1 | Reqs | Reqe 
+
+type msg2 = Empty2 | Inv | Gnts | Gnte
+
+type msg3 = Empty3 | Invack
+
+
+var Exgntd : bool
+var Curcmd : msg1
+var Flag : bool
+
+array Cache[proc] : state
+array Chan1[proc] : msg1
+array Chan2[proc] : msg2
+array Chan3[proc] : msg3
+array Curptr[proc] : bool
+array Shrset[proc] : bool
+array Invset[proc] : bool
+
+
+init (z) {
+     Cache[z] = Invalid &&
+     Chan1[z] = Empty1 && 
+     Chan2[z] = Empty2 &&
+     Chan3[z] = Empty3 && 
+     Curptr[z] = False && 
+     Shrset[z] = False && 
+     Invset[z] = False &&
+     Exgntd = False && 
+     Curcmd = Empty1 && 
+     Flag = False }
+
+
+(* unsafe (z1 z2) { Cache[z1] = Exclusive && Cache[z2] = Shared } *)
+(*unsafe (z1 z2) { Cache[z1] = Exclusive && Cache[z2] = Exclusive }*)
+unsafe (z1 z2) { Cache[z1] = Exclusive && Cache[z2] <> Invalid }
+
+
+
+transition t1(x)
+requires { Curcmd = Reqs && Exgntd = False && Chan2[x] = Empty2 &&
+	   Curptr[x] = True && Flag = False }
+{ Curcmd := Empty1 ;
+  Chan2[j] := case | j = x : Gnts | _ : Chan2[j] ;
+  Shrset[j] := case | j = x : True | _ : Shrset[j] ;
+}
+
+
+transition t2(x)
+requires { Shrset[x] = False && Curcmd = Reqe && Chan2[x] = Empty2 &&
+	   Curptr[x] = True && Flag = False &&
+           forall_other j. Shrset[j] = False}
+{ Curcmd := Empty1 ; Exgntd := True ;
+  Chan2[j] := case | j = x : Gnte | _ : Chan2[j] ;
+  Shrset[j] := case | j = x : True | _ : Shrset[j] ;
+}
+
+
+transition t3(x)
+requires { Curcmd = Empty1 && Chan1[x] = Reqs && Flag = False }
+{ 
+  Flag := True ; 
+  (* Invset := Shrset ;  *)
+  Invset[j] := case | _ : Shrset[j];
+  Curcmd := Reqs;
+  Chan1[j] := case | j = x : Empty1 | _ : Chan1[j] ;
+  Curptr[j] := case | j = x : True | _ : False 
+}
+
+transition t3bis(x)
+requires { Curcmd = Empty1 && Chan1[x] = Reqe && Flag = False }
+{ Flag := True ; 
+  (* Invset := Shrset ;  *)
+  Invset[j] := case | _ : Shrset[j];
+  Curcmd := Reqe;
+  Chan1[j] := case | j = x : Empty1 | _ : Chan1[j] ;
+  Curptr[j] := case | j = x : True | _ : False 
+}
+
+transition t4(x)
+requires { Flag = True && Shrset[x] = False }
+{ Invset[j] := case | j = x : False | _ : Invset[j] }
+
+
+transition t5(x)
+requires { Flag = True && Shrset[x] = True }
+{ Invset[j] := case | j = x : True | _ : Invset[j] }
+
+
+transition t6(x)
+requires { Flag = True && Invset[x] = Shrset[x] 
+           && forall_other j. Invset[j] = Shrset[j] }
+{ Flag := False }
+
+
+transition t7(x)
+requires { Curcmd = Reqs && Exgntd = True && Invset[x] = True &&
+	   Chan2[x] = Empty2 && Flag = False }
+{
+  Chan2[j] := case | j = x : Inv | _ : Chan2[j] ;
+  Invset[j] := case | j = x : False | _ : Invset[j] ;
+}
+
+
+transition t8(x)
+requires { Curcmd = Reqe && Invset[x] = True && Chan2[x] = Empty2 && Flag = False }
+{ 
+  Chan2[j] := case | j = x : Inv | _ : Chan2[j] ;
+  Invset[j] := case | j = x : False | _ : Invset[j] ;
+}
+
+
+transition t9(x)
+requires { Curcmd <> Empty1 && Chan3[x] = Invack && Flag = False }
+{ Exgntd := False;
+  Chan3[j] := case | j = x : Empty3 | _ : Chan3[j] ;
+  Shrset[j] := case | j = x : False | _ : Shrset[j] 
+}
+
+
+
+transition t10(x)
+requires { Cache[x] = Invalid && Chan1[x] = Empty1 && Flag = False }
+{
+  Cache[j] := case | j = x : Invalid | _ : Cache[j] ;
+  Chan1[j] := case | j = x : Reqs | _ : Chan1[j] ;
+}
+
+
+transition t11(x)
+requires { Cache[x] <> Exclusive && Chan1[x] = Empty1 && Flag = False }
+{ Chan1[j] := case | j = x : Reqe | _ : Chan1[j] }
+
+
+
+transition t12(x)
+requires { Chan2[x] = Inv && Chan3[x] = Empty3 && Flag = False }
+{ 
+  Cache[j] := case | j = x : Invalid | _ : Cache[j] ;
+  Chan2[j] := case | j = x : Empty2 | _ : Chan2[j] ;
+  Chan3[j] := case | j = x : Invack | _ : Chan3[j] 
+}
+
+
+transition t13(x)
+requires { Chan2[x] = Gnts && Flag = False }
+{ 
+  Cache[j] := case | j = x : Shared | _ : Cache[j] ;
+  Chan2[j] := case | j = x : Empty2 | _ : Chan2[j] 
+}
+
+
+transition t14(x)
+requires { Chan2[x] = Gnte && Flag = False }
+{
+  Cache[j] := case | j = x : Exclusive | _ : Cache[j] ;
+  Chan2[j] := case | j = x : Empty2 | _ : Chan2[j] 
+}
+
+

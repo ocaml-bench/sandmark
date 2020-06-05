@@ -1,0 +1,67 @@
+(*****************************************************************************)
+(* Szymanski's mutual exclusion algorithm                                    *)
+(*****************************************************************************)
+(*                                                                           *)
+(* 0 : Bx := true                                                            *)
+(* 1 : await forall y. x <> y => not Sy then Bx := false                     *)
+(* 2 : Wx := true ; Sx := true ;                                             *)
+(* 3 : if exists y. x <> y /\ not By /\ not Wy                               *)
+(*        then Sx := false ; goto 4                                          *)
+(*        else Wx := false ; goto 5                                          *)
+(* 4 : await exists y. x <> y => Sy /\ not Wy then Wx := false ; Sx := true; *)
+(* 5 : await forall y. x <> y => not Wy                                      *)
+(* 6 : await forall y. y < x => not Sy                                       *)
+(* 7 : {Critical section}                                                    *)
+(*     Sx := false ; goto 0                                                  *)
+(*                                                                           *)
+(* A simple solution to Lamport's concurrent programming problem with        *)
+(* linear wait.  Boleslaw K. Szymanski. ICS, page 621-626. (1988)            *)
+(*****************************************************************************)
+
+
+type location = L0 | L1 | L2 | L3 | L4 | L5 | L6 | L7 
+
+array A[proc] : location
+array B[proc] : bool
+array S[proc] : bool
+array W[proc] : bool 
+
+init (x) { A[x] = L0 && S[x] = False && W[x] = False && B[x] = False }
+ 
+unsafe (z1 z2) { A[z1] = L7 && A[z2] = L7 }
+
+transition t0 (x)
+requires { A[x] = L0 }
+{ A[x] := L1; B[x] := True }
+
+transition t1 (x)
+requires { A[x] = L1 && forall_other y. S[y] = False }
+{ A[x] := L2; B[x] := False }
+
+transition t2 (x)
+requires { A[x] = L2 }
+{ A[x] := L3; S[x] := True; W[x] := True }
+
+transition t3_then (x y)
+requires { A[x] = L3 && B[y] = False && W[y] = False }
+{ A[x] := L4; S[x] := False }
+
+transition t3_else (x)
+requires { A[x] = L3 && forall_other y. ( B[y] =  True || W[y] = True ) }
+{ A[x] := L5; W[x] := False }
+
+transition t4 (x y)
+requires { A[x] = L4 && S[y] = True && W[y] = False }
+{ A[x] := L5; S[x] := True; W[x] := False }
+
+transition t5 (x)
+requires { A[x] = L5 && forall_other y. W[y] = False }
+{ A[x] := L6 }
+
+transition t6 (x)
+requires { A[x] = L6 && forall_other j. (x <= j || S[j] = False) }
+{ A[x] := L7 }
+
+transition t7 (x)
+requires { A[x] = L7 }
+{ A[x] := L0; S[x] := False }

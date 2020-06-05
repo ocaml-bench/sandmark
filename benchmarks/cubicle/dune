@@ -1,0 +1,1 @@
+(alias (name buildbench) (deps german_pfs.cub szymanski_at.cub))
