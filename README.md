@@ -188,7 +188,7 @@ work on OS X is to install GNU sed with homebrew and then update the
 
 ## User configurable benchmark wrapper
 
-To run a macro benchmark with a custom range of processors a conditional string can be passed with `PARAMWRAPPER`.
+To run a macro benchmark with a custom range of processors/isolated CPUs/ a conditional string can be passed with `PARAMWRAPPER`.
 
 For example :
 ```bash
@@ -196,9 +196,9 @@ $ make run_config_macro.json PARAMWRAPPER="if params < 16 then paramwrapper = 2-
 ```
 In the above example strings : `16`, `2-15`, `2-15,16-21` are used to construct a json file containing a `paramwrapper` record with the value : `taskset --cpu-list 2-15 chrt -r 1` or `taskset --cpu-list 2-15,16-21 chrt -r 1`. This depends upon `params`, in the above example it happens on `16`. 
 
-The command above generates a new `.json` file. In this example it's `run_config_macro.json`.
+The command above generates a new `.json` file. In this example it is `run_config_macro.json`.
 
-There are limitations to it's flexibility and it currently only supports that single string. If no optional string is provided it defaults to 
+If no optional string is provided it defaults to 
 ```bash
 PARAMWRAPPER="if params < 16 then paramwrapper = 2-15 else paramwrapper = 2-15,16-27"
 ```
