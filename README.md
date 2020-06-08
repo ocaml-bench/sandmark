@@ -194,7 +194,7 @@ For example :
 ```bash
 $ make run_config_macro.json PARAMWRAPPER="if params < 16 then paramwrapper = 2-15 else paramwrapper = 2-15,16-21"
 ```
-In the above example strings : `16`, `2-15`, `2-15,16-21` are used to construct a json file containing a `paramwrapper` record with the value : `taskset --cpu-list 2-15 chrt -r 1` or `taskset --cpu-list 2-15,16-21 chrt -r 1`. This depends upon `params`, in the above example it happens on `16`. 
+In the above example strings : `16`, `2-15`, `2-15,16-21` are used to construct a json file containing a `paramwrapper` record with the value : `taskset --cpu-list 2-15 chrt -r 1` or `taskset --cpu-list 2-15,16-21 chrt -r 1`. The `paramwrapper` value switches to one or the other depending on the value `params` is being compared to in this case `16`. 
 
 The command above generates a new `.json` file. In this example it is `run_config_macro.json`.
 
