@@ -92,7 +92,14 @@ appropriate settings.
 
 The run_all_parallel.sh script uses chrt and the user executing the
 script requires sudo with nopasswd permission, which is quite useful
-with periodic nightly builds.
+with periodic nightly builds. Using the `sudo visudo` command on
+Ubuntu, for example, you can add the following entry to the
+`/etc/sudoers` file to allow a user running the script to execute any
+command:
+
+```
+username   ALL=(ALL:ALL) NOPASSWD: ALL
+```
 
 ### Configuration
 
