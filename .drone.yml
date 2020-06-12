@@ -9,12 +9,32 @@ steps:
 - name: 4.07.1.bench
   image: ocaml/opam2:4.07
   commands:
-  - sudo apt-get update && sudo apt-get -y install libgmp-dev m4 libdw-dev
+  - sudo apt-get update && sudo apt-get -y install libgmp-dev m4 libdw-dev && sudo apt-get install jq
+  - sudo chown -R opam .
+  - eval $(opam env)
+  - opam install dune.1.11.4
+  - export ITER=1
+  - export OPAM_DISABLE_SANDBOXING=true
+  - make ocaml-versions/4.07.1.bench
+
+---
+kind: pipeline
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: 4.10.0+multicore+parallel.bench
+  image: ocaml/opam2:4.10.0+multicore+bench
+  commands:
+  - sudo apt-get update && sudo apt-get -y install libgmp-dev m4 libdw-dev && sudo apt-get install jq
   - sudo chown -R opam .
   - eval $(opam env)
   - opam install dune.1.11.4
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - make multicore_parallel_run_config_macro_parallel.json
-  - RUN_CONFIG_JSON=multicore_parallel_run_config_macro_parallel.json make ocaml-versions/4.10.0+multicore+parallel.bench
+  - BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_macro_parallel.json make ocaml-versions/4.10.0+multicore+parallel.bench
 
