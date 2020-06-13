@@ -1,6 +1,7 @@
 (executable
  (name mandelbrot6_multicore)
- (modules mandelbrot6_multicore))
+ (modules mandelbrot6_multicore)
+ (libraries domainslib))
 
 (executable
  (name mandelbrot6_multiprocess)
@@ -18,7 +19,8 @@
 
 (executable
  (name quicksort_multicore)
- (modules quicksort_multicore))
+ (modules quicksort_multicore)
+ (libraries domainslib))
 
 (executable
  (name binarytrees5_multicore)
