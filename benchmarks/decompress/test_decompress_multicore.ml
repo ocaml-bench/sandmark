@@ -1,115 +1,70 @@
-open Decompress
+open Zl
 
 let num_domains = try int_of_string(Sys.argv.(1)) with _ -> 1
 let iterations = try int_of_string(Sys.argv.(2)) with _ -> 64
 let data_size = try int_of_string(Sys.argv.(3)) with _ -> 32 * 1024
 
-exception Deflate_error of Zlib_deflate.error
-exception Inflate_error of Zlib_inflate.error
+let blit_to_buffer t b v len =
+  let rec go off len =
+    if len > 0
+    then
+      ( let len' = (min : int -> int -> int) len (Bytes.length t) in
+        Bigstringaf.blit_to_bytes v ~src_off:off t ~dst_off:0 ~len:len' ;
+        Buffer.add_subbytes b t 0 len' ;
+        go (off + len) (len - len') ) in
+  go 0 len
 
-(* Keep in your mind, this is an easy example of Decompress but not efficient.
-   Don't copy/paste this code in a productive environment. *)
+let compress data =
+  (* pre-allocation of values. *)
+  let w = De.make_window ~bits:15 in
+  let q = De.Queue.create 0x1000 in
+  let i = De.bigstring_create De.io_buffer_size in
+  let o = De.bigstring_create De.io_buffer_size in
+  let p = ref 0 in
+  let t = Bytes.create De.io_buffer_size in
+  let b = Buffer.create 0x1000 in
 
-let compress ?(level = 4) data =
-  let input_buffer = Bytes.create 0xFFFF in
-  (* We need to allocate an input buffer, the size of this buffer is important.
-     In fact, the Lz77 algorithm can find a pattern (and compress) only on this
-     input buffer. So if the input buffer is small, the algorithm has no chance
-     to find many patterns.
+  (* NOTE: [q] can be the bottleneck about compression where [q] is
+   * the shared-queue between Lz77 algorithm and encoder. Smaller is it,
+   * the more encoder will flush!
+   *
+   * [t] degrades performances to pass from a [De.bigstring] to a [Buffer.t] *)
 
-     If it is big, the algorithm can find a far pattern and keep this pattern
-     as long as it tries to compress. The optimal size seems to be [1 << 15]
-     bytes (a bigger buffer is not necessary because the distance can be upper
-     than [1 << 15]). *)
-  let output_buffer = Bytes.create 0xFFFF in
-  (* We need to allocate an output buffer, is like you can. it's depends your
-     capabilities of your writing. *)
-  let pos = ref 0 in
-  let res = Buffer.create (String.length data) in
-  (* The buffer is not a good idea. In fact, we can have a memory problem with
-     that (like if the output is too big). You need to keep in your mind that
-     is insecure to let a buffer to grow automatically (an attacker can use
-     this behaviour). *)
+  let refill v =
+    let len =
+      (min : int -> int -> int) (Bigstringaf.length v) (String.length data - !p) in
+    Bigstringaf.blit_from_string
+      data ~src_off:!p
+      v ~dst_off:0 ~len ; p := !p + len ; len in
+  let flush v len = blit_to_buffer t b v len in
 
-  (* This is the same interface as [caml-zip]. A refiller and a flusher. The
-     refiller send you the maximum byte than you can [blit] inside the input
-     buffer.
-
-     So, if the second argument is [Some max], it's mandatory to respect that,
-     otherwise, you lost something. In the other case, you can blit the maximum
-     that what you can.
-
-     The flusher send you the output buffer and how many byte Decompress wrote
-     inside. The offset for this buffer is always [0]. Then, you need to send
-     how many bytes are free in the output buffer (and the common is that all
-     is free).
-
-     One argument (optionnal) is missing, it's the [meth]. This argument is
-     used to limit the memory used by the state internally. In fact, Decompress
-     (and `zlib`) need to keep all of your input to calculate at the end the
-     frequencies and the dictionary. So if you want to compress a big file, may
-     be you will have a memory problem (because, all your file will be present
-     in the memory). So you can specify a method to flush the internal memory
-     (with SYNC, PARTIAL or FULL - see the documentation about that) at each
-     [n] bytes, like: ~meth:(PARTIAL, 4096) flushes the internal memory when we
-     compute 4096 bytes of your input.
-
-     If [meth] is specified, the refiller has a [Some] as the second parameter.
-     Otherwise, it is [None]. *)
-  Zlib_deflate.bytes input_buffer output_buffer
-    (fun input_buffer i -> 
-      Domain.Sync.poll();
-      match i with 
-      | Some max ->
-          let n = min max (min 0xFFFF (String.length data - !pos)) in
-          Bytes.blit_string data !pos input_buffer 0 n ;
-          pos := !pos + n ;
-          n
-      | None ->
-          let n = min 0xFFFF (String.length data - !pos) in
-          Bytes.blit_string data !pos input_buffer 0 n ;
-          pos := !pos + n ;
-          n )
-    (fun output_buffer len ->
-      Buffer.add_subbytes res output_buffer 0 len ;
-      0xFFFF )
-    (Zlib_deflate.default ~witness:B.bytes level)
-  (* We can specify the level of the compression, see the documentation to know
-     what we use for each level. The default is 4. *)
-  |> function
-  | Ok _ -> Buffer.contents res | Error exn -> raise (Deflate_error exn)
+  Higher.compress
+    ~level:3 ~w ~q ~i ~o ~refill ~flush ;
+  Buffer.contents b
 
 let uncompress data =
-  let input_buffer = Bytes.create 0xFFFF in
-  (* We need to allocate an input buffer. it's depends your capabilities of
-     your reading. *)
-  let output_buffer = Bytes.create 0xFFFF in
-  (* Same as [compress]. *)
-  let window = Window.create ~witness:B.bytes in
-  (* We allocate a window. We let the user to do that to reuse the window if
-     it's needed. In fact, the window is a big buffer ([size = (1 << 15)]) and
-     allocate this buffer costs.
+  (* pre-allocation of values. *)
+  let w = De.make_window ~bits:15 in
+  let allocate _ = w in
+  let i = De.bigstring_create De.io_buffer_size in
+  let o = De.bigstring_create De.io_buffer_size in
+  let p = ref 0 in
+  let t = Bytes.create 0x1000 in
+  let b = Buffer.create 0x1000 in
 
-     So in this case, we decompress only one time but if you want to decompress
-     some flows, you can reuse this window after a [Window.reset]. *)
-  let pos = ref 0 in
-  let res = Buffer.create (String.length data) in
-  Zlib_inflate.bytes input_buffer output_buffer
-    (* Same logic as [compress]. *)
-      (fun input_buffer ->
-      Domain.Sync.poll ();
-      let n = min 0xFFFF (String.length data - !pos) in
-      Bytes.blit_string data !pos input_buffer 0 n ;
-      pos := !pos + n ;
-      n )
-    (fun output_buffer len ->
-      Domain.Sync.poll ();
-      Buffer.add_subbytes res output_buffer 0 len ;
-      0xFFFF )
-    (Zlib_inflate.default ~witness:B.bytes window)
-  |> function
-  | Ok _ -> Buffer.contents res
-  | Error exn -> raise (Inflate_error exn)
+  let refill v =
+    let len =
+      (min : int -> int -> int) (Bigstringaf.length v) (String.length data - !p) in
+    Bigstringaf.blit_from_string
+      data ~src_off:!p 
+      v ~dst_off:0 ~len ; p := !p + len ; len in
+  let flush v len = blit_to_buffer t b v len in
+
+  (* NOTE: about multicore, Lz77 compression can exist into one domain where
+   * encoder can exists to another domain. Both use the shared-queue [q] and
+   * only it must be protected about data-race. *)
+
+  Higher.uncompress ~allocate ~i ~o ~refill ~flush
 
 let () = Random.init(42)
 

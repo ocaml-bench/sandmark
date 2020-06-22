@@ -1,12 +1,12 @@
 (executable
  (name test_decompress)
   (modules test_decompress)
-  (libraries checkseum.ocaml decompress))
+  (libraries checkseum.ocaml decompress.zl))
 
 (executable
  (name test_decompress_multicore)
   (modules test_decompress_multicore)
-  (libraries checkseum.ocaml decompress))
+  (libraries checkseum.ocaml decompress.zl))
 
 (alias (name buildbench)
        (deps test_decompress.exe))
