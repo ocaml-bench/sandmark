@@ -11,7 +11,7 @@ let blit_to_buffer t b v len =
       ( let len' = (min : int -> int -> int) len (Bytes.length t) in
         Bigstringaf.blit_to_bytes v ~src_off:off t ~dst_off:0 ~len:len' ;
         Buffer.add_subbytes b t 0 len' ;
-        go (off + len) (len - len') ) in
+        go (off + len') (len - len') ) in
   go 0 len
 
 let compress data =
