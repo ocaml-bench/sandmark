@@ -27,9 +27,10 @@ CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 WRAPPER = $(subst run_,,$(RUN_BENCH_TARGET))
 
 PACKAGES = \
-	cpdf menhir minilight camlimages yojson lwt alt-ergo zarith \
-	js_of_ocaml-compiler uuidm react ocplib-endian nbcodec checkseum decompress \
-	sexplib0 irmin-mem cubicle
+       cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib menhir \
+       minilight base stdio dune-private-libs dune-configurator camlimages yojson lwt \
+       alt-ergo zarith integers js_of_ocaml-compiler uuidm react ocplib-endian        \
+       nbcodec checkseum sexplib0 irmin-mem
 
 DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip # Ubuntu
 PIP_DEPENDENCIES = intervaltree
