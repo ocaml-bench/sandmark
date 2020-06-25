@@ -30,7 +30,7 @@ PACKAGES = \
        cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib menhir \
        minilight base stdio dune-private-libs dune-configurator camlimages yojson lwt \
        alt-ergo zarith integers js_of_ocaml-compiler uuidm react ocplib-endian        \
-       nbcodec checkseum sexplib0 irmin-mem
+       nbcodec checkseum sexplib0 irmin-mem cubicle
 
 DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip # Ubuntu
 PIP_DEPENDENCIES = intervaltree
