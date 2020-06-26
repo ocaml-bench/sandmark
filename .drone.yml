@@ -7,9 +7,9 @@ platform:
 
 steps:
 - name: 4.10.0+multicore.bench
-  image: ocaml/opam2:4.10
+  image: ocurrent/opam:debian-10-ocaml-4.10
   commands:
-  - sudo apt-get update && sudo apt-get -y install libgmp-dev m4 libdw-dev && sudo apt-get -y install jq 
+  - sudo apt-get update && sudo apt-get -y install pkg-config libgmp-dev m4 libdw-dev && sudo apt-get -y install jq
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
