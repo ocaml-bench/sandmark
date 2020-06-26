@@ -14,18 +14,14 @@ $ pip3 install jupyter seaborn pandas intervaltree
 $ sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 $ opam init
 
-$ opam install dune.1.11.4
+$ opam install dune.2.6.0
 
-$ make ocaml-versions/4.06.0.bench
+$ make ocaml-versions/4.10.0+multicore.bench
 ```
 
 You can now find the results in the `_results/` folder.
 
 ## Pre-requisites
-
-It is necessary that the system dune version is `< 2.0`. The
-development uses `ocaml-base-compiler.4.09.0` with `dune.1.11.4` and
-`jbuilder.transition`.
 
 On GNU/Linux you need to have `libgmp-dev` installed for several of
 the benchmarks to work. You also need to have `libdw-dev` installed
