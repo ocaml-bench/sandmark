@@ -1150,6 +1150,17 @@
         }
       ]
     },
+    {
+      "executable": "coq_bench",
+      "name": "coq_bench",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "benchmarks/coq_bench/Zlib.v",
+          "short_name": "Zlib.v"
+        }
+      ]
+    },
       {
       "executable": "benchmarks/numerical-analysis/qr_decomposition.exe",
       "name": "qr-decomposition",
