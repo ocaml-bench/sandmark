@@ -36,7 +36,7 @@ WRAPPER = $(subst run_,,$(RUN_BENCH_TARGET))
 PACKAGES = \
 	cpdf menhir minilight camlimages yojson lwt alt-ergo zarith \
 	js_of_ocaml-compiler uuidm react ocplib-endian nbcodec checkseum decompress \
-	sexplib0 irmin-mem cubicle
+	sexplib0 irmin-mem cubicle coq coq_bench 
 
 DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip # Ubuntu
 PIP_DEPENDENCIES = intervaltree
