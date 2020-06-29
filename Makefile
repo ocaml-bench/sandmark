@@ -1,4 +1,11 @@
 # options for running the benchmarks
+#
+# paramwrapper for passing taskset and chrt details
+# When passing arguments to PARAMWRAPPER do follow the syntax 
+# if params < {number of cores} then paramwrapper = {range of cores} else paramwrapper = {range of cores}
+# the above statement is a skeleton and can be replaced by the following example
+# Example : if params < 16 then paramwrapper = 2-15 else paramwrapper = 2-15,16-27
+PARAMWRAPPER=
 
 # benchmark build target type:
 #  - buildbench: build all single threaded tests
@@ -154,7 +161,8 @@ bash:
 	@echo "[opam subshell completed]"
 
 %_macro.json: %.json
-	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.ismacrobench == true)]}' < $< > $@
+	if [ -z "$$PARAMWRAPPER" ]; then PARAMWRAPPER="if params < 16 then paramwrapper = 2-13 else paramwrapper = 2-13,16-27"; else echo "user configured paramwrapper"; fi; \
+	jq --arg PARAMWRAPPER "$${PARAMWRAPPER}" '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.ismacrobench == true)]} | {wrappers: .wrappers, benchmarks: [.benchmarks | .[] | {executable: .executable, name: .name, ismacrobench: .ismacrobench, runs: [.runs | .[] as $$x | $$x | .params | split(" ") | first as $$n | $$n | length | if . < 3 then try ($$n | tonumber | if . < ($$PARAMWRAPPER | split(" ") | .[3] | tonumber) then $$x | .paramwrapper |= ($$PARAMWRAPPER | split(" ") | "taskset --cpu-list " + .[7] + " chrt -r 1") else $$x | .paramwrapper |= ($$PARAMWRAPPER | split(" ") | "taskset --cpu-list " + .[11] + " chrt -r 1") end) else $$x | .paramwrapper |= ($$PARAMWRAPPER | split(" ") | "taskset --cpu-list " + .[7] + " chrt -r 1") end] } ] }' < $< > $@
 
 %_macro_parallel.json: %_macro.json
 	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.ismacrobench == true)]} | {wrappers : .wrappers, benchmarks : [.benchmarks | .[] | select(.ismacrobench == true) | {executable : .executable, name: .name, ismacrobench: .ismacrobench, runs : [.runs | .[] as $$item | if ($$item | .params | split(" ") | .[0] ) == "2" then $$item | .paramwrapper |= "" else empty end ] } ]}' < $< > $@
