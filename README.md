@@ -1,3 +1,5 @@
+[![Build Status](http://cloud.drone.io/api/badges/ocaml-bench/sandmark/status.svg?branch=master)]
+
 # Sandmark
 
 A benchmarking suite for OCaml.
