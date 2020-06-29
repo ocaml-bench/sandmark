@@ -1,12 +1,35 @@
 kind: pipeline
-name: default
+name: 4.10.0+stock+serial
 
 platform:
   os: linux
   arch: amd64
 
 steps:
-- name: 4.10.0+multicore.bench
+- name: 4.10.0+stock
+  image: ocurrent/opam:debian-10-ocaml-4.10
+  commands:
+  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev && sudo apt-get -y install jq
+  - sudo chown -R opam .
+  - eval $(opam env)
+  - opam update
+  - opam install dune.2.6.0
+  - export ITER=1
+  - export OPAM_DISABLE_SANDBOXING=true
+  - wget https://github.com/ocaml-bench/sandmark/pull/131.patch
+  - patch -p1 < 131.patch
+  - make ocaml-versions/4.10.0+stock.bench
+
+---
+kind: pipeline
+name: 4.10.0+multicore+serial
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: 4.10.0+multicore+serial
   image: ocurrent/opam:debian-10-ocaml-4.10
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev && sudo apt-get -y install jq
@@ -19,5 +42,27 @@ steps:
   - wget https://github.com/ocaml-bench/sandmark/pull/131.patch
   - patch -p1 < 131.patch
   - make ocaml-versions/4.10.0+multicore.bench
+
+---
+kind: pipeline
+name: 4.10.0+multicore+parallel
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: 4.10.0+multicore+parallel
+  image: ocurrent/opam:debian-10-ocaml-4.10
+  commands:
+  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev && sudo apt-get -y install jq
+  - sudo chown -R opam .
+  - eval $(opam env)
+  - opam update
+  - opam install dune.2.6.0
+  - export ITER=1
+  - export OPAM_DISABLE_SANDBOXING=true
+  - wget https://github.com/ocaml-bench/sandmark/pull/131.patch
+  - patch -p1 < 131.patch
   - make multicore_parallel_run_config_macro_parallel.json
   - BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_macro_parallel.json make ocaml-versions/4.10.0+multicore.bench
