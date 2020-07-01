@@ -16,7 +16,9 @@ $ opam init
 
 $ opam install dune.1.11.4
 
-$ make ocaml-versions/4.06.0.bench
+$ git clone https://github.com/ocaml-bench/sandmark.git
+$ cd sandmark
+$ make ocaml-versions/4.10.0+multicore.bench
 ```
 
 You can now find the results in the `_results/` folder.
@@ -112,18 +114,65 @@ wrapper which will be used to collect data (e.g. orun or perf). You
 can edit this file to change benchmark parameters or setup a custom
 set of benchmarks that you care about.
 
+### Running benchmarks
+
+We can obtain throughput and latency results for the benchmarks.
+
+Config file can be specified with `RUN_CONFIG_JSON`, the default is
+`run_config.json`. This file lists the executable to run and the
+wrapper which will be used to collect data (e.g. orun or perf). You
+can edit this file to change benchmark parameters or wrappers.
+
+The bench can be specified with `BUILD_BENCH_TARGET`, default being
+`buildbench` which runs the serial benchmarks, for running parallel
+benchmarks use `multibench_parallel`. You can also setup a custom bench and add
+only the benchmarks you care about.
+
+For obtaining latency results, we can adjust `RUN_BENCH_TARGET`. The scripts
+for latencies are present in the `pausetimes/` directory. `pausetimes_trunk`
+obtains the latencies for stock OCaml and `pausetimes_multicore` for Multicore
+OCaml.
+
+### Results
+
+After a run is complete, the results will be available in the `_results`
+directory.
+
+Jupyter notebooks are available in the `notebooks` directory to parse and
+visualise the results, for both serial and parallel benchmarks. To run the
+jupyter notebooks with your results, copy your results to `notebooks/
+sequential` for sequential benchmarks and `notebooks/parallel` for parallel
+benchmarks. It is sufficient to copy only the consolidated results, which are
+present as `_results/<comp-version>/<comp-version>.orun.bench`. You can run the
+notebooks with
+
+```
+$ jupyter notebooks
+```
+
 ### Adding benchmarks
 
-You can add benchmarks as follows:
+You can add new benchmarks as follows:
 
- - Add any opam packages you need, by adding the opam files to
-   `repository/` and the package install to `PACKAGES` in the
-   `Makefile`
+ - **Add dependencies to packages:**
+    If there are any dependencies your benchmark has that is not already
+    present in sandmark, add its opam file to
+    `dependencies/packages/<package-name>/<package-version>/opam`. If the
+    package depends on other packages, repeat this step for all of those
+    packages. Add the package to `PACKAGES` in the Makefile.  
 
- - Add any OCaml code to the `benchmarks/` directory, it is assumed
-   dune will build it.
+ - **Add benchmark files:**
+    Find a relevant folder in `benchmarks/` and add your code to it. Feel free
+    to create a new folder if you don't find any existing ones relevant. Every
+    folder in `benchmarks/` has its own dune file, add a dune entry for your
+    benchmark in it. Also add you code and input files if any to an alias,
+    `buildbench` for sequential benchmarks and `multibench_parallel` for
+    parallel benchmarks.
 
- - Add your benchmark command line to `run_config.json`
+ - **Add commands to run your applications:**
+    An entry for your benchmark run is to be added to config file;
+    `run_config.json` for sequential benchmarks and
+    `multicore_parallel_run_config.json` for parallel benchmarks.
 
 ## UI
 
@@ -194,11 +243,11 @@ For example :
 ```bash
 $ make multicore_parallel_run_config_macro.json PARAMWRAPPER="if params < 16 then paramwrapper = 2-15 else paramwrapper = 2-15,16-21"
 ```
-In the above example strings : `16`, `2-15`, `2-15,16-21` are used to construct a json file containing a `paramwrapper` record with the value : `taskset --cpu-list 2-15 chrt -r 1` or `taskset --cpu-list 2-15,16-21 chrt -r 1`. The `paramwrapper` value switches to one or the other depending on the value `params` is being compared to in this case `16`. 
+In the above example strings : `16`, `2-15`, `2-15,16-21` are used to construct a json file containing a `paramwrapper` record with the value : `taskset --cpu-list 2-15 chrt -r 1` or `taskset --cpu-list 2-15,16-21 chrt -r 1`. The `paramwrapper` value switches to one or the other depending on the value `params` is being compared to in this case `16`.
 
 The command above generates a new `.json` file. In this example it is `run_config_macro.json`.
 
-If no optional string is provided it defaults to 
+If no optional string is provided it defaults to
 ```bash
 PARAMWRAPPER="if params < 16 then paramwrapper = 2-15 else paramwrapper = 2-15,16-27"
 ```
