@@ -106,14 +106,6 @@ command:
 username   ALL=(ALL:ALL) NOPASSWD: ALL
 ```
 
-### Configuration
-
-The benchmarks which are executed are specified in
-`run_config.json`. This file specifies the executable to run and the
-wrapper which will be used to collect data (e.g. orun or perf). You
-can edit this file to change benchmark parameters or setup a custom
-set of benchmarks that you care about.
-
 ### Running benchmarks
 
 We can obtain throughput and latency results for the benchmarks.
