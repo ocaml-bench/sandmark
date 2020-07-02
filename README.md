@@ -18,6 +18,7 @@ $ opam install dune.1.11.4
 
 $ git clone https://github.com/ocaml-bench/sandmark.git
 $ cd sandmark
+$ make ocaml-versions/4.10.0+stock.bench
 $ make ocaml-versions/4.10.0+multicore.bench
 ```
 
@@ -110,20 +111,21 @@ username   ALL=(ALL:ALL) NOPASSWD: ALL
 
 We can obtain throughput and latency results for the benchmarks.
 
-Config file can be specified with `RUN_CONFIG_JSON`, the default is
-`run_config.json`. This file lists the executable to run and the
+A config file can be specified with the environment variable `RUN_CONFIG_JSON`,
+the default is `run_config.json`. This file lists the executable to run and the
 wrapper which will be used to collect data (e.g. orun or perf). You
 can edit this file to change benchmark parameters or wrappers.
 
-The bench can be specified with `BUILD_BENCH_TARGET`, default being
+The build bench target controls the type of benchmark being built. It can be
+specified with the environment variable `BUILD_BENCH_TARGET`, the default being
 `buildbench` which runs the serial benchmarks, for running parallel
 benchmarks use `multibench_parallel`. You can also setup a custom bench and add
 only the benchmarks you care about.
 
-For obtaining latency results, we can adjust `RUN_BENCH_TARGET`. The scripts
-for latencies are present in the `pausetimes/` directory. `pausetimes_trunk`
-obtains the latencies for stock OCaml and `pausetimes_multicore` for Multicore
-OCaml.
+For obtaining latency results, we can adjust the environment variable
+`RUN_BENCH_TARGET`. The scripts for latencies are present in the `pausetimes/`
+directory. `pausetimes_trunk` obtains the latencies for stock OCaml and
+`pausetimes_multicore` for Multicore OCaml.
 
 ### Results
 
@@ -139,7 +141,7 @@ present as `_results/<comp-version>/<comp-version>.orun.bench`. You can run the
 notebooks with
 
 ```
-$ jupyter notebooks
+$ jupyter notebook
 ```
 
 ### Adding benchmarks
@@ -147,7 +149,7 @@ $ jupyter notebooks
 You can add new benchmarks as follows:
 
  - **Add dependencies to packages:**
-    If there are any dependencies your benchmark has that is not already
+    If there are any dependencies your benchmark has that are not already
     present in sandmark, add its opam file to
     `dependencies/packages/<package-name>/<package-version>/opam`. If the
     package depends on other packages, repeat this step for all of those
@@ -162,7 +164,7 @@ You can add new benchmarks as follows:
     parallel benchmarks.
 
  - **Add commands to run your applications:**
-    An entry for your benchmark run is to be added to config file;
+    Add an entry for your benchmark run to the relevant config file;
     `run_config.json` for sequential benchmarks and
     `multicore_parallel_run_config.json` for parallel benchmarks.
 
