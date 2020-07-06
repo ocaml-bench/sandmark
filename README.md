@@ -112,20 +112,20 @@ username   ALL=(ALL:ALL) NOPASSWD: ALL
 We can obtain throughput and latency results for the benchmarks.
 
 A config file can be specified with the environment variable `RUN_CONFIG_JSON`,
-the default is `run_config.json`. This file lists the executable to run and the
-wrapper which will be used to collect data (e.g. orun or perf). You
+and the default value is `run_config.json`. This file lists the executable to
+run and the wrapper which will be used to collect data (e.g. orun or perf). You
 can edit this file to change benchmark parameters or wrappers.
 
-The build bench target controls the type of benchmark being built. It can be
-specified with the environment variable `BUILD_BENCH_TARGET`, the default being
-`buildbench` which runs the serial benchmarks, for running parallel
-benchmarks use `multibench_parallel`. You can also setup a custom bench and add
-only the benchmarks you care about.
+The build bench target determines the type of benchmark being built. It can be
+specified with the environment variable `BUILD_BENCH_TARGET`, and the default
+value is `buildbench` which runs the serial benchmarks. For executing the
+parallel benchmarks use `multibench_parallel`. You can also setup a custom
+bench and add only the benchmarks you care about.
 
 For obtaining latency results, we can adjust the environment variable
 `RUN_BENCH_TARGET`. The scripts for latencies are present in the `pausetimes/`
-directory. `pausetimes_trunk` obtains the latencies for stock OCaml and
-`pausetimes_multicore` for Multicore OCaml.
+directory. The `pausetimes_trunk` Bash script obtains the latencies for stock
+OCaml and the `pausetimes_multicore` Bash script for Multicore OCaml.
 
 ### Results
 
@@ -134,11 +134,12 @@ directory.
 
 Jupyter notebooks are available in the `notebooks` directory to parse and
 visualise the results, for both serial and parallel benchmarks. To run the
-jupyter notebooks with your results, copy your results to `notebooks/
-sequential` for sequential benchmarks and `notebooks/parallel` for parallel
-benchmarks. It is sufficient to copy only the consolidated results, which are
-present as `_results/<comp-version>/<comp-version>.orun.bench`. You can run the
-notebooks with
+Jupyter notebooks for your results, copy your results to `notebooks/
+sequential` folder for sequential benchmarks and `notebooks/parallel` folder
+for parallel benchmarks. It is sufficient to copy only the consolidated
+bench files, which are present as
+`_results/<comp-version>/<comp-version>.orun.bench`. You can run the notebooks
+with
 
 ```
 $ jupyter notebook
@@ -149,11 +150,11 @@ $ jupyter notebook
 You can add new benchmarks as follows:
 
  - **Add dependencies to packages:**
-    If there are any dependencies your benchmark has that are not already
-    present in sandmark, add its opam file to
+    If there are any package dependencies your benchmark has that are not
+    already included in Sandmark, add its opam file to
     `dependencies/packages/<package-name>/<package-version>/opam`. If the
     package depends on other packages, repeat this step for all of those
-    packages. Add the package to `PACKAGES` in the Makefile.  
+    packages. Add the package to `PACKAGES` variable in the Makefile.  
 
  - **Add benchmark files:**
     Find a relevant folder in `benchmarks/` and add your code to it. Feel free
@@ -164,7 +165,7 @@ You can add new benchmarks as follows:
     parallel benchmarks.
 
  - **Add commands to run your applications:**
-    Add an entry for your benchmark run to the relevant config file;
+    Add an entry for your benchmark run to the appropriate config file;
     `run_config.json` for sequential benchmarks and
     `multicore_parallel_run_config.json` for parallel benchmarks.
 
