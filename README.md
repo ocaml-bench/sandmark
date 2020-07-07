@@ -138,7 +138,7 @@ Jupyter notebooks for your results, copy your results to `notebooks/
 sequential` folder for sequential benchmarks and `notebooks/parallel` folder
 for parallel benchmarks. It is sufficient to copy only the consolidated
 bench files, which are present as
-`_results/<comp-version>/<comp-version>.orun.bench`. You can run the notebooks
+`_results/<comp-version>/<comp-version>.bench`. You can run the notebooks
 with
 
 ```
