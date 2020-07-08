@@ -159,10 +159,20 @@ You can add new benchmarks as follows:
  - **Add benchmark files:**
     Find a relevant folder in `benchmarks/` and add your code to it. Feel free
     to create a new folder if you don't find any existing ones relevant. Every
-    folder in `benchmarks/` has its own dune file, add a dune entry for your
-    benchmark in it. Also add you code and input files if any to an alias,
+    folder in `benchmarks/` has its own dune file; if you are creating a new
+    directory for your benchmark, also create a dune file in that directory and
+    add a stanza for your benchmark. If you are adding your benchmark to an
+    existing directory, add a dune stanza for your benchmark in the directory's
+    dune file.
+
+    Also add you code and input files if any to an alias,
     `buildbench` for sequential benchmarks and `multibench_parallel` for
-    parallel benchmarks.
+    parallel benchmarks. For instance, if you are adding a parallel benchmark
+    `benchmark.ml` and its input file `input.txt` to a directory, in that
+    directory's dune file add
+    ```
+    (alias (name multibench_parallel) (deps benchmark.ml input.txt))
+    ```
 
  - **Add commands to run your applications:**
     Add an entry for your benchmark run to the appropriate config file;
