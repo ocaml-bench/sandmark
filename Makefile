@@ -21,6 +21,9 @@ RUN_CONFIG_JSON ?= run_config.json
 #  orun
 RUN_BENCH_TARGET ?= run_orun
 
+# Dry run test without executing benchmarks
+DRY_RUN ?= 0
+
 # number of benchmark iterations to run
 ITER ?= 1
 
@@ -34,9 +37,10 @@ CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 WRAPPER = $(subst run_,,$(RUN_BENCH_TARGET))
 
 PACKAGES = \
-	cpdf menhir minilight camlimages yojson lwt alt-ergo zarith \
-	js_of_ocaml-compiler uuidm react ocplib-endian nbcodec checkseum decompress \
-	sexplib0 irmin-mem cubicle
+       cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib menhir \
+       minilight base stdio dune-private-libs dune-configurator camlimages yojson lwt \
+       alt-ergo zarith integers js_of_ocaml-compiler uuidm react ocplib-endian        \
+       nbcodec checkseum sexplib0 irmin-mem cubicle
 
 DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip # Ubuntu
 PIP_DEPENDENCIES = intervaltree
@@ -119,21 +123,25 @@ ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.comp _opam/% .
 	opam exec --switch $* -- cp pausetimes/* $$(opam config var bin)
 	opam exec --switch $* -- rungen _build/$*_1 $(RUN_CONFIG_JSON) > runs_dune.inc;
 	opam exec --switch $* -- dune build --profile=release --workspace=ocaml-versions/.workspace.$* @$(BUILD_BENCH_TARGET);
-	@{ IS_PARALLEL=`grep -c chrt $(RUN_CONFIG_JSON)`; 									\
-	   if [ "$$IS_PARALLEL" -gt 0 ]; then											\
-	     $(PRE_BENCH_EXEC) sudo -s OPAMROOT="${OPAMROOT}" OPAMROOTISOK="true" BUILD_BENCH_TARGET="${BUILD_BENCH_TARGET}" 	\
-               RUN_BENCH_TARGET="${RUN_BENCH_TARGET}" RUN_CONFIG_JSON="${RUN_CONFIG_JSON}" opam exec --switch $* -- 		\
-	       dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?; 	\
-	   else															\
-	     $(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release 					\
-	       --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;						\
+	@{ if [ "$(DRY_RUN)" -eq 0 ]; then												\
+		IS_PARALLEL=`grep -c chrt $(RUN_CONFIG_JSON)`; 										\
+		if [ "$$IS_PARALLEL" -gt 0 ]; then											\
+		  $(PRE_BENCH_EXEC) sudo -s OPAMROOT="${OPAMROOT}" OPAMROOTISOK="true" BUILD_BENCH_TARGET="${BUILD_BENCH_TARGET}" 	\
+	            RUN_BENCH_TARGET="${RUN_BENCH_TARGET}" RUN_CONFIG_JSON="${RUN_CONFIG_JSON}" opam exec --switch $* -- 		\
+		    dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?; 		\
+		else															\
+		  $(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release 						\
+		    --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;						\
+		fi;															\
+		for f in `find _build/$*_* -name '*.bench'`; do 									\
+		   d=`basename $$f | cut -d '.' -f 1,2`; 										\
+		   mkdir -p _results/$*/$$d/ ; cp $$f _results/$*/$$d/; 								\
+		done;															\
+	        find _build/$*_* -name '*.$(WRAPPER).bench' | xargs cat > _results/$*/$*.$(WRAPPER).bench;				\
+		exit $$ex; 														\
+	   else 															\
+		exit 0; 														\
 	   fi };
-	@{ for f in `find _build/$*_* -name '*.bench'`; do \
-	   d=`basename $$f | cut -d '.' -f 1,2`; \
-	   mkdir -p _results/$*/$$d/ ; cp $$f _results/$*/$$d/; \
-	done };
-	@{ find _build/$*_* -name '*.$(WRAPPER).bench' | xargs cat > _results/$*/$*.$(WRAPPER).bench; };
-	exit $$ex;
 
 define check_dependency
 	$(if $(filter $(shell $(2) | grep $(1) | wc -l), 0),
