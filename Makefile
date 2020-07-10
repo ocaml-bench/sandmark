@@ -22,7 +22,7 @@ RUN_CONFIG_JSON ?= run_config.json
 RUN_BENCH_TARGET ?= run_orun
 
 # Dry run test without executing benchmarks
-DRY_RUN ?= 0
+BUILD_ONLY ?= 0
 
 # number of benchmark iterations to run
 ITER ?= 1
@@ -123,7 +123,7 @@ ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.comp _opam/% .
 	opam exec --switch $* -- cp pausetimes/* $$(opam config var bin)
 	opam exec --switch $* -- rungen _build/$*_1 $(RUN_CONFIG_JSON) > runs_dune.inc;
 	opam exec --switch $* -- dune build --profile=release --workspace=ocaml-versions/.workspace.$* @$(BUILD_BENCH_TARGET);
-	@{ if [ "$(DRY_RUN)" -eq 0 ]; then												\
+	@{ if [ "$(BUILD_ONLY)" -eq 0 ]; then												\
 		IS_PARALLEL=`grep -c chrt $(RUN_CONFIG_JSON)`; 										\
 		if [ "$$IS_PARALLEL" -gt 0 ]; then											\
 		  $(PRE_BENCH_EXEC) sudo -s OPAMROOT="${OPAMROOT}" OPAMROOTISOK="true" BUILD_BENCH_TARGET="${BUILD_BENCH_TARGET}" 	\

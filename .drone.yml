@@ -16,9 +16,7 @@ steps:
   - opam install dune.2.6.0
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
-  - wget https://github.com/ocaml-bench/sandmark/pull/131.patch
-  - patch -p1 < 131.patch
-  - DRY_RUN=1 make ocaml-versions/4.10.0+stock.bench
+  - BUILD_ONLY=1 make ocaml-versions/4.10.0+stock.bench
 
 ---
 kind: pipeline
@@ -39,9 +37,7 @@ steps:
   - opam install dune.2.6.0
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
-  - wget https://github.com/ocaml-bench/sandmark/pull/131.patch
-  - patch -p1 < 131.patch
-  - DRY_RUN=1 make ocaml-versions/4.10.0+multicore.bench
+  - BUILD_ONLY=1 make ocaml-versions/4.10.0+multicore.bench
 
 ---
 kind: pipeline
@@ -62,7 +58,5 @@ steps:
   - opam install dune.2.6.0
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
-  - wget https://github.com/ocaml-bench/sandmark/pull/131.patch
-  - patch -p1 < 131.patch
   - make multicore_parallel_run_config_macro_parallel.json
-  - DRY_RUN=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_macro_parallel.json make ocaml-versions/4.10.0+multicore.bench
+  - BUILD_ONLY=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_macro_parallel.json make ocaml-versions/4.10.0+multicore.bench
