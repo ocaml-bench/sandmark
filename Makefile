@@ -115,8 +115,6 @@ blah:
 ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
 	@opam update
 	opam install --switch=$* --keep-build-dir --yes rungen orun
-	#opam list --rec --resolve coq
-	#exit 1
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \

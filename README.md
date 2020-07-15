@@ -20,6 +20,7 @@ $ opam install dune.2.6.0
 
 $ git clone https://github.com/ocaml-bench/sandmark.git
 $ cd sandmark
+$ make ocaml-versions/4.10.0+stock.bench
 $ make ocaml-versions/4.10.0+multicore.bench
 ```
 
