@@ -44,6 +44,7 @@ PACKAGES = \
 
 DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip # Ubuntu
 PIP_DEPENDENCIES = intervaltree
+OPAM_DEPENDENCIES = sexp
 
 # want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
@@ -76,7 +77,7 @@ else
 	ln -s $(SYS_DUNE_BASE_DIR)/lib/dune $(CURDIR)/_opam/sys_dune/lib/dune
 endif
 
-ocamls=$(wildcard ocaml-versions/*.comp)
+ocamls=$(wildcard ocaml-versions/*.var)
 
 # to build in a Dockerfile you need to disable sandboxing in opam
 ifeq ($(OPAM_DISABLE_SANDBOXING), true)
@@ -85,7 +86,7 @@ endif
 _opam/opam-init/init.sh:
 	opam init --bare --no-setup --no-opamrc $(OPAM_INIT_EXTRA_FLAGS) ./dependencies
 
-_opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp setup_sys_dune
+_opam/%: _opam/opam-init/init.sh ocaml-versions/%.var setup_sys_dune
 	rm -rf dependencies/packages/ocaml/ocaml.$*
 	rm -rf dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
 	mkdir -p dependencies/packages/ocaml/ocaml.$*
@@ -93,10 +94,12 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.comp setup_sys_dune
 	mkdir -p dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
 	cp -R dependencies/template/ocaml-base-compiler/* \
 	  dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/
-	{ url="$$(cat ocaml-versions/$*.comp)"; echo "url { src: \"$$url\" }"; echo "setenv: [ [ ORUN_CONFIG_ocaml_url = \"$$url\" ] ]"; } \
+	{ url="$$(cat ocaml-versions/$*.var | sexp query '(field url)')"; echo "url { src: \"$$url\" }"; echo "setenv: [ [ ORUN_CONFIG_ocaml_url = \"$$url\" ] ]"; } \
 	  >> dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/opam
+	$(eval OCAML_CONFIG_OPTION = $(shell cat ocaml-versions/$*.var | sexp query '(field configure)'))
+	$(eval OCAML_RUN_PARAM = $(shell cat ocaml-versions/$*.var     | sexp query '(field runparams)'))
 	opam update
-	opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
+	OCAMLRUNPARAM=$(OCAML_RUN_PARAM) OCAMLCONFIGOPTION=$(OCAML_CONFIG_OPTION) opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
 	opam pin add -n --yes --switch $* rungen rungen/
 
@@ -112,7 +115,7 @@ log_sandmark_hash:
 blah:
 	@echo ${PACKAGES}
 
-ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.comp _opam/% .FORCE
+ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.var _opam/% .FORCE
 	@opam update
 	opam install --switch=$* --keep-build-dir --yes rungen orun
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
@@ -148,9 +151,15 @@ define check_dependency
 		@echo "$(1) is not installed. $(3)")
 endef
 
+define check_opam_dependency
+	$(if $(filter $(shell $(2) $(1) | wc -l), 0),
+		@echo "$(1) is not installed. $(3)")
+endef
+
 depend:
-	$(foreach d, $(DEPENDENCIES),     $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
-	$(foreach d, $(PIP_DEPENDENCIES), $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
+	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
+	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
+	$(foreach d, $(OPAM_DEPENDENCIES), $(call check_opam_dependency, $(d), opam list -is, Install using opam install.))
 
 clean:
 	rm -rf dependencies/packages/ocaml/*
