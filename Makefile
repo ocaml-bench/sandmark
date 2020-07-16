@@ -99,7 +99,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.var setup_sys_dune
 	$(eval OCAML_CONFIG_OPTION = $(shell cat ocaml-versions/$*.var | sexp query '(field configure)'))
 	$(eval OCAML_RUN_PARAM = $(shell cat ocaml-versions/$*.var     | sexp query '(field runparams)'))
 	opam update
-	OCAMLRUNPARAM=$(OCAML_RUN_PARAM) OCAMLCONFIGOPTION=$(OCAML_CONFIG_OPTION) opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
+	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
 	opam pin add -n --yes --switch $* rungen rungen/
 
