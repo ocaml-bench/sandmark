@@ -1158,6 +1158,10 @@
         {
           "params": "benchmarks/coq/ex1.v",
           "short_name": "ex1.v"
+        },
+        {
+          "params": "benchmarks/coq/BasicSyntax.v",
+          "short_name": "BasicSyntax.v"
         }
       ]
     },
