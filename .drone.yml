@@ -13,7 +13,7 @@ steps:
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.6.0 sexp
+  - opam install dune.2.6.0
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - BUILD_ONLY=1 make ocaml-versions/4.10.0+stock.bench
@@ -34,7 +34,7 @@ steps:
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.6.0 sexp
+  - opam install dune.2.6.0
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - BUILD_ONLY=1 make ocaml-versions/4.10.0+multicore.bench
@@ -55,7 +55,7 @@ steps:
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.6.0 sexp
+  - opam install dune.2.6.0
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - make multicore_parallel_run_config_macro_parallel.json
