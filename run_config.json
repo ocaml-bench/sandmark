@@ -1150,6 +1150,17 @@
         }
       ]
     },
+    {
+      "executable": "coqc",
+      "name": "coq",
+      "ismacrobench": true,
+      "runs": [
+        {
+          "params": "benchmarks/coq/ex1.v",
+          "short_name": "ex1.v"
+        }
+      ]
+    },
       {
       "executable": "benchmarks/numerical-analysis/qr_decomposition.exe",
       "name": "qr-decomposition",
