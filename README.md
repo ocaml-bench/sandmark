@@ -66,14 +66,15 @@ These stages are implemented in:
 ## Configuration
 
 The compiler variant and its configuration options can be specified in
-a .var file in the ocaml-versions/ directory. It uses the s-expression
-syntax as shown in the following example:
+a .json file in the ocaml-versions/ directory. It uses the JSON syntax
+as shown in the following example:
 
 ```
-((url "https://github.com/ocaml-multicore/ocaml-multicore/archive/parallel_minor_gc.tar.gz")
- (configure "-q")
- (runparams "v=0x400"))
-
+{
+  "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/parallel_minor_gc.tar.gz",
+  "configure" : "-q",
+  "runparams" : "v=0x400"
+}
 ```
 
 The various options are described below:
