@@ -1,4 +1,4 @@
-[![Build Status](http://cloud.drone.io/api/badges/ocaml-bench/sandmark/status.svg?branch=master)]
+[![Build Status](http://cloud.drone.io/api/badges/ocaml-bench/sandmark/status.svg?branch=master)](http://cloud.drone.io/ocaml-bench/sandmark)
 
 # Sandmark
 
@@ -46,7 +46,7 @@ These stages are implemented in:
 
  - Opam setup: the `Makefile` handles the creation of an opam switch
    that builds a custom compiler as specified in the
-   `ocaml-versions/<version>.comp` file.  It then installs all the
+   `ocaml-versions/<version>.var` file.  It then installs all the
    required packages; these packages are statically defined by their
    opam files in the `dependencies` directory.
 
@@ -62,6 +62,31 @@ These stages are implemented in:
    the runplan using the benchmark wrapper defined in
    `run_config.json` and specified via the `RUN_BENCH_TARGET` variable
    passed to the makefile.
+
+## Configuration
+
+The compiler variant and its configuration options can be specified in
+a .json file in the ocaml-versions/ directory. It uses the JSON syntax
+as shown in the following example:
+
+```
+{
+  "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/parallel_minor_gc.tar.gz",
+  "configure" : "-q",
+  "runparams" : "v=0x400"
+}
+```
+
+The various options are described below:
+
+- `url` is MANDATORY and provides the web URL to download the source
+  for the ocaml-base-compiler.
+
+- `configure` is OPTIONAL, and you can use this setting to pass
+  specific flags to the `configure` script.
+
+- `runparams` is OPTIONAL, and its values are passed to OCAMLRUNPARAM
+  when building the compiler.
 
 ## Execution
 

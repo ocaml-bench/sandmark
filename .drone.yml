@@ -7,7 +7,7 @@ platform:
 
 steps:
 - name: 4.10.0+stock
-  image: ocurrent/opam:debian-10-ocaml-4.10
+  image: ocurrent/opam:ubuntu-18.04-ocaml-4.10
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev && sudo apt-get -y install jq
   - sudo chown -R opam .
@@ -28,7 +28,7 @@ platform:
 
 steps:
 - name: 4.10.0+multicore+serial
-  image: ocurrent/opam:debian-10-ocaml-4.10
+  image: ocurrent/opam:ubuntu-18.04-ocaml-4.10
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev && sudo apt-get -y install jq
   - sudo chown -R opam .
@@ -49,7 +49,7 @@ platform:
 
 steps:
 - name: 4.10.0+multicore+parallel
-  image: ocurrent/opam:debian-10-ocaml-4.10
+  image: ocurrent/opam:ubuntu-18.04-ocaml-4.10
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev && sudo apt-get -y install jq
   - sudo chown -R opam .
