@@ -1,7 +1,7 @@
 # options for running the benchmarks
 #
 # paramwrapper for passing taskset and chrt details
-# When passing arguments to PARAMWRAPPER do follow the syntax 
+# When passing arguments to PARAMWRAPPER do follow the syntax
 # if params < {number of cores} then paramwrapper = {range of cores} else paramwrapper = {range of cores}
 # the above statement is a skeleton and can be replaced by the following example
 # Example : if params < 16 then paramwrapper = 2-15 else paramwrapper = 2-15,16-27
@@ -40,7 +40,7 @@ PACKAGES = \
        cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib menhir \
        minilight base stdio dune-private-libs dune-configurator camlimages yojson lwt \
        alt-ergo zarith integers js_of_ocaml-compiler uuidm react ocplib-endian        \
-       nbcodec checkseum sexplib0 irmin-mem cubicle conf-findutils coq
+       nbcodec checkseum sexplib0 irmin-mem cubicle conf-findutils coq fraplib
 
 DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip # Ubuntu
 PIP_DEPENDENCIES = intervaltree

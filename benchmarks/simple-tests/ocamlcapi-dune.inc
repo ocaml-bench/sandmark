@@ -6,6 +6,6 @@
 (library
     (name ocamlcapi)
     (modules ocamlcapi)
-    (c_names ocamlcapi))
+    (foreign_stubs (language c) (names ocamlcapi)))
 
 (alias (name buildbench) (deps capi.exe))
