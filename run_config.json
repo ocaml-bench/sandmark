@@ -318,7 +318,7 @@
     {
       "executable": "frama-c",
       "name": "frama-c",
-      "tags": ["macro_bench", "run_in_ci"],
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "-slevel 1000000000 -no-results -no-val-show-progress benchmarks/frama-c/t.c -val",
@@ -422,7 +422,7 @@
     {
       "executable": "benchmarks/zarith/zarith_pi.exe",
       "name": "zarith_pi",
-      "tags": ["macro_bench"],
+      "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
           "params": "5000"
