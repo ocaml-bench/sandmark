@@ -162,6 +162,8 @@ clean:
 	rm -rf _build
 	rm -rf _opam
 	rm -rf _results
+	rm -rf *_macro*.json *ci.json
+	rm -rf *~
 
 list:
 	@echo $(ocamls)
@@ -172,7 +174,10 @@ bash:
 
 %_macro.json: %.json
 	if [ -z "$$PARAMWRAPPER" ]; then PARAMWRAPPER="if params < 16 then paramwrapper = 2-13 else paramwrapper = 2-13,16-27"; else echo "user configured paramwrapper"; fi; \
-	jq --arg PARAMWRAPPER "$${PARAMWRAPPER}" '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.ismacrobench == true)]} | {wrappers: .wrappers, benchmarks: [.benchmarks | .[] | {executable: .executable, name: .name, ismacrobench: .ismacrobench, runs: [.runs | .[] as $$x | $$x | .params | split(" ") | first as $$n | $$n | length | if . < 3 then try ($$n | tonumber | if . < ($$PARAMWRAPPER | split(" ") | .[3] | tonumber) then $$x | .paramwrapper |= ($$PARAMWRAPPER | split(" ") | "taskset --cpu-list " + .[7] + " chrt -r 1") else $$x | .paramwrapper |= ($$PARAMWRAPPER | split(" ") | "taskset --cpu-list " + .[11] + " chrt -r 1") end) else $$x | .paramwrapper |= ($$PARAMWRAPPER | split(" ") | "taskset --cpu-list " + .[7] + " chrt -r 1") end] } ] }' < $< > $@
+	jq --arg PARAMWRAPPER "$${PARAMWRAPPER}" '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index("macro_bench") != null)]} | {wrappers: .wrappers, benchmarks: [.benchmarks | .[] | {executable: .executable, name: .name, tags: .tags, runs: [.runs | .[] as $$x | $$x | .params | split(" ") | first as $$n | $$n | length | if . < 3 then try ($$n | tonumber | if . < ($$PARAMWRAPPER | split(" ") | .[3] | tonumber) then $$x | .paramwrapper |= ($$PARAMWRAPPER | split(" ") | "taskset --cpu-list " + .[7] + " chrt -r 1") else $$x | .paramwrapper |= ($$PARAMWRAPPER | split(" ") | "taskset --cpu-list " + .[11] + " chrt -r 1") end) else $$x | .paramwrapper |= ($$PARAMWRAPPER | split(" ") | "taskset --cpu-list " + .[7] + " chrt -r 1") end] } ] }' < $< > $@
 
-%_macro_parallel.json: %_macro.json
-	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.ismacrobench == true)]} | {wrappers : .wrappers, benchmarks : [.benchmarks | .[] | select(.ismacrobench == true) | {executable : .executable, name: .name, ismacrobench: .ismacrobench, runs : [.runs | .[] as $$item | if ($$item | .params | split(" ") | .[0] ) == "2" then $$item | .paramwrapper |= "" else empty end ] } ]}' < $< > $@
+%_macro_2domains.json: %_macro.json
+	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index("macro_bench") != null)]} | {wrappers : .wrappers, benchmarks : [.benchmarks | .[] | select(.tags | index("macro_bench") != null) | {executable : .executable, name: .name, tags: .tags, runs : [.runs | .[] as $$item | if ($$item | .params | split(" ") | .[0] ) == "2" then $$item | .paramwrapper |= "" else empty end ] } ]}' < $< > $@
+
+%_ci.json: %.json
+	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index("run_in_ci") != null)]}' < $< > $@

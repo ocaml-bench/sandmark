@@ -21,7 +21,7 @@
     {
       "executable": "benchmarks/decompress/test_decompress.exe",
       "name": "test_decompress",
-      "ismacrobench": true,
+      "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
           "params": "64 524_288"
@@ -31,7 +31,7 @@
     {
       "executable": "benchmarks/yojson/ydump.exe",
       "name": "yojson_ydump",
-      "ismacrobench": true,
+      "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
           "params": "-c sample.json",
@@ -42,7 +42,7 @@
     {
       "executable": "benchmarks/sequence/sequence_cps.exe",
       "name": "sequence_cps",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "10000"
@@ -52,7 +52,7 @@
     {
       "executable": "setrip",
       "name": "setrip",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "-enc -rseed 1067894368"
@@ -62,7 +62,7 @@
     {
       "executable": "benchmarks/thread-lwt/thread_ring_lwt_mvar.exe",
       "name": "thread_ring_lwt_mvar",
-      "ismacrobench": true,
+      "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
           "params": "20_000"
@@ -72,7 +72,7 @@
     {
       "executable": "benchmarks/thread-lwt/thread_ring_lwt_stream.exe",
       "name": "thread_ring_lwt_stream",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "20_000"
@@ -82,7 +82,7 @@
     {
       "executable": "cpdf",
       "name": "cpdf",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "-merge benchmarks/cpdf/metro_geo.pdf -o /dev/null",
@@ -93,7 +93,7 @@
     {
       "executable": "cpdf",
       "name": "cpdf",
-      "ismacrobench": true,
+      "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
           "params": "scale-to-fit a4landscape -twoup benchmarks/cpdf/PDFReference16.pdf_toobig -o /dev/null",
@@ -108,7 +108,7 @@
     {
       "executable": "cpdf",
       "name": "cpdf",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "-blacktext benchmarks/cpdf/metro_geo.pdf -o /dev/null",
@@ -119,7 +119,7 @@
     {
       "executable": "benchmarks/benchmarksgame/binarytrees5.exe",
       "name": "binarytrees5",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "21"
@@ -129,7 +129,7 @@
 		{
       "executable": "benchmarks/multicore-numerical/LU_decomposition.exe",
       "name": "LU_decomposition",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         { "params": "1024" }
       ]
@@ -137,7 +137,7 @@
 		{
       "executable": "benchmarks/multicore-numerical/floyd_warshall.exe",
       "name": "floyd_warshall",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         { "params": "512"}
       ]
@@ -145,7 +145,7 @@
     {
       "executable": "benchmarks/multicore-numerical/game_of_life.exe",
       "name": "game_of_life",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         { "params": "256" }
       ]
@@ -153,7 +153,7 @@
     {
       "executable": "benchmarks/multicore-grammatrix/grammatrix.exe",
       "name": "grammatrix",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         { "params": "" }
       ]
@@ -161,7 +161,7 @@
     {
       "executable": "benchmarks/benchmarksgame/fannkuchredux2.exe",
       "name": "fannkuchredux2",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "12"
@@ -171,7 +171,7 @@
     {
       "executable": "benchmarks/benchmarksgame/fannkuchredux.exe",
       "name": "fannkuchredux",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "12"
@@ -181,7 +181,7 @@
     {
       "executable": "benchmarks/benchmarksgame/knucleotide.exe",
       "name": "knucleotide",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""
@@ -191,7 +191,7 @@
     {
       "executable": "benchmarks/benchmarksgame/knucleotide3.exe",
       "name": "knucleotide3",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""
@@ -201,7 +201,7 @@
     {
       "executable": "benchmarks/benchmarksgame/regexredux2.exe",
       "name": "regexredux2",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""
@@ -211,7 +211,7 @@
     {
       "executable": "benchmarks/benchmarksgame/revcomp2.exe",
       "name": "revcomp2",
-      "ismacrobench": true,
+      "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
           "params": ""
@@ -221,7 +221,7 @@
     {
       "executable": "benchmarks/benchmarksgame/fasta3.exe",
       "name": "fasta3",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "25_000_000"
@@ -231,7 +231,7 @@
     {
       "executable": "benchmarks/benchmarksgame/fasta6.exe",
       "name": "fasta6",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "25_000_000"
@@ -241,7 +241,7 @@
     {
       "executable": "benchmarks/benchmarksgame/mandelbrot6.exe",
       "name": "mandelbrot6",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "16_000"
@@ -251,7 +251,7 @@
     {
       "executable": "benchmarks/multicore-numerical/matrix_multiplication.exe",
       "name": "matrix_multiplication",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         { "params": "1024" }
       ]
@@ -259,7 +259,7 @@
     {
       "executable": "benchmarks/multicore-numerical/quicksort.exe",
       "name": "quicksort",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         { "params": "4000000" }
       ]
@@ -267,7 +267,7 @@
     {
       "executable": "benchmarks/benchmarksgame/nbody.exe",
       "name": "nbody",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "50_000_000"
@@ -277,7 +277,7 @@
     {
       "executable": "benchmarks/benchmarksgame/pidigits5.exe",
       "name": "pidigits5",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "10_000"
@@ -287,7 +287,7 @@
     {
       "executable": "benchmarks/benchmarksgame/spectralnorm2.exe",
       "name": "spectralnorm2",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "5_500"
@@ -297,7 +297,7 @@
     {
       "executable": "minilight-ocaml",
       "name": "minilight",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "benchmarks/minilight/roomfront.ml.txt",
@@ -308,7 +308,7 @@
     {
       "executable": "benchmarks/valet/test_lwt.exe",
       "name": "test_lwt",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "200"
@@ -318,7 +318,7 @@
     {
       "executable": "frama-c",
       "name": "frama-c",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "-slevel 1000000000 -no-results -no-val-show-progress benchmarks/frama-c/t.c -val",
@@ -329,7 +329,7 @@
     {
       "executable": "benchmarks/bdd/bdd.exe",
       "name": "bdd",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "26"
@@ -339,7 +339,7 @@
     {
       "executable": "js_of_ocaml",
       "name": "js_of_ocaml",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "--disable=check-magic-number %{bin:frama-c.byte}",
@@ -350,7 +350,7 @@
     {
       "executable": "alt-ergo",
       "name": "alt-ergo",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "benchmarks/alt-ergo/fill.why",
@@ -361,7 +361,7 @@
     {
       "executable": "alt-ergo",
       "name": "alt-ergo",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "benchmarks/alt-ergo/yyll.why",
@@ -372,7 +372,7 @@
     {
       "executable": "benchmarks/lexifi-g2pp/main.exe",
       "name": "lexifi-g2pp",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""
@@ -382,7 +382,7 @@
     {
       "executable": "benchmarks/kb/kb.exe",
       "name": "kb",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""
@@ -392,7 +392,7 @@
     {
       "executable": "benchmarks/kb/kb_no_exc.exe",
       "name": "kb_no_exc",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""
@@ -402,7 +402,7 @@
     {
       "executable": "benchmarks/zarith/zarith_fact.exe",
       "name": "zarith_fact",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "40 1_000_000"
@@ -412,7 +412,7 @@
     {
       "executable": "benchmarks/zarith/zarith_fib.exe",
       "name": "zarith_fib",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "Z 40"
@@ -422,7 +422,7 @@
     {
       "executable": "benchmarks/zarith/zarith_pi.exe",
       "name": "zarith_pi",
-      "ismacrobench": true,
+      "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
           "params": "5000"
@@ -432,7 +432,7 @@
     {
       "executable": "benchmarks/zarith/zarith_tak.exe",
       "name": "zarith_tak",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "Z 2500"
@@ -442,7 +442,7 @@
     {
       "executable": "menhir",
       "name": "menhir",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "benchmarks/menhir/ocaml.mly --list-errors -la 2 --no-stdlib --lalr",
@@ -453,7 +453,7 @@
     {
       "executable": "menhir",
       "name": "menhir",
-      "ismacrobench": true,
+      "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
           "params": "-v -t benchmarks/menhir/keywords.mly benchmarks/menhir/sql-parser.mly --base sql-parser",
@@ -464,7 +464,7 @@
     {
       "executable": "menhir",
       "name": "menhir",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "-v --table benchmarks/menhir/sysver.mly",
@@ -475,7 +475,7 @@
     {
       "executable": "cubicle",
       "name": "cubicle",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "benchmarks/cubicle/german_pfs.cub",
@@ -486,7 +486,7 @@
     {
       "executable": "cubicle",
       "name": "cubicle",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "benchmarks/cubicle/szymanski_at.cub",
@@ -497,7 +497,7 @@
     {
       "executable": "benchmarks/chameneos/chameneos_redux_lwt.exe",
       "name": "chameneos_redux_lwt",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": "600000"
@@ -507,7 +507,7 @@
     {
       "executable": "benchmarks/simple-tests/stress.exe",
       "name": "stress",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "1 10"
@@ -559,7 +559,7 @@
     {
       "executable": "benchmarks/simple-tests/capi.exe",
       "name": "capi",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "test_no_args_alloc 200_000_000"
@@ -584,7 +584,7 @@
     {
       "executable": "benchmarks/simple-tests/stacks.exe",
       "name": "stacks",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "100000 ints-small"
@@ -603,7 +603,7 @@
     {
       "executable": "benchmarks/simple-tests/weakretain.exe",
       "name": "weakretain",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "25 1000"
@@ -646,7 +646,7 @@
     {
       "executable": "benchmarks/simple-tests/lazylist.exe",
       "name": "lazylist",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "100000 100"
@@ -662,7 +662,7 @@
     {
       "executable": "benchmarks/simple-tests/lists.exe",
       "name": "lists",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "int 1"
@@ -750,7 +750,7 @@
     {
       "executable": "benchmarks/simple-tests/finalise.exe",
       "name": "finalise",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "10"
@@ -787,7 +787,7 @@
     {
       "executable": "benchmarks/stdlib/stack_bench.exe",
       "name": "stack_bench",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "stack_fold 2500000"
@@ -800,7 +800,7 @@
     {
       "executable": "benchmarks/stdlib/array_bench.exe",
       "name": "array_bench",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "array_forall 1000 100000"
@@ -816,7 +816,7 @@
     {
       "executable": "benchmarks/stdlib/bytes_bench.exe",
       "name": "bytes_bench",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "bytes_get 100000000"
@@ -859,7 +859,7 @@
     {
       "executable": "benchmarks/stdlib/set_bench.exe",
       "name": "set_bench",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "set_fold 1000000"
@@ -875,7 +875,7 @@
     {
       "executable": "benchmarks/stdlib/hashtbl_bench.exe",
       "name": "hashtbl_bench",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "int_replace1 10000"
@@ -924,7 +924,7 @@
     {
       "executable": "benchmarks/stdlib/string_bench.exe",
       "name": "string_bench",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "string_get 50000000"
@@ -970,7 +970,7 @@
     {
       "executable": "benchmarks/stdlib/str_bench.exe",
       "name": "str_bench",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "str_regexp 1000000"
@@ -995,7 +995,7 @@
     {
       "executable": "benchmarks/stdlib/pervasives_bench.exe",
       "name": "pervasives_bench",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "pervasives_equal_lists 1000000000"
@@ -1026,7 +1026,7 @@
     {
       "executable": "benchmarks/stdlib/map_bench.exe",
       "name": "map_bench",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "map_iter 10000"
@@ -1057,7 +1057,7 @@
     {
       "executable": "benchmarks/stdlib/big_array_bench.exe",
       "name": "big_array_bench",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "big_array_int_rev 1024 50000"
@@ -1070,7 +1070,7 @@
     {
       "executable": "benchmarks/simple-tests/morestacks.exe",
       "name": "morestacks",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "1_000"
@@ -1080,7 +1080,7 @@
     {
       "executable": "benchmarks/simple-tests/alloc.exe",
       "name": "alloc",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         {
           "params": "200_000"
@@ -1090,7 +1090,7 @@
     {
       "executable": "benchmarks/numerical-analysis/durand_kerner_aberth.exe",
       "name": "durand-kerner-aberth",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""
@@ -1100,7 +1100,7 @@
     {
       "executable": "benchmarks/numerical-analysis/fft.exe",
       "name": "fft",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""
@@ -1110,7 +1110,7 @@
     {
       "executable": "benchmarks/numerical-analysis/levinson_durbin.exe",
       "name": "levinson-durbin",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""
@@ -1120,7 +1120,7 @@
     {
       "executable": "benchmarks/numerical-analysis/lu_decomposition.exe",
       "name": "lu-decomposition",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""
@@ -1130,7 +1130,7 @@
     {
       "executable": "benchmarks/numerical-analysis/naive_multilayer.exe",
       "name": "naive-multilayer",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""
@@ -1140,7 +1140,7 @@
     {
       "executable": "benchmarks/irmin/irmin_mem_rw.exe",
       "name": "imrin_mem_rw",
-      "ismacrobench": false,
+      "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
           "params" : "10_000 50_000 80 100_000_000"
@@ -1153,7 +1153,7 @@
     {
       "executable": "coqc",
       "name": "coq",
-      "ismacrobench": true,
+      "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
           "params": "benchmarks/coq/ex1.v",
@@ -1168,7 +1168,7 @@
       {
       "executable": "benchmarks/numerical-analysis/qr_decomposition.exe",
       "name": "qr-decomposition",
-      "ismacrobench": true,
+      "tags": ["macro_bench"],
       "runs": [
         {
           "params": ""

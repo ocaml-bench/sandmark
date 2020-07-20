@@ -21,7 +21,7 @@
     {
       "executable": "benchmarks/simple-tests/finalise.exe",
       "name": "finalise",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         { "params": "10" },
         { "params": "20" },
@@ -39,7 +39,7 @@
     {
       "executable": "benchmarks/simple-tests/weak_htbl.exe",
       "name": "weak_htbl",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         { "params": "100000" },
         { "params": "200000" },
@@ -57,7 +57,7 @@
    {
       "executable": "benchmarks/simple-tests/lazy_primes.exe",
       "name": "lazy_primes",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         { "params": "1000" },
         { "params": "2000" },
@@ -75,7 +75,7 @@
     {
       "executable": "benchmarks/simple-tests/weakretain.exe",
       "name": "weakretain",
-      "ismacrobench": false,
+      "tags": [],
       "runs": [
         { "params": "25 1000" },
         { "params": "25 100000" },
