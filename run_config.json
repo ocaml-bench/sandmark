@@ -1162,10 +1162,6 @@
         {
           "params": "benchmarks/coq/BasicSyntax.v",
           "short_name": "BasicSyntax.v"
-        },
-        {
-          "params": "benchmarks/coq/CompilerCorrectness.v",
-          "short_name": "CompilerCorrectness.v"
         }
       ]
     },
