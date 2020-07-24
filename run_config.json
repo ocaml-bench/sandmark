@@ -1150,7 +1150,7 @@
         }
       ]
     },
-    {
+    	    {
       "executable": "coqc",
       "name": "coq",
       "tags": ["macro_bench", "run_in_ci"],
@@ -1162,6 +1162,90 @@
         {
           "params": "benchmarks/coq/BasicSyntax.v",
           "short_name": "BasicSyntax.v"
+        },
+        {
+          "params": "benchmarks/coq/CompilerCorrectness.v",
+          "short_name": "CompilerCorrectness.v"
+        },
+        {
+          "params": "benchmarks/coq/AbstractInterpretation.v",
+          "short_name": "AbstractInterpretation.v"
+        },
+        {
+          "params": "benchmarks/coq/AbstractInterpret.v",
+          "short_name": "AbstractInterpret.v"
+        },
+	{
+          "params": "benchmarks/coq/DeepAndShallowEmbeddings.v",
+          "short_name": "DeepAndShallowEmbeddings.v"
+        },
+                {
+          "params": "benchmarks/coq/Frap.v",
+          "short_name": "Frap.v"
+        },
+	{
+          "params": "benchmarks/coq/HoareLogic.v",
+          "short_name": "HoareLogic.v"
+        },
+                {
+          "params": "benchmarks/coq/Imp.v",
+          "short_name": "Imp.v"
+        },
+                {
+          "params": "benchmarks/coq/Interpreters.v",
+          "short_name": "Interpreters.v"
+        },
+                {
+          "params": "benchmarks/coq/IntroToProofScripting.v",
+          "short_name": "IntroToProofScripting.v"
+        },
+                {
+          "params": "benchmarks/coq/Invariant.v",
+          "short_name": "Invariant.v"
+        },
+                {
+          "params": "benchmarks/coq/LambdaCalculusAndTypeSoundness.v",
+          "short_name": "LambdaCalculusAndTypeSoundness.v"
+        },
+                {
+          "params": "benchmarks/coq/LogicProgramming.v",
+          "short_name": "LogicProgramming.v"
+        },
+                {
+          "params": "benchmarks/coq/OperationalSemantics.v",
+          "short_name": "OperationalSemantics.v"
+        },
+                {
+          "params": "benchmarks/coq/Polymorphism.v",
+          "short_name": "Polymorphism.v"
+        },
+                {
+          "params": "benchmarks/coq/ProofByReflection.v",
+          "short_name": "ProofByReflection.v"
+        },
+                {
+          "params": "benchmarks/coq/Relations.v",
+          "short_name": "Relations.v"
+        },
+                {
+          "params": "benchmarks/coq/SharedMemory.v",
+          "short_name": "SharedMemory.v"
+        },
+                {
+          "params": "benchmarks/coq/SubsetTypes.v",
+          "short_name": "SubsetTypes.v"
+        },
+                {
+          "params": "benchmarks/coq/TransitionSystems.v",
+          "short_name": "TransitionSystems.v"
+        },
+                {
+          "params": "benchmarks/coq/TypesAndMutation.v",
+          "short_name": "TypesAndMutation.v"
+        },
+                {
+          "params": "benchmarks/coq/Var.v",
+          "short_name": "Var.v"
         }
       ]
     },
