@@ -3,7 +3,7 @@
   * Author: Adam Chlipala
   * License: https://creativecommons.org/licenses/by-nc-nd/4.0/ *)
 
-Require Import Frap.
+From Frap Require Import Frap.
 
 Set Implicit Arguments.
 
