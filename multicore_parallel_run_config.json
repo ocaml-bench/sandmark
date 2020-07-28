@@ -303,7 +303,7 @@
     {
       "executable": "benchmarks/multicore-numerical/evolutionary_algorithm_multicore.exe",
       "name": "evolutionary_algorithm_multicore",
-      "tags": ["macro_bench"],
+      "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         { "params": "1 10000 10000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1"},
         { "params": "2 10000 10000", "paramwrapper": "taskset --cpu-list 2-13 chrt -r 1" },
