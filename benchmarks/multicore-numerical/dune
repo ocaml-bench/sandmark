@@ -86,6 +86,11 @@
  (name mergesort)
  (modules mergesort))
 
+(executable
+ (name evolutionary_algorithm_multicore)
+ (modules evolutionary_algorithm_multicore)
+ (libraries domainslib))
+
 (alias (name multibench_parallel)
 			 (deps mandelbrot6_multicore.exe spectralnorm2_multicore.exe quicksort.exe
 						 quicksort_multicore.exe binarytrees5_multicore.exe
@@ -94,7 +99,8 @@
 						 matrix_multiplication_tiling_multicore.exe nbody.exe
 						 nbody_multicore.exe mergesort.exe mergesort_multicore.exe
 						 floyd_warshall.exe floyd_warshall_multicore.exe
-						 LU_decomposition.exe LU_decomposition_multicore.exe))
+						 LU_decomposition.exe LU_decomposition_multicore.exe
+             evolutionary_algorithm_multicore.exe))
 
 (alias (name buildbench)
        (deps game_of_life.exe matrix_multiplication.exe quicksort.exe
