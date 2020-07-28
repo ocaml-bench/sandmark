@@ -126,7 +126,7 @@
         }
       ]
     },
-		{
+    {
       "executable": "benchmarks/multicore-numerical/LU_decomposition.exe",
       "name": "LU_decomposition",
       "tags": ["macro_bench"],
@@ -134,7 +134,7 @@
         { "params": "1024" }
       ]
     },
-		{
+    {
       "executable": "benchmarks/multicore-numerical/floyd_warshall.exe",
       "name": "floyd_warshall",
       "tags": ["macro_bench"],
