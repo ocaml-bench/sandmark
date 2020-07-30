@@ -165,7 +165,7 @@ bash:
 	@echo "[opam subshell completed]"
 
 %_macro.json: %.json
-	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.ismacrobench == true)]}' < $< > $@
+	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index("macro_bench") != null)]}' < $< > $@
 
 %_macro_2domains.json: %_macro.json
 	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index("macro_bench") != null)]} | {wrappers : .wrappers, benchmarks : [.benchmarks | .[] | select(.tags | index("macro_bench") != null) | {executable : .executable, name: .name, tags: .tags, runs : [.runs | .[] as $$item | if ($$item | .params | split(" ") | .[0] ) == "2" then $$item | .paramwrapper |= "" else empty end ] } ]}' < $< > $@
