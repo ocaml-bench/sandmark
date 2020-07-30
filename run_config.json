@@ -1156,12 +1156,36 @@
       "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
-          "params": "benchmarks/coq/ex1.v",
-          "short_name": "ex1.v"
-        },
-        {
           "params": "benchmarks/coq/BasicSyntax.v",
           "short_name": "BasicSyntax.v"
+        },
+	{
+          "params": "benchmarks/coq/AbstractInterpretation.v",
+          "short_name": "AbstractInterpretation.v"
+        },
+	{
+          "params": "benchmarks/coq/CompilerCorrectness.v",
+          "short_name": "CompilerCorrectness.v"
+        },
+        {
+          "params": "benchmarks/coq/HoareLogic.v",
+          "short_name": "HoareLogic.v"
+        },
+        {
+          "params": "benchmarks/coq/LambdaCalculusAndTypeSoundness.v",
+          "short_name": "LambdaCalculusAndTypeSoundness.v"
+        },
+	{
+          "params": "benchmarks/coq/OperationalSemantics.v",
+          "short_name": "OperationalSemantics.v"
+        },
+	{
+          "params": "benchmarks/coq/SharedMemory.v",
+          "short_name": "SharedMemory.v"
+        },
+	{
+          "params": "benchmarks/coq/TypesAndMutation.v",
+          "short_name": "TypesAndMutation.v"
         }
       ]
     },
