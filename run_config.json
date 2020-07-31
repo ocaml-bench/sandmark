@@ -1156,12 +1156,12 @@
       "tags": ["macro_bench", "run_in_ci"],
       "runs": [
         {
-          "params": "benchmarks/coq/ex1.v",
-          "short_name": "ex1.v"
-        },
-        {
           "params": "benchmarks/coq/BasicSyntax.v",
           "short_name": "BasicSyntax.v"
+        },
+	{
+          "params": "benchmarks/coq/AbstractInterpretation.v",
+          "short_name": "AbstractInterpretation.v"
         }
       ]
     },
