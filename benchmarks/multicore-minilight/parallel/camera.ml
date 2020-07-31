@@ -7,11 +7,13 @@
 
 ------------------------------------------------------------------------------*)
 
-open Vector3f
-module C = Domainslib.Chan
 
-type message = Do of (unit -> unit) | Quit
-type chan = {req: message C.t; resp: unit C.t}
+
+
+open Vector3f
+module T = Domainslib.Task
+
+
 
 (**
  * A View with rasterization capability.
@@ -48,17 +50,7 @@ class obj inBuffer_i num_domains =
          let up = if viewDirection_c.(1) < 0.0 then vOneZ else ~-|vOneZ in
          (vUnitize (vCross up viewDirection_c), up) in
 
-    let channels_c =
-      Array.init (num_domains - 1) (fun _ -> {req= C.make_bounded 1; resp= C.make_bounded 0})
-    in
-
-    let rec worker i c () =
-      match C.recv c.req with
-      | Do f -> f (); C.send c.resp () ; worker i c ()
-      | Quit -> ()
-    in
-
-    let domains_c = Array.mapi (fun i c -> Domain.spawn (worker i c)) channels_c in
+    let pool_c = T.setup_pool ~num_domains:(num_domains - 1) in
 
 object (__)
 
@@ -71,8 +63,8 @@ object (__)
    val right_m         = right_c
    val up_m            = up_c
 
-   val channels_m      = channels_c
-   val domains_m       = domains_c
+   val pool_m          = pool_c
+
 
 (* queries ------------------------------------------------------------------ *)
    method eyePoint = viewPosition_m
@@ -93,10 +85,9 @@ object (__)
       and width, height = (float image#width, float image#height) in
 
       (* do image sampling pixel loop *)
-      let work s e () =
-        for y = e downto s do
-         for x = image#width - 1 downto 0 do
-						Domain.Sync.poll ();
+      let () =
+        T.parallel_for pool_c ~chunk_size:4 ~start:0 ~finish:(image#height - 1)
+        ~body:(fun y -> for x = image#width - 1 downto 0 do
 
             (* make sample ray direction, stratified by pixels *)
             let sampleDirection =
@@ -120,27 +111,9 @@ object (__)
             (* add radiance to pixel *)
             image#addToPixel x y radiance
 
-         done
-        done
-      in
+         done )
+       in
 
-    let mine, theirs =
-      let rec loop s n d acc =
-        if d = 1 then (s,s+n-1)::acc
-        else
-          let w = n / d in
-          loop (s+w) (n - w) (d - 1) ((s,s+w-1)::acc)
-          in
-      match loop 0 image#height num_domains [] with
-      | [] -> failwith "Impossible"
-      | x::xs -> x,xs
-
-      in
-      let (s,e) = mine in
-      List.iteri (fun i (s,e) ->
-        C.send channels_m.(i).req (Do (work s e))) theirs;
-      work s e ();
-      Array.iter (fun c -> C.recv c.resp) channels_m;
       image
 
 end
