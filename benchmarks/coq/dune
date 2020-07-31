@@ -1,3 +1,3 @@
 (alias
   (name buildbench)
-  (deps AbstractInterpretation.v BasicSyntax.v CompilerCorrectness.v HoareLogic.v LambdaCalculusAndTypeSoundness.v OperationalSemantics.v SharedMemory.v TypesAndMutation.v))
+  (deps AbstractInterpretation.v BasicSyntax.v ))
