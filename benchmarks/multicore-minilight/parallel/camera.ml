@@ -78,7 +78,7 @@ object (__)
     * @param random (Random.State.t) random number generator
     * @return (Image.obj) modified image
     *)
-   method frame (scene:Scene.obj) (image:Image.obj) random =
+   method frame (scene:Scene.obj) (image:Image.obj) =
 
       let rayTracer = new RayTracer.obj scene
 
@@ -89,6 +89,7 @@ object (__)
         T.parallel_for pool_c ~chunk_size:4 ~start:0 ~finish:(image#height - 1)
         ~body:(fun y -> for x = image#width - 1 downto 0 do
 
+            let random = Rand.get_state () in
             (* make sample ray direction, stratified by pixels *)
             let sampleDirection =
 

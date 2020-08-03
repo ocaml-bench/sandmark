@@ -122,7 +122,7 @@ try
       let scene  = new Scene.obj  modelFile camera#eyePoint in
 
       (* make deterministic *)
-      let random = Random.State.make [|1|] in
+      (* let random = Random.State.make [|1|] in *)
       (*let random = Random.State.make_self_init in*)
 
       (* (must now be imperative so relevant data can be caught with ctrl-c) *)
@@ -133,7 +133,7 @@ try
          while frameNo := !frameNo + 1 ; !frameNo <= iterations do
 
             (* render a frame *)
-            let _ = camera#frame scene image random in
+            let _ = camera#frame scene image in
 
             (* save image every three minutes, and at start and end *)
             if (savePeriod < ((Sys.time ()) -. !lastTime)) ||
