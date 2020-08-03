@@ -25,6 +25,7 @@ let aux_1 bodies dt pool =
     ~finish:(num_bodies - 1)
     ~body:(fun i ->
       let b = bodies.(i) in
+      let vx, vy, vz = ref b.vx, ref b.vy, ref b.vz in
       for j = 0 to Array.length bodies - 1 do
         Domain.Sync.poll();
         let b' = bodies.(j) in
@@ -32,15 +33,14 @@ let aux_1 bodies dt pool =
           let dx = b.x -. b'.x  and dy = b.y -. b'.y  and dz = b.z -. b'.z in
           let dist2 = dx *. dx +. dy *. dy +. dz *. dz in
           let mag = dt /. (dist2 *. sqrt(dist2)) in
-          b.vx <- b.vx -. dx *. b'.mass *. mag;
-          b.vy <- b.vy -. dy *. b'.mass *. mag;
-          b.vz <- b.vz -. dz *. b'.mass *. mag;
-
-          b'.vx <- b'.vx +. dx *. b.mass *. mag;
-          b'.vy <- b'.vy +. dy *. b.mass *. mag;
-          b'.vz <- b'.vz +. dz *. b.mass *. mag;
+          vx := !vx -. dx *. b'.mass *. mag;
+          vy := !vy -. dy *. b'.mass *. mag;
+          vz := !vz -. dz *. b'.mass *. mag;
         end
-      done);
+      done;
+      b.vx <- !vx;
+      b.vy <- !vy;
+      b.vz <- !vz);
   for i = 0 to num_bodies - 1 do
     Domain.Sync.poll();
     let b = bodies.(i) in
@@ -85,7 +85,7 @@ let bodies =
       mass=(Random.float 10.) *. solar_mass; })
 
 let () =
-  let pool = T.setup_pool ~num_domains:(num_domains - 1) in 
+  let pool = T.setup_pool ~num_domains:(num_domains - 1) in
   offset_momentum bodies;
   Printf.printf "%.9f\n" (energy bodies);
   for _i = 1 to n do aux_1 bodies 0.01 pool done;
