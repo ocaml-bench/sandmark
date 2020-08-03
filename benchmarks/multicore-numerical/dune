@@ -104,7 +104,7 @@
 						 nbody_multicore.exe mergesort.exe mergesort_multicore.exe
 						 floyd_warshall.exe floyd_warshall_multicore.exe
 						 LU_decomposition.exe LU_decomposition_multicore.exe
-             evolutionary_algorithm_multicore.exe evolutionary_algorithm))
+             evolutionary_algorithm_multicore.exe evolutionary_algorithm.exe))
 
 (alias (name buildbench)
        (deps game_of_life.exe matrix_multiplication.exe quicksort.exe
