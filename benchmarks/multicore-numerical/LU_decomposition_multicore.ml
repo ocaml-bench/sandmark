@@ -3,6 +3,13 @@ let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
 let mat_size = try int_of_string Sys.argv.(2) with _ -> 1200
 let chunk_size = try int_of_string Sys.argv.(3) with _ -> 16
 
+let k : Random.State.t Domain.DLS.key = Domain.DLS.new_key ()
+let get_state () = try Option.get @@ Domain.DLS.get k with _ ->
+  begin
+    Domain.DLS.set k (Random.State.make_self_init ());
+    Option.get @@ Domain.DLS.get k
+  end
+
 module SquareMatrix = struct
 
   let create f : float array =
@@ -20,9 +27,9 @@ module SquareMatrix = struct
 
   let get (m : float array) r c = m.(r * mat_size + c)
   let set (m : float array) r c v = m.(r * mat_size + c) <- v
-  let parallel_copy pool a = 
+  let parallel_copy pool a =
     let n = Array.length a in
-    let copy_part a b i = 
+    let copy_part a b i =
       let s = (i * n / num_domains) in
       let e = (i+1) * n / num_domains - 1 in
       Array.blit a s b s (e - s + 1) in
@@ -55,7 +62,8 @@ let lup pool (a0 : float array) =
 
 let () =
   let pool = T.setup_pool ~num_domains:(num_domains - 1) in
-  let a = create (fun _ _ -> (Random.float 100.0) +. 1.0 ) in 
+  let a = parallel_create pool
+    (fun _ _ -> (Random.State.float (get_state ()) 100.0) +. 1.0 ) in
   let lu = lup pool a in
   let _l = parallel_create pool (fun i j -> if i > j then get lu i j else if i = j then 1.0 else 0.0) in
   let _u = parallel_create pool (fun i j -> if i <= j then get lu i j else 0.0) in
