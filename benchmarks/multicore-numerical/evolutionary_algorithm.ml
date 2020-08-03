@@ -5,14 +5,6 @@ Per Kristian Lehre <p.k.lehre@cs.bham.ac.uk>
 May 6th, 2020
 "
 
-let my_key : Random.State.t Domain.DLS.key = Domain.DLS.new_key ()
-
-let get () = try Option.get @@ Domain.DLS.get my_key
-  with _ -> begin
-    Domain.DLS.set my_key (Random.State.make_self_init ());
-    Option.get @@ Domain.DLS.get my_key
-  end
-
 type bitstring = bool array
 type individual = { chromosome : bitstring; fitness : float }
 type fitness_function = bitstring -> float
@@ -26,10 +18,10 @@ let evaluate f x = { chromosome=x; fitness=(f x) }
 
 let fittest x y = if x.fitness > y.fitness then x else y
 let pop_fittest pop = Array.fold_left fittest pop.(0) pop
+let state = Random.State.make_self_init ()
 
 let random_bitstring n =
-  let s = get () in
-  Array.init n (fun _ -> Random.State.bool s)
+  Array.init n (fun _ -> Random.State.bool state)
 
 let random_individual n f =
   evaluate f (random_bitstring n)
@@ -40,16 +32,13 @@ let onemax : fitness_function = Array.fold_left add_bit 0.0
 
 (* Choose fittest out of k uniformly sampled individuals *)
 let rec k_tournament k pop =
-  let s = Option.get @@ Domain.DLS.get my_key in
-  let x = pop.(Random.State.int s (population_size pop)) in
+  let x = pop.(Random.State.int state (population_size pop)) in
   if k <= 1 then x
   else
     let y = k_tournament (k-1) pop in
     fittest x y
 
-let flip_coin p =
-  let s = Option.get @@ Domain.DLS.get my_key in
-  (Random.State.float s 1.0) < p
+let flip_coin p = (Random.State.float state 1.0) < p
 
 let xor a b = if a then not b else b
 (* Naive Theta(n) implementation of mutation. *)
