@@ -108,4 +108,5 @@
 
 (alias (name buildbench)
        (deps game_of_life.exe matrix_multiplication.exe quicksort.exe
-			       mergesort.exe floyd_warshall.exe LU_decomposition.exe))
+			       mergesort.exe floyd_warshall.exe LU_decomposition.exe
+             evolutionary_algorithm.exe))
