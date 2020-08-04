@@ -27,7 +27,7 @@ module T = Domainslib.Task
  * - up_m is unitized
  * - above three form a coordinate frame
  *)
-class obj inBuffer_i num_domains =
+class obj inBuffer_i pool =
 
 (* construction ------------------------------------------------------------- *)
    (* read view position *)
@@ -50,8 +50,6 @@ class obj inBuffer_i num_domains =
          let up = if viewDirection_c.(1) < 0.0 then vOneZ else ~-|vOneZ in
          (vUnitize (vCross up viewDirection_c), up) in
 
-    let pool_c = T.setup_pool ~num_domains:(num_domains - 1) in
-
 object (__)
 
 (* fields ------------------------------------------------------------------- *)
@@ -62,9 +60,6 @@ object (__)
    val viewDirection_m = viewDirection_c
    val right_m         = right_c
    val up_m            = up_c
-
-   val pool_m          = pool_c
-
 
 (* queries ------------------------------------------------------------------ *)
    method eyePoint = viewPosition_m
@@ -86,7 +81,7 @@ object (__)
 
       (* do image sampling pixel loop *)
       let () =
-        T.parallel_for pool_c ~chunk_size:4 ~start:0 ~finish:(image#height - 1)
+        T.parallel_for pool ~chunk_size:4 ~start:0 ~finish:(image#height - 1)
         ~body:(fun y -> for x = image#width - 1 downto 0 do
 
             let random = Rand.get_state () in
