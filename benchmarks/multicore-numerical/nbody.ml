@@ -29,10 +29,6 @@ let advance bodies dt =
         b.vx <- b.vx -. dx *. b'.mass *. mag;
         b.vy <- b.vy -. dy *. b'.mass *. mag;
         b.vz <- b.vz -. dz *. b'.mass *. mag;
-
-        b'.vx <- b'.vx +. dx *. b.mass *. mag;
-        b'.vy <- b'.vy +. dy *. b.mass *. mag;
-        b'.vz <- b'.vz +. dz *. b.mass *. mag;
       end
     done
   done;
