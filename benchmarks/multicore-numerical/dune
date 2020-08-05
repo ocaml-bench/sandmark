@@ -87,6 +87,10 @@
  (modules mergesort))
 
 (executable
+ (name evolutionary_algorithm)
+ (modules evolutionary_algorithm))
+
+(executable
  (name evolutionary_algorithm_multicore)
  (modules evolutionary_algorithm_multicore)
  (libraries domainslib))
@@ -100,8 +104,9 @@
 						 nbody_multicore.exe mergesort.exe mergesort_multicore.exe
 						 floyd_warshall.exe floyd_warshall_multicore.exe
 						 LU_decomposition.exe LU_decomposition_multicore.exe
-             evolutionary_algorithm_multicore.exe))
+             evolutionary_algorithm_multicore.exe evolutionary_algorithm.exe))
 
 (alias (name buildbench)
        (deps game_of_life.exe matrix_multiplication.exe quicksort.exe
-			       mergesort.exe floyd_warshall.exe LU_decomposition.exe))
+			       mergesort.exe floyd_warshall.exe LU_decomposition.exe
+             evolutionary_algorithm.exe))

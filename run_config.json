@@ -151,6 +151,14 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-numerical/evolutionary_algorithm.exe",
+      "name": "evolutionary_algorithm",
+      "tags": ["macro_bench"],
+      "runs": [
+        { "params": "10000 10000" }
+      ]
+    },
+    {
       "executable": "benchmarks/multicore-grammatrix/grammatrix.exe",
       "name": "grammatrix",
       "tags": ["macro_bench"],
