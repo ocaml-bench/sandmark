@@ -7,13 +7,21 @@
 
 ------------------------------------------------------------------------------*)
 
-
-
-
 open Vector3f
 module T = Domainslib.Task
 
+module Rand = struct
+  open Domain.DLS
 
+  let k : Random.State.t key = new_key ()
+
+  let get_state () = try Option.get @@ get k
+    with _ -> begin
+      set k (Random.State.make_self_init ());
+      Option.get @@ get k
+    end
+
+end
 
 (**
  * A View with rasterization capability.
@@ -27,7 +35,7 @@ module T = Domainslib.Task
  * - up_m is unitized
  * - above three form a coordinate frame
  *)
-class obj inBuffer_i pool =
+class obj inBuffer_i pool chunk_size =
 
 (* construction ------------------------------------------------------------- *)
    (* read view position *)
@@ -81,7 +89,7 @@ object (__)
 
       (* do image sampling pixel loop *)
       let () =
-        T.parallel_for pool ~chunk_size:4 ~start:0 ~finish:(image#height - 1)
+        T.parallel_for pool ~chunk_size:(chunk_size) ~start:0 ~finish:(image#height - 1)
         ~body:(fun y -> for x = image#width - 1 downto 0 do
 
             let random = Rand.get_state () in
