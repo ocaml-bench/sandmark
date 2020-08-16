@@ -56,7 +56,7 @@ let uncompress data =
     let len =
       (min : int -> int -> int) (Bigstringaf.length v) (String.length data - !p) in
     Bigstringaf.blit_from_string
-      data ~src_off:!p 
+      data ~src_off:!p
       v ~dst_off:0 ~len ; p := !p + len ; len in
   let flush v len = blit_to_buffer t b v len in
 
@@ -66,12 +66,19 @@ let uncompress data =
 
   Higher.uncompress ~allocate ~i ~o ~refill ~flush
 
-let () = Random.init(42)
+let rng_state_key : Random.State.t Domain.DLS.key = Domain.DLS.new_key ()
+
+let get_rng_state () = try Option.get @@ Domain.DLS.get rng_state_key
+  with _ -> begin
+    Domain.DLS.set rng_state_key (Random.State.make_self_init ());
+    Option.get @@ Domain.DLS.get rng_state_key
+  end
 
 let data_to_compress =
   let buf = Bytes.create data_size in
+  let rng_state = get_rng_state () in
   for i = 0 to data_size - 1 do
-    Bytes.set buf i (Char.chr (97 + Random.int 26))
+    Bytes.set buf i (Char.chr (97 + Random.State.int rng_state 26))
   done ;
   Bytes.to_string buf
 
