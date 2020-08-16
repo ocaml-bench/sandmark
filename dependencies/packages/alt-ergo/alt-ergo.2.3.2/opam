@@ -5,7 +5,7 @@ authors: "Alt-Ergo developers"
 maintainer: "OCamlPro <alt-ergo@ocamlpro.com>"
 license: "OCamlPro Non-Commercial Purpose License, version 1"
 build: [
-  ["./configure" name]
+  ["./configure" "--prefix=$OPAM_SWITCH_PREFIX" "--libdir=$CAML_LD_LIBRARY_PATH" name]
   ["dune" "subst"] {pinned}
   ["dune" "build" "-p" name "-j" jobs]
 ]
