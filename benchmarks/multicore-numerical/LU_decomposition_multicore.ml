@@ -1,7 +1,6 @@
 module T = Domainslib.Task
 let num_domains = try int_of_string Sys.argv.(1) with _ -> 1
 let mat_size = try int_of_string Sys.argv.(2) with _ -> 1200
-let chunk_size = try int_of_string Sys.argv.(3) with _ -> 16
 
 let k : Random.State.t Domain.DLS.key = Domain.DLS.new_key ()
 let get_state () = try Option.get @@ Domain.DLS.get k with _ ->
@@ -49,7 +48,7 @@ open SquareMatrix
 let lup pool (a0 : float array) =
   let a = parallel_copy pool a0 in
   for k = 0 to (mat_size - 2) do
-  T.parallel_for pool ~chunk_size:chunk_size ~start:(k + 1) ~finish:(mat_size  -1)
+  T.parallel_for pool ~start:(k + 1) ~finish:(mat_size  -1)
   ~body:(fun row ->
     let factor = get a row k /. get a k k in
     for col = k + 1 to mat_size-1 do

@@ -59,13 +59,7 @@ let lambda = try int_of_string Sys.argv.(2) with _ -> 1000
 let k = 2
 
 let n = try int_of_string Sys.argv.(1) with _ -> 1000
-(*
-let multicore_init pool num_domains x0 n f =
-  let a = Array.make n x0 in
-  T.parallel_for
-    pool ~chunk_size:(n/num_domains) ~start:0 ~finish:(n-1)
-    ~body:(fun i -> a.(i) <- f ());
-  a *)
+
 let init n f =
   let a = Array.init n (fun _ -> f ()) in
   a
