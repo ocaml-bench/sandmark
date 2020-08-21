@@ -1,9 +1,9 @@
 let n_times = try int_of_string Sys.argv.(1) with _ -> 2
-let board_size = 1024
+let board_size = try int_of_string Sys.argv.(2) with _ -> 1024
 
-let rg = 
+let rg =
   ref (Array.init board_size (fun _ -> Array.init board_size (fun _ -> Random.int 2)))
-let rg' = 
+let rg' =
   ref (Array.init board_size (fun _ -> Array.init board_size (fun _ -> Random.int 2)))
 let buf = Bytes.create board_size
 
@@ -34,7 +34,7 @@ let print g =
   for x = 0 to board_size - 1 do
     for y = 0 to board_size - 1 do
       if g.(x).(y) = 0
-      then Bytes.set buf y '.' 
+      then Bytes.set buf y '.'
       else Bytes.set buf y 'o'
     done;
     print_endline (Bytes.unsafe_to_string buf)
@@ -58,6 +58,6 @@ let rec repeat n =
   | _ -> next (); repeat (n-1)
 
 let ()=
-  print !rg;
+  (*print !rg;*)
   repeat n_times;
-  print !rg
+  (*print !rg*)
