@@ -18,7 +18,7 @@ build: [
 ]
 url {
   src: "https://github.com/ocaml-multicore/domainslib/archive/0.2.2.tar.gz"
-  checksum: "2f4b669c429db2650e64508f23ee7478"
+  checksum: "md5=2f4b669c429db2650e64508f23ee7478"
 }
 
 
