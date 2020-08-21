@@ -29,20 +29,20 @@ CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 WRAPPER = $(subst run_,,$(RUN_BENCH_TARGET))
 
 PACKAGES = \
-       cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib menhir \
-       minilight base stdio dune-private-libs dune-configurator camlimages yojson lwt \
-       alt-ergo zarith integers js_of_ocaml-compiler uuidm react ocplib-endian        \
-       nbcodec checkseum sexplib0 irmin-mem cubicle conf-findutils coq fraplib
+	cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib \
+	menhir minilight base stdio dune-private-libs dune-configurator camlimages \
+	yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum \
+	sexplib0 irmin-mem cubicle conf-findutils
+
+ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
+	PACKAGES += lockfree kcas domainslib ctypes.0.14.0+multicore
+else
+	PACKAGES += ctypes.0.14.0+stock frama-c coq fraplib alt-ergo js_of_ocaml-compiler
+endif
 
 DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip # Ubuntu
 PIP_DEPENDENCIES = intervaltree
 
-# want to handle 'multibench' and 'benchmarks/multicore-lockfree/multibench' as target
-ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
-	PACKAGES += lockfree kcas domainslib ctypes.0.14.0+multicore
-else ## ctypes and frama-c do not build under multicore
-	PACKAGES += ctypes.0.14.0+stock frama-c
-endif
 
 .SECONDARY:
 export OPAMROOT=$(CURDIR)/_opam
