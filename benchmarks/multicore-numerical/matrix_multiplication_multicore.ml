@@ -10,7 +10,7 @@ let mat_mul m1 m2 =
   let j_n = Array.length m2.(0) in
   let k_n = Array.length m2 in
 
-  T.parallel_for pool ~chunk_size:(i_n/num_domains) ~start:0 ~finish:(i_n - 1) ~body:(fun i ->
+  T.parallel_for pool ~start:0 ~finish:(i_n - 1) ~body:(fun i ->
     for j = 0 to pred j_n do
       for k = 0 to pred k_n do
         m3.(i).(j) <- m3.(i).(j) + (m1.(i).(k) * m2.(k).(j));

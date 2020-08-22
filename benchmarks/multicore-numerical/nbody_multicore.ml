@@ -20,7 +20,6 @@ type planet = { mutable x : float;  mutable y : float;  mutable z : float;
 
 let aux_1 bodies dt pool =
   T.parallel_for pool
-    ~chunk_size:(num_bodies/num_domains)
     ~start:0
     ~finish:(num_bodies - 1)
     ~body:(fun i ->

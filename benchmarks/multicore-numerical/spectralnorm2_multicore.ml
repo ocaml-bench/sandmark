@@ -15,7 +15,7 @@ let eval_A i j = 1. /. float((i+j)*(i+j+1)/2+i+1)
 
 let eval_A_times_u pool u v =
   let n = Array.length v - 1 in
-  T.parallel_for pool ~start:0 ~finish:n ~chunk_size:(n/num_domains)
+  T.parallel_for pool ~start:0 ~finish:n
     ~body:(fun i ->
       let vi = ref 0. in
       for j = 0 to n do vi := !vi +. eval_A i j *. u.(j) done;
@@ -23,7 +23,7 @@ let eval_A_times_u pool u v =
 
 let eval_At_times_u pool u v =
   let n = Array.length v -1 in
-  T.parallel_for pool ~start:0 ~finish:n ~chunk_size:(n/num_domains)
+  T.parallel_for pool ~start:0 ~finish:n
     ~body:(fun i ->
     let vi = ref 0. in
     for j = 0 to n do vi := !vi +. eval_A j i *. u.(j) done;

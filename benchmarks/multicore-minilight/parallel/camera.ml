@@ -35,7 +35,7 @@ end
  * - up_m is unitized
  * - above three form a coordinate frame
  *)
-class obj inBuffer_i pool chunk_size =
+class obj inBuffer_i pool =
 
 (* construction ------------------------------------------------------------- *)
    (* read view position *)
@@ -89,7 +89,7 @@ object (__)
 
       (* do image sampling pixel loop *)
       let () =
-        T.parallel_for pool ~chunk_size:(chunk_size) ~start:0 ~finish:(image#height - 1)
+        T.parallel_for pool ~start:0 ~finish:(image#height - 1)
         ~body:(fun y -> for x = image#width - 1 downto 0 do
 
             let random = Rand.get_state () in

@@ -47,8 +47,8 @@ let next_cell g x y =
 let next pool =
   let g = !rg in
   let new_g = !rg' in
-  T.parallel_for pool ~chunk_size:(board_size/num_domains) ~start:0
-    ~finish:(board_size - 1) ~body:(fun x ->
+  T.parallel_for pool ~start:0 ~finish:(board_size - 1)
+    ~body:(fun x ->
       for y = 0 to board_size - 1 do
         new_g.(x).(y) <- next_cell g x y
       done);
