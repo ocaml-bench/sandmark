@@ -38,5 +38,310 @@
         }
       ]
     }, 
+
+    
+    {
+      "executable": "benchmarks/stdlib/hashtbl_bench.exe",
+      "name": "hashtbl_bench",
+      "tags": [],
+      "runs": [
+        {
+          "params": "int_replace1 10000"
+        },
+        {
+          "params": "int_find1 20000"
+        },
+        {
+          "params": "caml_hash_int 200000"
+        },
+        {
+          "params": "caml_hash_tuple 100000"
+        },
+        {
+          "params": "int_replace2 100000"
+        },
+        {
+          "params": "int_find2 300000"
+        },
+        {
+          "params": "hashtbl_iter 200000"
+        },
+        {
+          "params": "hashtbl_fold 200000"
+        },
+        {
+          "params": "hashtbl_add_resizing 4000000"
+        },
+        {
+          "params": "hashtbl_add_sized 6000000"
+        },
+        {
+          "params": "hashtbl_add_duplicate 2000000"
+        },
+        {
+          "params": "hashtbl_remove 4000000"
+        },
+        {
+          "params": "hashtbl_find 6000000"
+        },
+        {
+          "params": "hashtbl_filter_map 100000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/string_bench.exe",
+      "name": "string_bench",
+      "tags": [],
+      "runs": [
+        {
+          "params": "string_get 50000000"
+        },
+        {
+          "params": "string_sub 50000000"
+        },
+        {
+          "params": "string_blit 25000000"
+        },
+        {
+          "params": "string_concat 20000000"
+        },
+        {
+          "params": "string_iter 1000000"
+        },
+        {
+          "params": "string_map 20000000"
+        },
+        {
+          "params": "string_trim 1000000"
+        },
+        {
+          "params": "string_index 25000000"
+        },
+        {
+          "params": "string_contains 25000000"
+        },
+        {
+          "params": "string_uppercase_ascii 1000000"
+        },
+        {
+          "params": "string_split_on_char 500000"
+        },
+        {
+          "params": "string_compare 10000"
+        },
+        {
+          "params": "string_equal 25000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/str_bench.exe",
+      "name": "str_bench",
+      "tags": [],
+      "runs": [
+        {
+          "params": "str_regexp 1000000"
+        },
+        {
+          "params": "str_string_match 50000000"
+        },
+        {
+          "params": "str_search_forward 5000000"
+        },
+        {
+          "params": "str_string_partial_match 25000000"
+        },
+        {
+          "params": "str_global_replace 1000000"
+        },
+        {
+          "params": "str_split 2000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/pervasives_bench.exe",
+      "name": "pervasives_bench",
+      "tags": [],
+      "runs": [
+        {
+          "params": "pervasives_equal_lists 1000000000"
+        },
+        {
+          "params": "pervasives_compare_lists 100000000"
+        },
+        {
+          "params": "pervasives_equal_ints 1000000000"
+        },
+        {
+          "params": "pervasives_compare_ints 1000000000"
+        },
+        {
+          "params": "pervasives_equal_floats 1000000000"
+        },
+        {
+          "params": "pervasives_compare_floats 200000000"
+        },
+        {
+          "params": "pervasives_equal_strings 20000000"
+        },
+        {
+          "params": "pervasives_compare_strings 20000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/map_bench.exe",
+      "name": "map_bench",
+      "tags": [],
+      "runs": [
+        {
+          "params": "map_iter 10000"
+        },
+        {
+          "params": "map_add 1000000"
+        },
+        {
+          "params": "map_add_duplicate 1000000"
+        },
+        {
+          "params": "map_remove 1000000"
+        },
+        {
+          "params": "map_fold 10000"
+        },
+        {
+          "params": "map_for_all 10000"
+        },
+        {
+          "params": "map_find 1000000"
+        },
+        {
+          "params": "map_map 10000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/big_array_bench.exe",
+      "name": "big_array_bench",
+      "tags": [],
+      "runs": [
+        {
+          "params": "big_array_int_rev 1024 50000"
+        },
+        {
+          "params": "big_array_int32_rev 1024 50000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/morestacks.exe",
+      "name": "morestacks",
+      "tags": [],
+      "runs": [
+        {
+          "params": "1_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/alloc.exe",
+      "name": "alloc",
+      "tags": [],
+      "runs": [
+        {
+          "params": "200_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/durand_kerner_aberth.exe",
+      "name": "durand-kerner-aberth",
+      "tags": ["macro_bench"],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/fft.exe",
+      "name": "fft",
+      "tags": ["macro_bench"],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/levinson_durbin.exe",
+      "name": "levinson-durbin",
+      "tags": ["macro_bench"],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/lu_decomposition.exe",
+      "name": "lu-decomposition",
+      "tags": ["macro_bench"],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/naive_multilayer.exe",
+      "name": "naive-multilayer",
+      "tags": ["macro_bench"],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/irmin/irmin_mem_rw.exe",
+      "name": "imrin_mem_rw",
+      "tags": ["macro_bench", "run_in_ci"],
+      "runs": [
+        {
+          "params" : "10_000 50_000 80 100_000_000"
+        },
+        {
+          "params" : "10_000 50_000 20 100_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "coqc",
+      "name": "coq",
+      "tags": ["macro_bench", "run_in_ci"],
+      "runs": [
+        {
+          "params": "benchmarks/coq/BasicSyntax.v",
+          "short_name": "BasicSyntax.v"
+        },
+	{
+          "params": "benchmarks/coq/AbstractInterpretation.v",
+          "short_name": "AbstractInterpretation.v"
+        }
+      ]
+    },
+      {
+      "executable": "benchmarks/numerical-analysis/qr_decomposition.exe",
+      "name": "qr-decomposition",
+      "tags": ["macro_bench"],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    }
   ]
 }
