@@ -40,7 +40,7 @@ else
 	PACKAGES += ctypes.0.14.0+stock frama-c coq fraplib alt-ergo js_of_ocaml-compiler
 endif
 
-DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip # Ubuntu
+DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip pkg-config m4 # Ubuntu
 PIP_DEPENDENCIES = intervaltree
 
 
@@ -106,7 +106,7 @@ log_sandmark_hash:
 blah:
 	@echo ${PACKAGES}
 
-ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.json _opam/% .FORCE
+ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json _opam/% .FORCE
 	@opam update
 	opam install --switch=$* --keep-build-dir --yes rungen orun
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
@@ -141,6 +141,15 @@ define check_dependency
 	$(if $(filter $(shell $(2) | grep $(1) | wc -l), 0),
 		@echo "$(1) is not installed. $(3)")
 endef
+
+check_url:
+	@{ for f in `find ocaml-versions/*.json`; do	\
+	      URL=`jq -r '.url' $$f`;			\
+	      if [ -z "$$URL" ] ; then 			\
+		   echo "No URL (mandatory) for $$f";	\
+	      fi; 					\
+	   done;					\
+	};
 
 depend:
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
