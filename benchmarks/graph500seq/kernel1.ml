@@ -37,7 +37,7 @@ let sortVerticeList list newList =
   in
   sortVerticeList list newList 0.
 
-(*As the name suggests, it removes the self loops from ijw*)
+(* As the name suggests, it removes the self loops from [ijw] *)
 let rec removeSelfLoops ijw newList col m =
   if col = m then newList
   else if List.nth (List.nth ijw 0) col = List.nth (List.nth ijw 1) col then
