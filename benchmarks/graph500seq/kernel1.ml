@@ -6,8 +6,8 @@ Written by support of PRISM Lab, IIT Madras and OCaml Labs*)*)
 
 (*This function helps in transpose of the list which has to be converted from (startVertex, endVertex, weight) in column to (startVertex, endVertex, weight) in 3 rows*)
 
-let scale = int_of_string Sys.argv.(1)
-let edgefactor = int_of_string Sys.argv.(2)
+let scale = try int_of_string Sys.argv.(1) with _ -> 2
+let edgefactor = try int_of_string Sys.argv.(2) with _ -> 1
 
 let rec transpose list col newList =
   if col = 3 then newList
@@ -37,7 +37,7 @@ let sortVerticeList list newList =
   in
   sortVerticeList list newList 0.
 
-(* As the name suggests, it removes the self loops from [ijw] *)
+(*As the name suggests, it removes the self loops from ijw*)
 let rec removeSelfLoops ijw newList col m =
   if col = m then newList
   else if List.nth (List.nth ijw 0) col = List.nth (List.nth ijw 1) col then

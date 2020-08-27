@@ -11,7 +11,7 @@
   are only considered. This function is not checking the visited as the verticesInspected already takes care of it in other function (changeVerticeInspected).
   E.g. N1 is under study and now the nodes N2, N3 are at 2, inf distance in distanceArray, so N2 will be selected as the min vertex.*)
 
-let startVertex = int_of_string Sys.argv.(3)
+let startVertex = try int_of_string Sys.argv.(3) with _ -> 0
 
 let minimumDistance verticesInspected distanceArray =
   let rec minimumDistance verticesInspected distanceArray minimumVal index
