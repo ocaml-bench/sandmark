@@ -14,12 +14,17 @@
   is always the node to be computed on for adjacency. As queue pushs the node from front, head::tail helps directly, primrily pointing out that queue has been considered 
   as a list.*)
 
-let rec appendVerticesToQueue parentVertex queue adjacentVertices (parentArray:int array) visited =
+let rec appendVerticesToQueue parentVertex queue adjacentVertices
+    (parentArray : int array) visited =
   match adjacentVertices with
-    [] -> queue,parentArray |
-    head::tail -> if visited.(fst(head)) = 0 then let _ = parentArray.(fst(head)) <- parentVertex in appendVerticesToQueue parentVertex (queue @ [fst(head)]) tail parentArray visited
-    else appendVerticesToQueue parentVertex queue tail parentArray visited
-;; 
+  | [] -> (queue, parentArray)
+  | head :: tail ->
+      if visited.(fst head) = 0 then
+        let _ = parentArray.(fst head) <- parentVertex in
+        appendVerticesToQueue parentVertex
+          (queue @ [ fst head ])
+          tail parentArray visited
+      else appendVerticesToQueue parentVertex queue tail parentArray visited
 
 (*For debugging*)
 (*let rec printList list = 
@@ -33,43 +38,49 @@ let rec appendVerticesToQueue parentVertex queue adjacentVertices (parentArray:i
 
 let rec bfs adjMatrix queue bfsTree parentArray visited =
   match queue with
-    [] -> bfsTree,parentArray |
-    head::tail -> if visited.(head) = 0 then
-      let _ = visited.(head) <- 1 in
-      let adjacentVertices = Hashtbl.find adjMatrix head in  
-      let queue, parentArray = appendVerticesToQueue head tail adjacentVertices parentArray visited in
-      (*let _ = printList queue in*)(*For debugging*)
-      let _ = Hashtbl.remove adjMatrix head in bfs adjMatrix queue (bfsTree@[head]) parentArray visited
-    else bfs adjMatrix tail bfsTree parentArray visited
-;;
+  | [] -> (bfsTree, parentArray)
+  | head :: tail ->
+      if visited.(head) = 0 then
+        let _ = visited.(head) <- 1 in
+        let adjacentVertices = Hashtbl.find adjMatrix head in
+        let queue, parentArray =
+          appendVerticesToQueue head tail adjacentVertices parentArray visited
+        in
+        (*let _ = printList queue in*)
+        (*For debugging*)
+        let _ = Hashtbl.remove adjMatrix head in
+        bfs adjMatrix queue (bfsTree @ [ head ]) parentArray visited
+      else bfs adjMatrix tail bfsTree parentArray visited
 
 (*Main function is the function where it calls bfs. Size computation is using HashMap and the initialiszation of all arrays and lists happen here.*)
 
-let rec bfsRecDisconnectedGraph adjMatrix bfsTree parentArray visited index = 
-  if index = Array.length visited then bfsTree, parentArray 
-  else
-  if parentArray.(index) = -1 && visited.(index) = 0 
-  then let bfsTree, parentArray = bfs adjMatrix [index] bfsTree parentArray visited in 
-    bfsRecDisconnectedGraph adjMatrix bfsTree parentArray visited (index+1)
-  else bfsRecDisconnectedGraph adjMatrix bfsTree parentArray visited (index+1)
-;;
+let rec bfsRecDisconnectedGraph adjMatrix bfsTree parentArray visited index =
+  if index = Array.length visited then (bfsTree, parentArray)
+  else if parentArray.(index) = -1 && visited.(index) = 0 then
+    let bfsTree, parentArray =
+      bfs adjMatrix [ index ] bfsTree parentArray visited
+    in
+    bfsRecDisconnectedGraph adjMatrix bfsTree parentArray visited (index + 1)
+  else bfsRecDisconnectedGraph adjMatrix bfsTree parentArray visited (index + 1)
 
 let main adjMatrixHash n =
   let len = n in
   (*Printf.printf "%d\n" len;*)
   let parentArray = Array.make len (-1) in
   let visited = Array.make len 0 in
-  let bfsTree,parentArray = bfsRecDisconnectedGraph adjMatrixHash [] parentArray visited 0 in 
+  let bfsTree, parentArray =
+    bfsRecDisconnectedGraph adjMatrixHash [] parentArray visited 0
+  in
   Printf.printf "\nBfs Tree is : ";
   List.iter (fun x -> Printf.printf "%d " x) bfsTree;
   Printf.printf "\n Parent Array is : ";
   Array.iter (fun x -> Printf.printf "%d " x) parentArray;
   Printf.printf "\n KERNEL2 OVER";
-  (bfsTree,parentArray)
-;;
+  (bfsTree, parentArray)
 
-let linkKernel1 () = 
+let linkKernel1 () =
   let ans = Kernel1.linkKronecker () in
-  main (fst(ans)) (snd(ans));;
+  main (fst ans) (snd ans)
 
-linkKernel1 ();;
+;;
+linkKernel1 ()
