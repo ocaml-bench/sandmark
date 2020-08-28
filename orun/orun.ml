@@ -158,8 +158,7 @@ let re = Re.Perl.compile_pat "caml[A-Z].*"
 let is_interesting_symbol name =
   Base.List.exists [ "caml_curry"; "caml_tuplify"; "caml_apply" ]
     ~f:(fun prefix -> Base.String.is_prefix ~prefix name)
-    || ( Re.execp re name
-     && not (Base.String.is_prefix ~prefix:"camlCompiler_bench_runtime" name))
+    || Re.execp re name
 
 let read_process_lines command =
   let lines = ref [] in
@@ -174,18 +173,21 @@ let read_process_lines command =
   end;
 List.rev !lines
 
-let get_benchmark_exe output cmdline =
+let get_benchmark_exe cmdline =
   let cwd = Sys.getcwd () in
-  let re_exe = Re.Perl.compile_pat ".exe$|setrip|cpdf|minilight-ocaml|frama-c|js_of_ocaml|alt-ergo|menhir|cubicle|coqc" in
-  let bench = List.find_opt (Re.execp re_exe) cmdline in
-  match bench with
-  | None -> ""
-  | Some x ->
-     let exe = Str.replace_first (Str.regexp "^./") "" x in
-     Base.String.concat ~sep:"/" [cwd; exe]
+  let prefix = Sys.getenv ("OPAM_SWITCH_PREFIX") in
+  let exe = List.nth cmdline 3 in
+  let final_exe = "" in
+  let result = try Str.search_forward (Str.regexp "\\.exe$") exe 0 with
+    Not_found -> 0
+  | _ -> 1 in
+  match result with
+  | 0 -> Base.String.concat ~sep:"/" [prefix; "bin"; exe]
+  | _ -> let e = Str.replace_first (Str.regexp "^./") "" exe in
+         Base.String.concat ~sep:"/" [cwd; e]
 
-let get_codesize output cmdline =
-  let file = get_benchmark_exe output cmdline in
+let get_codesize cmdline =
+  let file = get_benchmark_exe cmdline in
   match file with
   | "" -> 0.0
   | _ ->
@@ -298,7 +300,7 @@ let run output input cmdline =
           assert false
     in
     let after = Unix.gettimeofday () in
-    let codesize = get_codesize output cmdline in
+    let codesize = get_codesize cmdline in
     let stats =
       [ ("name", `String name)
       ; ("command", `String (quote_cmd cmdline))
