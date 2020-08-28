@@ -9,7 +9,8 @@ A benchmarking suite for OCaml.
 On Ubuntu 18.04.4 LTS you can try the following commands:
 
 ```bash
-$ sudo apt-get install curl git libgmp-dev libdw-dev python3-pip jq bubblewrap m4 unzip
+$ sudo apt-get install curl git libgmp-dev libdw-dev python3-pip jq bubblewrap \
+	pkg-config m4 unzip
 $ pip3 install jupyter seaborn pandas intervaltree
 
 # Install OPAM if not available already
