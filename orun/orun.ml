@@ -176,14 +176,10 @@ List.rev !lines
 let get_benchmark_exe cmdline =
   let cwd = Sys.getcwd () in
   let prefix = Sys.getenv ("OPAM_SWITCH_PREFIX") in
-  let exe = List.nth cmdline 3 in
-  let final_exe = "" in
-  let result = try Str.search_forward (Str.regexp "\\.exe$") exe 0 with
-    Not_found -> 0
-  | _ -> 1 in
+  let result = List.filter (fun s -> Filename.check_suffix s ".exe") cmdline in
   match result with
-  | 0 -> Base.String.concat ~sep:"/" [prefix; "bin"; exe]
-  | _ -> let e = Str.replace_first (Str.regexp "^./") "" exe in
+  | [] -> Base.String.concat ~sep:"/" [prefix; "bin"; List.nth cmdline 3]
+  | _ -> let e = Str.replace_first (Str.regexp "^./") "" (List.hd result) in
          Base.String.concat ~sep:"/" [cwd; e]
 
 let get_codesize cmdline =
