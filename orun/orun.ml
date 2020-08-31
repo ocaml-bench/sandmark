@@ -184,25 +184,22 @@ let get_benchmark_exe cmdline =
 
 let get_codesize cmdline =
   let file = get_benchmark_exe cmdline in
-  match file with
-  | "" -> 0.0
-  | _ ->
-    let command = Base.String.concat ~sep:" " ["/usr/bin/nm"; "--format=bsd";
+  let command = Base.String.concat ~sep:" " ["/usr/bin/nm"; "--format=bsd";
                                             "--debug-syms"; "--radix=d";
                                             "--print-size"; file] in
-    let lines = read_process_lines command in
-    Base.List.fold lines ~init:0 ~f:(fun total line ->
-      if not (Base.String.is_prefix ~prefix:" " line)
-       then (
-         match Base.String.split ~on:' ' line with
-         | [ _sym_addr; sym_size; (("t" | "T") as _sym_type); sym_name ]
-           when is_interesting_symbol sym_name ->
-           (match total + Base.Int.of_string sym_size with
-            | exception Failure _ -> total
-            | v -> v)
-         | _ -> total)
-       else total)
-     |> Float.of_int
+  let lines = read_process_lines command in
+  Base.List.fold lines ~init:0 ~f:(fun total line ->
+    if not (Base.String.is_prefix ~prefix:" " line)
+     then (
+       match Base.String.split ~on:' ' line with
+       | [ _sym_addr; sym_size; (("t" | "T") as _sym_type); sym_name ]
+         when is_interesting_symbol sym_name ->
+         (match total + Base.Int.of_string sym_size with
+          | exception Failure _ -> total
+          | v -> v)
+       | _ -> total)
+     else total)
+   |> Float.of_int
 
 let run output input cmdline =
   let prog = List.hd cmdline in
