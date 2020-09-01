@@ -7,9 +7,12 @@
 (*<-------OCaml Kernel 3 inspired from https://graph500.org/?page_id=12---------->
   Written by support of PRISM Lab, IIT Madras and OCaml Labs*)
 
-(*Minimum Distance function computes the vertex which is at the min distance from the node which is currently under study. Only the nodes which have not been visited
-  are only considered. This function is not checking the visited as the verticesInspected already takes care of it in other function (changeVerticeInspected).
-  E.g. N1 is under study and now the nodes N2, N3 are at 2, inf distance in distanceArray, so N2 will be selected as the min vertex.*)
+(*Minimum Distance function computes the vertex which is at the min distance from the node 
+which is currently under study. Only the nodes which have not been visited
+  are only considered. This function is not checking the visited as the 
+  verticesInspected already takes care of it in other function (changeVerticeInspected).
+  E.g. N1 is under study and now the nodes N2, N3 are at 2, inf distance in distanceArray, 
+  so N2 will be selected as the min vertex.*)
 
 let startVertex = try int_of_string Sys.argv.(3) with _ -> 0
 
@@ -27,8 +30,10 @@ let minimumDistance verticesInspected distanceArray =
   in
   minimumDistance verticesInspected distanceArray infinity 0 0
 
-(*After determining the min vertex (obtained from prev func), we haveto adjust dist such that, for all node, if dist[node] > dist[min vertex] + weight_node_minVertex
-  then update the distance else continue with other nodes. Parent Array is also updated here.*)
+(*After determining the min vertex (obtained from prev func), 
+we have to adjust dist such that, for all node, 
+if dist[node] > dist[min vertex] + weight_node_minVertex then update the distance 
+else continue with other nodes. Parent Array is also updated here.*)
 
 let rec adjustDistance vertex adjacentList distanceArray parentArray visited =
   match adjacentList with
@@ -56,7 +61,8 @@ let rec changeVerticeInspected vertex (list : int list) (newList : int list) =
       if head = vertex then changeVerticeInspected vertex tail newList
       else changeVerticeInspected vertex tail (newList @ [ head ])
 
-(*Dijkstra's algorithm which calculates the min vertex, then adjust the distance , update the visited list and iterate till all nodes have been inspected.*)
+(*Dijkstra's algorithm which calculates the min vertex, then adjust the distance , 
+update the visited list and iterate till all nodes have been inspected.*)
 let rec dijkstraAlgorithm adjMatrix parentArray distanceArray verticesInspected
     visited =
   if Array.length verticesInspected = 0 then (distanceArray, parentArray)
@@ -82,13 +88,12 @@ let rec hashMapVerticeList adjMatrix list n index =
 
 (*ALl intialisation done in main function. Weights are float and vertices are int*)
 let main adjMatrix startVertex n =
-  let size = n in
-  let parentArray = Array.make size 0 in
-  let distanceArray = Array.make size infinity in
+  let parentArray = Array.make n 0 in
+  let distanceArray = Array.make n infinity in
   parentArray.(startVertex) <- startVertex;
   distanceArray.(startVertex) <- 0.;
   let verticesInspected = hashMapVerticeList adjMatrix [] n 0 in
-  let visited = Array.make size 0 in
+  let visited = Array.make n 0 in
   let distanceArray, parentArray =
     dijkstraAlgorithm adjMatrix parentArray distanceArray verticesInspected
       visited
@@ -102,7 +107,7 @@ let main adjMatrix startVertex n =
 
 let linkKernel1 () =
   let ans = Kernel1.linkKronecker () in
-  main (fst ans) (startVertex) (snd ans)
+  main (fst ans) startVertex (snd ans)
 
 ;;
 linkKernel1 ()

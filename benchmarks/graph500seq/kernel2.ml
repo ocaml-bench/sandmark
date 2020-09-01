@@ -6,13 +6,20 @@
 (*<-------OCaml Kernel 2 inspired from https://graph500.org/?page_id=12---------->
   Written by support of PRISM Lab, IIT Madras and OCaml Labs*)
 
-(*This function iterates over the list which are adjacent to the node. So lets say for node n1, we have n2,n3,n4 nodes. THe list would be in the form of (node,wght)
-  tuple inside the list i.e. [(n2,weight_21);(n3,weight_31);(n4,weight_41)] which is adjacentVertice list. Parent array will be updated here. Queue is just a list module.
-  Also, visited array has the nodes which have already being visited to avoid the nodes being pushed to queue which have been visited in order to avoid redundancy.*)
+(*This function iterates over the list which are adjacent to the node. 
+So lets say for node n1, we have n2,n3,n4 nodes. THe list would be in 
+the form of (node,wght) tuple inside the list 
+i.e. [(n2,weight_21);(n3,weight_31);(n4,weight_41)] which is 
+adjacentVertice list. Parent array will be updated here. Queue is just a 
+list module.
+  Also, visited array has the nodes which have already being visited to avoid 
+  the nodes being pushed to queue which have been visited in order to avoid redundancy.*)
 
-(*appendVerticesToQueue is the function doing recusrion to push desired elements in the queue, adjacent and ~visited nodes for a node. THe queue's first element
-  is always the node to be computed on for adjacency. As queue pushs the node from front, head::tail helps directly, primrily pointing out that queue has been considered 
-  as a list.*)
+(*appendVerticesToQueue is the function doing recusrion to push desired elements 
+in the queue, adjacent and ~visited nodes for a node. THe queue's first element
+  is always the node to be computed on for adjacency. As queue pushs the node 
+  from front, head::tail helps directly, primrily pointing out that queue 
+  has been considered as a list.*)
 
 let rec appendVerticesToQueue parentVertex queue adjacentVertices
     (parentArray : int array) visited =
@@ -33,8 +40,11 @@ let rec appendVerticesToQueue parentVertex queue adjacentVertices
   	head::tail -> let _ = Printf.printf "%d" head in printList tail
   ;;*)
 
-(*BFS function is a normal bfs function by building the bfs tree. Uses adjacency HashMap, queue, parent Array, visited. bfsTree stores the order of the nodes and 
-  it is a list. Parent array works as : parent[node] = _parentNode_ is the DAT being used i.e. an array*)
+(*BFS function is a normal bfs function by building the bfs tree. 
+Uses adjacency HashMap, queue, parent Array, visited. 
+bfsTree stores the order of the nodes and 
+  it is a list. Parent array works as : parent[node] = _parentNode_ 
+  is the DAT being used i.e. an array*)
 
 let rec bfs adjMatrix queue bfsTree parentArray visited =
   match queue with
@@ -52,7 +62,9 @@ let rec bfs adjMatrix queue bfsTree parentArray visited =
         bfs adjMatrix queue (bfsTree @ [ head ]) parentArray visited
       else bfs adjMatrix tail bfsTree parentArray visited
 
-(*Main function is the function where it calls bfs. Size computation is using HashMap and the initialiszation of all arrays and lists happen here.*)
+(*Main function is the function where it calls bfs. 
+Size computation is using HashMap and the initialiszation 
+of all arrays and lists happen here.*)
 
 let rec bfsRecDisconnectedGraph adjMatrix bfsTree parentArray visited index =
   if index = Array.length visited then (bfsTree, parentArray)

@@ -1,16 +1,31 @@
-(*Kronecker is using the following algorithm :  Function Kronecker generator(scale, edgefactor) : N = 2^scale M =
-  edgefactor * N (No of edges) [A,B,C] = [0.57, 0.19, 0.19] ijw = {	{1,1,1,1,1,...Mtimes}; {1,1,1,1,1...Mtimes};
-  {1,1,1,1,1...Mtimes}; } ab = A + B; c_norm = C/(1 - (A + B)); a_norm = A/(A + B); for i in (0, scale) : ii_bit =
-  rand(1,M) > ab; jj_bit = rand (1, M) > ( c_norm * ii_bit + a_norm * not (ii_bit) );(not a is basically a xor 1)
-  ijw(1:2,:) = ijw(1:2,:) + 2^(ib-1) * [ii_bit; jj_bit];
-
+(*Kronecker is using the following algorithm : 
+ Function Kronecker generator(scale, edgefactor) :
+ 	N = 2^scale
+ 	M = edgefactor * N (No of edges)
+ 	[A,B,C] = [0.57, 0.19, 0.19]
+ 	ijw = {	{1,1,1,1,1,...Mtimes};
+ 			{1,1,1,1,1...Mtimes};
+ 			{1,1,1,1,1...Mtimes};
+ 			}
+ 	ab = A + B;
+  	c_norm = C/(1 - (A + B));
+  	a_norm = A/(A + B);
+  	for i in (0, scale) :
+  		ii_bit = rand(1,M) > ab;
+  		jj_bit = rand (1, M) > ( c_norm * ii_bit + a_norm * not (ii_bit) );(not a: a xor 0)
+  		ijw(1:2,:) = ijw(1:2,:) + 2^(ib-1) * [ii_bit; jj_bit];
   	ijw(3,:) = unifrnd(0, 1, 1, M);//produce values from 0 to 1 for 1*M array.
-
-  	p = randperm (N);	 ijw(1:2,:) = p(ijw(1:2,:)); p = randperm (M); ijw = ijw(:, p); ijw(1:2,:) = ijw(1:2,:) - 1; Here,
-  the labels are from 0 to N-1. *)
+  	
+  	p = randperm (N);	
+  	ijw(1:2,:) = p(ijw(1:2,:));
+  	p = randperm (M);
+  	ijw = ijw(:, p);
+  	ijw(1:2,:) = ijw(1:2,:) - 1;
+	Here, the labels are from 0 to N-1.
+*)
 
 (*(*<-------OCaml Kronecker Kernel inspired from https://graph500.org/?page_id=12---------->
-  Written by support of PRISM Lab, IIT Madras and OCaml Labs*)*)
+Written by support of PRISM Lab, IIT Madras and OCaml Labs*)*)
 
 let rec listGenerator1D list m =
   if m = 0 then list else listGenerator1D (0. :: list) (m - 1)
