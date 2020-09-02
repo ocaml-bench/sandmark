@@ -10,7 +10,8 @@
 (* This function iterates over the list which are adjacent to the node. So lets
  * say for node n1, we have n2,n3,n4 nodes. The list would be in the form of
  * (node,wght) tuple inside the list i.e.
- * [(n2,weight_21);(n3,weight_31);(n4,weight_41)] which is adjacentVertice list. Parent array will be updated here. Queue is just a list module.
+ * [(n2,weight_21);(n3,weight_31);(n4,weight_41)] which is adjacentVertice
+ * list. Parent array will be updated here. Queue is just a list module.
  *
  * Also, visited array has the nodes which have already being visited to avoid
  * the nodes being pushed to queue which have been visited in order to avoid
