@@ -153,6 +153,54 @@ let gc_stats stderr_file =
   in
   `Assoc (go false)
 
+let re = Re.Perl.compile_pat "caml[A-Z].*"
+
+let is_interesting_symbol name =
+  Base.List.exists [ "caml_curry"; "caml_tuplify"; "caml_apply" ]
+    ~f:(fun prefix -> Base.String.is_prefix ~prefix name)
+    || Re.execp re name
+
+let read_process_lines command =
+  let lines = ref [] in
+  let in_channel = Unix.open_process_in command in
+  begin
+    try
+      while true do
+        lines := Stdio.In_channel.input_line_exn in_channel :: !lines
+      done;
+    with End_of_file ->
+      ignore (Unix.close_process_in in_channel)
+  end;
+List.rev !lines
+
+let get_benchmark_exe cmdline =
+  let cwd = Sys.getcwd () in
+  let prefix = Sys.getenv ("OPAM_SWITCH_PREFIX") in
+  let result = List.filter (fun s -> Filename.check_suffix s ".exe") cmdline in
+  match result with
+  | [] -> Base.String.concat ~sep:"/" [prefix; "bin"; List.nth cmdline 3]
+  | _ -> let e = Str.replace_first (Str.regexp "^./") "" (List.hd result) in
+         Base.String.concat ~sep:"/" [cwd; e]
+
+let get_codesize cmdline =
+  let file = get_benchmark_exe cmdline in
+  let command = Base.String.concat ~sep:" " ["/usr/bin/nm"; "--format=bsd";
+                                            "--debug-syms"; "--radix=d";
+                                            "--print-size"; file] in
+  let lines = read_process_lines command in
+  Base.List.fold lines ~init:0 ~f:(fun total line ->
+    if not (Base.String.is_prefix ~prefix:" " line)
+     then (
+       match Base.String.split ~on:' ' line with
+       | [ _sym_addr; sym_size; (("t" | "T") as _sym_type); sym_name ]
+         when is_interesting_symbol sym_name ->
+         (match total + Base.Int.of_string sym_size with
+          | exception Failure _ -> total
+          | v -> v)
+       | _ -> total)
+     else total)
+   |> Float.of_int
+
 let run output input cmdline =
   let prog = List.hd cmdline in
   (* workaround for the lack of execve *)
@@ -203,11 +251,11 @@ let run output input cmdline =
     in
     let name = strip_suffix (Filename.basename output) ".bench" in
     let name = strip_suffix name ".orun" in
-    let ocamlrunparam = 
-      let params = 
-        match List.filter 
-                (fun s -> starts_with "OCAMLRUNPARAM=" s) 
-                (Array.to_list (Unix.environment ())) 
+    let ocamlrunparam =
+      let params =
+        match List.filter
+                (fun s -> starts_with "OCAMLRUNPARAM=" s)
+                (Array.to_list (Unix.environment ()))
         with
         | [] -> "v=0x400" (* print stats at termination *)
         | x::_ ->
@@ -245,6 +293,7 @@ let run output input cmdline =
           assert false
     in
     let after = Unix.gettimeofday () in
+    let codesize = get_codesize cmdline in
     let stats =
       [ ("name", `String name)
       ; ("command", `String (quote_cmd cmdline))
@@ -253,7 +302,8 @@ let run output input cmdline =
       ; ("sys_time_secs", `Float sys_secs)
       ; ("maxrss_kB", `Int maxrss_kB)
       ; ("ocaml", get_ocaml_config ())
-      ; ("gc", gc_stats captured_stderr_filename) ]
+      ; ("gc", gc_stats captured_stderr_filename)
+      ; ("codesize", `Float codesize)]
     in
     let extra_config =
       Unix.environment () |> Array.to_list

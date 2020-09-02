@@ -100,7 +100,7 @@ module StringMap = Map.Make (String)
 module IntMap = Map.Make (struct
   type t = int
 
-  let compare = Pervasives.compare
+  let compare = Stdlib.compare
 end)
 
 let slash_regex = Str.regexp "[/\\.]"
