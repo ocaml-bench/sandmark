@@ -1,17 +1,17 @@
-(*Kernel 1 is basic construction of adjacency HashMap for undirected graphs 
-which is corresponding to sparse graph implementation. INPUTS : ijw and m which has been 
-derived from kronecker product*)
+(* Graph 500 benchmark: Kernel 1
 
-(*(*<-------OCaml Kernel 1 inspired from https://graph500.org/?page_id=12---------->
-Written by support of PRISM Lab, IIT Madras and OCaml Labs*)*)
+   Kernel 1 is basic construction of adjacency HashMap for undirected graphs
+   which is corresponding to sparse graph implementation.
 
-(*This function helps in transpose of the list which has to be converted 
-from (startVertex, endVertex, weight) in column to (startVertex, endVertex, weight) in 3 rows*)
+   INPUTS : [ijw] and [m] which has been derived from kronecker product *)
 
 let scale = try int_of_string Sys.argv.(1) with _ -> 2
 
 let edgefactor = try int_of_string Sys.argv.(2) with _ -> 1
 
+(* This function helps in transpose of the list which has to be converted from
+ * [(startVertex, endVertex, weight)] in column to [(startVertex, endVertex,
+ * weight)] in 3 rows *)
 let rec transpose list col newList =
   if col = 3 then newList
   else
@@ -22,7 +22,8 @@ let rec transpose list col newList =
     in
     transpose list (col + 1) (newList @ [ transposeRow 0 [] ])
 
-(*This basically sorts the list in a way that (startVertex, endVertex), startVertex > endVertex.*)
+(* This basically sorts the list in a way that (startVertex, endVertex),
+ * startVertex > endVertex. *)
 let sortVerticeList list newList =
   let rec sortVerticeList list newList maximum =
     match list with
@@ -40,7 +41,7 @@ let sortVerticeList list newList =
   in
   sortVerticeList list newList 0.
 
-(*As the name suggests, it removes the self loops from ijw*)
+(* As the name suggests, it removes the self loops from [ijw] *)
 let rec removeSelfLoops ijw newList col m =
   if col = m then newList
   else if List.nth (List.nth ijw 0) col = List.nth (List.nth ijw 1) col then
@@ -57,20 +58,8 @@ let rec removeSelfLoops ijw newList col m =
         ] )
       (col + 1) m
 
-(*This is basically the construction of adj matrix [row][col], 
-just in case dense graphs are being tested. All the kernels further though 
-use HashMap, and thus would require changes*)
-
-(*let constructionAdjMatrix list maxLabel = let matrix = Array.make_matrix
-maxLabel maxLabel 0. in let rec fillMatrix matrix list = match list with [] ->
-matrix | head::tail -> let _ = matrix.(int_of_float(List.nth head
-0)).(int_of_float(List.nth head 1)) <- (List.nth head 2) in   let _ =
-matrix.(int_of_float(List.nth head 1)).(int_of_float(List.nth head 0)) <-
-(List.nth head 2) in fillMatrix matrix tail in fillMatrix matrix list ;;*)
-
-(*Adding Edge adds the edge to HashMap for undirected graphs, where the binding 
-is between index and the list (endVertex, weight) *)
-
+(* Adding Edge adds the edge to HashMap for undirected graphs, where the
+ * binding is between index and the list (endVertex, weight) *)
 let addEdge startVertex endVertex weight hashTable =
   if Hashtbl.mem hashTable startVertex = false then
     Hashtbl.add hashTable startVertex [ (endVertex, weight) ]
@@ -78,8 +67,8 @@ let addEdge startVertex endVertex weight hashTable =
     Hashtbl.replace hashTable startVertex
       (Hashtbl.find hashTable startVertex @ [ (endVertex, weight) ])
 
-(*The two functions constructionAdjHash and kernel1 are the main 
-functions driving all the other functions.*)
+(* The two functions constructionAdjHash and kernel1 are the main functions
+ * driving all the other functions. *)
 let rec constructionAdjHash list hashTable =
   match list with
   | [] -> hashTable
