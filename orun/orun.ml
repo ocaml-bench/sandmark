@@ -166,7 +166,7 @@ let read_process_lines command =
   begin
     try
       while true do
-        lines := Stdio.In_channel.input_line_exn in_channel :: !lines
+        lines := input_line in_channel :: !lines
       done;
     with End_of_file ->
       ignore (Unix.close_process_in in_channel)

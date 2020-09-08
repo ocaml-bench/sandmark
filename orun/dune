@@ -12,7 +12,7 @@
 (executable
  (name orun)
  (public_name orun)
- (libraries base stdio re str cmdliner yojson unix wait4 profiler))
+ (libraries base re str cmdliner yojson unix wait4 profiler))
 
 (rule
  (targets profiler_library_flags.sexp)
