@@ -5,7 +5,7 @@ synopsis: "Run benchmarks and measure performance"
 maintainer: "Stephen Dolan <stephen.dolan@cl.cam.ac.uk>"
 authors: "Stephen Dolan <stephen.dolan@cl.cam.ac.uk>"
 license: "MIT"
-depends: [ "ocaml" "base" "re" "cmdliner" "yojson" ]
+depends: [ "ocaml" "re" "cmdliner" "yojson" ]
 build: [
   ["ocaml-update-c" "wait4.c"] {ocaml:update-c}
   ["dune" "build" "-p" name]
