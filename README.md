@@ -120,15 +120,11 @@ You can execute both serial and parallel benchmarks using the
 Ensure that the respective .json configuration files have the
 appropriate settings.
 
-The run_all_parallel.sh script uses chrt and the user executing the
-script requires sudo with nopasswd permission, which is quite useful
-with periodic nightly builds. Using the `sudo visudo` command on
-Ubuntu, for example, you can add the following entry to the
-`/etc/sudoers` file to allow a user running the script to execute any
-command:
-
+If using `RUN_BENCH_TARGET=run_orunchrt` then the benchmarks will
+run using `chrt -r 1`. You may need to give the user permissions
+to execute `chrt`, one way to do this can be:
 ```
-username   ALL=(ALL:ALL) NOPASSWD: ALL
+sudo setcap cap_sys_nice=ep /usr/bin/chrt
 ```
 
 ### Running benchmarks
@@ -178,7 +174,7 @@ You can add new benchmarks as follows:
     already included in Sandmark, add its opam file to
     `dependencies/packages/<package-name>/<package-version>/opam`. If the
     package depends on other packages, repeat this step for all of those
-    packages. Add the package to `PACKAGES` variable in the Makefile.  
+    packages. Add the package to `PACKAGES` variable in the Makefile.
 
  - **Add benchmark files:**
     Find a relevant folder in `benchmarks/` and add your code to it. Feel free

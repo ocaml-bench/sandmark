@@ -118,15 +118,8 @@ ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json
 	opam exec --switch $* -- rungen _build/$*_1 $(RUN_CONFIG_JSON) > runs_dune.inc;
 	opam exec --switch $* -- dune build --profile=release --workspace=ocaml-versions/.workspace.$* @$(BUILD_BENCH_TARGET);
 	@{ if [ "$(BUILD_ONLY)" -eq 0 ]; then												\
-		IS_PARALLEL=`grep -c chrt $(RUN_CONFIG_JSON)`; 										\
-		if [ "$$IS_PARALLEL" -gt 0 ]; then											\
-		  $(PRE_BENCH_EXEC) sudo -s OPAMROOT="${OPAMROOT}" OPAMROOTISOK="true" BUILD_BENCH_TARGET="${BUILD_BENCH_TARGET}" 	\
-	            RUN_BENCH_TARGET="${RUN_BENCH_TARGET}" RUN_CONFIG_JSON="${RUN_CONFIG_JSON}" opam exec --switch $* -- 		\
-		    dune build -j 1 --profile=release --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?; 		\
-		else															\
-		  $(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release 						\
-		    --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;						\
-		fi;															\
+		$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release 						\
+		  --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;						\
 		for f in `find _build/$*_* -name '*.bench'`; do 									\
 		   d=`basename $$f | cut -d '.' -f 1,2`; 										\
 		   mkdir -p _results/$*/$$d/ ; cp $$f _results/$*/$$d/; 								\
