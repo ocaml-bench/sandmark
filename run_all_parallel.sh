@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# Since the parallel benchmarks use `chrt -r 1` you will need to run this script
-# twice. First run without sudo which will build the compiler and the benchmarks,
-# and will fail running the benchmarks. Then run the script with sudo which will
-# run the benchmarks and produce the results.
+# If using RUN_BENCH_TARGET=run_orunchrt the parallel benchmarks
+# use `chrt -r 1`. You may need to setup permissions to allow the
+# user to execute `chrt`. For example, this could be done with:
+#   sudo setcap cap_sys_nice=ep /usr/bin/chrt
 #
-# $ bash run_all_parallel.sh; sudo bash run_all_parallel.sh
 
 make multicore_parallel_run_config_macro.json
 
