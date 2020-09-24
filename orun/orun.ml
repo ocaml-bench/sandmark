@@ -156,9 +156,8 @@ let gc_stats stderr_file =
 let re = Re.Perl.compile_pat "caml[A-Z].*"
 
 let is_interesting_symbol name =
-  Base.List.exists [ "caml_curry"; "caml_tuplify"; "caml_apply" ]
-    ~f:(fun prefix -> Base.String.is_prefix ~prefix name)
-    || Re.execp re name
+  List.exists (fun prefix -> Str.string_partial_match (Str.regexp prefix) name 0)
+    [ "caml_curry"; "caml_tuplify"; "caml_apply" ] || Re.execp re name
 
 let read_process_lines command =
   let lines = ref [] in
@@ -166,7 +165,7 @@ let read_process_lines command =
   begin
     try
       while true do
-        lines := Stdio.In_channel.input_line_exn in_channel :: !lines
+        lines := input_line in_channel :: !lines
       done;
     with End_of_file ->
       ignore (Unix.close_process_in in_channel)
@@ -178,28 +177,28 @@ let get_benchmark_exe cmdline =
   let prefix = Sys.getenv ("OPAM_SWITCH_PREFIX") in
   let result = List.filter (fun s -> Filename.check_suffix s ".exe") cmdline in
   match result with
-  | [] -> Base.String.concat ~sep:"/" [prefix; "bin"; List.nth cmdline 3]
+  | [] -> String.concat "/" [prefix; "bin"; List.nth cmdline 3]
   | _ -> let e = Str.replace_first (Str.regexp "^./") "" (List.hd result) in
-         Base.String.concat ~sep:"/" [cwd; e]
+         String.concat "/" [cwd; e]
 
 let get_codesize cmdline =
   let file = get_benchmark_exe cmdline in
-  let command = Base.String.concat ~sep:" " ["/usr/bin/nm"; "--format=bsd";
-                                            "--debug-syms"; "--radix=d";
-                                            "--print-size"; file] in
+  let command = String.concat " " ["/usr/bin/nm"; "--format=bsd";
+                                   "--debug-syms"; "--radix=d";
+                                   "--print-size"; file] in
   let lines = read_process_lines command in
-  Base.List.fold lines ~init:0 ~f:(fun total line ->
-    if not (Base.String.is_prefix ~prefix:" " line)
+  List.fold_left (fun total line ->
+    if not (Str.string_partial_match (Str.regexp " ") line 0)
      then (
-       match Base.String.split ~on:' ' line with
+       match String.split_on_char ' ' line with
        | [ _sym_addr; sym_size; (("t" | "T") as _sym_type); sym_name ]
          when is_interesting_symbol sym_name ->
-         (match total + Base.Int.of_string sym_size with
+         (match total + int_of_string sym_size with
           | exception Failure _ -> total
           | v -> v)
        | _ -> total)
-     else total)
-   |> Float.of_int
+     else total) 0 lines
+  |> Float.of_int
 
 let run output input cmdline =
   let prog = List.hd cmdline in
