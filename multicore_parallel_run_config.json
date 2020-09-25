@@ -379,8 +379,8 @@
       "name": "pingpong_multicore",
       "tags": [],
       "runs": [
-        { "params": "2 256 1000000", "paramwrapper": "taskset --cpu-list 2-13"},
-        { "params": "4 256 1000000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "1 256 1000000", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 256 1000000", "paramwrapper": "taskset --cpu-list 2-13" },
         { "params": "4 256 1000000", "paramwrapper": "taskset --cpu-list 2-13" },
         { "params": "8 256 1000000", "paramwrapper": "taskset --cpu-list 2-13" },
         { "params": "12 256 1000000", "paramwrapper": "taskset --cpu-list 2-13" },
