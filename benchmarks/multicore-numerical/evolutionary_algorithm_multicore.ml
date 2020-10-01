@@ -5,13 +5,7 @@ Per Kristian Lehre <p.k.lehre@cs.bham.ac.uk>
 May 6th, 2020
 "
 module T = Domainslib.Task
-let my_key : Random.State.t Domain.DLS.key = Domain.DLS.new_key ()
-
-let get () = try Option.get @@ Domain.DLS.get my_key
-  with _ -> begin
-    Domain.DLS.set my_key (Random.State.make_self_init ());
-    Option.get @@ Domain.DLS.get my_key
-  end
+let my_key = Domain.DLS.new_key (fun () -> Random.State.make_self_init ())
 
 type bitstring = bool array
 type individual = { chromosome : bitstring; fitness : float }
@@ -28,7 +22,7 @@ let fittest x y = if x.fitness > y.fitness then x else y
 let pop_fittest pop = Array.fold_left fittest pop.(0) pop
 
 let random_bitstring n =
-  let s = get () in
+  let s = Domain.DLS.get my_key in
   Array.init n (fun _ -> Random.State.bool s)
 
 let random_individual n f =
@@ -40,7 +34,7 @@ let onemax : fitness_function = Array.fold_left add_bit 0.0
 
 (* Choose fittest out of k uniformly sampled individuals *)
 let rec k_tournament k pop =
-  let s = Option.get @@ Domain.DLS.get my_key in
+  let s = Domain.DLS.get my_key in
   let x = pop.(Random.State.int s (population_size pop)) in
   if k <= 1 then x
   else
@@ -48,7 +42,7 @@ let rec k_tournament k pop =
     fittest x y
 
 let flip_coin p =
-  let s = Option.get @@ Domain.DLS.get my_key in
+  let s = Domain.DLS.get my_key in
   (Random.State.float s 1.0) < p
 
 let xor a b = if a then not b else b

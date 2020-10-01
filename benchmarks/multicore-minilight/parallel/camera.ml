@@ -10,18 +10,7 @@
 open Vector3f
 module T = Domainslib.Task
 
-module Rand = struct
-  open Domain.DLS
-
-  let k : Random.State.t key = new_key ()
-
-  let get_state () = try Option.get @@ get k
-    with _ -> begin
-      set k (Random.State.make_self_init ());
-      Option.get @@ get k
-    end
-
-end
+let k = Domain.DLS.new_key (fun () -> Random.State.make_self_init ())
 
 (**
  * A View with rasterization capability.
@@ -92,7 +81,7 @@ object (__)
         T.parallel_for pool ~start:0 ~finish:(image#height - 1)
         ~body:(fun y -> for x = image#width - 1 downto 0 do
 
-            let random = Rand.get_state () in
+            let random = Domain.DLS.get k in
             (* make sample ray direction, stratified by pixels *)
             let sampleDirection =
 
