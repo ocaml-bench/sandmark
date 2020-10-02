@@ -10,7 +10,7 @@
 open Vector3f
 module T = Domainslib.Task
 
-let k = Domain.DLS.new_key (fun () -> Random.State.make_self_init ())
+let k = Domain.DLS.new_key Random.State.make_self_init
 
 (**
  * A View with rasterization capability.

@@ -5,7 +5,7 @@ Per Kristian Lehre <p.k.lehre@cs.bham.ac.uk>
 May 6th, 2020
 "
 module T = Domainslib.Task
-let my_key = Domain.DLS.new_key (fun () -> Random.State.make_self_init ())
+let my_key = Domain.DLS.new_key Random.State.make_self_init
 
 type bitstring = bool array
 type individual = { chromosome : bitstring; fitness : float }
