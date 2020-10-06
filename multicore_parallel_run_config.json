@@ -680,6 +680,28 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-lockfree/test_ctrie_sequential.exe",
+      "name": "lockfree-map",
+      "ismacrobench": false,
+      "runs": [
+        { "params": "80 1000000", "paramwrapper": "taskset --cpu-list 2-13       chrt -r 1"}
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_ctrie.exe",
+      "name": "lockfree-map_multicore",
+      "ismacrobench": false,
+      "runs": [
+        { "params": "2  80 1000000", "paramwrapper": "taskset --cpu-list 2-13       chrt -r 1"},
+        { "params": "4  80 1000000", "paramwrapper": "taskset --cpu-list 2-13       chrt -r 1" },
+        { "params": "8  80 1000000", "paramwrapper": "taskset --cpu-list 2-13       chrt -r 1" },
+        { "params": "12 80 1000000", "paramwrapper": "taskset --cpu-list 2-13       chrt -r 1" },
+        { "params": "16 80 1000000", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "20 80 1000000", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" },
+        { "params": "24 80 1000000", "paramwrapper": "taskset --cpu-list 2-13,16-27 chrt -r 1" }
+      ]
+    },
+    {
       "executable": "benchmarks/simple-tests/alloc_multicore.exe",
       "name": "alloc_multicore",
       "tags": [],
