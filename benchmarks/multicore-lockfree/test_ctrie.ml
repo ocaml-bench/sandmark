@@ -1,6 +1,6 @@
 let threads = int_of_string Sys.argv.(1)
 let insert_percent = int_of_string Sys.argv.(2)
-let num_opers = int_of_string Sys.argv.(3)
+let num_opers = int_of_string Sys.argv.(3) / threads
 
 let () = Random.init 42
 
