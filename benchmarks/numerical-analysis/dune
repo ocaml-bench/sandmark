@@ -2,7 +2,7 @@
 ;; See https://github.com/OCamlPro/ocamlbench-repo
 (executable (name durand_kerner_aberth) (modules durand_kerner_aberth))
 (executable (name fft) (modules fft))
-(executable (name lu_decomposition) (modules lu_decomposition))
+(executable (name crout_decomposition) (modules crout_decomposition))
 (executable (name qr_decomposition) (modules qr_decomposition))
 
 (executable
@@ -16,7 +16,7 @@
  (deps
    durand_kerner_aberth.exe
    fft.exe
-   lu_decomposition.exe
+   crout_decomposition.exe
    qr_decomposition.exe
    levinson_durbin.exe
    naive_multilayer.exe))

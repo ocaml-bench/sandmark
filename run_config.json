@@ -1267,8 +1267,8 @@
       ]
     },
     {
-      "executable": "benchmarks/numerical-analysis/lu_decomposition.exe",
-      "name": "lu-decomposition",
+      "executable": "benchmarks/numerical-analysis/crout_decomposition.exe",
+      "name": "crout-decomposition",
       "tags": [
         "macro_bench"
       ],
