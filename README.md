@@ -2,7 +2,7 @@
 
 # Sandmark
 
-A benchmarking suite for OCaml.
+A benchmark suite for OCaml.
 
 ## Quick Start
 
