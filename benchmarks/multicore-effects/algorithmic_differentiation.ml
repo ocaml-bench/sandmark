@@ -48,7 +48,7 @@ end = struct
 end;;
 
 let iterations = int_of_string Sys.argv.(1) in
-  for iteration = 0 to iterations do
+  for _iteration = 1 to iterations do
     (* f = x + x^3 =>
       df/dx = 1 + 3 * x^2 *)
     for x = 0 to 10 do
