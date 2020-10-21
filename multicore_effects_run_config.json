@@ -41,6 +41,38 @@
       "runs": [
         { "params": "5001" }
       ]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/effect_throughput_clone.exe",
+      "name": "throughput_clone",
+      "tags": [],
+      "runs": [
+        { "params": "2_000_000" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/effect_throughput_perform.exe",
+      "name": "throughput_perform",
+      "tags": [],
+      "runs": [
+        { "params": "2_000_000" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/effect_throughput_perform_drop.exe",
+      "name": "throughput_perform_drop",
+      "tags": [],
+      "runs": [
+        { "params": "2_000_000" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/effect_throughput_val.exe",
+      "name": "throughput_val",
+      "tags": [],
+      "runs": [
+        { "params": "2_000_000" }
+      ]
     }
   ]
 }
