@@ -17,5 +17,5 @@
     (libraries lockfree))
 
 (alias
-		(name multibench_serial)
+		(name multibench_effects)
 		(deps algorithmic_differentiation.exe queens.exe eratosthenes.exe test_sched.exe))

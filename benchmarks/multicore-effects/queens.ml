@@ -36,12 +36,11 @@ let find_solution n =
             | Some x -> Some x
       in loop lst
 
-let main () =
-  let n = 8 in
-    find_solution n
+let iterations = try int_of_string Sys.argv.(1) with _ -> 100
+let size = try int_of_string Sys.argv.(2) with _ -> 8
 
-let iterations = int_of_string Sys.argv.(1)
 
-let () = for iteration = 0 to iterations do
-    ignore(main ())
-done
+let () =
+  for _i = 1 to iterations do
+    ignore(find_solution size)
+  done
