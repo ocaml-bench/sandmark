@@ -1,3 +1,21 @@
+
+
+(executables
+    (names effect_throughput_clone)
+    (modules effect_throughput_clone))
+
+(executables
+    (names effect_throughput_perform)
+    (modules effect_throughput_perform))
+
+(executables
+    (names effect_throughput_perform_drop)
+    (modules effect_throughput_perform_drop))
+
+(executables
+    (names effect_throughput_val)
+    (modules effect_throughput_val))
+
 (executables
     (names algorithmic_differentiation)
     (modules algorithmic_differentiation))
@@ -18,4 +36,4 @@
 
 (alias
 		(name multibench_effects)
-		(deps algorithmic_differentiation.exe queens.exe eratosthenes.exe test_sched.exe))
+		(deps algorithmic_differentiation.exe queens.exe eratosthenes.exe test_sched.exe effect_throughput_clone.exe effect_throughput_perform.exe effect_throughput_perform_drop.exe effect_throughput_val.exe))
