@@ -46,25 +46,25 @@
       "executable": "benchmarks/multicore-effects/effect_throughput_clone.exe",
       "name": "throughput_clone",
       "tags": ["throughput"],
-      "runs": [{ "params": "2_000_000" }]
+      "runs": [{ "params": "4_000_000" }]
     },
     {
       "executable": "benchmarks/multicore-effects/effect_throughput_perform.exe",
       "name": "throughput_perform",
       "tags": ["throughput"],
-      "runs": [{ "params": "2_000_000" }]
+      "runs": [{ "params": "4_000_000" }]
     },
     {
       "executable": "benchmarks/multicore-effects/effect_throughput_perform_drop.exe",
       "name": "throughput_perform_drop",
       "tags": ["throughput"],
-      "runs": [{ "params": "2_000_000" }]
+      "runs": [{ "params": "4_000_000" }]
     },
     {
       "executable": "benchmarks/multicore-effects/effect_throughput_val.exe",
       "name": "throughput_val",
       "tags": ["throughput"],
-      "runs": [{ "params": "2_000_000" }]
+      "runs": [{ "params": "4_000_000" }]
     },
     {
       "executable": "benchmarks/multicore-effects/rec_seq_ack.exe",
@@ -130,13 +130,13 @@
       "executable": "benchmarks/multicore-effects/rec_seq_sudan.exe",
       "name": "rec_seq_sudan",
       "tags": ["recursive"],
-      "runs": [ {"params": "2 2 2"}]
+      "runs": [ {"params": "10_000_000 2 2 2"}]
     },
     {
       "executable": "benchmarks/multicore-effects/rec_eff_sudan.exe",
       "name": "rec_eff_sudan",
       "tags": ["recursive"],
-      "runs": [ {"params": "2 2 2"}]
+      "runs": [ {"params": "10_000_000 2 2 2"}]
     }
   ]
 }
