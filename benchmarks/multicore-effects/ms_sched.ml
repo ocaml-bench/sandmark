@@ -16,7 +16,7 @@ let run main =
   let enqueue k = MSQueue.push run_q k in
   let rec dequeue () =
     match MSQueue.pop run_q with
-    | None -> 
+    | None ->
         if Atomic.get exiting_flag then () else (Domain.Sync.cpu_relax(); dequeue ())
     | Some(y) -> (continue y ())
   in
@@ -30,7 +30,7 @@ let run main =
         ( enqueue k; dequeue () )
     | effect (Fork f) k ->
         ( enqueue k; spawn f )
-    | effect Exit k ->
+    | effect Exit _ ->
       ( Atomic.set exiting_flag true; dequeue () )
   in
   spawn main

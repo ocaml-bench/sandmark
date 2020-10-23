@@ -2,17 +2,17 @@
 
 (* A message is either a [Stop] signal or a [Candidate] prime number *)
 type message = Stop | Candidate of int
-    
+
 (** Process primitives **)
 type pid = int
-  
+
 effect Spawn : (pid -> unit) -> pid
 let spawn p = perform (Spawn p)
-  
-effect Yield : unit
-let yield () = perform Yield  
 
-(** Communication primitives **)
+effect Yield : unit
+let yield () = perform Yield
+
+(* Communication primitives *)
 effect Send : pid * message -> unit
 let send pid data =
   perform (Send (pid, data));
@@ -31,9 +31,9 @@ struct
   module Make (Ord : Map.OrderedType) =
   struct
     include Map.Make(Ord)
-      
+
     let empty = empty
-      
+
     let lookup key mb =
       try
         Some (find key mb)
@@ -56,10 +56,10 @@ struct
       | None ->
          let msg_q = Queue.create () in
          Queue.push msg msg_q;
-         add key msg_q mb    
-  end    
+         add key msg_q mb
+  end
 end
-    
+
 (** Communication handler **)
 let mailbox f =
   let module Mailbox = Mailbox.Make(struct type t = pid let compare = compare end) in
@@ -77,7 +77,7 @@ let mailbox f =
      let msg = lookup who in
      continue k msg
 
-(** Process handler 
+(** Process handler
     Slightly modified version of sched.ml **)
 let run main () =
   let run_q = Queue.create () in
@@ -97,12 +97,12 @@ let run main () =
        enqueue (fun () -> continue k !pid); spawn p
   in
   spawn main
-  
+
 let fromSome = function
   | Some x -> x
   | _ -> failwith "Attempt to unwrap None"
 
-(** The prime number generator **)     
+(** The prime number generator **)
 let rec generator : pid -> unit =
   fun _ ->
     let n =
