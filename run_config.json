@@ -982,7 +982,7 @@
           "params": "40"
         }
     ]
-  }
+  },
   {
       "executable": "benchmarks/simple-tests/finalise.exe",
       "name": "finalise",
