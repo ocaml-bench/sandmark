@@ -26,7 +26,7 @@ PRE_BENCH_EXEC ?=
 # option to allow benchmarks to continue even if the opam package install errored
 CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
-WRAPPER = $(subst run_,,$(RUN_BENCH_TARGET))
+WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
 PACKAGES = \
 	cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib \
@@ -89,6 +89,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json setup_sys_dune
 	  >> dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/opam
 	$(eval OCAML_CONFIG_OPTION = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval OCAML_RUN_PARAM     = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
+	$(eval ENVIRONMENT = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
 	opam update
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
@@ -118,13 +119,13 @@ ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json
 	opam exec --switch $* -- rungen _build/$*_1 $(RUN_CONFIG_JSON) > runs_dune.inc;
 	opam exec --switch $* -- dune build --profile=release --workspace=ocaml-versions/.workspace.$* @$(BUILD_BENCH_TARGET);
 	@{ if [ "$(BUILD_ONLY)" -eq 0 ]; then												\
-     	echo "Executing benchmarks with:"; \
-     	echo "  RUN_CONFIG_JSON=${RUN_CONFIG_JSON}"; \
-     	echo "  RUN_BENCH_TARGET=${RUN_BENCH_TARGET}  (WRAPPER=${WRAPPER})"; \
-     	echo "  PRE_BENCH_EXEC=${PRE_BENCH_EXEC}"; \
-		$(PRE_BENCH_EXEC) opam exec --switch $* -- dune build -j 1 --profile=release 						\
+	echo "Executing benchmarks with:"; \
+	echo "  RUN_CONFIG_JSON=${RUN_CONFIG_JSON}"; \
+	echo "  RUN_BENCH_TARGET=${RUN_BENCH_TARGET}  (WRAPPER=${WRAPPER})"; \
+	echo "  PRE_BENCH_EXEC=${PRE_BENCH_EXEC}"; \
+		$(PRE_BENCH_EXEC) $(ENVIRONMENT) opam exec --switch $* -- dune build -j 1 --profile=release				\
 		  --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;						\
-		for f in `find _build/$*_* -name '*.$(WRAPPER).bench'`; do 									\
+		for f in `find _build/$*_* -name '*.$(WRAPPER).bench'`; do 								\
 		   d=`basename $$f | cut -d '.' -f 1,2`; 										\
 		   mkdir -p _results/$*/$$d/ ; cp $$f _results/$*/$$d/; 								\
 		done;															\
