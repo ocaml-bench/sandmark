@@ -89,7 +89,6 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json setup_sys_dune
 	  >> dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/opam
 	$(eval OCAML_CONFIG_OPTION = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval OCAML_RUN_PARAM     = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
-	$(eval ENVIRONMENT = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
 	opam update
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* orun orun/
@@ -108,6 +107,7 @@ blah:
 	@echo ${PACKAGES}
 
 ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json _opam/% .FORCE
+	$(eval ENVIRONMENT = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
 	@opam update
 	opam install --switch=$* --keep-build-dir --yes rungen orun
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
