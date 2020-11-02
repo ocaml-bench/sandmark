@@ -22,7 +22,7 @@
       "executable": "benchmarks/graph500seq/kernel2.exe",
       "name": "kernel2",
       "tags": [
-        "run_in_ci"
+        "lt_1s", "run_in_ci"
       ],
       "runs": [
         {
@@ -34,7 +34,7 @@
       "executable": "benchmarks/graph500seq/kernel3.exe",
       "name": "kernel3",
       "tags": [
-        "run_in_ci"
+        "lt_1s", "run_in_ci"
       ],
       "runs": [
         {
@@ -46,7 +46,8 @@
       "executable": "benchmarks/decompress/test_decompress.exe",
       "name": "test_decompress",
       "tags": [
-        "macro_bench",
+       	"1s_10s",
+       	"macro_bench",
         "run_in_ci"
       ],
       "runs": [
@@ -59,6 +60,7 @@
       "executable": "benchmarks/yojson/ydump.exe",
       "name": "yojson_ydump",
       "tags": [
+        "lt_1s",
         "macro_bench",
         "run_in_ci"
       ],
@@ -73,6 +75,7 @@
       "executable": "benchmarks/sequence/sequence_cps.exe",
       "name": "sequence_cps",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -85,6 +88,7 @@
       "executable": "setrip",
       "name": "setrip",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -97,6 +101,7 @@
       "executable": "benchmarks/thread-lwt/thread_ring_lwt_mvar.exe",
       "name": "thread_ring_lwt_mvar",
       "tags": [
+        "1s_10s",
         "macro_bench",
         "run_in_ci"
       ],
@@ -110,6 +115,7 @@
       "executable": "benchmarks/thread-lwt/thread_ring_lwt_stream.exe",
       "name": "thread_ring_lwt_stream",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -121,7 +127,7 @@
     {
       "executable": "cpdf",
       "name": "cpdf",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
         {
           "params": "-merge benchmarks/cpdf/metro_geo.pdf -o /dev/null",
@@ -133,6 +139,7 @@
       "executable": "cpdf",
       "name": "cpdf",
       "tags": [
+        "10s_100s",
         "macro_bench",
         "run_in_ci"
       ],
@@ -151,6 +158,7 @@
       "executable": "cpdf",
       "name": "cpdf",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -163,7 +171,8 @@
     {
       "executable": "benchmarks/benchmarksgame/binarytrees5.exe",
       "name": "binarytrees5",
-      "tags": [
+      "tags":[
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -176,6 +185,7 @@
       "executable": "benchmarks/multicore-numerical/LU_decomposition.exe",
       "name": "LU_decomposition",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -188,6 +198,7 @@
       "executable": "benchmarks/multicore-numerical/floyd_warshall.exe",
       "name": "floyd_warshall",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -200,6 +211,7 @@
       "executable": "benchmarks/multicore-numerical/game_of_life.exe",
       "name": "game_of_life",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -212,6 +224,7 @@
       "executable": "benchmarks/multicore-numerical/evolutionary_algorithm.exe",
       "name": "evolutionary_algorithm",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -224,6 +237,7 @@
       "executable": "benchmarks/multicore-grammatrix/grammatrix.exe",
       "name": "grammatrix",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -236,6 +250,7 @@
       "executable": "benchmarks/benchmarksgame/fannkuchredux2.exe",
       "name": "fannkuchredux2",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -248,6 +263,7 @@
       "executable": "benchmarks/benchmarksgame/fannkuchredux.exe",
       "name": "fannkuchredux",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -260,6 +276,7 @@
       "executable": "benchmarks/benchmarksgame/knucleotide.exe",
       "name": "knucleotide",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -272,6 +289,7 @@
       "executable": "benchmarks/benchmarksgame/knucleotide3.exe",
       "name": "knucleotide3",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -284,6 +302,7 @@
       "executable": "benchmarks/benchmarksgame/regexredux2.exe",
       "name": "regexredux2",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -296,6 +315,7 @@
       "executable": "benchmarks/benchmarksgame/revcomp2.exe",
       "name": "revcomp2",
       "tags": [
+        "1s_10s",
         "macro_bench",
         "run_in_ci"
       ],
@@ -309,6 +329,7 @@
       "executable": "benchmarks/benchmarksgame/fasta3.exe",
       "name": "fasta3",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -321,6 +342,7 @@
       "executable": "benchmarks/benchmarksgame/fasta6.exe",
       "name": "fasta6",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -333,6 +355,7 @@
       "executable": "benchmarks/benchmarksgame/mandelbrot6.exe",
       "name": "mandelbrot6",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -345,6 +368,7 @@
       "executable": "benchmarks/multicore-numerical/matrix_multiplication.exe",
       "name": "matrix_multiplication",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -357,6 +381,7 @@
       "executable": "benchmarks/multicore-numerical/quicksort.exe",
       "name": "quicksort",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -369,6 +394,7 @@
       "executable": "benchmarks/benchmarksgame/nbody.exe",
       "name": "nbody",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -381,6 +407,7 @@
       "executable": "benchmarks/benchmarksgame/pidigits5.exe",
       "name": "pidigits5",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -393,6 +420,7 @@
       "executable": "benchmarks/benchmarksgame/spectralnorm2.exe",
       "name": "spectralnorm2",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -405,6 +433,7 @@
       "executable": "minilight-ocaml",
       "name": "minilight",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -418,6 +447,7 @@
       "executable": "benchmarks/valet/test_lwt.exe",
       "name": "test_lwt",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -429,7 +459,7 @@
     {
       "executable": "frama-c",
       "name": "frama-c",
-      "tags": [
+      "tags": [ 
         "macro_bench"
       ],
       "runs": [
@@ -443,6 +473,7 @@
       "executable": "benchmarks/bdd/bdd.exe",
       "name": "bdd",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -468,6 +499,7 @@
       "executable": "alt-ergo",
       "name": "alt-ergo",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -481,6 +513,7 @@
       "executable": "alt-ergo",
       "name": "alt-ergo",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -494,6 +527,7 @@
       "executable": "benchmarks/lexifi-g2pp/main.exe",
       "name": "lexifi-g2pp",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -506,6 +540,7 @@
       "executable": "benchmarks/kb/kb.exe",
       "name": "kb",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -518,6 +553,7 @@
       "executable": "benchmarks/kb/kb_no_exc.exe",
       "name": "kb_no_exc",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -529,7 +565,9 @@
     {
       "executable": "benchmarks/zarith/zarith_fact.exe",
       "name": "zarith_fact",
-      "tags": [],
+      "tags": [
+	"1s_10s"
+	],
       "runs": [
         {
           "params": "40 1_000_000"
@@ -539,7 +577,7 @@
     {
       "executable": "benchmarks/zarith/zarith_fib.exe",
       "name": "zarith_fib",
-      "tags": [],
+      "tags": ["1s_10s"],
       "runs": [
         {
           "params": "Z 40"
@@ -550,6 +588,7 @@
       "executable": "benchmarks/zarith/zarith_pi.exe",
       "name": "zarith_pi",
       "tags": [
+        "1s_10s",
         "macro_bench",
         "run_in_ci"
       ],
@@ -562,7 +601,7 @@
     {
       "executable": "benchmarks/zarith/zarith_tak.exe",
       "name": "zarith_tak",
-      "tags": [],
+      "tags": ["1s_10s"],
       "runs": [
         {
           "params": "Z 2500"
@@ -573,6 +612,7 @@
       "executable": "menhir",
       "name": "menhir",
       "tags": [
+        "gt_100s",
         "macro_bench"
       ],
       "runs": [
@@ -586,6 +626,7 @@
       "executable": "menhir",
       "name": "menhir",
       "tags": [
+        "1s_10s",
         "macro_bench",
         "run_in_ci"
       ],
@@ -600,6 +641,7 @@
       "executable": "menhir",
       "name": "menhir",
       "tags": [
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
@@ -613,6 +655,7 @@
       "executable": "cubicle",
       "name": "cubicle",
       "tags": [
+        "gt_100s",
         "macro_bench"
       ],
       "runs": [
@@ -626,6 +669,7 @@
       "executable": "cubicle",
       "name": "cubicle",
       "tags": [
+        "gt_100s",
         "macro_bench"
       ],
       "runs": [
@@ -639,6 +683,7 @@
       "executable": "benchmarks/chameneos/chameneos_redux_lwt.exe",
       "name": "chameneos_redux_lwt",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -650,84 +695,99 @@
     {
       "executable": "benchmarks/simple-tests/stress.exe",
       "name": "stress",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
-        {
-          "params": "1 10"
-        },
         {
           "params": "10000 10"
         },
         {
-          "params": "100000 10"
-        },
-        {
-          "params": "1 25"
-        },
-        {
-          "params": "10000 25"
-        },
-        {
-          "params": "100000 25"
-        },
-        {
-          "params": "1 50"
-        },
-        {
-          "params": "10000 50"
-        },
-        {
-          "params": "100000 50"
-        },
-        {
-          "params": "1 75"
-        },
-        {
-          "params": "10000 75"
-        },
-        {
-          "params": "100000 75"
+          "params": "100000 100"
         },
         {
           "params": "1 100"
         },
         {
-          "params": "10000 100"
+        	"params":"100000 10"
         },
         {
-          "params": "100000 100"
+        	"params":"10000 100"
+        },
+        {
+        	"params":"1 10"
         }
-      ]
-    },
+    ]
+  },
+  
+  {
+      "executable": "benchmarks/simple-tests/stress.exe",
+      "name": "stress",
+      "tags": ["1s_10s"],
+      "runs": [
+        {
+          "params": "100000 50"
+        },
+        {
+        	"params": "10000 50"
+        },
+        {
+        	"params": "10000 25"
+        },
+        {
+        	"params":"1 75"
+        },
+        {
+        	"params":"100000 75"
+        },
+        {
+        	"params":"1 25"
+        },
+        {
+        	"params" :"1 50"
+        },
+        {
+        	"params":"100000 25"
+        },
+        {
+        	"params":"10000 75"
+        }
+    ]
+  },
     {
       "executable": "benchmarks/simple-tests/capi.exe",
       "name": "capi",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
         {
-          "params": "test_no_args_alloc 200_000_000"
+          "params": "test_many_args_noalloc_200_000_000"
         },
         {
-          "params": "test_no_args_noalloc 200_000_000"
+        	"params":"test_no_args_noalloc_200_000_000"
         },
         {
-          "params": "test_few_args_alloc 200_000_000"
+        	"params":"test_few_args_noalloc_200_000_000"
+        }
+    ]
+  },
+  {
+      "executable": "benchmarks/simple-tests/capi.exe",
+      "name": "capi",
+      "tags": ["1s_10s"],
+      "runs": [
+        {
+          "params": "test_many_args_alloc_200_000_000"
         },
         {
-          "params": "test_few_args_noalloc 200_000_000"
+          "params": "test_no_args_alloc_200_000_000"
         },
         {
-          "params": "test_many_args_alloc 200_000_000"
-        },
-        {
-          "params": "test_many_args_noalloc 200_000_000"
+          "params": "test_few_args_alloc_200_000_000"
         }
       ]
     },
     {
       "executable": "benchmarks/simple-tests/stacks.exe",
       "name": "stacks",
-      "tags": [],
+      "tags": ["1s_10s"],
       "runs": [
         {
           "params": "100000 ints-small"
@@ -746,7 +806,7 @@
     {
       "executable": "benchmarks/simple-tests/weakretain.exe",
       "name": "weakretain",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
         {
           "params": "25 1000"
@@ -789,11 +849,18 @@
     {
       "executable": "benchmarks/simple-tests/lazylist.exe",
       "name": "lazylist",
-      "tags": [],
+      "tags": ["1s_10s"],
       "runs": [
         {
           "params": "100000 100"
-        },
+        }
+    ]
+  },
+  {
+      "executable": "benchmarks/simple-tests/lazylist.exe",
+      "name": "lazylist",
+      "tags": ["lt_1s"],
+      "runs": [
         {
           "params": "10000 1000"
         },
@@ -805,7 +872,7 @@
     {
       "executable": "benchmarks/simple-tests/lists.exe",
       "name": "lists",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
         {
           "params": "int 1"
@@ -841,16 +908,10 @@
           "params": "float-tuple 10000"
         },
         {
-          "params": "float-tuple 100000"
-        },
-        {
           "params": "string 1"
         },
         {
           "params": "string 10000"
-        },
-        {
-          "params": "string 100000"
         },
         {
           "params": "record 1"
@@ -859,16 +920,10 @@
           "params": "record 10000"
         },
         {
-          "params": "record 100000"
-        },
-        {
           "params": "float-array 1"
         },
         {
           "params": "float-array 10000"
-        },
-        {
-          "params": "float-array 100000"
         },
         {
           "params": "int-array 1"
@@ -884,17 +939,39 @@
         },
         {
           "params": "int-option-array 10000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/lists.exe",
+      "name": "lists",
+      "tags": ["1s_10s"],
+      "runs": [
+      	{
+          "params": "int-option-array 100000"
         },
         {
-          "params": "int-option-array 100000"
+          "params": "string 100000"
+        },
+        {
+          "params": "record 100000"
+        },
+        {
+          "params": "float-array 100000"
+        },
+        {
+          "params": "float-tuple 100000"
         }
       ]
     },
     {
       "executable": "benchmarks/simple-tests/finalise.exe",
       "name": "finalise",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
+        {
+          "params": "30"
+        },
         {
           "params": "10"
         },
@@ -902,11 +979,15 @@
           "params": "20"
         },
         {
-          "params": "30"
-        },
-        {
           "params": "40"
-        },
+        }
+    ]
+  },
+  {
+      "executable": "benchmarks/simple-tests/finalise.exe",
+      "name": "finalise",
+      "tags": ["1s_10s"],
+      "runs": [
         {
           "params": "50"
         },
@@ -930,11 +1011,18 @@
     {
       "executable": "benchmarks/stdlib/stack_bench.exe",
       "name": "stack_bench",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
         {
           "params": "stack_fold 2500000"
-        },
+        }
+    ]
+  },
+  {
+      "executable": "benchmarks/stdlib/stack_bench.exe",
+      "name": "stack_bench",
+      "tags": ["1s_10s"],
+      "runs": [
         {
           "params": "stack_push_pop 100000000"
         }
@@ -943,7 +1031,7 @@
     {
       "executable": "benchmarks/stdlib/array_bench.exe",
       "name": "array_bench",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
         {
           "params": "array_forall 1000 100000"
@@ -959,14 +1047,33 @@
     {
       "executable": "benchmarks/stdlib/bytes_bench.exe",
       "name": "bytes_bench",
-      "tags": [],
+      "tags": ["1s_10s"],
       "runs": [
+      	{
+          "params": "bytes_map 1000000"
+        },
+        {
+          "params": "bytes_uppercase_ascii 1000000"
+        },
+        {
+          "params": "bytes_contains 100000000"
+        },
+        {
+          "params": "bytes_iter 1000000"
+        },
         {
           "params": "bytes_get 100000000"
         },
         {
           "params": "bytes_sub 100000000"
-        },
+        }
+      ]
+  },
+  {
+      "executable": "benchmarks/stdlib/bytes_bench.exe",
+      "name": "bytes_bench",
+      "tags": ["lt_1s"],
+      "runs": [
         {
           "params": "bytes_blit 2500000"
         },
@@ -974,22 +1081,10 @@
           "params": "bytes_concat 2000000"
         },
         {
-          "params": "bytes_iter 1000000"
-        },
-        {
-          "params": "bytes_map 1000000"
-        },
-        {
           "params": "bytes_trim 2500000"
         },
         {
           "params": "bytes_index 10000000"
-        },
-        {
-          "params": "bytes_contains 100000000"
-        },
-        {
-          "params": "bytes_uppercase_ascii 1000000"
         },
         {
           "params": "bytes_set 1000000000"
@@ -1002,7 +1097,7 @@
     {
       "executable": "benchmarks/stdlib/set_bench.exe",
       "name": "set_bench",
-      "tags": [],
+      "tags": ["1s_10s"],
       "runs": [
         {
           "params": "set_fold 1000000"
@@ -1018,14 +1113,27 @@
     {
       "executable": "benchmarks/stdlib/hashtbl_bench.exe",
       "name": "hashtbl_bench",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
-        {
+      	{
           "params": "int_replace1 10000"
         },
         {
-          "params": "int_find1 20000"
+          "params": "hashtbl_remove 4000000"
         },
+        {
+          "params": "hashtbl_find 6000000"
+        },
+        {
+          "params": "int_find1 20000"
+        }
+      ]
+  },
+  {
+      "executable": "benchmarks/stdlib/hashtbl_bench.exe",
+      "name": "hashtbl_bench",
+      "tags": ["1s_10s"],
+      "runs": [
         {
           "params": "caml_hash_int 200000"
         },
@@ -1054,12 +1162,6 @@
           "params": "hashtbl_add_duplicate 2000000"
         },
         {
-          "params": "hashtbl_remove 4000000"
-        },
-        {
-          "params": "hashtbl_find 6000000"
-        },
-        {
           "params": "hashtbl_filter_map 100000"
         }
       ]
@@ -1067,34 +1169,38 @@
     {
       "executable": "benchmarks/stdlib/string_bench.exe",
       "name": "string_bench",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
-        {
+      	{
           "params": "string_get 50000000"
         },
         {
-          "params": "string_sub 50000000"
+          "params": "string_blit 25000000"
         },
         {
-          "params": "string_blit 25000000"
+          "params": "string_trim 1000000"
+        },
+        {
+          "params": "string_contains 25000000"
+        },
+        {
+          "params": "string_index 25000000"
+        }
+      ]
+  },
+  {
+      "executable": "benchmarks/stdlib/string_bench.exe",
+      "name": "string_bench",
+      "tags": ["1s_10s"],
+      "runs": [
+        {
+          "params": "string_sub 50000000"
         },
         {
           "params": "string_concat 20000000"
         },
         {
           "params": "string_iter 1000000"
-        },
-        {
-          "params": "string_map 20000000"
-        },
-        {
-          "params": "string_trim 1000000"
-        },
-        {
-          "params": "string_index 25000000"
-        },
-        {
-          "params": "string_contains 25000000"
         },
         {
           "params": "string_uppercase_ascii 1000000"
@@ -1111,24 +1217,42 @@
       ]
     },
     {
+      "executable": "benchmarks/stdlib/string_bench.exe",
+      "name": "string_bench",
+      "tags": ["10s_100s"],
+      "runs": [
+      	{
+          "params": "string_map 20000000"
+        }
+      ]
+  },
+    {
       "executable": "benchmarks/stdlib/str_bench.exe",
       "name": "str_bench",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
+        {
+          "params": "str_string_partial_match 25000000"
+        },
         {
           "params": "str_regexp 1000000"
         },
         {
           "params": "str_string_match 50000000"
         },
+         {
+          "params": "str_global_replace 1000000"
+        }
+    ]
+  },
+  {
+      "executable": "benchmarks/stdlib/str_bench.exe",
+      "name": "str_bench",
+      "tags": ["1s_10s"],
+      "runs": [
+       
         {
           "params": "str_search_forward 5000000"
-        },
-        {
-          "params": "str_string_partial_match 25000000"
-        },
-        {
-          "params": "str_global_replace 1000000"
         },
         {
           "params": "str_split 2000000"
@@ -1138,25 +1262,32 @@
     {
       "executable": "benchmarks/stdlib/pervasives_bench.exe",
       "name": "pervasives_bench",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
         {
           "params": "pervasives_equal_lists 1000000000"
         },
         {
-          "params": "pervasives_compare_lists 100000000"
+          "params": "pervasives_equal_ints 1000000000"
         },
         {
-          "params": "pervasives_equal_ints 1000000000"
+          "params": "pervasives_compare_floats 200000000"
+        }
+    ]
+  },
+  {
+      "executable": "benchmarks/stdlib/pervasives_bench.exe",
+      "name": "pervasives_bench",
+      "tags": ["1s_10s"],
+      "runs": [
+        {
+          "params": "pervasives_compare_lists 100000000"
         },
         {
           "params": "pervasives_compare_ints 1000000000"
         },
         {
           "params": "pervasives_equal_floats 1000000000"
-        },
-        {
-          "params": "pervasives_compare_floats 200000000"
         },
         {
           "params": "pervasives_equal_strings 20000000"
@@ -1169,7 +1300,7 @@
     {
       "executable": "benchmarks/stdlib/map_bench.exe",
       "name": "map_bench",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
         {
           "params": "map_iter 10000"
@@ -1191,7 +1322,14 @@
         },
         {
           "params": "map_find 1000000"
-        },
+        }
+    ]
+  },
+  {
+      "executable": "benchmarks/stdlib/map_bench.exe",
+      "name": "map_bench",
+      "tags": ["1s_10s"],
+      "runs": [
         {
           "params": "map_map 10000"
         }
@@ -1200,7 +1338,7 @@
     {
       "executable": "benchmarks/stdlib/big_array_bench.exe",
       "name": "big_array_bench",
-      "tags": [],
+      "tags": ["1s_10s"],
       "runs": [
         {
           "params": "big_array_int_rev 1024 50000"
@@ -1213,7 +1351,7 @@
     {
       "executable": "benchmarks/simple-tests/morestacks.exe",
       "name": "morestacks",
-      "tags": [],
+      "tags": ["1s_10s"],
       "runs": [
         {
           "params": "1_000"
@@ -1223,7 +1361,7 @@
     {
       "executable": "benchmarks/simple-tests/alloc.exe",
       "name": "alloc",
-      "tags": [],
+      "tags": ["lt_1s"],
       "runs": [
         {
           "params": "200_000"
@@ -1234,6 +1372,7 @@
       "executable": "benchmarks/numerical-analysis/durand_kerner_aberth.exe",
       "name": "durand-kerner-aberth",
       "tags": [
+        "lt_1s",
         "macro_bench"
       ],
       "runs": [
@@ -1246,6 +1385,7 @@
       "executable": "benchmarks/numerical-analysis/fft.exe",
       "name": "fft",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -1258,6 +1398,7 @@
       "executable": "benchmarks/numerical-analysis/levinson_durbin.exe",
       "name": "levinson-durbin",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -1270,6 +1411,7 @@
       "executable": "benchmarks/numerical-analysis/lu_decomposition.exe",
       "name": "lu-decomposition",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -1282,6 +1424,7 @@
       "executable": "benchmarks/numerical-analysis/naive_multilayer.exe",
       "name": "naive-multilayer",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
@@ -1294,6 +1437,7 @@
       "executable": "benchmarks/irmin/irmin_mem_rw.exe",
       "name": "imrin_mem_rw",
       "tags": [
+        "1s_10s",
         "macro_bench",
         "run_in_ci"
       ],
@@ -1310,6 +1454,7 @@
       "executable": "coqc",
       "name": "coq",
       "tags": [
+        "gt_100s",
         "macro_bench",
         "run_in_ci"
       ],
@@ -1328,6 +1473,7 @@
       "executable": "benchmarks/numerical-analysis/qr_decomposition.exe",
       "name": "qr-decomposition",
       "tags": [
+        "1s_10s",
         "macro_bench"
       ],
       "runs": [
