@@ -19,18 +19,12 @@
   ],
   "benchmarks": [
     {
-      "executable": "benchmarks/graph500seq/kernel2.exe",
-      "name": "kernel2",
+      "executable": "benchmarks/graph500seq/kernel1.exe",
+      "name": "kernel1",
       "tags": [
-        "lt_1s", "run_in_ci"
+        "10s_100s", "macro_bench"
       ],
       "runs": [
-        {
-	  "params": "4 3"
-	},
-	{
-          "params": "3 1"
-        }
 	{
 	  "params": "12 10"
 	},
@@ -38,7 +32,22 @@
 	  "params": "10 9"
 	},
 	{
-	  "params": "2 1"
+	  "params": "13 9"
+	}
+      ]
+    },
+    {
+      "executable": "benchmarks/graph500seq/kernel2.exe",
+      "name": "kernel2",
+      "tags": [
+        "1s_10s", "macro_bench"
+      ],
+      "runs": [
+	{
+	  "params": "12 10"
+	},
+	{
+	  "params": "10 9"
 	},
 	{
 	  "params": "13 9"
@@ -49,17 +58,17 @@
       "executable": "benchmarks/graph500seq/kernel3.exe",
       "name": "kernel3",
       "tags": [
-        "lt_1s", "run_in_ci"
+        "10s_100s", "macro_bench"
       ],
       "runs": [
-        {
-          "params": "3 1 1"
-        },
 	{
 	  "params": "12 10 2"
 	},
 	{
 	  "params": "10 9 0"
+	},
+	{
+	  "params": "13 9 18"
 	}
       ]
     },
