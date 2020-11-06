@@ -27,6 +27,10 @@
 (*(*<-------OCaml Kronecker Kernel inspired from https://graph500.org/?page_id=12---------->
 Written by support of PRISM Lab, IIT Madras and OCaml Labs*)*)
 
+let scale = try int_of_string Sys.argv.(1) with _ -> 2
+
+let edgefactor = try int_of_string Sys.argv.(2) with _ -> 1
+
 let rec listGenerator1D list m =
   if m = 0 then list else listGenerator1D (0. :: list) (m - 1)
 
@@ -39,7 +43,7 @@ let rec randomWghtGen len list =
 
 let rec generateIIBitList list m ab =
   if List.length list = m then List.rev list
-  else if Random.float (float_of_int m) > ab then
+  else if Random.float 1. > ab then
     generateIIBitList (1. :: list) m ab
   else generateIIBitList (0. :: list) m ab
 
@@ -48,7 +52,7 @@ let rec generateJJBitList list ii_bit m a_norm c_norm =
   | [] -> List.rev list
   | head :: tail ->
       if
-        Random.float (float_of_int m)
+        Random.float 1.
         > (c_norm *. head) +. (a_norm *. float_of_int (int_of_float head lxor 1))
       then generateJJBitList (1. :: list) tail m a_norm c_norm
       else generateJJBitList (0. :: list) tail m a_norm c_norm
@@ -92,7 +96,7 @@ let rec printList list =
   match list with
   | [] -> Printf.printf "END"
   | head :: tail ->
-      List.iter print_float head;
+      let _ = List.map (Printf.printf "%f ") head in
       printList tail
 
 let computeNumber scale edgefactor =
@@ -100,25 +104,32 @@ let computeNumber scale edgefactor =
   let m = edgefactor * n in
   (n, m)
 
+let rec writeFile ijw file = 
+  match ijw with 
+  [] -> None |
+  head::tail -> let _ = List.iter (Printf.fprintf file "%f, ") head in let _ = Printf.fprintf file "\n" in writeFile tail file
+
 let kronecker scale edgefactor =
   let n, m = computeNumber scale edgefactor in
   let a, b, c = (0.57, 0.19, 0.19) in
   let ijw = listGenerator m [] in
-  (*For debugging*)
-  let _ = printList ijw in
   let ab = a +. b in
   let c_norm = c /. (1. -. (a +. b)) in
   let a_norm = a /. (a +. b) in
   let ijw = compareWithPr 0 m n ab a_norm c_norm ijw scale in
-  (*For debugging*)
-  let _ = printList ijw in
   let thirdRow = randomWghtGen m [] in
   let ijw = [ List.nth ijw 0 ] @ [ List.nth ijw 1 ] @ [ thirdRow ] in
   let firstRowPermute = permute (List.nth ijw 0) in
   let secondRowPermute = permute (List.nth ijw 1) in
   let ijw = [ firstRowPermute ] @ [ secondRowPermute ] @ [ List.nth ijw 2 ] in
-  (*For debugging*)
-  let _ = printList ijw in
   let ijw = permute (transpose 0 ijw []) in
   let ijw = transpose 0 ijw [] in
+  let _ = printList ijw in
+  if Sys.file_exists "kronecker.txt" then Sys.remove "kronecker.txt"; 
+  let file = open_out "kronecker.txt" in
+  let _ = writeFile ijw file in
+  let _ = close_out file in
   ijw
+;;
+
+kronecker scale edgefactor;;

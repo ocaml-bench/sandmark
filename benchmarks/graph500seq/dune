@@ -1,4 +1,4 @@
 (executables
-	(names  kernel2	kernel3))
+	(names kronecker kernel1 kernel2 kernel3))
 
-(alias (name buildbench) (deps kernel2.exe kernel3.exe))
+(alias (name buildbench) (deps kronecker.exe kernel1.exe kernel2.exe kernel3.exe))
