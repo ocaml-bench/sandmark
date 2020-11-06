@@ -22,7 +22,7 @@
       "executable": "benchmarks/graph500seq/kernel1.exe",
       "name": "kernel1",
       "tags": [
-        "10s_100s", "macro_bench"
+        "10s_100s", "macro_bench", "run_in_ci"
       ],
       "runs": [
 	{
@@ -40,7 +40,7 @@
       "executable": "benchmarks/graph500seq/kernel2.exe",
       "name": "kernel2",
       "tags": [
-        "1s_10s", "macro_bench"
+        "1s_10s", "macro_bench","run_in_ci"
       ],
       "runs": [
 	{
@@ -58,7 +58,7 @@
       "executable": "benchmarks/graph500seq/kernel3.exe",
       "name": "kernel3",
       "tags": [
-        "10s_100s", "macro_bench"
+        "10s_100s", "macro_bench","run_in_ci"
       ],
       "runs": [
 	{
