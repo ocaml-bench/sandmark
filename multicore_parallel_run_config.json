@@ -476,7 +476,7 @@
     },
     {
       "executable": "benchmarks/multicore-lockfree/test_wsqueue.exe",
-      "name": "lockfree-wsqueue",
+      "name": "test_wsqueue",
       "tags": ["lockfree_bench"],
       "runs": [
         {
@@ -485,8 +485,8 @@
       ]
     },
     {
-      "executable": "benchmarks/multicore-lockfree/test_wsqueue_parallel.exe",
-      "name": "lockfree-wsqueue-parallel",
+      "executable": "benchmarks/multicore-lockfree/test_wsqueue_multicore.exe",
+      "name": "test_wsqueue_multicore",
       "tags": ["lockfree_bench"],
       "runs": [
         {
@@ -517,7 +517,7 @@
     },
     {
       "executable": "benchmarks/multicore-lockfree/test_hash.exe",
-      "name": "lockfree-hash",
+      "name": "test_hash",
       "tags": ["lockfree_bench"],
       "runs": [
         {
@@ -526,8 +526,8 @@
       ]
     },
     {
-      "executable": "benchmarks/multicore-lockfree/test_hash_parallel.exe",
-      "name": "lockfree-hash-parallel",
+      "executable": "benchmarks/multicore-lockfree/test_hash_multicore.exe",
+      "name": "test_hash_multicore",
       "tags": ["lockfree_bench"],
       "runs": [
         {
