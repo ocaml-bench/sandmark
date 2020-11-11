@@ -4,8 +4,8 @@
 	(libraries lockfree))
 
 (executable
-	(name test_wsqueue_parallel)
-	(modules test_wsqueue_parallel)
+	(name test_wsqueue_multicore)
+	(modules test_wsqueue_multicore)
 	(libraries lockfree))
 
-(alias (name multibench_parallel) (deps test_wsqueue.exe test_wsqueue_parallel.exe))
+(alias (name multibench_parallel) (deps test_wsqueue.exe test_wsqueue_multicore.exe))

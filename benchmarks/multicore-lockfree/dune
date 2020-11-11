@@ -1,2 +1,3 @@
 (include hash-dune.inc)
 (include wsqueue-dune.inc)
+(include bag-dune.inc)
