@@ -1,6 +1,8 @@
 module WSQueue = Lockfree.WSQueue
 
-let num_items = try int_of_string Sys.argv.(1) with _ -> 10000000
+let num_threads = try int_of_string Sys.argv.(1) with _ -> 4
+let num_items = try int_of_string Sys.argv.(2) with _ -> 10000000
+let items_per_thread = num_items / num_threads
 
 let make_and_populate_wsq _ =
   let q = WSQueue.create () in
@@ -23,5 +25,7 @@ let loop_and_drain_queue wsq n () =
 let () =
   let q = make_and_populate_wsq () in
   let t = Unix.gettimeofday () in
-  loop_and_drain_queue q num_items ();
+  let d = Array.init (num_threads - 1) (fun _ -> Domain.spawn (loop_and_drain_queue q items_per_thread)) in
+  loop_and_drain_queue q items_per_thread ();
+  Array.iter Domain.join d;
   Printf.printf "%f" (Unix.gettimeofday () -. t)

@@ -1,25 +1,25 @@
-module Hash = Lockfree.Hash
+module Hash = Lockfree.Hash_Custom(struct
+  let load = 3;;
+  let nb_bucket = 526;;
+  let hash_function i = i;;
+end)
 
-let threads = int_of_string Sys.argv.(1)
-let read_percent = int_of_string Sys.argv.(2)
-let num_opers = int_of_string Sys.argv.(3)
+let read_percent = try int_of_string Sys.argv.(2) with _ -> 50
+let num_opers = try int_of_string Sys.argv.(1) with _ -> 1000000
 
 let () = Random.init 42
 
 let h = Hash.create()
 
-let do_stuff_with_hash () =
-  for _ = 1 to num_opers do
-    if Random.int 100 > read_percent then
-        Hash.add h (Random.int 1000) 0
-    else
-        ignore(Hash.find h (Random.int 1000))
-  done
+let add_or_remove_entries ht n () =
+    for i = 1 to n do 
+      let r = Random.int 100 in
+      let key = Random.int n in
+      if (r > read_percent) then
+        Hash.add ht key i
+      else
+        Hash.find ht key |> ignore
+      done
 
 let () =
-    let rec spawn_thread n =
-        match n with
-        | 0 -> []
-        | _ -> (Domain.spawn do_stuff_with_hash) :: spawn_thread (n-1)
-    in
-        ignore(List.map (fun d -> Domain.join d) (spawn_thread threads))
+    add_or_remove_entries h num_opers ()

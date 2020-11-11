@@ -477,32 +477,82 @@
     {
       "executable": "benchmarks/multicore-lockfree/test_wsqueue.exe",
       "name": "lockfree-wsqueue",
-      "tags": [],
+      "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "1 100000"
+          "params": "100_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_wsqueue_parallel.exe",
+      "name": "lockfree-wsqueue-parallel",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "1 100_000_000"
         },
         {
-          "params": "2 100000"
+          "params": "2 100_000_000"
         },
         {
-          "params": "4 100000"
+          "params": "4 100_000_000"
+        },
+        {
+          "params": "8 100_000_000"
+        },
+        {
+          "params": "12 100_000_000"
+        },
+        {
+          "params": "16 100_000_000"
+        },
+        {
+          "params": "20 100_000_000"
+        },
+        {
+          "params": "24 100_000_000"
         }
       ]
     },
     {
       "executable": "benchmarks/multicore-lockfree/test_hash.exe",
       "name": "lockfree-hash",
-      "tags": [],
+      "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "1 80 1000000"
+          "params": "100_000_000 50"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_hash_parallel.exe",
+      "name": "lockfree-hash-parallel",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "1 100_000_000 50"
         },
         {
-          "params": "2 80 1000000"
+          "params": "2 100_000_000 50"
         },
         {
-          "params": "4 80 1000000"
+          "params": "4 100_000_000 50"
+        },
+        {
+          "params": "8 100_000_000 50"
+        },
+        {
+          "params": "12 100_000_000 50"
+        },
+        {
+          "params": "16 100_000_000 50"
+        },
+        {
+          "params": "20 100_000_000 50"
+        },
+        {
+          "params": "24 100_000_000 50"
         }
       ]
     },
