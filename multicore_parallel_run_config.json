@@ -480,7 +480,7 @@
       "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "100_000_000"
+          "params": "10_000_000"
         }
       ]
     },
@@ -490,28 +490,69 @@
       "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "1 100_000_000"
+          "params": "1 10_000_000"
         },
         {
-          "params": "2 100_000_000"
+          "params": "2 10_000_000"
         },
         {
-          "params": "4 100_000_000"
+          "params": "4 10_000_000"
         },
         {
-          "params": "8 100_000_000"
+          "params": "8 10_000_000"
         },
         {
-          "params": "12 100_000_000"
+          "params": "12 10_000_000"
         },
         {
-          "params": "16 100_000_000"
+          "params": "16 10_000_000"
         },
         {
-          "params": "20 100_000_000"
+          "params": "20 10_000_000"
         },
         {
-          "params": "24 100_000_000"
+          "params": "24 10_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_msqueue.exe",
+      "name": "test_msqueue",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "10_000_000 50"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_msqueue_multicore.exe",
+      "name": "test_msqueue_multicore",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "1 10_000_000 50"
+        },
+        {
+          "params": "2 10_000_000 50"
+        },
+        {
+          "params": "4 10_000_000 50"
+        },
+        {
+          "params": "8 10_000_000 50"
+        },
+        {
+          "params": "12 10_000_000 50"
+        },
+        {
+          "params": "16 10_000_000 50"
+        },
+        {
+          "params": "20 10_000_000 50"
+        },
+        {
+          "params": "24 10_000_000 50"
         }
       ]
     },
@@ -521,7 +562,7 @@
       "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "100_000_000 50"
+          "params": "10_000_000 50"
         }
       ]
     },
@@ -531,28 +572,28 @@
       "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "1 100_000_000 50"
+          "params": "1 10_000_000 50"
         },
         {
-          "params": "2 100_000_000 50"
+          "params": "2 10_000_000 50"
         },
         {
-          "params": "4 100_000_000 50"
+          "params": "4 10_000_000 50"
         },
         {
-          "params": "8 100_000_000 50"
+          "params": "8 10_000_000 50"
         },
         {
-          "params": "12 100_000_000 50"
+          "params": "12 10_000_000 50"
         },
         {
-          "params": "16 100_000_000 50"
+          "params": "16 10_000_000 50"
         },
         {
-          "params": "20 100_000_000 50"
+          "params": "20 10_000_000 50"
         },
         {
-          "params": "24 100_000_000 50"
+          "params": "24 10_000_000 50"
         }
       ]
     },
@@ -562,7 +603,7 @@
       "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "100_000_000 50"
+          "params": "10_000_000 50"
         }
       ]
     },
@@ -572,28 +613,28 @@
       "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "1 100_000_000 50"
+          "params": "1 10_000_000 50"
         },
         {
-          "params": "2 100_000_000 50"
+          "params": "2 10_000_000 50"
         },
         {
-          "params": "4 100_000_000 50"
+          "params": "4 10_000_000 50"
         },
         {
-          "params": "8 100_000_000 50"
+          "params": "8 10_000_000 50"
         },
         {
-          "params": "12 100_000_000 50"
+          "params": "12 10_000_000 50"
         },
         {
-          "params": "16 100_000_000 50"
+          "params": "16 10_000_000 50"
         },
         {
-          "params": "20 100_000_000 50"
+          "params": "20 10_000_000 50"
         },
         {
-          "params": "24 100_000_000 50"
+          "params": "24 10_000_000 50"
         }
       ]
     },
