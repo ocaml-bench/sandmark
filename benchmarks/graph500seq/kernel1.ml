@@ -5,57 +5,22 @@ derived from kronecker product*)
 (*(*<-------OCaml Kernel 1 inspired from https://graph500.org/?page_id=12---------->
 Written by support of PRISM Lab, IIT Madras and OCaml Labs*)*)
 
-(*This function helps in transpose of the list which has to be converted 
-from (startVertex, endVertex, weight) in column to (startVertex, endVertex, weight) in 3 rows*)
+let scale = try int_of_string Sys.argv.(1) with _ -> 12
 
-let scale = try int_of_string Sys.argv.(1) with _ -> 2
+let edgefactor = try int_of_string Sys.argv.(2) with _ -> 10
 
-let edgefactor = try int_of_string Sys.argv.(2) with _ -> 1
-
-let rec transpose list col newList =
-  if col = 3 then newList
-  else
-    let rec transposeRow row rowList =
-      if row = List.length list then rowList
-      else
-        transposeRow (row + 1) (rowList @ [ List.nth (List.nth list row) col ])
-    in
-    transpose list (col + 1) (newList @ [ transposeRow 0 [] ])
-
-(*This basically sorts the list in a way that (startVertex, endVertex), startVertex > endVertex.*)
-let sortVerticeList list newList =
-  let rec sortVerticeList list newList maximum =
-    match list with
-    | [] -> (newList, int_of_float maximum)
-    | head :: tail ->
-        let x = List.nth head 0 and y = List.nth head 1 in
-        if x > y then
-          sortVerticeList tail
-            (newList @ [ [ x; y; List.nth head 2 ] ])
-            (max maximum x)
+(*This basically sorts the list in a way that (startVertex, endVertex), startVertex > endVertex. It removes the self loops from ijw*)
+let sortVerticeList ar newAr index =
+  let rec sortVerticeList ar maximum newAr index =
+    if index = -1 then ar, int_of_float (maximum) else
+        if ar.(0).(index) > ar.(1).(index) then 
+          sortVerticeList ar (max maximum ar.(0).(index)) (Array.append newAr [|ar.(0).(index); ar.(1).(index) ; ar.(2).(index)|]) (index-1)
+        else if ar.(0).(index) = ar.(1).(index) then 
+          sortVerticeList ar (max maximum ar.(0).(index)) newAr (index-1)
         else
-          sortVerticeList tail
-            (newList @ [ [ y; x; List.nth head 2 ] ])
-            (max maximum y)
+          sortVerticeList ar (max maximum ar.(1).(index)) (Array.append newAr [|ar.(1).(index); ar.(0).(index) ; ar.(2).(index)|])  (index-1)
   in
-  sortVerticeList list newList 0.
-
-(*As the name suggests, it removes the self loops from ijw*)
-let rec removeSelfLoops ijw newList col m =
-  if col = m then newList
-  else if List.nth (List.nth ijw 0) col = List.nth (List.nth ijw 1) col then
-    removeSelfLoops ijw newList (col + 1) m
-  else
-    removeSelfLoops ijw
-      ( newList
-      @ [
-          [
-            List.nth (List.nth ijw 0) col;
-            List.nth (List.nth ijw 1) col;
-            List.nth (List.nth ijw 2) col;
-          ];
-        ] )
-      (col + 1) m
+  sortVerticeList ar 0. newAr index
 
 (*This is basically the construction of adj matrix [row][col], 
 just in case dense graphs are being tested. All the kernels further though 
@@ -80,16 +45,15 @@ let addEdge startVertex endVertex weight hashTable =
 
 (*The two functions constructionAdjHash and kernel1 are the main 
 functions driving all the other functions.*)
-let rec constructionAdjHash list hashTable =
-  match list with
-  | [] -> hashTable
-  | head :: tail ->
-      let startVertex = int_of_float (List.nth head 0)
-      and endVertex = int_of_float (List.nth head 1)
-      and weight = List.nth head 2 in
+let rec constructionAdjHash ar hashTable index =
+  if index = -1 then hashTable 
+else
+      let startVertex = int_of_float (ar.(index).(0))
+      and endVertex = int_of_float (ar.(index).(1))
+      and weight = ar.(index).(2) in
       addEdge startVertex endVertex weight hashTable;
       addEdge endVertex startVertex weight hashTable;
-      constructionAdjHash tail hashTable
+      constructionAdjHash ar hashTable (index-1)
 
 let rec adjustForAllVertices adjMatrix size index =
   if index = size then adjMatrix
@@ -106,22 +70,21 @@ let rec readFile file ijw =
   Some line ->  
       match List.rev (String.split_on_char ',' line) with
       [] -> readFile file ijw |
-      _::tail -> let list = List.map (float_of_string) (List.rev tail) in
-      let ijw = ijw@[list] in readFile file ijw
+      _::tail -> let list = Array.of_list (List.map (float_of_string) (List.rev tail)) in
+      let ijw = Array.append ijw [|list|] in readFile file ijw
   with
   End_of_file -> let _ = close_in file in ijw
 
 let kernel1 ijw m =
-  let list = removeSelfLoops ijw [] 0 m in
-  let list, maximumEdgeLabel = sortVerticeList list [] in
+  let ar, maximumEdgeLabel = sortVerticeList ijw [||] (m-1)  in
   let hashTable = Hashtbl.create (maximumEdgeLabel + 1) in
-  let adjMatrix = constructionAdjHash list hashTable in
+  let adjMatrix = constructionAdjHash ar hashTable (m-1) in
   let adjMatrix = adjustForAllVertices adjMatrix (maximumEdgeLabel + 1) 0 in
   (adjMatrix, maximumEdgeLabel + 1)
 
 let linkKronecker () =
   let file = open_in "kronecker.txt" in
-  let ijw = readFile file [] in 
+  let ijw = readFile file [||] in 
   let adjMatrix =
     kernel1
       (ijw)
