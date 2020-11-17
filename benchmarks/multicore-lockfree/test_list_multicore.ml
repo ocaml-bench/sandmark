@@ -4,12 +4,13 @@ let read_percent = try int_of_string Sys.argv.(3) with _ -> 50
 let items_per_dom = n / num_domain
 
 module List = Lockfree.List
-
+let k = Domain.DLS.new_key Random.State.make_self_init
 let l = List.create ()
 
 let push_or_pop n () =
+  let state = Domain.DLS.get k in
   for i = 1 to n do
-    let r = Random.int 100 in
+    let r = Random.State.int state 100 in
     if (r > read_percent) then
       List.push l i
     else
