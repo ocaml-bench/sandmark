@@ -639,6 +639,47 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-lockfree/test_list.exe",
+      "name": "test_list",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "10_000_000 50"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_list_multicore.exe",
+      "name": "test_list_multicore",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "1 10_000_000 50"
+        },
+        {
+          "params": "2 10_000_000 50"
+        },
+        {
+          "params": "4 10_000_000 50"
+        },
+        {
+          "params": "8 10_000_000 50"
+        },
+        {
+          "params": "12 10_000_000 50"
+        },
+        {
+          "params": "16 10_000_000 50"
+        },
+        {
+          "params": "20 10_000_000 50"
+        },
+        {
+          "params": "24 10_000_000 50"
+        }
+      ]
+    },
+    {
       "executable": "benchmarks/simple-tests/alloc_multicore.exe",
       "name": "alloc_multicore",
       "tags": [],
