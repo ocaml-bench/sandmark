@@ -77,7 +77,7 @@ let rec bfsRecDisconnectedGraph adjMatrix bfsTree parentArray visited index =
 
 let main adjMatrixHash n =
   let len = n in
-  (*Printf.printf "%d\n" len;*)
+  let _  = Printf.printf "%d\n" len in 
   let parentArray = Array.make len (-1) in
   let visited = Array.make len 0 in
   let bfsTree, parentArray =
@@ -94,5 +94,4 @@ let linkKernel1 () =
   let ans = Kernel1.linkKronecker () in
   main (fst ans) (snd ans)
 
-;;
-linkKernel1 ()
+let _ = linkKernel1 ()

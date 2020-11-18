@@ -133,5 +133,4 @@ let kronecker scale edgefactor =
   let _ = close_out file in
   ijw
 
-;;
-kronecker scale edgefactor
+let _ = kronecker scale edgefactor

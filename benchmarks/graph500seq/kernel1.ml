@@ -90,18 +90,24 @@ let rec readFile file ijw =
     let _ = close_in file in
     ijw
 
+let computeNumber scale edgefactor =
+  let n = int_of_float (2. ** float_of_int scale) in
+  let m = edgefactor * n in
+  (n, m)
+
 let kernel1 ijw m =
   let ar, maximumEdgeLabel = sortVerticeList ijw [||] (m - 1) in
   let hashTable = Hashtbl.create (maximumEdgeLabel + 1) in
   let adjMatrix = constructionAdjHash ar hashTable ( Array.length ar - 1) in
   let adjMatrix = adjustForAllVertices adjMatrix (maximumEdgeLabel + 1) 0 in
+  let _ = Printf.printf "%d" maximumEdgeLabel in
   (adjMatrix, maximumEdgeLabel + 1)
 
 let linkKronecker () =
   let file = open_in "kronecker.txt" in
   let ijw = readFile file [||] in
-  let _ = Array.map (Printf.printf "%f" ) ijw.(0) in
+  (*let _ = Array.map (Printf.printf "%f" ) ijw.(0) in*)
   let adjMatrix =
-    kernel1 ijw (snd (Kronecker.computeNumber scale edgefactor))
+    kernel1 ijw (snd (computeNumber scale edgefactor))
   in
   adjMatrix

@@ -109,5 +109,5 @@ let linkKernel1 () =
   let ans = Kernel1.linkKronecker () in
   main (fst ans) startVertex (snd ans)
 
-;;
-linkKernel1 ()
+
+let _ = linkKernel1 ()
