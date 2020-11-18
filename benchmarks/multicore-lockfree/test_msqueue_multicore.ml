@@ -9,7 +9,6 @@ let k = Domain.DLS.new_key Random.State.make_self_init
 
 let enqueue_or_dequeue msq n () =
   let state = Domain.DLS.get k in
-  Printf.printf "%d\n" (Domain.self () :> int);
   for i = 1 to n do
     let r = Random.State.int state 100 in
     if (r > read_percent) then
