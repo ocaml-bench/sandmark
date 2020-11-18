@@ -1,2 +1,4 @@
-(include runs_dune.inc)
-(dirs benchmarks)
+(executables
+	(names kronecker kernel1 kernel2 kernel3))
+
+(alias (name buildbench) (deps kronecker.exe kernel1.exe kernel2.exe kernel3.exe))
