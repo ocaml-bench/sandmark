@@ -14,12 +14,12 @@ startVertex > endVertex.
 It removes the self loops from ijw*)
 let sortVerticeList ar newAr index =
   let rec sortVerticeList ar maximum newAr index =
-    if index = -1 then (ar, int_of_float maximum)
+    if index = -1 then (newAr, int_of_float maximum)
     else if ar.(0).(index) > ar.(1).(index) then
       sortVerticeList ar
         (max maximum ar.(0).(index))
         (Array.append newAr
-           [| ar.(0).(index); ar.(1).(index); ar.(2).(index) |])
+           [|[| ar.(0).(index); ar.(1).(index); ar.(2).(index) |]|])
         (index - 1)
     else if ar.(0).(index) = ar.(1).(index) then
       sortVerticeList ar (max maximum ar.(0).(index)) newAr (index - 1)
@@ -27,7 +27,7 @@ let sortVerticeList ar newAr index =
       sortVerticeList ar
         (max maximum ar.(1).(index))
         (Array.append newAr
-           [| ar.(1).(index); ar.(0).(index); ar.(2).(index) |])
+           [|[| ar.(1).(index); ar.(0).(index); ar.(2).(index) |]|])
         (index - 1)
   in
   sortVerticeList ar 0. newAr index
@@ -93,13 +93,14 @@ let rec readFile file ijw =
 let kernel1 ijw m =
   let ar, maximumEdgeLabel = sortVerticeList ijw [||] (m - 1) in
   let hashTable = Hashtbl.create (maximumEdgeLabel + 1) in
-  let adjMatrix = constructionAdjHash ar hashTable (m - 1) in
+  let adjMatrix = constructionAdjHash ar hashTable ( Array.length ar - 1) in
   let adjMatrix = adjustForAllVertices adjMatrix (maximumEdgeLabel + 1) 0 in
   (adjMatrix, maximumEdgeLabel + 1)
 
 let linkKronecker () =
   let file = open_in "kronecker.txt" in
   let ijw = readFile file [||] in
+  let _ = Array.map (Printf.printf "%f" ) ijw.(0) in
   let adjMatrix =
     kernel1 ijw (snd (Kronecker.computeNumber scale edgefactor))
   in
