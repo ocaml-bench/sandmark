@@ -1,0 +1,2 @@
+(include runs_dune.inc)
+(dirs benchmarks)
