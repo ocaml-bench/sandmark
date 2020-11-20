@@ -490,28 +490,28 @@
       "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "1 10_000_000"
+          "params": "1 10_000_000", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "2 10_000_000"
+          "params": "2 10_000_000", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "4 10_000_000"
+          "params": "4 10_000_000", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "8 10_000_000"
+          "params": "8 10_000_000", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "12 10_000_000"
+          "params": "12 10_000_000", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "16 10_000_000"
+          "params": "16 10_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         },
         {
-          "params": "20 10_000_000"
+          "params": "20 10_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         },
         {
-          "params": "24 10_000_000"
+          "params": "24 10_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         }
       ]
     },
@@ -531,28 +531,28 @@
       "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "1 10_000_000 50"
+          "params": "1 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "2 10_000_000 50"
+          "params": "2 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "4 10_000_000 50"
+          "params": "4 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "8 10_000_000 50"
+          "params": "8 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "12 10_000_000 50"
+          "params": "12 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "16 10_000_000 50"
+          "params": "16 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         },
         {
-          "params": "20 10_000_000 50"
+          "params": "20 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         },
         {
-          "params": "24 10_000_000 50"
+          "params": "24 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         }
       ]
     },
@@ -572,28 +572,28 @@
       "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "1 10_000_000 50"
+          "params": "1 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "2 10_000_000 50"
+          "params": "2 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "4 10_000_000 50"
+          "params": "4 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "8 10_000_000 50"
+          "params": "8 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "12 10_000_000 50"
+          "params": "12 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "16 10_000_000 50"
+          "params": "16 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         },
         {
-          "params": "20 10_000_000 50"
+          "params": "20 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         },
         {
-          "params": "24 10_000_000 50"
+          "params": "24 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         }
       ]
     },
@@ -613,28 +613,28 @@
       "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "1 10_000_000 50"
+          "params": "1 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "2 10_000_000 50"
+          "params": "2 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "4 10_000_000 50"
+          "params": "4 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "8 10_000_000 50"
+          "params": "8 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "12 10_000_000 50"
+          "params": "12 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "16 10_000_000 50"
+          "params": "16 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         },
         {
-          "params": "20 10_000_000 50"
+          "params": "20 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         },
         {
-          "params": "24 10_000_000 50"
+          "params": "24 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         }
       ]
     },
@@ -654,28 +654,28 @@
       "tags": ["lockfree_bench"],
       "runs": [
         {
-          "params": "1 10_000_000 50"
+          "params": "1 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "2 10_000_000 50"
+          "params": "2 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "4 10_000_000 50"
+          "params": "4 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "8 10_000_000 50"
+          "params": "8 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "12 10_000_000 50"
+          "params": "12 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
         },
         {
-          "params": "16 10_000_000 50"
+          "params": "16 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         },
         {
-          "params": "20 10_000_000 50"
+          "params": "20 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         },
         {
-          "params": "24 10_000_000 50"
+          "params": "24 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
         }
       ]
     },
