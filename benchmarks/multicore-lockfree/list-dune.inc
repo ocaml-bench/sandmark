@@ -8,4 +8,4 @@
 	(modules test_list_multicore)
 	(libraries lockfree))
 
-(alias (name multibench_parallel) (deps test_list.exe test_wsqueue_multicore.exe))
+(alias (name multibench_parallel) (deps test_list.exe test_list_multicore.exe))
