@@ -94,6 +94,16 @@
     (libraries lockfree))
 
 (alias
+		(name retro_eff_eff)
+		(deps rec_eff_ack.exe rec_eff_evenodd.exe rec_eff_fib.exe
+		   rec_eff_motzkin.exe rec_eff_tak.exe rec_eff_sudan.exe))
+
+(alias
+		(name retro_eff_seq)
+		(deps rec_seq_ack.exe rec_seq_evenodd.exe rec_seq_fib.exe
+		   rec_seq_motzkin.exe rec_seq_tak.exe rec_seq_sudan.exe))
+
+(alias
 		(name multibench_effects)
 		(deps algorithmic_differentiation.exe queens.exe eratosthenes.exe test_sched.exe
         effect_throughput_clone.exe effect_throughput_perform.exe effect_throughput_perform_drop.exe effect_throughput_val.exe
