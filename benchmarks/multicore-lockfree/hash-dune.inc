@@ -3,4 +3,9 @@
 	(modules test_hash)
 	(libraries lockfree))
 
-(alias (name multibench_parallel) (deps test_hash.exe))
+(executable
+	(name test_hash_multicore)
+	(modules test_hash_multicore)
+	(libraries lockfree))
+
+(alias (name multibench_parallel) (deps test_hash.exe test_hash_multicore.exe))
