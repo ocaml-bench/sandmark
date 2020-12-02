@@ -5,6 +5,5 @@ _results
 runs_dune.inc
 *~
 *.swp
-*_macro.json
-*_parallel.json
+*_filtered.json
 .ipynb_checkpoints

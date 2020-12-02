@@ -171,11 +171,8 @@ bash:
 	bash
 	@echo "[opam subshell completed]"
 
-%_macro.json: %.json
-	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index("macro_bench") != null)]}' < $< > $@
+%_filtered.json: %.json
+	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index($(TAG)) != null)]}' < $< > $@
 
-%_macro_2domains.json: %_macro.json
-	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index("macro_bench") != null)]} | {wrappers : .wrappers, benchmarks : [.benchmarks | .[] | select(.tags | index("macro_bench") != null) | {executable : .executable, name: .name, tags: .tags, runs : [.runs | .[] as $$item | if ($$item | .params | split(" ") | .[0] ) == "2" then $$item | .paramwrapper |= "" else empty end ] } ]}' < $< > $@
-
-%_ci.json: %.json
-	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index("run_in_ci") != null)]}' < $< > $@
+%_2domains.json: %.json
+	jq '{wrappers : .wrappers, benchmarks : [.benchmarks | .[] | {executable : .executable, name: .name, tags: .tags, runs : [.runs | .[] as $$item | if ($$item | .params | split(" ") | .[0] ) == "2" then $$item | .paramwrapper |= "" else empty end ] } ] }' < $< > $@
