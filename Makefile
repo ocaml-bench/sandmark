@@ -161,7 +161,7 @@ clean:
 	rm -rf _build
 	rm -rf _opam
 	rm -rf _results
-	rm -rf *_macro*.json *ci.json
+	rm -rf *filtered.json
 	rm -rf *~
 
 list:

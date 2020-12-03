@@ -136,6 +136,28 @@ and the default value is `run_config.json`. This file lists the executable to
 run and the wrapper which will be used to collect data (e.g. orun or perf). You
 can edit this file to change benchmark parameters or wrappers.
 
+The benchmarks also have associated tags which classify the benchmarks. The
+current tags are:
+
+* `macro_bench` - A macro benchmark.
+* `run_in_ci` - This benchmark is run in the CI.
+* `lt_1s` - running time is less than 1s on the `turing` machine.
+* `1s_10s` - running time is between 1s and 10s on the `turning` machine.
+* `10s_100s` - running time is between 10s and 100s on the `turing` machine.
+* `gt_100s` - running time is greater than 100s on the `turing` machine.
+
+The benchmarking machine `turing` is an Intel Xeon Gold 5120 CPU with 64GB of
+RAM housed at IITM.
+
+The `run_config.json` file may be filtered based on the tag. For example,
+
+```bash
+$ TAG='"macro_bench"' make run_config_filtered.json
+```
+
+filters the `run_config.json` file to only contain the benchmarks tagged as
+`macro_bench`.
+
 The build bench target determines the type of benchmark being built. It can be
 specified with the environment variable `BUILD_BENCH_TARGET`, and the default
 value is `buildbench` which runs the serial benchmarks. For executing the
