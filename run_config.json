@@ -483,7 +483,7 @@
     {
       "executable": "frama-c",
       "name": "frama-c",
-      "tags": [ 
+      "tags": [
         "macro_bench"
       ],
       "runs": [
@@ -741,7 +741,7 @@
         }
     ]
   },
-  
+
   {
       "executable": "benchmarks/simple-tests/stress.exe",
       "name": "stress",
@@ -1274,7 +1274,7 @@
       "name": "str_bench",
       "tags": ["1s_10s"],
       "runs": [
-       
+
         {
           "params": "str_search_forward 5000000"
         },
