@@ -127,9 +127,7 @@ to execute `chrt`, one way to do this can be:
 sudo setcap cap_sys_nice=ep /usr/bin/chrt
 ```
 
-### Running benchmarks
-
-We can obtain throughput and latency results for the benchmarks.
+### Configuring the benchmark runs
 
 A config file can be specified with the environment variable `RUN_CONFIG_JSON`,
 and the default value is `run_config.json`. This file lists the executable to
@@ -158,16 +156,19 @@ $ TAG='"macro_bench"' make run_config_filtered.json
 filters the `run_config.json` file to only contain the benchmarks tagged as
 `macro_bench`.
 
+### Running benchmarks
+
 The build bench target determines the type of benchmark being built. It can be
 specified with the environment variable `BUILD_BENCH_TARGET`, and the default
 value is `buildbench` which runs the serial benchmarks. For executing the
 parallel benchmarks use `multibench_parallel`. You can also setup a custom
 bench and add only the benchmarks you care about.
 
-For obtaining latency results, we can adjust the environment variable
-`RUN_BENCH_TARGET`. The scripts for latencies are present in the `pausetimes/`
-directory. The `pausetimes_trunk` Bash script obtains the latencies for stock
-OCaml and the `pausetimes_multicore` Bash script for Multicore OCaml.
+We can obtain throughput and latency results for the benchmarks. For obtaining 
+latency results, we can adjust the environment variable `RUN_BENCH_TARGET`. 
+The scripts for latencies are present in the `pausetimes/` directory. The 
+`pausetimes_trunk` Bash script obtains the latencies for stock OCaml and the 
+`pausetimes_multicore` Bash script for Multicore OCaml.
 
 ### Results
 
