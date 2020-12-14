@@ -1,0 +1,5 @@
+(executables
+	(names kernel3_par)
+	(libraries domainslib lockfree unix))
+
+(alias (name buildbench) (deps kernel3_par.exe))
