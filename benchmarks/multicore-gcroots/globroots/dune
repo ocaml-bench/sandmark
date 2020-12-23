@@ -1,0 +1,3 @@
+(library
+ (name globroots)
+ (foreign_stubs (language c) (names globrootsprim)))
