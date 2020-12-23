@@ -108,7 +108,7 @@
   {
     "executable": "benchmarks/multicore-gcroots/globroots_seq.exe",
     "name": "globroots_seq",
-    "tags": ["lt_1s", "sequential", "parallel"],
+    "tags": ["lt_1s", "parallel"],
     "runs": [
       { "params": "10000" }
     ]

@@ -13,7 +13,5 @@
  (modules globroots_mp)
  (libraries globroots))
 
-(alias (name buildbench) (deps globroots_seq.exe))
-
 (alias (name multibench_parallel)
   (deps globroots_seq.exe globroots_sp.exe globroots_mp.exe))
