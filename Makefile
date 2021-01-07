@@ -81,7 +81,10 @@ ocaml-versions/%.bench: depend ocaml-versions/%.json # .FORCE
 		OCAMLRUNPARAM="$(CONFIG_RUN_PARAMS)" OCAMLCONFIGOPTION="$(CONFIG_OPTIONS)" opam compiler create $(CONFIG_SWITCH_INPUT);	\
 	   fi; };
 	opam install rungen orun
-	opam repo add local dependencies
+	@{ LOCAL_REPO_EXISTS=`opam repo -s | grep -c local`; 	\
+	   if [ "$$LOCAL_REPO_EXISTS" -eq 0 ]; then		\
+	     opam repo add local dependencies;			\
+           fi; };
 	opam install --switch=$(CONFIG_SWITCH_NAME) --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
