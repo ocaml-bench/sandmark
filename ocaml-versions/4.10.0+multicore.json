@@ -1,3 +1,5 @@
 {
-  "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/parallel_minor_gc.tar.gz"
+    "name" : "ocaml-multicore/ocaml-multicore:parallel_minor_gc",
+    "configure" : "-q",
+    "runparams" : "v=0x400"
 }

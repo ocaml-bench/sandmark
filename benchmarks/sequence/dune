@@ -3,4 +3,4 @@
 (executable
  (name sequence_cps))
 
-(alias (name buildbench) (deps sequence_cps.exe))
+;; (alias (name buildbench) (deps sequence_cps.exe))

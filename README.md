@@ -21,11 +21,13 @@ $ opam install dune.2.6.0
 
 $ git clone https://github.com/ocaml-bench/sandmark.git
 $ cd sandmark
-$ make ocaml-versions/4.10.0+stock.bench
-$ make ocaml-versions/4.10.0+multicore.bench
+$ make depend
+
+$ TAG='"run_in_ci"' make run_config_filtered.json
+$ OPAMSOLVERTIMEOUT=0 BUILD_BENCH_TARGET=buildbench RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/4.10.0+multicore.bench
 ```
 
-You can now find the results in the `_results/` folder.
+You can now find the results in the `_build/analytics` folder.
 
 ## Pre-requisites
 
@@ -38,18 +40,17 @@ dependencies.
 
 ## Overview
 
-Sandmark uses opam, with a static local repository, to build external
-libraries and applications. It then builds any sandmark OCaml
-benchmarks and any data dependencies. Following this it runs the
-benchmarks as defined in the `run_config.json`
+Sandmark uses opam to build external libraries and applications. It
+then builds any sandmark OCaml benchmarks and any data
+dependencies. Following this it runs the benchmarks as defined in the
+`run_config.json`
 
 These stages are implemented in:
 
  - Opam setup: the `Makefile` handles the creation of an opam switch
    that builds a custom compiler as specified in the
-   `ocaml-versions/<version>.var` file.  It then installs all the
-   required packages; these packages are statically defined by their
-   opam files in the `dependencies` directory.
+   `ocaml-versions/<version>.json` file.  It then installs all the
+   required packages and their `dependencies`.
 
  - Runplan: the list of benchmarks which will run along with the
    measurement wrapper (e.g. orun or perf) is specified in
@@ -59,20 +60,20 @@ These stages are implemented in:
  - Build: dune is used to build all the sandmark OCaml benchmarks that
    are in the `benchmarks` directory.
 
- - Execute: dune is used to execute all the benchmarks sepcified in
+ - Execute: dune is used to execute all the benchmarks specified in
    the runplan using the benchmark wrapper defined in
    `run_config.json` and specified via the `RUN_BENCH_TARGET` variable
    passed to the makefile.
 
 ## Configuration
 
-The compiler variant and its configuration options can be specified in
+The compiler switch and its configuration options can be specified in
 a .json file in the ocaml-versions/ directory. It uses the JSON syntax
 as shown in the following example:
 
 ```
 {
-  "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/parallel_minor_gc.tar.gz",
+  "name" : "ocaml-multicore/ocaml-multicore:parallel_minor_gc",
   "configure" : "-q",
   "runparams" : "v=0x400"
 }
@@ -80,8 +81,8 @@ as shown in the following example:
 
 The various options are described below:
 
-- `url` is MANDATORY and provides the web URL to download the source
-  for the ocaml-base-compiler.
+- `name` is MANDATORY and specifies the ocaml compiler switch to be
+  installed.
 
 - `configure` is OPTIONAL, and you can use this setting to pass
   specific flags to the `configure` script.
@@ -93,11 +94,10 @@ The various options are described below:
 
 ### orun
 
-The orun wrapper is packaged in `orun/`, it collects runtime and OCaml
-garbage collector statistics producing output in a JSON format. You
-can use orun independently of the sandmark benchmarking suite, by
-installing it as an opam pin (e.g. `opam install .` from within
-`orun/`).
+The orun wrapper collects runtime and OCaml garbage collector
+statistics producing output in a JSON format. You can use orun
+independently of the sandmark benchmarking suite after installion from
+opam.ocaml.org.
 
 ### Using a directory different than /home
 
@@ -113,9 +113,6 @@ In order to get around this issue, you may specify
 location from sandboxing.
 
 ## Benchmarks
-
-You can execute both serial and parallel benchmarks using the
-`run_all_serial.sh` and `run_all_parallel.sh` scripts.
 
 Ensure that the respective .json configuration files have the
 appropriate settings.
@@ -162,31 +159,15 @@ The build bench target determines the type of benchmark being built. It can be
 specified with the environment variable `BUILD_BENCH_TARGET`, and the default
 value is `buildbench` which runs the serial benchmarks. For executing the
 parallel benchmarks use `multibench_parallel`. You can also setup a custom
-bench and add only the benchmarks you care about.
+bench and add only the benchmarks that you care about.
 
-We can obtain throughput and latency results for the benchmarks. For obtaining 
-latency results, we can adjust the environment variable `RUN_BENCH_TARGET`. 
-The scripts for latencies are present in the `pausetimes/` directory. The 
-`pausetimes_trunk` Bash script obtains the latencies for stock OCaml and the 
-`pausetimes_multicore` Bash script for Multicore OCaml.
+We can obtain throughput and latency results for the benchmarks. For obtaining
+latency results, we can adjust the environment variable `RUN_BENCH_TARGET`.
 
 ### Results
 
-After a run is complete, the results will be available in the `_results`
+After a run is complete, the results will be available in the `_build/analytics`
 directory.
-
-Jupyter notebooks are available in the `notebooks` directory to parse and
-visualise the results, for both serial and parallel benchmarks. To run the
-Jupyter notebooks for your results, copy your results to `notebooks/
-sequential` folder for sequential benchmarks and `notebooks/parallel` folder
-for parallel benchmarks. It is sufficient to copy only the consolidated
-bench files, which are present as
-`_results/<comp-version>/<comp-version>.bench`. You can run the notebooks
-with
-
-```
-$ jupyter notebook
-```
 
 ### Adding benchmarks
 
@@ -222,48 +203,6 @@ You can add new benchmarks as follows:
     `run_config.json` for sequential benchmarks and
     `multicore_parallel_run_config.json` for parallel benchmarks.
 
-## UI
-
-JupyterHub is a multi-user server for hosting Jupyter notebooks. The
-Littlest JupyterHub (TLJH) installation is capable of hosting 0-100
-users.
-
-The following steps can be used for installation on Ubuntu 18.04.4 LTS:
-
-```bash
-$ sudo apt install python3 python3-dev git curl
-$ curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py | \
-  sudo -E python3 - --admin adminuser
-```
-
-If you would like to run the the service on a specific port, say
-"8082", you need to update the same in /opt/tljh/state/traefix.toml
-file.
-
-You can verify that the services are running from:
-
-```bash
-$ sudo systemctl status traefik
-$ sudo systemctl status jupyterhub
-```
-
-By default, the hub login opens at hostname:15001/hub/login, which is
-used by the admin user to create user accounts. The users will be able
-to login using hostname:8082/user/username/tree.
-
-You can also setup HTTPS using Let's Encrypt with JuptyerHub using the
-following steps:
-
-```bash
-$ sudo tljh-config set https.enabled true
-$ sudo tljh-config set https.letsencrypt.email e-mail
-$ sudo tljh-config add-item https.letsencrypt.domains example.domain
-$ sudo tljh-config show
-$ sudo tljh-config reload proxy
-```
-
-Reference: https://tljh.jupyter.org/en/latest/install/custom-server.html
-
 ## Multicore Notes
 
 ### ctypes
@@ -282,4 +221,3 @@ The ocaml-update-c command in multicore needs to run with GNU
 sed. `sed` will default to a BSD sed on OS X. One way to make things
 work on OS X is to install GNU sed with homebrew and then update the
 `PATH` you run sandmark with to pick up the GNU version.
-
