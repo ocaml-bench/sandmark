@@ -153,6 +153,11 @@ depend:
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
 	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
 
+
+benchclean:
+	rm -rf _build/
+	rm -rf _results/
+
 clean:
 	rm -rf dependencies/packages/ocaml/*
 	rm -rf dependencies/packages/ocaml-base-compiler/*
