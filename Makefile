@@ -99,9 +99,9 @@ ocaml-versions/%.bench: depend ocaml-versions/%.json # .FORCE
 	        echo "  PRE_BENCH_EXEC=${PRE_BENCH_EXEC}"; 										\
 	        $(PRE_BENCH_EXEC) $(ENVIRONMENT) opam exec --switch $(CONFIG_SWITCH_NAME) -- dune build -j 1 --profile=release				\
 		  --workspace=ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME) @$(RUN_BENCH_TARGET); ex=$$?;						\
-		mkdir -p _build/analytics;	  											\
+		mkdir -p _results/;	  											\
 	        for i in `seq 1 $(ITER)`; do  												\
-	          find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat > _build/analytics/$(CONFIG_SWITCH_NAME)_$$i.$(WRAPPER).summary.bench;		\
+	          find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat > _results/$(CONFIG_SWITCH_NAME)_$$i.$(WRAPPER).summary.bench;		\
 		  find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.bench' -exec rm -f {} \;; 								\
 	        done; 															\
 	     exit $$ex; 														\
