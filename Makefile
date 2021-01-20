@@ -2,6 +2,9 @@
 # Configuration
 #
 
+# Use bash
+SHELL=/bin/bash
+
 # options for running the benchmarks
 # benchmark build target type:
 #  - buildbench: build all single threaded tests
@@ -40,7 +43,7 @@ else
 	PACKAGES += fraplib coq.dev #ctypes.0.14.0+stock frama-c coq fraplib alt-ergo js_of_ocaml-compiler
 endif
 
-DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip pkg-config m4 # Ubuntu
+DEPENDENCIES = libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 # Ubuntu
 PIP_DEPENDENCIES = intervaltree
 
 %_filtered.json: %.json
@@ -62,7 +65,18 @@ depend:
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
 	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
 
-ocaml-versions/%.bench: depend ocaml-versions/%.json # .FORCE
+.PHONY: .FORCE
+.FORCE:
+
+# the file sandmark_git_hash.txt contains the current git hash for this version of sandmark
+log_sandmark_hash:
+	-git log -n 1
+
+.PHONY: blah
+blah:
+	@echo ${PACKAGES}
+
+ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.json .FORCE
 	$(eval CONFIG_SWITCH_INPUT = $(shell jq -r '.name' ocaml-versions/$*.json))
 	$(eval CONFIG_SWITCH_NAME  = $(shell jq -r '.name | sub(":"; "-") | sub("/"; "-")' ocaml-versions/$*.json))
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
@@ -100,11 +114,22 @@ ocaml-versions/%.bench: depend ocaml-versions/%.json # .FORCE
 	        $(PRE_BENCH_EXEC) $(ENVIRONMENT) opam exec --switch $(CONFIG_SWITCH_NAME) -- dune build -j 1 --profile=release				\
 		  --workspace=ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME) @$(RUN_BENCH_TARGET); ex=$$?;						\
 		mkdir -p _results/;	  											\
-	        for i in `seq 1 $(ITER)`; do  												\
-	          find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat > _results/$(CONFIG_SWITCH_NAME)_$$i.$(WRAPPER).summary.bench;		\
-		  find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.bench' -exec rm -f {} \;; 								\
+	        for i in `seq 1 $(ITER)`; do \
+			declare -A META=( ["arch"]="uname -m" ["hostname"]="hostname" ["kernel"]="uname -s" ["version"]="uname -r" ); \
+			s=""; for key in "$${!META[@]}"; do \
+			result=`$${META[$${key}]}`; \
+			if [ "$${s}" == "" ]; then \
+				s="$${key}=$${result}"; \
+			else \
+				s="$${s} $${key}=$${result}"; \
+			fi \
+			done; \
+			header_entry=`jo -p $${s} | jq -c`; \
+			echo "$${header_entry}" > _results/$(CONFIG_SWITCH_NAME)_$$i.$(WRAPPER).summary.bench; \
+			find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat >> _results/$(CONFIG_SWITCH_NAME)_$$i.$(WRAPPER).summary.bench;		\
+			find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.bench' -exec rm -f {} \;; 								\
 	        done; 															\
-	     exit $$ex; 														\
+		exit $$ex; 														\
 	   else 															\
 		exit 0; 														\
 	   fi };
