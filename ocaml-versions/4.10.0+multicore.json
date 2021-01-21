@@ -1,5 +1,6 @@
 {
-    "name" : "ocaml-multicore/ocaml-multicore:parallel_minor_gc",
+    "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/parallel_minor_gc.tar.gz",
     "configure" : "-q",
-    "runparams" : "v=0x400"
+    "runparams" : "v=0x400",
+    "package_overrides" : ["dune.2.6.0"]
 }

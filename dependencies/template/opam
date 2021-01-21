@@ -1,0 +1,35 @@
+opam-version: "2.0"
+synopsis: "OCaml compiler"
+maintainer: "platform@lists.ocaml.org"
+depends: [
+  "base-unix" {post}
+  "base-bigarray" {post}
+  "base-threads" {post}
+]
+setenv: [
+  [CAML_LD_LIBRARY_PATH = "%{_:stubsdir}%"]
+  [CAML_LD_LIBRARY_PATH += "%{lib}%/stublibs"]
+  [OCAML_TOPLEVEL_PATH = "%{toplevel}%"]
+]
+conflict-class: "ocaml-core-compiler"
+flags: compiler
+build: [
+  ["./configure" "-prefix" prefix]
+    {os != "openbsd" & os != "freebsd" & os != "macos"}
+  [
+    "./configure"
+    "-prefix"
+    prefix
+    "-cc"
+    "cc"
+    "-aspp"
+    "cc -c"
+  ] {os = "openbsd" | os = "freebsd" | os = "macos"}
+  [make "world"]
+  [make "world.opt"]
+]
+install: [make "install"]
+url {
+  src: "https://github.com/ocaml/ocaml/archive/4.05.0.tar.gz"
+  checksum: "md5=7e0079162134336a24b9028349c756bb"
+}

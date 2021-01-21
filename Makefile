@@ -35,7 +35,8 @@ CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
 WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
-PACKAGES = decompress irmin-mem zarith bigstringaf num lwt react uuidm cpdf menhir menhirLib
+DEP_PACKAGES = dune sexplib0 re yojson
+PACKAGES = decompress irmin-mem zarith bigstringaf num lwt react uuidm cpdf menhir menhirLib ocaml-config
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += #lockfree kcas domainslib ctypes.0.14.0+multicore
@@ -45,6 +46,13 @@ endif
 
 DEPENDENCIES = libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 # Ubuntu
 PIP_DEPENDENCIES = intervaltree
+
+.SECONDARY:
+export OPAMROOT=$(CURDIR)/_opam
+
+.PHONY: bash list depend clean
+
+ocamls=$(wildcard ocaml-versions/*.json)
 
 %_filtered.json: %.json
 	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index($(TAG)) != null)]}' < $< > $@
@@ -56,10 +64,40 @@ PIP_DEPENDENCIES = intervaltree
 # Build
 #
 
+override_packages/%: _opam/%
+	$(eval CONFIG_SWITCH_NAME = $*)
+	opam update
+	opam repo add upstream "https://opam.ocaml.org" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
+	@{	declare -A OVERRIDE=( ["dune"]="dune" ); 						\
+		for row in `cat ocaml-versions/$*.json | jq '.package_overrides | .[]'`; do		\
+			package_version=`echo $$row | xargs echo | tr -d '[:space:]'`;                  \
+			package_name=($${package_version//./ });                                        \
+			OVERRIDE["$${package_name}"]="$${package_version}";				\
+		done; 											\
+		for i in ${DEP_PACKAGES}; do 								\
+			if [ -v $${OVERRIDE["$${i}"]} ]; then 						\
+				OVERRIDE["$${i}"]="$${i}"; 						\
+			fi; 										\
+		done; 											\
+		for key in "$${!OVERRIDE[@]}"; do 							\
+		        opam install --switch=$(CONFIG_SWITCH_NAME) --yes "$${OVERRIDE[$${key}]}" ||    \
+				$(CONTINUE_ON_OPAM_INSTALL_ERROR); 					\
+		done; 											\
+	};
+
 define check_dependency
 	$(if $(filter $(shell $(2) | grep $(1) | wc -l), 0),
 		@echo "$(1) is not installed. $(3)")
 endef
+
+check_url:
+	@{ for f in `find ocaml-versions/*.json`; do    	\
+		URL=`jq -r '.url' $$f`;                   	\
+		if [ -z "$$URL" ] ; then                  	\
+			echo "No URL (mandatory) for $$f";   	\
+		fi;                                       	\
+	    done;                                        	\
+	};
 
 depend:
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
@@ -76,30 +114,46 @@ log_sandmark_hash:
 blah:
 	@echo ${PACKAGES}
 
-ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.json .FORCE
-	$(eval CONFIG_SWITCH_INPUT = $(shell jq -r '.name' ocaml-versions/$*.json))
-	$(eval CONFIG_SWITCH_NAME  = $(shell jq -r '.name | sub(":"; "-") | sub("/"; "-")' ocaml-versions/$*.json))
+list:
+	@echo $(ocamls)
+
+bash:
+	bash
+	@echo "[opam subshell completed]"
+
+# to build in a Dockerfile you need to disable sandboxing in opam
+ifeq ($(OPAM_DISABLE_SANDBOXING), true)
+	OPAM_INIT_EXTRA_FLAGS=--disable-sandboxing
+endif
+_opam/opam-init/init.sh:
+	opam init --bare --no-setup --no-opamrc $(OPAM_INIT_EXTRA_FLAGS) ./dependencies
+
+_opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
+	rm -rf dependencies/packages/ocaml/ocaml.$*
+	rm -rf dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
+	mkdir -p dependencies/packages/ocaml/ocaml.$*
+	cp -R dependencies/template/ocaml/* dependencies/packages/ocaml/ocaml.$*/
+	mkdir -p dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
+	cp -R dependencies/template/ocaml-base-compiler/* \
+          dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/
+	{ url="$$(jq -r '.url // empty' ocaml-versions/$*.json)"; echo "url { src: \"$$url\" }"; echo "setenv: [ [ ORUN_CONFIG_ocaml_url = \"$$url\" ] ]"; } \
+\
+          >> dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/opam
+	$(eval OCAML_CONFIG_OPTION = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
+	$(eval OCAML_RUN_PARAM     = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
+	opam update
+	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
+
+ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
+	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	$(eval ENVIRONMENT         = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
-	opam update
-	@{ if [ -f "$(HOME)/.opam/plugins/bin/opam-compiler" ]; then		\
-		echo "$(HOME)/.opam/plugins/bin/opam-compiler exists!";		\
-	   else									\
-		opam install opam-compiler --best-effort --yes; 	 	\
-	   fi; };
-	@{ SWITCH_EXISTS=`opam switch list -s | grep -c $(CONFIG_SWITCH_NAME)`;								\
-	   if [ "$$SWITCH_EXISTS" -eq 1 ]; then												\
-		opam switch $(CONFIG_SWITCH_NAME);											\
-	   else																\
-		OCAMLRUNPARAM="$(CONFIG_RUN_PARAMS)" OCAMLCONFIGOPTION="$(CONFIG_OPTIONS)" opam compiler create $(CONFIG_SWITCH_INPUT);	\
-	   fi; };
-	opam install rungen orun
-	@{ LOCAL_REPO_EXISTS=`opam repo -s | grep -c local`; 	\
-	   if [ "$$LOCAL_REPO_EXISTS" -eq 0 ]; then		\
-	     opam repo add local dependencies;			\
-           fi; };
+	opam install --switch=$(CONFIG_SWITCH_NAME) --best-effort --yes $(DEP_PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	opam install --switch=$(CONFIG_SWITCH_NAME) --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
+	opam pin add -n --yes --switch $(CONFIG_SWITCH_NAME) orun ../orun/
+	opam pin add -n --yes --switch $(CONFIG_SWITCH_NAME) rungen ../rungen/
+	opam install --switch=$(CONFIG_SWITCH_NAME) --yes rungen orun
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $(CONFIG_SWITCH_NAME)) (name $(CONFIG_SWITCH_NAME)_$$i)))"; \
@@ -127,7 +181,6 @@ ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.json .FORCE
 			header_entry=`jo -p $${s} | jq -c`; \
 			echo "$${header_entry}" > _results/$(CONFIG_SWITCH_NAME)_$$i.$(WRAPPER).summary.bench; \
 			find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat >> _results/$(CONFIG_SWITCH_NAME)_$$i.$(WRAPPER).summary.bench;		\
-			find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.bench' -exec rm -f {} \;; 								\
 	        done; 															\
 		exit $$ex; 														\
 	   else 															\
@@ -135,8 +188,13 @@ ocaml-versions/%.bench: depend log_sandmark_hash ocaml-versions/%.json .FORCE
 	   fi };
 
 clean:
-	rm -rf ocaml-versions/.workspace.*
+	rm -rf dependencies/packages/ocaml/*
+	rm -rf dependencies/packages/ocaml-base-compiler/*
+	rm -rf ocaml-versions/.packages.*
+	rm -rf ocaml-versions/*.bench
 	rm -rf _build
+	rm -rf _opam
+	rm -rf _results
+	rm -rf *filtered.json
 	rm -rf *~
-	rm -f *filtered.json
-	rm -f *.inc
+
