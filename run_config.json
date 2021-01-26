@@ -19,6 +19,20 @@
   ],
   "benchmarks": [
     {
+      "executable": "benchmarks/irmin/layers.exe -n 100",
+      "name": "layers",
+      "tags": [
+        "1s_10s",
+        "macro_bench",
+        "run_in_ci"
+      ],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
       "executable": "benchmarks/graph500seq/kronecker.exe",
       "name": "kronecker",
       "tags": [

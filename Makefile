@@ -111,15 +111,9 @@ ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json
 	$(eval ENVIRONMENT = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
 	@opam update
 	opam install --switch=$* --keep-build-dir --yes rungen orun
-	#opam install --switch=$* --yes index
-	#opam install --switch=$* --yes semaphore-compat
-	#opam install --switch=$* --yes progress-unix
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
-	 opam exec --switch $* -- opam list
-	# TODO: Add resolve command here to check missing dependencies
-	opam list --rec --resolve irmin-layers
-	#opam install --switch=$* --yes ppx_deriving_yojson
-	#exit 1
+	opam exec --switch $* -- opam list
+	opam list --rec --resolve irmin-mem
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
