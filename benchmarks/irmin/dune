@@ -1,5 +1,13 @@
 (executable
 	(name irmin_mem_rw)
-	(libraries irmin irmin-mem lwt.unix))
+	(modules irmin_mem_rw)
+	(libraries irmin irmin-mem lwt lwt.unix))
 
-(alias (name buildbench) (deps irmin_mem_rw.exe))
+(executable
+	(name layers)
+	(modules layers)
+	(preprocess
+	 (pps ppx_deriving_yojson ppx_repr))
+	(libraries irmin-pack irmin-pack.layered irmin-layers index fmt logs lwt yojson irmin unix cmdliner))
+
+(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))
