@@ -35,7 +35,7 @@ CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
 WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
-PACKAGES = dune sexplib0 re yojson decompress irmin-mem zarith bigstringaf num lwt react uuidm cpdf menhir menhirLib ocaml-config
+PACKAGES = dune sexplib0 re yojson decompress irmin-mem zarith bigstringaf num lwt react uuidm cpdf menhir menhirLib ocaml-config alt-ergo nbcodec
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += #lockfree kcas domainslib ctypes.0.14.0+multicore
@@ -43,7 +43,7 @@ else
 	PACKAGES += fraplib coq #ctypes.0.14.0+stock frama-c coq fraplib alt-ergo js_of_ocaml-compiler
 endif
 
-DEPENDENCIES = libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 # Ubuntu
+DEPENDENCIES = libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf # Ubuntu
 PIP_DEPENDENCIES = intervaltree
 
 .SECONDARY:

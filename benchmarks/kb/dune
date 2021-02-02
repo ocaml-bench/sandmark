@@ -3,4 +3,4 @@
 (executables
  (names kb kb_no_exc))
 
-;; (alias (name buildbench) (deps kb.exe kb_no_exc.exe))
+(alias (name buildbench) (deps kb.exe kb_no_exc.exe))
