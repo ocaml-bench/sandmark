@@ -1,0 +1,9 @@
+opam-version: "2.0"
+name: "Sandmark"
+synopsis: "Sandmark benchmark suite"
+maintainer: "Shakthi Kannan <author@shakthimaan.com>"
+authors: "Shakthi Kannan <author@shakthimaan.com>"
+homepage: "https://github.com/ocaml-bench/sandmark"
+bug-reports: "https://github.com/ocaml-bench/sandmark/issues"
+license: "CC 1.0 Universal"
+depends: [

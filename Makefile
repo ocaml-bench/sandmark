@@ -35,13 +35,12 @@ CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
 WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
-DEP_PACKAGES = dune sexplib0 re yojson
-PACKAGES = decompress irmin-mem zarith bigstringaf num lwt react uuidm cpdf menhir menhirLib ocaml-config
+PACKAGES = dune sexplib0 re yojson decompress irmin-mem zarith bigstringaf num lwt react uuidm cpdf menhir menhirLib ocaml-config
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += #lockfree kcas domainslib ctypes.0.14.0+multicore
 else
-	PACKAGES += fraplib coq.dev #ctypes.0.14.0+stock frama-c coq fraplib alt-ergo js_of_ocaml-compiler
+	PACKAGES += fraplib coq #ctypes.0.14.0+stock frama-c coq fraplib alt-ergo js_of_ocaml-compiler
 endif
 
 DEPENDENCIES = libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 # Ubuntu
@@ -64,25 +63,35 @@ ocamls=$(wildcard ocaml-versions/*.json)
 # Build
 #
 
+# TODO: Change dev.opam per switch
 override_packages/%: _opam/%
 	$(eval CONFIG_SWITCH_NAME = $*)
-	opam update
+	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
 	opam repo add upstream "https://opam.ocaml.org" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
-	@{	declare -A OVERRIDE=( ["dune"]="dune" ); 						\
-		for row in `cat ocaml-versions/$*.json | jq '.package_overrides | .[]'`; do		\
-			package_version=`echo $$row | xargs echo | tr -d '[:space:]'`;                  \
-			package_name=($${package_version//./ });                                        \
-			OVERRIDE["$${package_name}"]="$${package_version}";				\
-		done; 											\
-		for i in ${DEP_PACKAGES}; do 								\
-			if [ -v $${OVERRIDE["$${i}"]} ]; then 						\
-				OVERRIDE["$${i}"]="$${i}"; 						\
-			fi; 										\
-		done; 											\
-		for key in "$${!OVERRIDE[@]}"; do 							\
-		        opam install --switch=$(CONFIG_SWITCH_NAME) --yes "$${OVERRIDE[$${key}]}" ||    \
-				$(CONTINUE_ON_OPAM_INSTALL_ERROR); 					\
-		done; 											\
+	cp dependencies/template/dev.opam $(DEV_OPAM)
+	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.2.6.0" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
+	opam update --switch=$(CONFIG_SWITCH_NAME)
+	@{	declare -A OVERRIDE=( ["dune"]="\"dune\" {= \"2.6.0\"}" ); 					\
+		do_overrides=`jq '.package_overrides' ocaml-versions/$*.json`; \
+		if [ "$${do_overrides}" != null ]; then \
+			for row in `cat ocaml-versions/$*.json | jq '.package_overrides | .[]'`; do	\
+				package=`echo $$row | xargs echo | tr -d '[:space:]'`; \
+				package_name=`cut -d '.' -f 1 <<< "$$package"`; \
+				package_version=`cut -d '.' -f 2- <<< "$$package"`; \
+				OVERRIDE["$${package_name}"]="\"$${package_name}\" {= \"$${package_version}\" }";			\
+			done; 										\
+		fi; \
+		for i in ${PACKAGES}; do 							\
+			if [ -v $${OVERRIDE["$${i}"]} ]; then 					\
+				OVERRIDE["$${i}"]="\"$${i}\""; 					\
+			fi; 									\
+		done; 										\
+		for key in "$${!OVERRIDE[@]}"; do 						\
+			echo " $${OVERRIDE[$${key}]}" >> $(DEV_OPAM); 	\
+		done; 										\
+		echo "]" >> $(DEV_OPAM); 	\
+	        opam install $(DEV_OPAM) --switch=$(CONFIG_SWITCH_NAME) --yes --deps-only || $(CONTINUE_ON_OPAM_INSTALL_ERROR);	\
+		opam list --switch=$(CONFIG_SWITCH_NAME); \
 	};
 
 define check_dependency
@@ -149,8 +158,6 @@ ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash o
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	$(eval ENVIRONMENT         = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
-	opam install --switch=$(CONFIG_SWITCH_NAME) --best-effort --yes $(DEP_PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
-	opam install --switch=$(CONFIG_SWITCH_NAME) --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	opam pin add -n --yes --switch $(CONFIG_SWITCH_NAME) orun ../orun/
 	opam pin add -n --yes --switch $(CONFIG_SWITCH_NAME) rungen ../rungen/
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes rungen orun
