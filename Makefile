@@ -63,7 +63,10 @@ ocamls=$(wildcard ocaml-versions/*.json)
 # Build
 #
 
-# TODO: Change dev.opam per switch
+list_tags:
+	@echo "List of Tags"
+	@jq '[.benchmarks[].tags] | add | flatten | .[]' *.json | sort -u
+
 override_packages/%: _opam/%
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
