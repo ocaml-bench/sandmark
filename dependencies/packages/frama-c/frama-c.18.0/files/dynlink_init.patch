@@ -1,0 +1,10 @@
+diff -ru frama-c-base.15.0-bak/src/kernel_services/plugin_entry_points/dynamic.ml frama-c-base.15.0/src/kernel_services/plugin_entry_points/dynamic.ml
+--- a/src/kernel_services/plugin_entry_points/dynamic.ml
++++ b/src/kernel_services/plugin_entry_points/dynamic.ml
+@@ -46,7 +46,6 @@
+   if not !dynlib_init then
+     begin
+       dynlib_init := true ;
+-      Dynlink.init () ;
+       Dynlink.allow_unsafe_modules true ;
+     end
