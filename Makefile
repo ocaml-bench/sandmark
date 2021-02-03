@@ -113,7 +113,7 @@ ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json
 	opam install --switch=$* --keep-build-dir --yes rungen orun
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	opam exec --switch $* -- opam list
-	opam list --rec --resolve irmin-mem
+	opam list --rec --resolve irmin
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \
