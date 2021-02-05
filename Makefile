@@ -40,7 +40,7 @@ PACKAGES = \
 	num lwt react uuidm cpdf menhir menhirLib ocaml-config nbcodec minilight cubicle
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
-	PACKAGES += #lockfree kcas domainslib ctypes.0.14.0+multicore
+	PACKAGES += lockfree domainslib kcas # ctypes.0.14.0+multicore
 else
 	PACKAGES += fraplib frama-c coq alt-ergo #ctypes.0.14.0+stock  js_of_ocaml-compiler
 endif
