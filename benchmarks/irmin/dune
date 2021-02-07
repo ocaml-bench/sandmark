@@ -6,9 +6,6 @@
 (executable
 	(name layers)
 	(modules layers)
-	(preprocess
-	 (pps ppx_deriving_yojson ppx_repr))
-	(ppx_runtime_libraries lwt)
-	(libraries irmin-pack irmin-pack.layered irmin-layers index fmt logs lwt lwt.unix yojson irmin unix cmdliner))
+	(libraries ppx_deriving_yojson.runtime irmin-pack irmin-pack.layered irmin-layers index fmt logs lwt lwt.unix yojson irmin unix cmdliner))
 
 (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))
