@@ -9,6 +9,7 @@ dev-repo:     "git+https://github.com/mirage/irmin.git"
 build: [
  ["dune" "subst"] {dev}
  ["dune" "build" "-p" name "-j" jobs]
+ ["dune" "runtest" "-p" name "-j" jobs] {with-test}
 ]
 
 depends: [
@@ -23,15 +24,20 @@ depends: [
   "lwt"
   "mtime"
   "cmdliner"
+  "irmin-test"   {with-test & = version}
+  "alcotest-lwt" {with-test}
+  "astring"      {with-test}
+  "fpath"        {with-test}
+  "alcotest"     {with-test}
 ]
 
 synopsis: "Irmin backend which stores values in a pack file"
-x-commit-hash: "3e22238e86b6bac0c4eddff5b899efeaebe49dc9"
+x-commit-hash: "a517b827b26ef4beffae1c2e145d1b5492ba403e"
 url {
   src:
-    "https://github.com/mirage/irmin/releases/download/2.3.0/irmin-2.3.0.tbz"
+    "https://github.com/mirage/irmin/releases/download/2.4.0/irmin-2.4.0.tbz"
   checksum: [
-    "sha256=41d1d08cedb19d17935b7e840f18265ebd8b8a50cc3797d031aee992125070a6"
-    "sha512=ff527303850c2e36853ae0857f2ecbc22b5096f87197521dd049f80a234228c74f840aadef6d7c826acceda7b0a49e1dc2b5c105bb65d7c9551f0f8f377b2fc6"
+    "sha256=abe7d504aaa4c8fd0f08a04bbfb2748bc23f714df20dd6381b6885bcca56d4ac"
+    "sha512=e3097e50ea3598b3c5da4d567a4d3d053a2cd70549afb9ced6fcec8f6faf0677f5d7f8c0541515e0dd3d5eb1d3990e3067d47014deaf93cd52b92bb9f7319968"
   ]
 }

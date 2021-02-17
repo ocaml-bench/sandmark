@@ -32,7 +32,7 @@ PACKAGES = \
 	cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib \
 	menhir minilight base stdio dune-private-libs dune-configurator camlimages \
 	yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum \
-	sexplib0 irmin-mem cubicle conf-findutils index logs \
+	sexplib0 irmin cubicle conf-findutils index logs \
 	mtime ocaml-migrate-parsetree ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
@@ -108,6 +108,12 @@ blah:
 	@echo ${PACKAGES}
 
 ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json _opam/% .FORCE
+	@{ case "$*" in \
+	  *multicore*) opam pin add -n --yes --switch $* ocaml-migrate-parsetree.dev https://github.com/Sudha247/ocaml-migrate-parsetree.git#multicore; \
+		opam pin add -n --yes --switch $* ppxlib.dev https://github.com/Sudha247/ppxlib.git#multicore; 					 \
+		echo "Multicore" ;;  \
+	  *) echo "Not mutlicore";;  \
+	  esac };
 	$(eval ENVIRONMENT = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
 	@opam update
 	opam install --switch=$* --keep-build-dir --yes rungen orun
