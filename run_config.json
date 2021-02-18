@@ -782,13 +782,13 @@
       "tags": ["lt_1s"],
       "runs": [
         {
-          "params": "test_many_args_noalloc_200_000_000"
+          "params": "test_many_args_noalloc 200_000_000"
         },
         {
-        	"params":"test_no_args_noalloc_200_000_000"
+          "params":"test_no_args_noalloc 200_000_000"
         },
         {
-        	"params":"test_few_args_noalloc_200_000_000"
+          "params":"test_few_args_noalloc 200_000_000"
         }
     ]
   },
