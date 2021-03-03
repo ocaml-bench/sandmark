@@ -5,6 +5,9 @@
 # Use bash
 SHELL=/bin/bash
 
+# Make variable
+MAKE=/usr/bin/make
+
 # options for running the benchmarks
 # benchmark build target type:
 #  - buildbench: build all single threaded tests
@@ -198,6 +201,10 @@ ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash o
 	   else 															\
 		exit 0; 														\
 	   fi };
+
+bench:
+	TAG='"lt_1s"' $(MAKE) run_config_filtered.json; \
+	RUN_CONFIG_JSON=run_config_filtered.json $(MAKE) ocaml-versions/4.10.0+multicore.bench
 
 clean:
 	rm -rf dependencies/packages/ocaml/*
