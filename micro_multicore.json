@@ -1,0 +1,105 @@
+{
+  "wrappers": [
+    {
+      "name": "orun",
+      "command": "orun -o %{output} -- %{command}"
+    },
+    {
+      "name": "perfstat",
+      "command": "perf stat -o %{output} -- %{command}"
+    },
+    {
+      "name": "pausetimes_trunk",
+      "command": "bash pausetimes_trunk %{output} %{command}"
+    },
+    {
+      "name": "pausetimes_multicore",
+      "command": "bash pausetimes_multicore %{output} %{command}"
+    }
+  ],
+  "benchmarks": [
+    {
+      "executable": "benchmarks/simple-tests/finalise.exe",
+      "name": "finalise",
+      "tags": ["lt_1s"],
+      "runs": [
+        { "params": "10" }
+    ]
+  },
+  {
+      "executable": "benchmarks/simple-tests/finalise.exe",
+      "name": "finalise",
+      "tags": ["1s_10s"],
+      "runs": [
+        { "params": "20" },
+        { "params": "30" },
+        { "params": "40" },
+        { "params": "50" },
+        { "params": "60" },
+        { "params": "70" },
+        { "params": "80" },
+        { "params": "90" },
+        { "params": "100" }
+      ]
+    },
+
+   {
+      "executable": "benchmarks/simple-tests/lazy_primes.exe",
+      "name": "lazy_primes",
+      "tags": ["lt_1s"],
+      "runs": [
+        { "params": "1000" },
+        { "params": "2000" },
+        { "params": "3000" }
+    ]
+  },
+     {
+      "executable": "benchmarks/simple-tests/lazy_primes.exe",
+      "name": "lazy_primes",
+      "tags": ["1s_10s"],
+      "runs": [
+        { "params": "4000" },
+        { "params": "5000" },
+        { "params": "6000" },
+        { "params": "7000" },
+        { "params": "8000" }
+    ]
+  },
+     {
+      "executable": "benchmarks/simple-tests/lazy_primes.exe",
+      "name": "lazy_primes",
+      "tags": ["10s_100s"],
+      "runs": [
+        { "params": "9000" },
+        { "params": "10000" }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/simple-tests/weakretain.exe",
+      "name": "weakretain",
+      "tags": ["1s_10s"],
+      "runs": [
+        { "params": "25 10000000" },
+        { "params": "50 10000000" },
+        { "params": "75 100000" },
+        { "params": "75 10000000" },
+        { "params": "100 100000" },
+        { "params": "100 10000000" }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/weakretain.exe",
+      "name": "weakretain",
+      "tags": ["lt_1s"],
+      "runs": [
+      	{ "params": "50 1000" },
+        { "params": "50 100000" },
+        { "params": "25 1000" },
+        { "params": "25 100000" },
+        { "params": "100 1000" },
+        { "params": "75 1000" }
+      ]
+  }
+  ]
+}

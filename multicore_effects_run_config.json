@@ -1,0 +1,142 @@
+{
+  "wrappers": [
+    {
+      "name": "orun",
+      "command": "orun -o %{output} -- %{command}"
+    },
+    {
+      "name": "perfstat",
+      "command": "perf stat -o %{output} -- %{command}"
+    }
+  ],
+  "benchmarks": [
+    {
+      "executable": "benchmarks/multicore-effects/algorithmic_differentiation.exe",
+      "name": "algorithmic_differentiation",
+      "tags": [],
+      "runs": [
+        { "params": "10_000" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/queens.exe",
+      "name": "queens",
+      "tags": [],
+      "runs": [
+        { "params": "1_000 12" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/test_sched.exe",
+      "name": "test_sched",
+      "tags": [],
+      "runs": [
+        { "params": "1 100_000 1_000" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/eratosthenes.exe",
+      "name": "eratosthenes",
+      "tags": [],
+      "runs": [
+        { "params": "5001" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/effect_throughput_clone.exe",
+      "name": "throughput_clone",
+      "tags": ["throughput"],
+      "runs": [{ "params": "4_000_000" }]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/effect_throughput_perform.exe",
+      "name": "throughput_perform",
+      "tags": ["throughput"],
+      "runs": [{ "params": "4_000_000" }]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/effect_throughput_perform_drop.exe",
+      "name": "throughput_perform_drop",
+      "tags": ["throughput"],
+      "runs": [{ "params": "4_000_000" }]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/effect_throughput_val.exe",
+      "name": "throughput_val",
+      "tags": ["throughput"],
+      "runs": [{ "params": "4_000_000" }]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_seq_ack.exe",
+      "name": "rec_seq_ack",
+      "tags": ["recursive"],
+      "runs": [ {"params": "2 3 11"}]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_eff_ack.exe",
+      "name": "rec_eff_ack",
+      "tags": ["recursive"],
+      "runs": [ {"params": "2 3 11"}]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_seq_evenodd.exe",
+      "name": "rec_seq_evenodd",
+      "tags": ["recursive"],
+      "runs": [ {"params": "2 500_000_000"}]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_eff_evenodd.exe",
+      "name": "rec_eff_evenodd",
+      "tags": ["recursive"],
+      "runs": [ {"params": "2 500_000_000"}]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_seq_fib.exe",
+      "name": "rec_seq_fib",
+      "tags": ["recursive"],
+      "runs": [ {"params": "4 40"}]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_eff_fib.exe",
+      "name": "rec_eff_fib",
+      "tags": ["recursive"],
+      "runs": [ {"params": "4 40"}]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_seq_motzkin.exe",
+      "name": "rec_seq_motzkin",
+      "tags": ["recursive"],
+      "runs": [ {"params": "4 21"}]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_eff_motzkin.exe",
+      "name": "rec_eff_motzkin",
+      "tags": ["recursive"],
+      "runs": [ {"params": "4 21"}]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_seq_tak.exe",
+      "name": "rec_seq_tak",
+      "tags": ["recursive"],
+      "runs": [ {"params": "1 40 20 11"}]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_eff_tak.exe",
+      "name": "rec_eff_tak",
+      "tags": ["recursive"],
+      "runs": [ {"params": "1 40 20 11"}]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_seq_sudan.exe",
+      "name": "rec_seq_sudan",
+      "tags": ["recursive"],
+      "runs": [ {"params": "10_000_000 2 2 2"}]
+    },
+    {
+      "executable": "benchmarks/multicore-effects/rec_eff_sudan.exe",
+      "name": "rec_eff_sudan",
+      "tags": ["recursive"],
+      "runs": [ {"params": "10_000_000 2 2 2"}]
+    }
+  ]
+}
