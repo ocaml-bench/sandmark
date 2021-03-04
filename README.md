@@ -89,8 +89,8 @@ The various options are described below:
 - `runparams` is OPTIONAL, and its values are passed to OCAMLRUNPARAM
   when building the *compiler*.
   
-- `environment` is OPTIONAL, and its values are passed to OCAMLRUNPARAM
-  when running *benchmarks*.
+- `environment` is OPTIONAL, and it can be used to set environment variables
+  when running *benchmarks*. (e.g ```ENVIRONMENT="LD_PRELOAD=.. OCAMLRUNPARAM='a=2'```)
 
 ## Execution
 
