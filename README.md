@@ -87,7 +87,10 @@ The various options are described below:
   specific flags to the `configure` script.
 
 - `runparams` is OPTIONAL, and its values are passed to OCAMLRUNPARAM
-  when building the compiler.
+  when building the *compiler*.
+  
+- `environment` is OPTIONAL, and its values are passed to OCAMLRUNPARAM
+  when running *benchmarks*.
 
 ## Execution
 
