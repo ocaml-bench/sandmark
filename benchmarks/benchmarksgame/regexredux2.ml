@@ -53,8 +53,10 @@ let count re s =
 
 
 let () =
+  for a = 0 to 20 do
   List.iter (fun re -> printf "%s %i\n" (to_string re) (count re dna)) variants;
   let b = ref dna in
   List.iter (fun (re, s) ->
                b := Str.global_replace (Str.regexp re) s !b) subst;
   printf "\n%i\n%i\n%i\n" file_length code_length (String.length !b)
+  done

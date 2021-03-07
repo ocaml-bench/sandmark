@@ -7,7 +7,8 @@
 open Bytes
 
 let () =
-  let t, b, bi = make 256 ' ', make 61 '\n', ref 1 in
+  for x = 0 to 30 do
+  ignore(let t, b, bi = make 256 ' ', make 61 '\n', ref 1 in
   blit_string "TVGHEFCDIJMLKNOPQYSAABWXRZ" 0 t 65 26;
   blit t 65 t 97 26;
 
@@ -30,4 +31,5 @@ let () =
       print_string ( if ls<>[] then ("\n"^l) else l );
       if not q then rd [];
     ) in
-  rd []
+  rd [])
+  done

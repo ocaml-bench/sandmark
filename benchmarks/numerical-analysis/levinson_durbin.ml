@@ -67,4 +67,4 @@ let main () =
   ignore (print_ar_coeffs "Sound /e/" Dataset.e order);
   ignore (print_ar_coeffs "Sound /o/" Dataset.o order)
 
-let () = main () |> ignore
+let () = for a = 0 to 100 do main () |> ignore done

@@ -337,4 +337,4 @@ let main () =
   (* print_mat "R" r; *)
   (* print_mat "Q * R" *) (gemm q r)
 
-let () = main () |> ignore
+let () = for a = 0 to 100 do main () |> ignore done

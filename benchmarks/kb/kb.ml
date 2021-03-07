@@ -589,8 +589,10 @@ let _ =
   for i = 1 to 100 do kb_complete greater [] geom_rules done
 
 let () =
+  for a = 0 to 100 do
   try
     let fn = Sys.getenv "OCAML_GC_STATS" in
     let oc = open_out fn in
     Gc.print_stat oc
   with _ -> ()
+  done

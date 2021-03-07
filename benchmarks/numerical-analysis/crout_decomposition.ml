@@ -2833,4 +2833,4 @@ let main () =
   (* print_mat "matrix P * L * U" a' *)
   a'
 
-let () = main () |> ignore
+let () = for i = 0 to 300 do main () |> ignore done
