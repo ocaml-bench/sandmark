@@ -204,6 +204,7 @@ ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash o
 
 bench:
 	jq --version; \
+	export OPAM_DISABLE_SANDBOXING=true; \
 	TAG='"lt_1s"' $(MAKE) run_config_filtered.json; \
 	OPAM_DISABLE_SANDBOXING=true RUN_CONFIG_JSON=run_config_filtered.json $(MAKE) ocaml-versions/4.10.0+multicore.bench
 
