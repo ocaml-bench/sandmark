@@ -4,6 +4,27 @@
       "name": "orun",
       "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
     },
+    { 
+	      "name": "orun_bf80",
+	      "environment": "OCAMLRUNPARAM='a=2,o=80'",
+	      "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
+    },	
+    { 
+	      "name": "orun_bf100",
+	      "environment": "OCAMLRUNPARAM='a=2,o=100'",
+	      "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
+    },	
+    { 
+	      "name": "orun_bf120",
+	      "environment": "OCAMLRUNPARAM='a=2,o=120'",
+	      "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
+    },
+    { 
+	      "name": "orun_mimalloc",
+	      "environment": "LD_PRELOAD=/home/sadiq/sandmark/libmimalloc.so.1.7",
+	      "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
+    },	
+
     {
       "name": "perfstat",
       "command": "perf stat -o %{output} -- taskset --cpu-list 5 %{command}"
