@@ -1,4 +1,0 @@
-{
-  "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/parallel_minor_gc.tar.gz",
-  "environment" : "LD_PRELOAD=/home/sadiq/sandmark/libmimalloc.so.1.7"
-}
