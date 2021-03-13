@@ -19,12 +19,22 @@
   ],
   "benchmarks": [
     {
-      "executable": "benchmarks/irmin/layers.exe -n 100",
-      "name": "layers",
+      "executable": "benchmarks/irmin/layers.exe -n 16000",
+      "name": "layers_maxrss",
       "tags": [
-        "1s_10s",
-        "macro_bench",
-        "run_in_ci"
+        "gt_100s"
+      ],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/irmin/layers.exe -b 100 -n 100",
+      "name": "layers_majorgc",
+      "tags": [
+        "gt_100s"
       ],
       "runs": [
         {
