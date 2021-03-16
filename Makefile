@@ -202,12 +202,27 @@ ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash o
 		exit 0; 														\
 	   fi };
 
+json:
+	output=data.json; \
+	tmp=test.json; \
+	count=0; \
+	while read line; do \
+	    if [ "$${count}" -eq 0 ]; then \
+		echo "$${line}" | jq '. | {config: ., results: []}' > "$${output}"; \
+	        count=1; \
+	    else \
+	        bench=`echo "$${line}" | jq '. | {name: .name, metrics: {time_secs: .time_secs, maxrss_kB: .maxrss_kB}}'`; \
+		string=".results += [$${bench}]"; \
+	        jq "$${string}" "$${output}" > "$${tmp}" && mv "$${tmp}" "$${output}"; \
+	    fi \
+	done < _results/*.bench
+
 bench:
 	jq --version; \
 	cat /etc/os-release; \
 	TAG='"run_in_ci"' $(MAKE) run_config_filtered.json; \
 	OPAM_DISABLE_SANDBOXING=true RUN_CONFIG_JSON=run_config_filtered.json $(MAKE) ocaml-versions/4.10.0+multicore.bench; \
-	cat _results/*.bench
+	$(MAKE) json
 
 clean:
 	rm -rf dependencies/packages/ocaml/*
