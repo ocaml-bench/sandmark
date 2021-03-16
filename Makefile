@@ -45,7 +45,7 @@ PACKAGES = \
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += lockfree domainslib kcas # ctypes.0.14.0+multicore
 else
-	PACKAGES += fraplib frama-c coq alt-ergo #ctypes.0.14.0+stock  js_of_ocaml-compiler
+	PACKAGES += fraplib coq alt-ergo #frama-c ctypes.0.14.0+stock  js_of_ocaml-compiler
 endif
 
 DEPENDENCIES = libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf # Ubuntu
