@@ -218,9 +218,6 @@ json:
 	done < _results/*.bench
 
 bench:
-	jq --version; \
-	cat /etc/os-release; \
-	TAG='"run_in_ci"' $(MAKE) run_config_filtered.json; \
 	OPAM_DISABLE_SANDBOXING=true RUN_CONFIG_JSON=run_config_filtered.json $(MAKE) ocaml-versions/4.10.0+multicore.bench; \
 	$(MAKE) json
 
