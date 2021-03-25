@@ -118,21 +118,20 @@ ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json
 	opam exec --switch $* -- cp pausetimes/* $$(opam config var bin)
 	opam exec --switch $* -- rungen _build/$*_1 $(RUN_CONFIG_JSON) > runs_dune.inc;
 	opam exec --switch $* -- dune build --profile=release --workspace=ocaml-versions/.workspace.$* @$(BUILD_BENCH_TARGET);
-	@{ if [ "$(BUILD_ONLY)" -eq 0 ]; then												\
-	echo "Executing benchmarks with:"; \
-	echo "  RUN_CONFIG_JSON=${RUN_CONFIG_JSON}"; \
-	echo "  RUN_BENCH_TARGET=${RUN_BENCH_TARGET}  (WRAPPER=${WRAPPER})"; \
-	echo "  PRE_BENCH_EXEC=${PRE_BENCH_EXEC}"; \
-		$(PRE_BENCH_EXEC) $(ENVIRONMENT) opam exec --switch $* -- dune build -j 1 --profile=release				\
-		  --workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;						\
-		for f in `find _build/$*_* -name '*.$(WRAPPER).bench'`; do 								\
-		   d=`basename $$f | cut -d '.' -f 1,2`; 										\
-		   mkdir -p _results/$*/$$d/ ; cp $$f _results/$*/$$d/; 								\
-		done;															\
-	        find _build/$*_* -name '*.$(WRAPPER).bench' | xargs cat > _results/$*/$*.$(WRAPPER).bench;				\
-		exit $$ex; 														\
-	   else 															\
-		exit 0; 														\
+	@{ if [ "$(BUILD_ONLY)" -eq 0 ]; then									\
+		echo "Executing benchmarks with:"; 								\
+		echo "  RUN_CONFIG_JSON=${RUN_CONFIG_JSON}"; 							\
+		echo "  RUN_BENCH_TARGET=${RUN_BENCH_TARGET}  (WRAPPER=${WRAPPER})"; 				\
+		echo "  PRE_BENCH_EXEC=${PRE_BENCH_EXEC}"; 							\
+		$(PRE_BENCH_EXEC) $(ENVIRONMENT) opam exec --switch $* -- dune build -j 1 --profile=release	\
+			--workspace=ocaml-versions/.workspace.$* @$(RUN_BENCH_TARGET); ex=$$?;			\
+		mkdir -p _results/; 										\
+		for i in `seq 1 $(ITER)`; do 									\
+			find _build/$*_$$i -name '*.$(WRAPPER).bench' | xargs cat >> _results/$*_$$i.$(WRAPPER).summary.bench; \
+		done;												\
+		exit $$ex; 											\
+	   else 												\
+		exit 0; 											\
 	   fi };
 
 define check_dependency
