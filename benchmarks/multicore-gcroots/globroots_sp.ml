@@ -4,6 +4,9 @@ module C = Domainslib.Chan
 
 open Globroots
 
+module TestClassic = Test(Classic) ()
+module TestGenerational = Test(Generational) ()
+
 let c = C.make_bounded 0
 
 let wait () =
