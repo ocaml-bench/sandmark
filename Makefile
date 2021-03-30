@@ -108,18 +108,11 @@ blah:
 	@echo ${PACKAGES}
 
 ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json _opam/% .FORCE
-	@{ case "$*" in \
-	  *multicore*) opam pin add -n --yes --switch $* ocaml-migrate-parsetree.dev https://github.com/Sudha247/ocaml-migrate-parsetree.git#multicore; \
-		opam pin add -n --yes --switch $* ppxlib.dev https://github.com/Sudha247/ppxlib.git#multicore; 					 \
-		echo "Multicore" ;;  \
-	  *) echo "Not mutlicore";;  \
-	  esac };
 	$(eval ENVIRONMENT = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
 	@opam update
 	opam install --switch=$* --keep-build-dir --yes rungen orun
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	opam exec --switch $* -- opam list
-	opam list --rec --resolve irmin
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $*) (name $*_$$i)))"; \

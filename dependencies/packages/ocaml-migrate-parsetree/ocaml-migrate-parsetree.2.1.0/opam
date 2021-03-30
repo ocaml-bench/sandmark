@@ -34,3 +34,5 @@ url {
     "sha512=6ac80face6b77531c8d89a77d7a246bd5d43da435c355f62c03c8b8e360e1d7e339c904709fd3dbc9aa340c86ada9a69d5ebcf97cbdb7bd51bec97f831741b99"
   ]
 }
+patches: "0001-works-with-multicore.patch"
+extra-files: ["0001-works-with-multicore.patch" "md5=037f10a805b60c0f2ab4f4f70eb2f7a6"]

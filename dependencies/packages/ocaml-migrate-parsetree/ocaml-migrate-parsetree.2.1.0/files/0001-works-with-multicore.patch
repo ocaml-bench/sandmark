@@ -1,0 +1,2146 @@
+From 8c086210c0d2071648ee5f9efbaf8d338dc837d5 Mon Sep 17 00:00:00 2001
+From: Sudha Parimala <sudharg247@gmail.com>
+Date: Tue, 9 Feb 2021 23:29:19 +0530
+Subject: [PATCH] works with multicore!
+
+---
+ src/ast_402.ml                | 26 +++++++++++++++++++++++
+ src/ast_403.ml                | 26 +++++++++++++++++++++++
+ src/ast_404.ml                | 25 ++++++++++++++++++++++
+ src/ast_405.ml                | 26 +++++++++++++++++++++++
+ src/ast_406.ml                | 26 +++++++++++++++++++++++
+ src/ast_407.ml                | 26 +++++++++++++++++++++++
+ src/ast_408.ml                | 25 ++++++++++++++++++++++
+ src/ast_409.ml                | 27 +++++++++++++++++++++++
+ src/ast_410.ml                | 31 +++++++++++++++++++++++++--
+ src/ast_411.ml                | 26 +++++++++++++++++++++++
+ src/ast_412.ml                | 27 +++++++++++++++++++++++
+ src/migrate_402_403.ml        | 40 +++++++++++++++++++++++++++++++++++
+ src/migrate_403_402.ml        | 40 +++++++++++++++++++++++++++++++++++
+ src/migrate_403_404.ml        | 39 ++++++++++++++++++++++++++++++++++
+ src/migrate_404_403.ml        | 37 ++++++++++++++++++++++++++++++++
+ src/migrate_404_405.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_405_404.ml        | 37 ++++++++++++++++++++++++++++++++
+ src/migrate_405_406.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_406_405.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_406_407.ml        | 39 ++++++++++++++++++++++++++++++++++
+ src/migrate_407_406.ml        | 39 ++++++++++++++++++++++++++++++++++
+ src/migrate_407_408.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_408_407.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_408_409.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_409_408.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_409_410.ml        | 39 ++++++++++++++++++++++++++++++++++
+ src/migrate_410_409.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_410_411.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_411_410.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_411_412.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_412_411.ml        | 38 +++++++++++++++++++++++++++++++++
+ src/migrate_parsetree_def.ml  |  3 +++
+ src/migrate_parsetree_def.mli |  1 +
+ 33 files changed, 1059 insertions(+), 2 deletions(-)
+
+diff --git a/src/ast_402.ml b/src/ast_402.ml
+index 09e5ce7..451b9c2 100644
+--- a/src/ast_402.ml
++++ b/src/ast_402.ml
+@@ -242,6 +242,8 @@ module Parsetree = struct
+            *)
+     | Ppat_exception of pattern
+           (* exception P *)
++    | Ppat_effect of pattern * pattern
++          (* effect P P *)
+     | Ppat_extension of extension
+           (* [%id] *)
+ 
+@@ -488,6 +490,25 @@ module Parsetree = struct
+         (*
+            | C = D
+          *)
++  and effect_constructor (*IF_CURRENT = Parsetree.effect_constructor *) =
++    {
++     peff_name: string loc;
++     peff_kind : effect_constructor_kind;
++     peff_loc : Location.t;
++     peff_attributes: attributes; (* C [@id1] [@id2] of ... *)
++    }
++
++  and effect_constructor_kind (*IF_CURRENT = Parsetree.effect_constructor_kind *) =
++    Peff_decl of core_type list * core_type
++      (*
++         | C of T1 * ... * Tn     ([T1; ...; Tn], None)
++         | C: T0                  ([], Some T0)
++         | C: T1 * ... * Tn -> T0 ([T1; ...; Tn], Some T0)
++       *)
++    | Peff_rebind of Longident.t loc
++      (*
++         | C = D
++       *)
+ 
+   (** {2 Class language} *)
+ 
+@@ -697,6 +718,8 @@ module Parsetree = struct
+           (* type t1 += ... *)
+     | Psig_exception of extension_constructor
+           (* exception C of T *)
++    | Psig_effect of effect_constructor
++          (* effect C : T -> T *)
+     | Psig_module of module_declaration
+           (* module X : MT *)
+     | Psig_recmodule of module_declaration list
+@@ -824,6 +847,9 @@ module Parsetree = struct
+     | Pstr_exception of extension_constructor
+           (* exception C of T
+              exception C = M.X *)
++    | Pstr_effect of effect_constructor
++            (* effect C : T -> T
++             effect C = M.X *)
+     | Pstr_module of module_binding
+           (* module X = ME *)
+     | Pstr_recmodule of module_binding list
+diff --git a/src/ast_403.ml b/src/ast_403.ml
+index 47b2b71..9b7e251 100644
+--- a/src/ast_403.ml
++++ b/src/ast_403.ml
+@@ -269,6 +269,8 @@ module Parsetree = struct
+            *)
+     | Ppat_exception of pattern
+           (* exception P *)
++    | Ppat_effect of pattern * pattern
++          (* effect P P *)
+     | Ppat_extension of extension
+           (* [%id] *)
+ 
+@@ -523,6 +525,25 @@ module Parsetree = struct
+         (*
+            | C = D
+          *)
++  and effect_constructor (*IF_CURRENT = Parsetree.effect_constructor *) =
++    {
++     peff_name: string loc;
++     peff_kind : effect_constructor_kind;
++     peff_loc : Location.t;
++     peff_attributes: attributes; (* C [@id1] [@id2] of ... *)
++    }
++
++  and effect_constructor_kind (*IF_CURRENT = Parsetree.effect_constructor_kind *) =
++    Peff_decl of core_type list * core_type
++      (*
++         | C of T1 * ... * Tn     ([T1; ...; Tn], None)
++         | C: T0                  ([], Some T0)
++         | C: T1 * ... * Tn -> T0 ([T1; ...; Tn], Some T0)
++       *)
++    | Peff_rebind of Longident.t loc
++      (*
++         | C = D
++       *)
+ 
+   (** {2 Class language} *)
+ 
+@@ -732,6 +753,8 @@ module Parsetree = struct
+           (* type t1 += ... *)
+     | Psig_exception of extension_constructor
+           (* exception C of T *)
++    | Psig_effect of effect_constructor
++          (* effect C : T -> T *)
+     | Psig_module of module_declaration
+           (* module X : MT *)
+     | Psig_recmodule of module_declaration list
+@@ -860,6 +883,9 @@ module Parsetree = struct
+     | Pstr_exception of extension_constructor
+           (* exception C of T
+              exception C = M.X *)
++    | Pstr_effect of effect_constructor
++            (* effect C : T -> T
++             effect C = M.X *)
+     | Pstr_module of module_binding
+           (* module X = ME *)
+     | Pstr_recmodule of module_binding list
+diff --git a/src/ast_404.ml b/src/ast_404.ml
+index cd69606..3d4f1af 100644
+--- a/src/ast_404.ml
++++ b/src/ast_404.ml
+@@ -269,6 +269,8 @@ module Parsetree = struct
+            *)
+     | Ppat_exception of pattern
+           (* exception P *)
++    | Ppat_effect of pattern * pattern
++          (* effect P P *)
+     | Ppat_extension of extension
+           (* [%id] *)
+     | Ppat_open of Longident.t loc * pattern
+@@ -526,7 +528,25 @@ module Parsetree = struct
+         (*
+            | C = D
+          *)
++  and effect_constructor (*IF_CURRENT = Parsetree.effect_constructor *) =
++    {
++     peff_name: string loc;
++     peff_kind : effect_constructor_kind;
++     peff_loc : Location.t;
++     peff_attributes: attributes; (* C [@id1] [@id2] of ... *)
++    }
+ 
++  and effect_constructor_kind (*IF_CURRENT = Parsetree.effect_constructor_kind *) =
++    Peff_decl of core_type list * core_type
++      (*
++         | C of T1 * ... * Tn     ([T1; ...; Tn], None)
++         | C: T0                  ([], Some T0)
++         | C: T1 * ... * Tn -> T0 ([T1; ...; Tn], Some T0)
++       *)
++    | Peff_rebind of Longident.t loc
++      (*
++         | C = D
++       *)
+   (** {2 Class language} *)
+ 
+   (* Type expressions for the class language *)
+@@ -735,6 +755,8 @@ module Parsetree = struct
+           (* type t1 += ... *)
+     | Psig_exception of extension_constructor
+           (* exception C of T *)
++    | Psig_effect of effect_constructor
++          (* effect C : T -> T *)
+     | Psig_module of module_declaration
+           (* module X : MT *)
+     | Psig_recmodule of module_declaration list
+@@ -863,6 +885,9 @@ module Parsetree = struct
+     | Pstr_exception of extension_constructor
+           (* exception C of T
+              exception C = M.X *)
++    | Pstr_effect of effect_constructor
++            (* effect C : T -> T
++             effect C = M.X *)
+     | Pstr_module of module_binding
+           (* module X = ME *)
+     | Pstr_recmodule of module_binding list
+diff --git a/src/ast_405.ml b/src/ast_405.ml
+index 43759a6..120e62d 100644
+--- a/src/ast_405.ml
++++ b/src/ast_405.ml
+@@ -269,6 +269,8 @@ module Parsetree = struct
+            *)
+     | Ppat_exception of pattern
+           (* exception P *)
++    | Ppat_effect of pattern * pattern
++          (* effect P P *)
+     | Ppat_extension of extension
+           (* [%id] *)
+     | Ppat_open of Longident.t loc * pattern
+@@ -527,6 +529,25 @@ module Parsetree = struct
+         (*
+            | C = D
+          *)
++  and effect_constructor (*IF_CURRENT = Parsetree.effect_constructor *) =
++    {
++     peff_name: string loc;
++     peff_kind : effect_constructor_kind;
++     peff_loc : Location.t;
++     peff_attributes: attributes; (* C [@id1] [@id2] of ... *)
++    }
++
++  and effect_constructor_kind (*IF_CURRENT = Parsetree.effect_constructor_kind *) =
++    Peff_decl of core_type list * core_type
++      (*
++         | C of T1 * ... * Tn     ([T1; ...; Tn], None)
++         | C: T0                  ([], Some T0)
++         | C: T1 * ... * Tn -> T0 ([T1; ...; Tn], Some T0)
++       *)
++    | Peff_rebind of Longident.t loc
++      (*
++         | C = D
++       *)
+ 
+   (** {2 Class language} *)
+ 
+@@ -736,6 +757,8 @@ module Parsetree = struct
+           (* type t1 += ... *)
+     | Psig_exception of extension_constructor
+           (* exception C of T *)
++    | Psig_effect of effect_constructor
++          (* effect C : T -> T *)
+     | Psig_module of module_declaration
+           (* module X : MT *)
+     | Psig_recmodule of module_declaration list
+@@ -864,6 +887,9 @@ module Parsetree = struct
+     | Pstr_exception of extension_constructor
+           (* exception C of T
+              exception C = M.X *)
++    | Pstr_effect of effect_constructor
++            (* effect C : T -> T
++             effect C = M.X *)
+     | Pstr_module of module_binding
+           (* module X = ME *)
+     | Pstr_recmodule of module_binding list
+diff --git a/src/ast_406.ml b/src/ast_406.ml
+index d612665..5876575 100644
+--- a/src/ast_406.ml
++++ b/src/ast_406.ml
+@@ -282,6 +282,8 @@ module Parsetree = struct
+            *)
+     | Ppat_exception of pattern
+           (* exception P *)
++    | Ppat_effect of pattern * pattern
++          (* effect P P *)
+     | Ppat_extension of extension
+           (* [%id] *)
+     | Ppat_open of Longident.t loc * pattern
+@@ -540,6 +542,25 @@ module Parsetree = struct
+         (*
+            | C = D
+          *)
++ and effect_constructor (*IF_CURRENT = Parsetree.effect_constructor *) =
++    {
++     peff_name: string loc;
++     peff_kind : effect_constructor_kind;
++     peff_loc : Location.t;
++     peff_attributes: attributes; (* C [@id1] [@id2] of ... *)
++    }
++
++  and effect_constructor_kind (*IF_CURRENT = Parsetree.effect_constructor_kind *) =
++    Peff_decl of core_type list * core_type
++      (*
++         | C of T1 * ... * Tn     ([T1; ...; Tn], None)
++         | C: T0                  ([], Some T0)
++         | C: T1 * ... * Tn -> T0 ([T1; ...; Tn], Some T0)
++       *)
++    | Peff_rebind of Longident.t loc
++      (*
++         | C = D
++       *)
+ 
+   (** {2 Class language} *)
+ 
+@@ -755,6 +776,8 @@ module Parsetree = struct
+           (* type t1 += ... *)
+     | Psig_exception of extension_constructor
+           (* exception C of T *)
++    | Psig_effect of effect_constructor
++          (* effect C : T -> T *)
+     | Psig_module of module_declaration
+           (* module X : MT *)
+     | Psig_recmodule of module_declaration list
+@@ -883,6 +906,9 @@ module Parsetree = struct
+     | Pstr_exception of extension_constructor
+           (* exception C of T
+              exception C = M.X *)
++    | Pstr_effect of effect_constructor
++            (* effect C : T -> T
++             effect C = M.X *)
+     | Pstr_module of module_binding
+           (* module X = ME *)
+     | Pstr_recmodule of module_binding list
+diff --git a/src/ast_407.ml b/src/ast_407.ml
+index 44dbccd..78e829c 100644
+--- a/src/ast_407.ml
++++ b/src/ast_407.ml
+@@ -282,6 +282,8 @@ module Parsetree = struct
+            *)
+     | Ppat_exception of pattern
+           (* exception P *)
++    | Ppat_effect of pattern * pattern
++          (* effect P P *)
+     | Ppat_extension of extension
+           (* [%id] *)
+     | Ppat_open of Longident.t loc * pattern
+@@ -539,6 +541,25 @@ module Parsetree = struct
+         (*
+            | C = D
+          *)
++ and effect_constructor (*IF_CURRENT = Parsetree.effect_constructor *) =
++    {
++     peff_name: string loc;
++     peff_kind : effect_constructor_kind;
++     peff_loc : Location.t;
++     peff_attributes: attributes; (* C [@id1] [@id2] of ... *)
++    }
++
++  and effect_constructor_kind (*IF_CURRENT = Parsetree.effect_constructor_kind *) =
++    Peff_decl of core_type list * core_type
++      (*
++         | C of T1 * ... * Tn     ([T1; ...; Tn], None)
++         | C: T0                  ([], Some T0)
++         | C: T1 * ... * Tn -> T0 ([T1; ...; Tn], Some T0)
++       *)
++    | Peff_rebind of Longident.t loc
++      (*
++         | C = D
++       *)
+ 
+   (** {1 Class language} *)
+ 
+@@ -753,6 +774,8 @@ module Parsetree = struct
+           (* type t1 += ... *)
+     | Psig_exception of extension_constructor
+           (* exception C of T *)
++    | Psig_effect of effect_constructor
++          (* effect C : T -> T *)
+     | Psig_module of module_declaration
+           (* module X : MT *)
+     | Psig_recmodule of module_declaration list
+@@ -881,6 +904,9 @@ module Parsetree = struct
+     | Pstr_exception of extension_constructor
+           (* exception C of T
+              exception C = M.X *)
++    | Pstr_effect of effect_constructor
++          (* effect C : T -> T
++             effect C = M.X *)
+     | Pstr_module of module_binding
+           (* module X = ME *)
+     | Pstr_recmodule of module_binding list
+diff --git a/src/ast_408.ml b/src/ast_408.ml
+index 62add05..1c082e9 100644
+--- a/src/ast_408.ml
++++ b/src/ast_408.ml
+@@ -303,6 +303,8 @@ module Parsetree = struct
+     *)
+     | Ppat_exception of pattern
+     (* exception P *)
++    | Ppat_effect of pattern * pattern
++          (* effect P P *)
+     | Ppat_extension of extension
+     (* [%id] *)
+     | Ppat_open of Longident.t loc * pattern
+@@ -572,7 +574,25 @@ module Parsetree = struct
+       pext_loc : Location.t;
+       pext_attributes: attributes; (* C of ... [@id1] [@id2] *)
+     }
++  and effect_constructor (*IF_CURRENT = Parsetree.effect_constructor *) =
++    {
++     peff_name: string loc;
++     peff_kind : effect_constructor_kind;
++     peff_loc : Location.t;
++     peff_attributes: attributes; (* C [@id1] [@id2] of ... *)
++    }
+ 
++  and effect_constructor_kind (*IF_CURRENT = Parsetree.effect_constructor_kind *) =
++    Peff_decl of core_type list * core_type
++      (*
++         | C of T1 * ... * Tn     ([T1; ...; Tn], None)
++         | C: T0                  ([], Some T0)
++         | C: T1 * ... * Tn -> T0 ([T1; ...; Tn], Some T0)
++       *)
++    | Peff_rebind of Longident.t loc
++      (*
++         | C = D
++       *)
+   (* exception E *)
+   and type_exception (*IF_CURRENT = Parsetree.type_exception *) =
+     {
+@@ -808,6 +828,8 @@ module Parsetree = struct
+     (* type t1 += ... *)
+     | Psig_exception of type_exception
+     (* exception C of T *)
++    | Psig_effect of effect_constructor
++    (* effect C : T -> T *)
+     | Psig_module of module_declaration
+     (* module X = M
+        module X : MT *)
+@@ -956,6 +978,9 @@ module Parsetree = struct
+     | Pstr_exception of type_exception
+     (* exception C of T
+        exception C = M.X *)
++    | Pstr_effect of effect_constructor
++    (* effect C : T -> T
++       effect C = M.X *)
+     | Pstr_module of module_binding
+     (* module X = ME *)
+     | Pstr_recmodule of module_binding list
+diff --git a/src/ast_409.ml b/src/ast_409.ml
+index 318e8de..cbd8b05 100644
+--- a/src/ast_409.ml
++++ b/src/ast_409.ml
+@@ -292,6 +292,8 @@ module Parsetree = struct
+     *)
+     | Ppat_exception of pattern
+     (* exception P *)
++    | Ppat_effect of pattern * pattern
++          (* effect P P *)
+     | Ppat_extension of extension
+     (* [%id] *)
+     | Ppat_open of Longident.t loc * pattern
+@@ -562,6 +564,26 @@ module Parsetree = struct
+       pext_attributes: attributes; (* C of ... [@id1] [@id2] *)
+     }
+ 
++    and effect_constructor (*IF_CURRENT = Parsetree.effect_constructor *) =
++    {
++     peff_name: string loc;
++     peff_kind : effect_constructor_kind;
++     peff_loc : Location.t;
++     peff_attributes: attributes; (* C [@id1] [@id2] of ... *)
++    }
++
++    and effect_constructor_kind (*IF_CURRENT = Parsetree.effect_constructor_kind *) =
++      Peff_decl of core_type list * core_type
++      (*
++         | C of T1 * ... * Tn     ([T1; ...; Tn], None)
++         | C: T0                  ([], Some T0)
++         | C: T1 * ... * Tn -> T0 ([T1; ...; Tn], Some T0)
++       *)
++      | Peff_rebind of Longident.t loc
++      (*
++         | C = D
++       *)
++
+   (* exception E *)
+   and type_exception (*IF_CURRENT = Parsetree.type_exception *) =
+     {
+@@ -797,6 +819,8 @@ module Parsetree = struct
+     (* type t1 += ... *)
+     | Psig_exception of type_exception
+     (* exception C of T *)
++    | Psig_effect of effect_constructor
++    (* effect C : T -> T *)
+     | Psig_module of module_declaration
+     (* module X = M
+        module X : MT *)
+@@ -945,6 +969,9 @@ module Parsetree = struct
+     | Pstr_exception of type_exception
+     (* exception C of T
+        exception C = M.X *)
++    | Pstr_effect of effect_constructor
++    (* effect C : T -> T
++       effect C = M.X *)
+     | Pstr_module of module_binding
+     (* module X = ME *)
+     | Pstr_recmodule of module_binding list
+diff --git a/src/ast_410.ml b/src/ast_410.ml
+index 3cfb3a0..a2e2931 100644
+--- a/src/ast_410.ml
++++ b/src/ast_410.ml
+@@ -290,6 +290,8 @@ module Parsetree = struct
+     *)
+     | Ppat_exception of pattern
+     (* exception P *)
++    | Ppat_effect of pattern * pattern
++          (* effect P P *)
+     | Ppat_extension of extension
+     (* [%id] *)
+     | Ppat_open of Longident.t loc * pattern
+@@ -555,16 +557,36 @@ module Parsetree = struct
+       pext_loc : Location.t;
+       pext_attributes: attributes; (* C of ... [@id1] [@id2] *)
+     }
++  
++    and effect_constructor (*IF_CURRENT = Parsetree.effect_constructor *) =
++    {
++     peff_name: string loc;
++     peff_kind : effect_constructor_kind;
++     peff_loc : Location.t;
++     peff_attributes: attributes; (* C [@id1] [@id2] of ... *)
++    }
++
++    and effect_constructor_kind (*IF_CURRENT = Parsetree.effect_constructor_kind *) =
++      Peff_decl of core_type list * core_type
++      (*
++         | C of T1 * ... * Tn     ([T1; ...; Tn], None)
++         | C: T0                  ([], Some T0)
++         | C: T1 * ... * Tn -> T0 ([T1; ...; Tn], Some T0)
++       *)
++      | Peff_rebind of Longident.t loc
++      (*
++         | C = D
++       *)
+ 
+   (* exception E *)
+-  and type_exception (*IF_CURRENT = Parsetree.type_exception *) =
++    and type_exception (*IF_CURRENT = Parsetree.type_exception *) =
+     {
+       ptyexn_constructor: extension_constructor;
+       ptyexn_loc: Location.t;
+       ptyexn_attributes: attributes; (* ... [@@id1] [@@id2] *)
+     }
+ 
+-  and extension_constructor_kind (*IF_CURRENT = Parsetree.extension_constructor_kind *) =
++    and extension_constructor_kind (*IF_CURRENT = Parsetree.extension_constructor_kind *) =
+       Pext_decl of constructor_arguments * core_type option
+       (*
+          | C of T1 * ... * Tn     ([T1; ...; Tn], None)
+@@ -798,6 +820,8 @@ module Parsetree = struct
+     (* type t1 += ... *)
+     | Psig_exception of type_exception
+     (* exception C of T *)
++    | Psig_effect of effect_constructor
++    (* effect C : T -> T *)
+     | Psig_module of module_declaration
+     (* module X = M
+        module X : MT *)
+@@ -946,6 +970,9 @@ module Parsetree = struct
+     | Pstr_exception of type_exception
+     (* exception C of T
+        exception C = M.X *)
++    | Pstr_effect of effect_constructor
++    (* effect C : T -> T
++       effect C = M.X *)
+     | Pstr_module of module_binding
+     (* module X = ME *)
+     | Pstr_recmodule of module_binding list
+diff --git a/src/ast_411.ml b/src/ast_411.ml
+index 25c17dc..c8dfa38 100644
+--- a/src/ast_411.ml
++++ b/src/ast_411.ml
+@@ -291,6 +291,8 @@ module Parsetree = struct
+     *)
+     | Ppat_exception of pattern
+     (* exception P *)
++    | Ppat_effect of pattern * pattern
++          (* effect P P *)
+     | Ppat_extension of extension
+     (* [%id] *)
+     | Ppat_open of Longident.t loc * pattern
+@@ -556,6 +558,25 @@ module Parsetree = struct
+       pext_loc : Location.t;
+       pext_attributes: attributes; (* C of ... [@id1] [@id2] *)
+     }
++  and effect_constructor (*IF_CURRENT = Parsetree.effect_constructor *) =
++    {
++     peff_name: string loc;
++     peff_kind : effect_constructor_kind;
++     peff_loc : Location.t;
++     peff_attributes: attributes; (* C [@id1] [@id2] of ... *)
++    }
++
++  and effect_constructor_kind (*IF_CURRENT = Parsetree.effect_constructor_kind *) =
++    Peff_decl of core_type list * core_type
++      (*
++         | C of T1 * ... * Tn     ([T1; ...; Tn], None)
++         | C: T0                  ([], Some T0)
++         | C: T1 * ... * Tn -> T0 ([T1; ...; Tn], Some T0)
++       *)
++    | Peff_rebind of Longident.t loc
++      (*
++         | C = D
++       *)
+ 
+   (* exception E *)
+   and type_exception (*IF_CURRENT = Parsetree.type_exception *) =
+@@ -799,6 +820,8 @@ module Parsetree = struct
+     (* type t1 += ... *)
+     | Psig_exception of type_exception
+     (* exception C of T *)
++    | Psig_effect of effect_constructor
++    (* effect C : T -> T *)
+     | Psig_module of module_declaration
+     (* module X = M
+        module X : MT *)
+@@ -947,6 +970,9 @@ module Parsetree = struct
+     | Pstr_exception of type_exception
+     (* exception C of T
+        exception C = M.X *)
++    | Pstr_effect of effect_constructor
++    (* effect C : T -> T
++       effect C = M.X *)
+     | Pstr_module of module_binding
+     (* module X = ME *)
+     | Pstr_recmodule of module_binding list
+diff --git a/src/ast_412.ml b/src/ast_412.ml
+index 09a0737..90ae66d 100644
+--- a/src/ast_412.ml
++++ b/src/ast_412.ml
+@@ -294,6 +294,8 @@ module Parsetree = struct
+     *)
+     | Ppat_exception of pattern
+     (* exception P *)
++    | Ppat_effect of pattern * pattern
++          (* effect P P *)
+     | Ppat_extension of extension
+     (* [%id] *)
+     | Ppat_open of Longident.t loc * pattern
+@@ -560,6 +562,26 @@ module Parsetree = struct
+       pext_attributes: attributes; (* C of ... [@id1] [@id2] *)
+     }
+ 
++   and effect_constructor (*IF_CURRENT = Parsetree.effect_constructor *) =
++    {
++     peff_name: string loc;
++     peff_kind : effect_constructor_kind;
++     peff_loc : Location.t;
++     peff_attributes: attributes; (* C [@id1] [@id2] of ... *)
++    }
++
++  and effect_constructor_kind (*IF_CURRENT = Parsetree.effect_constructor_kind *) =
++    Peff_decl of core_type list * core_type
++      (*
++         | C of T1 * ... * Tn     ([T1; ...; Tn], None)
++         | C: T0                  ([], Some T0)
++         | C: T1 * ... * Tn -> T0 ([T1; ...; Tn], Some T0)
++       *)
++    | Peff_rebind of Longident.t loc
++      (*
++         | C = D
++       *)
++
+   (* exception E *)
+   and type_exception (*IF_CURRENT = Parsetree.type_exception *) =
+     {
+@@ -802,6 +824,8 @@ module Parsetree = struct
+     (* type t1 += ... *)
+     | Psig_exception of type_exception
+     (* exception C of T *)
++    | Psig_effect of effect_constructor
++    (* effect C : T -> T *)
+     | Psig_module of module_declaration
+     (* module X = M
+        module X : MT *)
+@@ -950,6 +974,9 @@ module Parsetree = struct
+     | Pstr_exception of type_exception
+     (* exception C of T
+        exception C = M.X *)
++    | Pstr_effect of effect_constructor
++    (* effect C : T -> T
++       effect C = M.X *)
+     | Pstr_module of module_binding
+     (* module X = ME *)
+     | Pstr_recmodule of module_binding list
+diff --git a/src/migrate_402_403.ml b/src/migrate_402_403.ml
+index 0e9f825..6a14a64 100644
+--- a/src/migrate_402_403.ml
++++ b/src/migrate_402_403.ml
+@@ -333,6 +333,8 @@ and copy_pattern_desc :
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension
+         (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+ 
+ and copy_core_type :
+   From.Parsetree.core_type ->
+@@ -509,6 +511,8 @@ and copy_structure_item_desc :
+   | From.Parsetree.Pstr_exception x0 ->
+       To.Parsetree.Pstr_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -878,6 +882,8 @@ and copy_signature_item_desc :
+   | From.Parsetree.Psig_exception x0 ->
+       To.Parsetree.Psig_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1245,6 +1251,40 @@ and copy_extension_constructor_kind :
+         (copy_loc copy_longident
+            x0)
+ 
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
++        
++        
+ and copy_type_declaration :
+   From.Parsetree.type_declaration ->
+     To.Parsetree.type_declaration
+diff --git a/src/migrate_403_402.ml b/src/migrate_403_402.ml
+index 27c63c4..413c98a 100644
+--- a/src/migrate_403_402.ml
++++ b/src/migrate_403_402.ml
+@@ -342,6 +342,8 @@ and copy_pattern_desc loc :
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension
+         (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+ 
+ and copy_core_type :
+   From.Parsetree.core_type ->
+@@ -518,6 +520,8 @@ and copy_structure_item_desc :
+   | From.Parsetree.Pstr_exception x0 ->
+       To.Parsetree.Pstr_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -886,6 +890,8 @@ and copy_signature_item_desc :
+   | From.Parsetree.Psig_exception x0 ->
+       To.Parsetree.Psig_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1252,6 +1258,40 @@ and copy_extension_constructor_kind loc :
+         (copy_loc copy_longident
+            x0)
+ 
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
++
++
+ and copy_type_declaration :
+   From.Parsetree.type_declaration ->
+     To.Parsetree.type_declaration
+diff --git a/src/migrate_403_404.ml b/src/migrate_403_404.ml
+index 84a57c7..d308b20 100644
+--- a/src/migrate_403_404.ml
++++ b/src/migrate_403_404.ml
+@@ -325,6 +325,8 @@ and copy_pattern_desc :
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension
+         (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+ 
+ and copy_core_type :
+   From.Parsetree.core_type ->
+@@ -504,6 +506,8 @@ and copy_structure_item_desc :
+   | From.Parsetree.Pstr_exception x0 ->
+       To.Parsetree.Pstr_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -874,6 +878,8 @@ and copy_signature_item_desc :
+   | From.Parsetree.Psig_exception x0 ->
+       To.Parsetree.Psig_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1240,6 +1246,39 @@ and copy_extension_constructor_kind :
+         (copy_loc copy_longident
+            x0)
+ 
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
++        
+ and copy_type_declaration :
+   From.Parsetree.type_declaration ->
+     To.Parsetree.type_declaration
+diff --git a/src/migrate_404_403.ml b/src/migrate_404_403.ml
+index c42ffb5..4ed268e 100644
+--- a/src/migrate_404_403.ml
++++ b/src/migrate_404_403.ml
+@@ -333,6 +333,8 @@ and copy_pattern_desc loc :
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension
+         (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | From.Parsetree.Ppat_open _ ->
+       migration_error loc Def.Ppat_open
+ and copy_core_type :
+@@ -513,6 +515,8 @@ and copy_structure_item_desc :
+   | From.Parsetree.Pstr_exception x0 ->
+       To.Parsetree.Pstr_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -883,6 +887,8 @@ and copy_signature_item_desc :
+   | From.Parsetree.Psig_exception x0 ->
+       To.Parsetree.Psig_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1248,7 +1254,38 @@ and copy_extension_constructor_kind :
+       To.Parsetree.Pext_rebind
+         (copy_loc copy_longident
+            x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
+ 
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
+ and copy_type_declaration :
+   From.Parsetree.type_declaration ->
+     To.Parsetree.type_declaration
+diff --git a/src/migrate_404_405.ml b/src/migrate_404_405.ml
+index 733bceb..1d317c4 100644
+--- a/src/migrate_404_405.ml
++++ b/src/migrate_404_405.ml
+@@ -291,6 +291,8 @@ and copy_pattern_desc :
+       To.Parsetree.Ppat_exception (copy_pattern x0)
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | From.Parsetree.Ppat_open (x0,x1) ->
+       To.Parsetree.Ppat_open
+         ((copy_loc copy_longident x0),
+@@ -445,6 +447,8 @@ and copy_structure_item_desc :
+   | From.Parsetree.Pstr_exception x0 ->
+       To.Parsetree.Pstr_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -760,6 +764,8 @@ and copy_signature_item_desc :
+   | From.Parsetree.Psig_exception x0 ->
+       To.Parsetree.Psig_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1084,7 +1090,39 @@ and copy_extension_constructor_kind :
+   | From.Parsetree.Pext_rebind x0 ->
+       To.Parsetree.Pext_rebind
+         (copy_loc copy_longident x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
+ 
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
++        
+ and copy_type_declaration :
+   From.Parsetree.type_declaration -> To.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_405_404.ml b/src/migrate_405_404.ml
+index 4fd3058..dbaccd1 100644
+--- a/src/migrate_405_404.ml
++++ b/src/migrate_405_404.ml
+@@ -291,6 +291,8 @@ and copy_pattern_desc :
+       To.Parsetree.Ppat_exception (copy_pattern x0)
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | From.Parsetree.Ppat_open (x0,x1) ->
+       To.Parsetree.Ppat_open
+         ((copy_loc copy_longident x0),
+@@ -445,6 +447,8 @@ and copy_structure_item_desc :
+   | From.Parsetree.Pstr_exception x0 ->
+       To.Parsetree.Pstr_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -760,6 +764,8 @@ and copy_signature_item_desc :
+   | From.Parsetree.Psig_exception x0 ->
+       To.Parsetree.Psig_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1084,7 +1090,38 @@ and copy_extension_constructor_kind :
+   | From.Parsetree.Pext_rebind x0 ->
+       To.Parsetree.Pext_rebind
+         (copy_loc copy_longident x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
+ 
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
+ and copy_type_declaration :
+   From.Parsetree.type_declaration -> To.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_405_406.ml b/src/migrate_405_406.ml
+index 939ff40..2438411 100644
+--- a/src/migrate_405_406.ml
++++ b/src/migrate_405_406.ml
+@@ -289,6 +289,8 @@ and copy_pattern_desc :
+       To.Parsetree.Ppat_exception (copy_pattern x0)
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | From.Parsetree.Ppat_open (x0,x1) ->
+       To.Parsetree.Ppat_open
+         ((copy_loc copy_longident x0),
+@@ -444,6 +446,8 @@ and copy_structure_item_desc :
+   | From.Parsetree.Pstr_exception x0 ->
+       To.Parsetree.Pstr_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -760,6 +764,8 @@ and copy_signature_item_desc :
+   | From.Parsetree.Psig_exception x0 ->
+       To.Parsetree.Psig_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1084,6 +1090,38 @@ and copy_extension_constructor_kind :
+   | From.Parsetree.Pext_rebind x0 ->
+       To.Parsetree.Pext_rebind
+         (copy_loc copy_longident x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
+ 
+ and copy_type_declaration :
+   From.Parsetree.type_declaration -> To.Parsetree.type_declaration =
+diff --git a/src/migrate_406_405.ml b/src/migrate_406_405.ml
+index 6ba2576..a6ba4be 100644
+--- a/src/migrate_406_405.ml
++++ b/src/migrate_406_405.ml
+@@ -293,6 +293,8 @@ and copy_pattern_desc :
+       To.Parsetree.Ppat_exception (copy_pattern x0)
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | From.Parsetree.Ppat_open (x0,x1) ->
+       To.Parsetree.Ppat_open
+         ((copy_loc copy_longident x0),
+@@ -449,6 +451,8 @@ and copy_structure_item_desc :
+   | From.Parsetree.Pstr_exception x0 ->
+       To.Parsetree.Pstr_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -769,6 +773,8 @@ and copy_signature_item_desc :
+   | From.Parsetree.Psig_exception x0 ->
+       To.Parsetree.Psig_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1095,6 +1101,38 @@ and copy_extension_constructor_kind :
+   | From.Parsetree.Pext_rebind x0 ->
+       To.Parsetree.Pext_rebind
+         (copy_loc copy_longident x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
+ 
+ and copy_type_declaration :
+   From.Parsetree.type_declaration -> To.Parsetree.type_declaration =
+diff --git a/src/migrate_406_407.ml b/src/migrate_406_407.ml
+index a04b149..9027895 100644
+--- a/src/migrate_406_407.ml
++++ b/src/migrate_406_407.ml
+@@ -293,6 +293,8 @@ and copy_pattern_desc :
+       To.Parsetree.Ppat_exception (copy_pattern x0)
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | From.Parsetree.Ppat_open (x0,x1) ->
+       To.Parsetree.Ppat_open
+         ((copy_loc copy_longident x0),
+@@ -452,6 +454,8 @@ and copy_structure_item_desc :
+   | From.Parsetree.Pstr_exception x0 ->
+       To.Parsetree.Pstr_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -770,6 +774,8 @@ and copy_signature_item_desc :
+   | From.Parsetree.Psig_exception x0 ->
+       To.Parsetree.Psig_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1099,6 +1105,39 @@ and copy_extension_constructor_kind :
+       To.Parsetree.Pext_rebind
+         (copy_loc copy_longident x0)
+ 
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
++
+ and copy_type_declaration :
+   From.Parsetree.type_declaration -> To.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_407_406.ml b/src/migrate_407_406.ml
+index cb934b7..69e551c 100644
+--- a/src/migrate_407_406.ml
++++ b/src/migrate_407_406.ml
+@@ -289,6 +289,8 @@ and copy_pattern_desc :
+       To.Parsetree.Ppat_exception (copy_pattern x0)
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | From.Parsetree.Ppat_open (x0,x1) ->
+       To.Parsetree.Ppat_open
+         ((copy_loc copy_longident x0),
+@@ -448,6 +450,8 @@ and copy_structure_item_desc :
+   | From.Parsetree.Pstr_exception x0 ->
+       To.Parsetree.Pstr_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -766,6 +770,8 @@ and copy_signature_item_desc :
+   | From.Parsetree.Psig_exception x0 ->
+       To.Parsetree.Psig_exception
+         (copy_extension_constructor x0)
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1095,6 +1101,39 @@ and copy_extension_constructor_kind :
+       To.Parsetree.Pext_rebind
+         (copy_loc copy_longident x0)
+ 
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
++        
+ and copy_type_declaration :
+   From.Parsetree.type_declaration -> To.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_407_408.ml b/src/migrate_407_408.ml
+index 899d4eb..abdf8eb 100644
+--- a/src/migrate_407_408.ml
++++ b/src/migrate_407_408.ml
+@@ -312,6 +312,8 @@ and copy_pattern_desc :
+       To.Parsetree.Ppat_exception (copy_pattern x0)
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | From.Parsetree.Ppat_open (x0,x1) ->
+       To.Parsetree.Ppat_open
+         ((copy_loc copy_longident x0),
+@@ -492,6 +494,8 @@ and copy_structure_item_desc :
+       { To.Parsetree.ptyexn_constructor = (copy_extension_constructor x0);
+         To.Parsetree.ptyexn_loc = x0.From.Parsetree.pext_loc;
+         To.Parsetree.ptyexn_attributes = copy_attributes atat }
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -841,6 +845,8 @@ and copy_signature_item_desc :
+         { To.Parsetree.ptyexn_constructor = (copy_extension_constructor x0);
+           To.Parsetree.ptyexn_loc = x0.From.Parsetree.pext_loc;
+           To.Parsetree.ptyexn_attributes = copy_attributes atat; }
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1190,6 +1196,38 @@ and copy_extension_constructor_kind :
+   | From.Parsetree.Pext_rebind x0 ->
+       To.Parsetree.Pext_rebind
+         (copy_loc copy_longident x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
+ 
+ and copy_type_declaration :
+   From.Parsetree.type_declaration -> To.Parsetree.type_declaration =
+diff --git a/src/migrate_408_407.ml b/src/migrate_408_407.ml
+index c1767d6..1fd5514 100644
+--- a/src/migrate_408_407.ml
++++ b/src/migrate_408_407.ml
+@@ -330,6 +330,8 @@ and copy_pattern_desc :
+       To.Parsetree.Ppat_exception (copy_pattern x0)
+   | From.Parsetree.Ppat_extension x0 ->
+       To.Parsetree.Ppat_extension (copy_extension x0)
++  | From.Parsetree.Ppat_effect (x0, x1) -> 
++      To.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | From.Parsetree.Ppat_open (x0,x1) ->
+       To.Parsetree.Ppat_open
+         ((copy_loc copy_longident x0),
+@@ -508,6 +510,8 @@ and copy_structure_item_desc :
+                    x0.From.Parsetree.ptyexn_constructor in
+          { e with pext_attributes = e.pext_attributes @ (copy_attributes x0.ptyexn_attributes) }
+         )
++  | From.Parsetree.Pstr_effect x0 ->
++      To.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | From.Parsetree.Pstr_module x0 ->
+       To.Parsetree.Pstr_module
+         (copy_module_binding x0)
+@@ -847,6 +851,8 @@ and copy_signature_item_desc :
+         (let e = copy_extension_constructor
+                    x0.From.Parsetree.ptyexn_constructor in
+          {e with pext_attributes = e.pext_attributes @ (copy_attributes x0.ptyexn_attributes) })
++  | From.Parsetree.Psig_effect x0 ->
++      To.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | From.Parsetree.Psig_module x0 ->
+       To.Parsetree.Psig_module
+         (copy_module_declaration x0)
+@@ -1199,6 +1205,38 @@ and copy_extension_constructor_kind :
+   | From.Parsetree.Pext_rebind x0 ->
+       To.Parsetree.Pext_rebind
+         (copy_loc copy_longident x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_longident x0)
+ 
+ and copy_type_declaration :
+   From.Parsetree.type_declaration -> To.Parsetree.type_declaration =
+diff --git a/src/migrate_408_409.ml b/src/migrate_408_409.ml
+index c9cffca..d0cd7bf 100644
+--- a/src/migrate_408_409.ml
++++ b/src/migrate_408_409.ml
+@@ -300,6 +300,8 @@ and copy_pattern_desc :
+       Ast_409.Parsetree.Ppat_exception (copy_pattern x0)
+   | Ast_408.Parsetree.Ppat_extension x0 ->
+       Ast_409.Parsetree.Ppat_extension (copy_extension x0)
++  | Ast_408.Parsetree.Ppat_effect (x0, x1) -> 
++      Ast_409.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | Ast_408.Parsetree.Ppat_open (x0, x1) ->
+       Ast_409.Parsetree.Ppat_open
+         ((copy_loc copy_Longident_t x0), (copy_pattern x1))
+@@ -448,6 +450,8 @@ and copy_structure_item_desc :
+       Ast_409.Parsetree.Pstr_typext (copy_type_extension x0)
+   | Ast_408.Parsetree.Pstr_exception x0 ->
+       Ast_409.Parsetree.Pstr_exception (copy_type_exception x0)
++  | Ast_408.Parsetree.Pstr_effect x0 ->
++      Ast_409.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | Ast_408.Parsetree.Pstr_module x0 ->
+       Ast_409.Parsetree.Pstr_module (copy_module_binding x0)
+   | Ast_408.Parsetree.Pstr_recmodule x0 ->
+@@ -701,6 +705,8 @@ and copy_signature_item_desc :
+       Ast_409.Parsetree.Psig_typext (copy_type_extension x0)
+   | Ast_408.Parsetree.Psig_exception x0 ->
+       Ast_409.Parsetree.Psig_exception (copy_type_exception x0)
++  | Ast_408.Parsetree.Psig_effect x0 ->
++      Ast_409.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | Ast_408.Parsetree.Psig_module x0 ->
+       Ast_409.Parsetree.Psig_module (copy_module_declaration x0)
+   | Ast_408.Parsetree.Psig_modsubst x0 ->
+@@ -1004,6 +1010,38 @@ and copy_extension_constructor_kind :
+         ((copy_constructor_arguments x0), (Option.map copy_core_type x1))
+   | Ast_408.Parsetree.Pext_rebind x0 ->
+       Ast_409.Parsetree.Pext_rebind (copy_loc copy_Longident_t x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_Longident_t x0)
+ and copy_type_declaration :
+   Ast_408.Parsetree.type_declaration -> Ast_409.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_409_408.ml b/src/migrate_409_408.ml
+index 5f2d847..7083661 100644
+--- a/src/migrate_409_408.ml
++++ b/src/migrate_409_408.ml
+@@ -300,6 +300,8 @@ and copy_pattern_desc :
+       Ast_408.Parsetree.Ppat_exception (copy_pattern x0)
+   | Ast_409.Parsetree.Ppat_extension x0 ->
+       Ast_408.Parsetree.Ppat_extension (copy_extension x0)
++  | Ast_409.Parsetree.Ppat_effect (x0, x1) -> 
++      Ast_408.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | Ast_409.Parsetree.Ppat_open (x0, x1) ->
+       Ast_408.Parsetree.Ppat_open
+         ((copy_loc copy_Longident_t x0), (copy_pattern x1))
+@@ -448,6 +450,8 @@ and copy_structure_item_desc :
+       Ast_408.Parsetree.Pstr_typext (copy_type_extension x0)
+   | Ast_409.Parsetree.Pstr_exception x0 ->
+       Ast_408.Parsetree.Pstr_exception (copy_type_exception x0)
++  | Ast_409.Parsetree.Pstr_effect x0 ->
++      Ast_408.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | Ast_409.Parsetree.Pstr_module x0 ->
+       Ast_408.Parsetree.Pstr_module (copy_module_binding x0)
+   | Ast_409.Parsetree.Pstr_recmodule x0 ->
+@@ -701,6 +705,8 @@ and copy_signature_item_desc :
+       Ast_408.Parsetree.Psig_typext (copy_type_extension x0)
+   | Ast_409.Parsetree.Psig_exception x0 ->
+       Ast_408.Parsetree.Psig_exception (copy_type_exception x0)
++  | Ast_409.Parsetree.Psig_effect x0 ->
++      Ast_408.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | Ast_409.Parsetree.Psig_module x0 ->
+       Ast_408.Parsetree.Psig_module (copy_module_declaration x0)
+   | Ast_409.Parsetree.Psig_modsubst x0 ->
+@@ -1004,6 +1010,38 @@ and copy_extension_constructor_kind :
+         ((copy_constructor_arguments x0), (Option.map copy_core_type x1))
+   | Ast_409.Parsetree.Pext_rebind x0 ->
+       Ast_408.Parsetree.Pext_rebind (copy_loc copy_Longident_t x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_Longident_t x0)
+ and copy_type_declaration :
+   Ast_409.Parsetree.type_declaration -> Ast_408.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_409_410.ml b/src/migrate_409_410.ml
+index e3dce6a..3c9711b 100644
+--- a/src/migrate_409_410.ml
++++ b/src/migrate_409_410.ml
+@@ -297,6 +297,8 @@ and copy_pattern_desc :
+       Ast_410.Parsetree.Ppat_exception (copy_pattern x0)
+   | Ast_409.Parsetree.Ppat_extension x0 ->
+       Ast_410.Parsetree.Ppat_extension (copy_extension x0)
++  | Ast_409.Parsetree.Ppat_effect (x0, x1) -> 
++      Ast_410.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | Ast_409.Parsetree.Ppat_open (x0, x1) ->
+       Ast_410.Parsetree.Ppat_open
+         ((copy_loc copy_Longident_t x0), (copy_pattern x1))
+@@ -445,6 +447,8 @@ and copy_structure_item_desc :
+       Ast_410.Parsetree.Pstr_typext (copy_type_extension x0)
+   | Ast_409.Parsetree.Pstr_exception x0 ->
+       Ast_410.Parsetree.Pstr_exception (copy_type_exception x0)
++  | Ast_409.Parsetree.Pstr_effect x0 ->
++      Ast_410.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | Ast_409.Parsetree.Pstr_module x0 ->
+       Ast_410.Parsetree.Pstr_module (copy_module_binding x0)
+   | Ast_409.Parsetree.Pstr_recmodule x0 ->
+@@ -706,6 +710,8 @@ and copy_signature_item_desc :
+       Ast_410.Parsetree.Psig_typext (copy_type_extension x0)
+   | Ast_409.Parsetree.Psig_exception x0 ->
+       Ast_410.Parsetree.Psig_exception (copy_type_exception x0)
++  | Ast_409.Parsetree.Psig_effect x0 ->
++      Ast_410.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | Ast_409.Parsetree.Psig_module x0 ->
+       Ast_410.Parsetree.Psig_module (copy_module_declaration x0)
+   | Ast_409.Parsetree.Psig_modsubst x0 ->
+@@ -1009,6 +1015,39 @@ and copy_extension_constructor_kind :
+         ((copy_constructor_arguments x0), (map_option copy_core_type x1))
+   | Ast_409.Parsetree.Pext_rebind x0 ->
+       Ast_410.Parsetree.Pext_rebind (copy_loc copy_Longident_t x0)
++
++  and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_Longident_t x0)
+ and copy_type_declaration :
+   Ast_409.Parsetree.type_declaration -> Ast_410.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_410_409.ml b/src/migrate_410_409.ml
+index 02f13bf..40f2606 100644
+--- a/src/migrate_410_409.ml
++++ b/src/migrate_410_409.ml
+@@ -309,6 +309,8 @@ and copy_pattern_desc :
+       Ast_409.Parsetree.Ppat_exception (copy_pattern x0)
+   | Ast_410.Parsetree.Ppat_extension x0 ->
+       Ast_409.Parsetree.Ppat_extension (copy_extension x0)
++  | Ast_410.Parsetree.Ppat_effect (x0, x1) -> 
++      Ast_409.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | Ast_410.Parsetree.Ppat_open (x0, x1) ->
+       Ast_409.Parsetree.Ppat_open
+         ((copy_loc copy_Longident_t x0), (copy_pattern x1))
+@@ -459,6 +461,8 @@ and copy_structure_item_desc :
+       Ast_409.Parsetree.Pstr_typext (copy_type_extension x0)
+   | Ast_410.Parsetree.Pstr_exception x0 ->
+       Ast_409.Parsetree.Pstr_exception (copy_type_exception x0)
++  | Ast_410.Parsetree.Pstr_effect x0 ->
++      Ast_409.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | Ast_410.Parsetree.Pstr_module x0 ->
+       Ast_409.Parsetree.Pstr_module (copy_module_binding x0)
+   | Ast_410.Parsetree.Pstr_recmodule x0 ->
+@@ -724,6 +728,8 @@ and copy_signature_item_desc :
+       Ast_409.Parsetree.Psig_typext (copy_type_extension x0)
+   | Ast_410.Parsetree.Psig_exception x0 ->
+       Ast_409.Parsetree.Psig_exception (copy_type_exception x0)
++  | Ast_410.Parsetree.Psig_effect x0 ->
++      Ast_409.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | Ast_410.Parsetree.Psig_module x0 ->
+       Ast_409.Parsetree.Psig_module (copy_module_declaration x0)
+   | Ast_410.Parsetree.Psig_modsubst x0 ->
+@@ -1030,6 +1036,38 @@ and copy_extension_constructor_kind :
+         ((copy_constructor_arguments x0), (map_option copy_core_type x1))
+   | Ast_410.Parsetree.Pext_rebind x0 ->
+       Ast_409.Parsetree.Pext_rebind (copy_loc copy_Longident_t x0)
++and copy_effect_constructor :
++  Ast_410.Parsetree.effect_constructor ->
++    Ast_409.Parsetree.effect_constructor
++  =
++  fun
++    { Ast_410.Parsetree.peff_name = peff_name;
++      Ast_410.Parsetree.peff_kind = peff_kind;
++      Ast_410.Parsetree.peff_loc = peff_loc;
++      Ast_410.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      Ast_409.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      Ast_409.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      Ast_409.Parsetree.peff_loc = (copy_location peff_loc);
++      Ast_409.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  Ast_410.Parsetree.effect_constructor_kind ->
++    Ast_409.Parsetree.effect_constructor_kind
++  =
++  function
++  | Ast_410.Parsetree.Peff_decl (x0,x1) ->
++      Ast_409.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | Ast_410.Parsetree.Peff_rebind x0 ->
++      Ast_409.Parsetree.Peff_rebind
++        (copy_loc copy_Longident_t x0)
+ and copy_type_declaration :
+   Ast_410.Parsetree.type_declaration -> Ast_409.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_410_411.ml b/src/migrate_410_411.ml
+index 279ea69..d4e5111 100644
+--- a/src/migrate_410_411.ml
++++ b/src/migrate_410_411.ml
+@@ -297,6 +297,8 @@ and copy_pattern_desc :
+       Ast_411.Parsetree.Ppat_exception (copy_pattern x0)
+   | Ast_410.Parsetree.Ppat_extension x0 ->
+       Ast_411.Parsetree.Ppat_extension (copy_extension x0)
++  | Ast_410.Parsetree.Ppat_effect (x0, x1) -> 
++      Ast_411.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | Ast_410.Parsetree.Ppat_open (x0, x1) ->
+       Ast_411.Parsetree.Ppat_open
+         ((copy_loc copy_Longident_t x0), (copy_pattern x1))
+@@ -448,6 +450,8 @@ and copy_structure_item_desc :
+       Ast_411.Parsetree.Pstr_typext (copy_type_extension x0)
+   | Ast_410.Parsetree.Pstr_exception x0 ->
+       Ast_411.Parsetree.Pstr_exception (copy_type_exception x0)
++  | Ast_410.Parsetree.Pstr_effect x0 ->
++      Ast_411.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | Ast_410.Parsetree.Pstr_module x0 ->
+       Ast_411.Parsetree.Pstr_module (copy_module_binding x0)
+   | Ast_410.Parsetree.Pstr_recmodule x0 ->
+@@ -709,6 +713,8 @@ and copy_signature_item_desc :
+       Ast_411.Parsetree.Psig_typext (copy_type_extension x0)
+   | Ast_410.Parsetree.Psig_exception x0 ->
+       Ast_411.Parsetree.Psig_exception (copy_type_exception x0)
++  | Ast_410.Parsetree.Psig_effect x0 ->
++      Ast_411.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | Ast_410.Parsetree.Psig_module x0 ->
+       Ast_411.Parsetree.Psig_module (copy_module_declaration x0)
+   | Ast_410.Parsetree.Psig_modsubst x0 ->
+@@ -1013,6 +1019,38 @@ and copy_extension_constructor_kind :
+         ((copy_constructor_arguments x0), (Option.map copy_core_type x1))
+   | Ast_410.Parsetree.Pext_rebind x0 ->
+       Ast_411.Parsetree.Pext_rebind (copy_loc copy_Longident_t x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_Longident_t x0)
+ and copy_type_declaration :
+   Ast_410.Parsetree.type_declaration -> Ast_411.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_411_410.ml b/src/migrate_411_410.ml
+index 071eab0..efed97b 100644
+--- a/src/migrate_411_410.ml
++++ b/src/migrate_411_410.ml
+@@ -297,6 +297,8 @@ and copy_pattern_desc :
+       Ast_410.Parsetree.Ppat_exception (copy_pattern x0)
+   | Ast_411.Parsetree.Ppat_extension x0 ->
+       Ast_410.Parsetree.Ppat_extension (copy_extension x0)
++  | Ast_411.Parsetree.Ppat_effect (x0, x1) -> 
++      Ast_410.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | Ast_411.Parsetree.Ppat_open (x0, x1) ->
+       Ast_410.Parsetree.Ppat_open
+         ((copy_loc copy_Longident_t x0), (copy_pattern x1))
+@@ -448,6 +450,8 @@ and copy_structure_item_desc :
+       Ast_410.Parsetree.Pstr_typext (copy_type_extension x0)
+   | Ast_411.Parsetree.Pstr_exception x0 ->
+       Ast_410.Parsetree.Pstr_exception (copy_type_exception x0)
++  | Ast_411.Parsetree.Pstr_effect x0 ->
++      Ast_410.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | Ast_411.Parsetree.Pstr_module x0 ->
+       Ast_410.Parsetree.Pstr_module (copy_module_binding x0)
+   | Ast_411.Parsetree.Pstr_recmodule x0 ->
+@@ -709,6 +713,8 @@ and copy_signature_item_desc :
+       Ast_410.Parsetree.Psig_typext (copy_type_extension x0)
+   | Ast_411.Parsetree.Psig_exception x0 ->
+       Ast_410.Parsetree.Psig_exception (copy_type_exception x0)
++  | Ast_411.Parsetree.Psig_effect x0 ->
++      Ast_410.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | Ast_411.Parsetree.Psig_module x0 ->
+       Ast_410.Parsetree.Psig_module (copy_module_declaration x0)
+   | Ast_411.Parsetree.Psig_modsubst x0 ->
+@@ -1013,6 +1019,38 @@ and copy_extension_constructor_kind :
+         ((copy_constructor_arguments x0), (Option.map copy_core_type x1))
+   | Ast_411.Parsetree.Pext_rebind x0 ->
+       Ast_410.Parsetree.Pext_rebind (copy_loc copy_Longident_t x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_Longident_t x0)
+ and copy_type_declaration :
+   Ast_411.Parsetree.type_declaration -> Ast_410.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_411_412.ml b/src/migrate_411_412.ml
+index 3f3e03f..064055b 100644
+--- a/src/migrate_411_412.ml
++++ b/src/migrate_411_412.ml
+@@ -293,6 +293,8 @@ and copy_pattern_desc :
+       Ast_412.Parsetree.Ppat_exception (copy_pattern x0)
+   | Ast_411.Parsetree.Ppat_extension x0 ->
+       Ast_412.Parsetree.Ppat_extension (copy_extension x0)
++  | Ast_411.Parsetree.Ppat_effect (x0, x1) -> 
++      Ast_412.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | Ast_411.Parsetree.Ppat_open (x0, x1) ->
+       Ast_412.Parsetree.Ppat_open
+         ((copy_loc copy_Longident_t x0), (copy_pattern x1))
+@@ -443,6 +445,8 @@ and copy_structure_item_desc :
+       Ast_412.Parsetree.Pstr_typext (copy_type_extension x0)
+   | Ast_411.Parsetree.Pstr_exception x0 ->
+       Ast_412.Parsetree.Pstr_exception (copy_type_exception x0)
++  | Ast_411.Parsetree.Pstr_effect x0 ->
++      Ast_412.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | Ast_411.Parsetree.Pstr_module x0 ->
+       Ast_412.Parsetree.Pstr_module (copy_module_binding x0)
+   | Ast_411.Parsetree.Pstr_recmodule x0 ->
+@@ -704,6 +708,8 @@ and copy_signature_item_desc :
+       Ast_412.Parsetree.Psig_typext (copy_type_extension x0)
+   | Ast_411.Parsetree.Psig_exception x0 ->
+       Ast_412.Parsetree.Psig_exception (copy_type_exception x0)
++  | Ast_411.Parsetree.Psig_effect x0 ->
++      Ast_412.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | Ast_411.Parsetree.Psig_module x0 ->
+       Ast_412.Parsetree.Psig_module (copy_module_declaration x0)
+   | Ast_411.Parsetree.Psig_modsubst x0 ->
+@@ -1010,6 +1016,38 @@ and copy_extension_constructor_kind :
+         ((copy_constructor_arguments x0), (Option.map copy_core_type x1))
+   | Ast_411.Parsetree.Pext_rebind x0 ->
+       Ast_412.Parsetree.Pext_rebind (copy_loc copy_Longident_t x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_Longident_t x0)
+ and copy_type_declaration :
+   Ast_411.Parsetree.type_declaration -> Ast_412.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_412_411.ml b/src/migrate_412_411.ml
+index 23d8f2e..d79e3bb 100644
+--- a/src/migrate_412_411.ml
++++ b/src/migrate_412_411.ml
+@@ -293,6 +293,8 @@ and copy_pattern_desc :
+       Ast_411.Parsetree.Ppat_exception (copy_pattern x0)
+   | Ast_412.Parsetree.Ppat_extension x0 ->
+       Ast_411.Parsetree.Ppat_extension (copy_extension x0)
++  | Ast_412.Parsetree.Ppat_effect (x0, x1) -> 
++      Ast_411.Parsetree.Ppat_effect (copy_pattern x0, copy_pattern x1)
+   | Ast_412.Parsetree.Ppat_open (x0, x1) ->
+       Ast_411.Parsetree.Ppat_open
+         ((copy_loc copy_Longident_t x0), (copy_pattern x1))
+@@ -443,6 +445,8 @@ and copy_structure_item_desc :
+       Ast_411.Parsetree.Pstr_typext (copy_type_extension x0)
+   | Ast_412.Parsetree.Pstr_exception x0 ->
+       Ast_411.Parsetree.Pstr_exception (copy_type_exception x0)
++  | Ast_412.Parsetree.Pstr_effect x0 ->
++      Ast_411.Parsetree.Pstr_effect (copy_effect_constructor x0)
+   | Ast_412.Parsetree.Pstr_module x0 ->
+       Ast_411.Parsetree.Pstr_module (copy_module_binding x0)
+   | Ast_412.Parsetree.Pstr_recmodule x0 ->
+@@ -704,6 +708,8 @@ and copy_signature_item_desc :
+       Ast_411.Parsetree.Psig_typext (copy_type_extension x0)
+   | Ast_412.Parsetree.Psig_exception x0 ->
+       Ast_411.Parsetree.Psig_exception (copy_type_exception x0)
++  | Ast_412.Parsetree.Psig_effect x0 ->
++      Ast_411.Parsetree.Psig_effect (copy_effect_constructor x0)
+   | Ast_412.Parsetree.Psig_module x0 ->
+       Ast_411.Parsetree.Psig_module (copy_module_declaration x0)
+   | Ast_412.Parsetree.Psig_modsubst x0 ->
+@@ -1012,6 +1018,38 @@ and copy_extension_constructor_kind :
+         ((copy_constructor_arguments x0), (Option.map copy_core_type x1))
+   | Ast_412.Parsetree.Pext_rebind x0 ->
+       Ast_411.Parsetree.Pext_rebind (copy_loc copy_Longident_t x0)
++and copy_effect_constructor :
++  From.Parsetree.effect_constructor ->
++    To.Parsetree.effect_constructor
++  =
++  fun
++    { From.Parsetree.peff_name = peff_name;
++      From.Parsetree.peff_kind = peff_kind;
++      From.Parsetree.peff_loc = peff_loc;
++      From.Parsetree.peff_attributes = peff_attributes }
++     ->
++    {
++      To.Parsetree.peff_name =
++        (copy_loc (fun x  -> x) peff_name);
++      To.Parsetree.peff_kind =
++        (copy_effect_constructor_kind peff_kind);
++      To.Parsetree.peff_loc = (copy_location peff_loc);
++      To.Parsetree.peff_attributes =
++        (copy_attributes peff_attributes)
++    }
++
++and copy_effect_constructor_kind :
++  From.Parsetree.effect_constructor_kind ->
++    To.Parsetree.effect_constructor_kind
++  =
++  function
++  | From.Parsetree.Peff_decl (x0,x1) ->
++      To.Parsetree.Peff_decl
++        ((List.map copy_core_type x0),
++          (copy_core_type x1))
++  | From.Parsetree.Peff_rebind x0 ->
++      To.Parsetree.Peff_rebind
++        (copy_loc copy_Longident_t x0)
+ and copy_type_declaration :
+   Ast_412.Parsetree.type_declaration -> Ast_411.Parsetree.type_declaration =
+   fun
+diff --git a/src/migrate_parsetree_def.ml b/src/migrate_parsetree_def.ml
+index 1ce3aaa..36bef11 100644
+--- a/src/migrate_parsetree_def.ml
++++ b/src/migrate_parsetree_def.ml
+@@ -60,6 +60,7 @@ type missing_feature =
+   (** 4.10 -> 4.09: module _ = ... *)
+   | Anonymous_module_declaration
+   (** 4.10 -> 4.09: module _ = struct ... end *)
++  | Palgebraic_effects
+ 
+ exception Migration_error of missing_feature * Location.t
+ 
+@@ -87,6 +88,7 @@ let missing_feature_description = function
+   | Anonymous_unpack -> "anynymous unpack"
+   | Anonymous_module_binding -> "anonymous module binding"
+   | Anonymous_module_declaration -> "anonymous module declaration"
++  | Palgebraic_effects        -> "OCaml 4.10"
+ 
+ (** [missing_feature_minimal_version x] is the OCaml version where x was
+     introduced. *)
+@@ -113,6 +115,7 @@ let missing_feature_minimal_version = function
+   | Anonymous_unpack -> "OCaml 4.10"
+   | Anonymous_module_binding -> "OCaml 4.10"
+   | Anonymous_module_declaration -> "OCaml 4.10"
++  | Palgebraic_effects -> "algebraic effects"
+ 
+ (** Turn a missing feature into a reasonable error message. *)
+ let migration_error_message x =
+diff --git a/src/migrate_parsetree_def.mli b/src/migrate_parsetree_def.mli
+index ff7c121..243f326 100644
+--- a/src/migrate_parsetree_def.mli
++++ b/src/migrate_parsetree_def.mli
+@@ -37,6 +37,7 @@ type missing_feature =
+   | Anonymous_unpack
+   | Anonymous_module_binding
+   | Anonymous_module_declaration
++  | Palgebraic_effects
+ 
+ (** Exception thrown by migration functions when a feature is not supported. *)
+ exception Migration_error of missing_feature * Location.t
+-- 
+2.17.1
+
