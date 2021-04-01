@@ -1,0 +1,163 @@
+git log -n 1
+commit 729c6a3b30ddcd017b98ffd7a80f84975c4d916d
+Author: shubhamkumar13 <kumar.shubham1312@gmail.com>
+Date:   Wed Mar 31 04:37:22 2021 +0530
+
+    replace makefile pinning with opam files and add multicore patches
+{ case "4.10.0+multicore" in \
+	*multicore*) echo "Multicore";; \
+*) echo "Not Multicore";; \
+esac };
+Multicore
+
+<><> Updating package repositories ><><><><><><><><><><><><><><><><><><><><><><>
+[default] no changes from file:///home/sk/sandmark/dependencies
+
+<><> Synchronising development packages <><><><><><><><><><><><><><><><><><><><>
+[orun.0.1] no changes from file:///home/sk/sandmark/orun
+[rungen.0.1] no changes from file:///home/sk/sandmark/rungen
+opam install --switch=4.10.0+multicore --keep-build-dir --yes rungen orun
+
+<><> Synchronising pinned packages ><><><><><><><><><><><><><><><><><><><><><><>
+[orun.0.1] no changes from file:///home/sk/sandmark/orun
+[rungen.0.1] no changes from file:///home/sk/sandmark/rungen
+
+opam install --switch=4.10.0+multicore --best-effort --keep-build-dir --yes cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib menhir minilight base stdio dune-private-libs dune-configurator camlimages yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum sexplib0 irmin cubicle conf-findutils index logs mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack ctypes.0.14.0+stock frama-c coq fraplib alt-ergo js_of_ocaml-compiler || true
+The following actions will be performed:
+  ∗ install ocaml-migrate-parsetree 2.1.0+stock  [required by ppxlib]
+  ∗ install ppxlib                  0.22.0+stock [required by ppx_deriving_yojson, ppx_deriving, ppx_repr]
+  ∗ install ppx_deriving            5.2.1
+  ∗ install ppx_repr                0.2.1
+  ∗ install ppx_deriving_yojson     3.6.1
+  ∗ install ppx_irmin               2.4.0
+  ∗ install index                   1.3.0
+  ∗ install irmin                   2.4.0
+  ∗ install irmin-layers            2.4.0
+  ∗ install irmin-pack              2.4.0
+===== ∗ 10 =====
+
+<><> Gathering sources ><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+[index.1.3.0] found in cache
+[irmin.2.4.0] found in cache
+[irmin-layers.2.4.0] found in cache
+[irmin-pack.2.4.0] found in cache
+[ocaml-migrate-parsetree.2.1.0+stock] found in cache
+[ppx_deriving.5.2.1] found in cache
+[ppx_deriving_yojson.3.6.1] found in cache
+[ppx_irmin.2.4.0] found in cache
+[ppx_repr.0.2.1] found in cache
+[ppxlib.0.22.0+stock] found in cache
+
+<><> Processing actions <><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+
+<><> Error report <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+┌─ The following actions failed
+│ λ build ocaml-migrate-parsetree 2.1.0+stock
+└─ 
+╶─ No changes have been performed
+# Run eval $(opam env) to update the current shell environment
+opam exec --switch 4.10.0+multicore -- opam list
+# Packages matching: installed
+# Name              # Installed      # Synopsis
+alt-ergo            2.3.2            The Alt-Ergo SMT prover
+alt-ergo-lib        2.3.2            The Alt-Ergo SMT prover library
+alt-ergo-parsers    2.3.2            The Alt-Ergo SMT prover parser library
+angstrom            0.15.0           Parser combinators built for speed and memory-efficiency
+astring             0.8.5            Alternative String module for OCaml
+base                v0.14.1          Full standard library replacement for OCaml
+base-bigarray       base
+base-bytes          base             Bytes library distributed with the OCaml compiler
+base-threads        base
+base-unix           base
+base64              3.4.0            Base64 encoding for OCaml
+bheap               2.0.0            Priority queues
+bigarray-compat     1.0.0            Compatibility library to use Stdlib.Bigarray when possible
+bigstringaf         0.6.1            Bigstring intrinsics and fast blits based on memcpy/memmove
+biniou              1.2.1            Binary data format designed for speed, safety, ease of use and backward compatibility as protocols evolve
+camlimages          5.0.3            Image processing library
+camlpdf             2.3              Read, write and modify PDF files
+camlzip             1.10             Provides easy access to compressed files in ZIP, GZIP and JAR format
+checkseum           0.2.1            Adler-32, CRC32 and CRC32-C implementation in C and OCaml
+cmdliner            1.0.4            Declarative definition of command line interfaces for OCaml
+conf-findutils      1                Virtual package relying on findutils
+conf-gmp            1                Virtual package relying on a GMP lib system installation
+conf-m4             1                Virtual package relying on m4
+conf-perl           1                Virtual package relying on perl
+conf-pkg-config     1.2              Virtual package relying on pkg-config installation
+conf-zlib           1                Virtual package relying on zlib
+coq                 dev              The Coq Proof Assistant
+cpdf                2.3              High-level pdf tools based on CamlPDF
+cppo                1.6.7            Code preprocessor like cpp for OCaml
+csexp               1.3.2            Parsing and printing of S-expressions in Canonical form
+cubicle             1.1.2            SMT based model checker for parameterized systems
+decompress          1.1.0            Implementation of Zlib and GZip in OCaml
+digestif            1.0.0            Hashes implementations (SHA*, RIPEMD160, BLAKE2* and MD5)
+dune                2.8.1            Fast, portable, and opinionated build system
+dune-configurator   2.8.1            Helper library for gathering system configuration
+dune-private-libs   2.6.0            Private libraries of Dune
+easy-format         1.3.2            High-level and functional interface to the Format module of the OCaml standard library
+either              1.0.0            Compatibility Either module
+eqaf                0.7              Constant-time equal function on string
+fmt                 0.8.9            OCaml Format pretty-printer combinators
+fraplib             dev              FRAP lib, the library of FRAP book
+integers            0.4.0            Various signed and unsigned integer types for OCaml
+jsonm               1.0.1            Non-blocking streaming JSON codec for OCaml
+logs                0.7.0            Logging infrastructure for OCaml
+lwt                 5.4.0            Promises and event-driven I/O
+menhir              20200612         An LR(1) parser generator
+menhirLib           20200612         Runtime support library for parsers generated by Menhir
+menhirSdk           20200612         Compile-time library for auxiliary tools related to Menhir
+minilight           1.6              Minimal global illumination renderer.
+mmap                1.1.0            File mapping functionality
+mtime               1.2.0            Monotonic wall-clock time for OCaml
+nbcodec             20151119         non-blocking IO interface design
+num                 1.3              The legacy Num library for arbitrary-precision integer and rational arithmetic
+ocaml               4.10.0+multicore The OCaml compiler (virtual package)
+ocaml-base-compiler 4.10.0+multicore OCaml compiler
+ocaml-compiler-libs v0.12.3          OCaml compiler libraries repackaged
+ocaml-config        1                OCaml Switch Configuration
+ocaml-syntax-shims  1.0.0            Backport new syntax to older OCaml versions
+ocamlbuild          0.14.0           OCamlbuild is a build system with builtin rules to easily build most OCaml projects.
+ocamlfind           1.8.1            A library manager for OCaml
+ocamlgraph          2.0.0            A generic graph library for OCaml
+ocplib-endian       1.1              Optimised functions to read and write int16/32/64 from strings and bigarrays
+ocplib-simplex      0.4              A library implementing a simplex algorithm, in a functional style, for solving systems of linear inequalities and optimizing linear objective functions
+optint              0.0.4            Abstract type on integer between x64 and x86 architecture
+orun                0.1              pinned to version 0.1 at file:///home/sk/sandmark/orun
+ppx_derivers        1.2.1            Shared [@@deriving] plugin registry
+progress            0.1.1            User-definable progress bars
+psmt2-frontend      0.2              A library to parse and type-check a conservative extension of the SMT-LIB 2   standard with prenex polymorphism
+re                  1.9.0            RE is a regular expression library for OCaml
+react               1.2.1            Declarative events and signals for OCaml
+repr                0.2.1            Dynamic type representations. Provides no stability guarantee
+result              1.5              Compatibility Result module
+rungen              0.1              pinned to version 0.1 at file:///home/sk/sandmark/rungen
+semaphore-compat    1.0.1            Compatibility Semaphore module
+seq                 base             Compatibility package for OCaml's standard iterator type starting from 4.07.
+sexplib0            v0.14.0          Library containing the definition of S-expressions and some base converters
+stdio               v0.14.0          Standard IO library for OCaml
+stdlib-shims        0.1.0            Backport some of the new stdlib features to older compiler
+stringext           1.6.0            Extra string functions for OCaml
+terminal_size       0.1.4            Get the dimensions of the terminal
+topkg               1.0.3            The transitory OCaml software packager
+uchar               0.0.2            Compatibility library for OCaml's Uchar module
+uri                 4.1.0            An RFC3986 URI/URL parsing library
+uuidm               0.9.7            Universally unique identifiers (UUIDs) for OCaml
+uutf                1.0.2            Non-blocking streaming Unicode codec for OCaml
+yojson              1.7.0            Yojson is an optimized parsing and printing library for the JSON format
+zarith              1.9              Implements arithmetic and logical operations over arbitrary-precision integers
+opam list --rec --resolve ocaml-migrate-parsetree
+# Packages matching: (installed | available) & solution(ocaml-migrate-parsetree)
+# Name                  # Installed      # Synopsis
+base-bigarray           base
+base-threads            base
+base-unix               base
+dune                    2.8.1            Fast, portable, and opinionated build system
+ocaml                   4.10.0+multicore The OCaml compiler (virtual package)
+ocaml-base-compiler     4.10.0+multicore OCaml compiler
+ocaml-config            1                OCaml Switch Configuration
+ocaml-migrate-parsetree --               Convert OCaml parsetrees between different versions
+opam exec --switch 4.10.0+multicore -- cp pausetimes/* $(opam config var bin)
+opam exec --switch 4.10.0+multicore -- rungen _build/4.10.0+multicore_1 run_config.json > runs_dune.inc;
+opam exec --switch 4.10.0+multicore -- dune build --profile=release --workspace=ocaml-versions/.workspace.4.10.0+multicore @buildbench;
