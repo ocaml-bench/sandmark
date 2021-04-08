@@ -114,6 +114,7 @@ ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json
 	@# case statement to select the correct variant for omp and ppxlib
 	@{ case "$*" in \
 		*multicore*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ;; \
+		*effects*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ;; \
 		*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+stock ppxlib.0.22.0+stock ;; \
 	esac }; \
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
