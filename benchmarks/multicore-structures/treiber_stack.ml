@@ -11,7 +11,6 @@ let rec add_node s n =
 
 let push s x =
   let new_node = {value= x; next= Atomic.make None} in
-  Gc.promote_to new_node s |> ignore ;
   add_node s new_node
 
 let rec remove_node s =
