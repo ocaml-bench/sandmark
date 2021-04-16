@@ -1,5 +1,4 @@
 opam-version: "2.0"
-name:         "digestif"
 maintainer:   [ "Eyyüb Sari <eyyub.sari@epitech.eu>"
                 "Romain Calascibetta <romain.calascibetta@gmail.com>" ]
 authors:      [ "Eyyüb Sari <eyyub.sari@epitech.eu>"
@@ -40,6 +39,7 @@ install:  [
 depends: [
   "ocaml"          {>= "4.03.0"}
   "dune"           {>= "2.6.0"}
+  "conf-pkg-config" {build}
   "eqaf"
   "base-bytes"
   "bigarray-compat"
@@ -50,23 +50,22 @@ depends: [
   "astring"        {with-test}
   "fpath"          {with-test}
   "rresult"        {with-test}
-  "ocamlfind"      {build & with-test}
+  "ocamlfind"      {with-test}
 ]
-
 depopts: [
   "ocaml-freestanding"
-  "mirage-xen-posix"
 ]
 
 conflicts: [
-  "mirage-xen-posix" {< "3.1.0"}
-  "ocaml-freestanding" {< "0.4.3"}
+  "mirage-xen" {< "6.0.0"}
+  "ocaml-freestanding" {< "0.6.0"}
 ]
+x-commit-hash: "f7e043938d9bb6fda9865086074e60929095cd9e"
 url {
   src:
-    "https://github.com/mirage/digestif/releases/download/v0.8.1/digestif-v0.8.1.tbz"
+    "https://github.com/mirage/digestif/releases/download/v1.0.0/digestif-v1.0.0.tbz"
   checksum: [
-    "sha256=628ef17091e9f8b4da95c4b68adeecf090efc38717875b94baa6a1629766d573"
-    "sha512=8cabd8c6d606679ba1a65e34e114c4ebeee68fde3b1bb5a077dfe7f7fa9f6b210c0db991e68789eadb7c48eadc9db2c1229fed8138a651d3b53612e4d8beb595"
+    "sha256=29450c1fecb93b3c5c19588f8abcbf4891ddf1f84a1bbd3fb860e96994472884"
+    "sha512=30f4e2ea85a0aa50dbafb7c52d55b49f5612fbeeaa4ed8bfbd1610848a8f397c4cd1589fe0bd7ab3f165974697151279d56c37bae44c7f29a2d5a514af9d4942"
   ]
 }

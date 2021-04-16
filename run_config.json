@@ -19,6 +19,26 @@
   ],
   "benchmarks": [
     {
+      "executable": "benchmarks/irmin/layers.exe",
+      "name": "irmin_pack_layered_1",
+      "tags": [
+        "gt_100s"
+      ],
+      "runs": [
+        { "params": " -n 16000" }
+      ]
+    },
+    {
+      "executable": "benchmarks/irmin/layers.exe",
+      "name": "irmin_pack_layered_2",
+      "tags": [
+        "gt_100s"
+      ],
+      "runs": [
+	{ "params": " -n 100 -b 100" }
+      ]
+    },
+    {
       "executable": "benchmarks/graph500seq/kronecker.exe",
       "name": "kronecker",
       "tags": [

@@ -1,0 +1,217 @@
+From d3f66b370ff37319eaa6e0068c99b3225ccdbd50 Mon Sep 17 00:00:00 2001
+From: Sudha Parimala <sudharg247@gmail.com>
+Date: Wed, 10 Feb 2021 16:33:01 +0530
+Subject: [PATCH] compiles with multicore
+
+---
+ ast/ast.ml       | 33 +++++++++++++++++++++++++++++++++
+ ast/pprintast.ml |  2 ++
+ 2 files changed, 35 insertions(+)
+
+diff --git a/ast/ast.ml b/ast/ast.ml
+index 7ecec02..e8e2b11 100644
+--- a/ast/ast.ml
++++ b/ast/ast.ml
+@@ -353,6 +353,8 @@ and pattern_desc = Parsetree.pattern_desc =
+   *)
+   | Ppat_exception of pattern
+   (* exception P *)
++  | Ppat_effect of pattern * pattern
++          (* effect P P *)
+   | Ppat_extension of extension
+   (* [%id] *)
+   | Ppat_open of longident_loc * pattern
+@@ -857,6 +859,8 @@ and signature_item_desc = Parsetree.signature_item_desc =
+   (* type t1 += ... *)
+   | Psig_exception of type_exception
+   (* exception C of T *)
++  | Psig_effect of Parsetree.effect_constructor
++    (* effect C : T -> T *)
+   | Psig_module of module_declaration
+   (* module X : MT *)
+   | Psig_modsubst of module_substitution
+@@ -997,6 +1001,9 @@ and structure_item_desc = Parsetree.structure_item_desc =
+   | Pstr_exception of type_exception
+   (* exception C of T
+      exception C = M.X *)
++  | Pstr_effect of Parsetree.effect_constructor
++    (* effect C : T -> T
++       effect C = M.X *)
+   | Pstr_module of module_binding
+   (* module X = ME *)
+   | Pstr_recmodule of module_binding list
+@@ -1268,6 +1275,9 @@ class virtual map =
+         | Ppat_unpack a ->
+             let a = self#loc (self#option self#string) a in Ppat_unpack a
+         | Ppat_exception a -> let a = self#pattern a in Ppat_exception a
++        | Ppat_effect (a, b) -> 
++          let a = self#pattern a in
++          let b = self#pattern b in Ppat_effect (a, b)
+         | Ppat_extension a -> let a = self#extension a in Ppat_extension a
+         | Ppat_open (a, b) ->
+             let a = self#longident_loc a in
+@@ -1760,6 +1770,7 @@ class virtual map =
+         | Psig_typext a -> let a = self#type_extension a in Psig_typext a
+         | Psig_exception a ->
+             let a = self#type_exception a in Psig_exception a
++        | Psig_effect a -> failwith "unimplemented"
+         | Psig_module a -> let a = self#module_declaration a in Psig_module a
+         | Psig_modsubst a ->
+             let a = self#module_substitution a in Psig_modsubst a
+@@ -1884,6 +1895,7 @@ class virtual map =
+         | Pstr_typext a -> let a = self#type_extension a in Pstr_typext a
+         | Pstr_exception a ->
+             let a = self#type_exception a in Pstr_exception a
++        | Pstr_effect a -> failwith "unimplemented"
+         | Pstr_module a -> let a = self#module_binding a in Pstr_module a
+         | Pstr_recmodule a ->
+             let a = self#list self#module_binding a in Pstr_recmodule a
+@@ -2090,6 +2102,7 @@ class virtual iter =
+         | Ppat_lazy a -> self#pattern a
+         | Ppat_unpack a -> self#loc (self#option self#string) a
+         | Ppat_exception a -> self#pattern a
++        | Ppat_effect (a, b) -> failwith "unimplemented"
+         | Ppat_extension a -> self#extension a
+         | Ppat_open (a, b) -> (self#longident_loc a; self#pattern b)
+     method expression : expression -> unit=
+@@ -2435,6 +2448,7 @@ class virtual iter =
+         | Psig_typesubst a -> self#list self#type_declaration a
+         | Psig_typext a -> self#type_extension a
+         | Psig_exception a -> self#type_exception a
++        | Psig_effect a -> failwith "unimplemented"
+         | Psig_module a -> self#module_declaration a
+         | Psig_modsubst a -> self#module_substitution a
+         | Psig_recmodule a -> self#list self#module_declaration a
+@@ -2525,6 +2539,7 @@ class virtual iter =
+             (self#rec_flag a; self#list self#type_declaration b)
+         | Pstr_typext a -> self#type_extension a
+         | Pstr_exception a -> self#type_exception a
++        | Pstr_effect a -> failwith "unimplemented"
+         | Pstr_module a -> self#module_binding a
+         | Pstr_recmodule a -> self#list self#module_binding a
+         | Pstr_modtype a -> self#module_type_declaration a
+@@ -2795,6 +2810,7 @@ class virtual ['acc] fold =
+           | Ppat_lazy a -> self#pattern a acc
+           | Ppat_unpack a -> self#loc (self#option self#string) a acc
+           | Ppat_exception a -> self#pattern a acc
++          | Ppat_effect (a, b) -> failwith "unimplemented"
+           | Ppat_extension a -> self#extension a acc
+           | Ppat_open (a, b) ->
+               let acc = self#longident_loc a acc in
+@@ -3273,6 +3289,7 @@ class virtual ['acc] fold =
+           | Psig_typesubst a -> self#list self#type_declaration a acc
+           | Psig_typext a -> self#type_extension a acc
+           | Psig_exception a -> self#type_exception a acc
++          | Psig_effect a -> failwith "unimplemented"
+           | Psig_module a -> self#module_declaration a acc
+           | Psig_modsubst a -> self#module_substitution a acc
+           | Psig_recmodule a -> self#list self#module_declaration a acc
+@@ -3393,6 +3410,7 @@ class virtual ['acc] fold =
+               let acc = self#list self#type_declaration b acc in acc
+           | Pstr_typext a -> self#type_extension a acc
+           | Pstr_exception a -> self#type_exception a acc
++          | Pstr_effect a -> failwith "unimplemented"
+           | Pstr_module a -> self#module_binding a acc
+           | Pstr_recmodule a -> self#list self#module_binding a acc
+           | Pstr_modtype a -> self#module_type_declaration a acc
+@@ -3738,6 +3756,7 @@ class virtual ['acc] fold_map =
+               ((Ppat_unpack a), acc)
+           | Ppat_exception a ->
+               let (a, acc) = self#pattern a acc in ((Ppat_exception a), acc)
++          | Ppat_effect (a, b) -> failwith "unimplemented"
+           | Ppat_extension a ->
+               let (a, acc) = self#extension a acc in
+               ((Ppat_extension a), acc)
+@@ -4419,6 +4438,7 @@ class virtual ['acc] fold_map =
+           | Psig_exception a ->
+               let (a, acc) = self#type_exception a acc in
+               ((Psig_exception a), acc)
++          | Psig_effect a -> failwith "unimplemented"
+           | Psig_module a ->
+               let (a, acc) = self#module_declaration a acc in
+               ((Psig_module a), acc)
+@@ -4607,6 +4627,7 @@ class virtual ['acc] fold_map =
+           | Pstr_exception a ->
+               let (a, acc) = self#type_exception a acc in
+               ((Pstr_exception a), acc)
++          | Pstr_effect a -> failwith "unimplemented"
+           | Pstr_module a ->
+               let (a, acc) = self#module_binding a acc in
+               ((Pstr_module a), acc)
+@@ -4945,6 +4966,7 @@ class virtual ['ctx] map_with_context =
+               Ppat_unpack a
+           | Ppat_exception a ->
+               let a = self#pattern ctx a in Ppat_exception a
++          | Ppat_effect (a, b) -> failwith "unimplemented"
+           | Ppat_extension a ->
+               let a = self#extension ctx a in Ppat_extension a
+           | Ppat_open (a, b) ->
+@@ -5526,6 +5548,7 @@ class virtual ['ctx] map_with_context =
+               let a = self#type_extension ctx a in Psig_typext a
+           | Psig_exception a ->
+               let a = self#type_exception ctx a in Psig_exception a
++          | Psig_effect a -> failwith "unimplemented"
+           | Psig_module a ->
+               let a = self#module_declaration ctx a in Psig_module a
+           | Psig_modsubst a ->
+@@ -5675,6 +5698,9 @@ class virtual ['ctx] map_with_context =
+               let a = self#type_extension ctx a in Pstr_typext a
+           | Pstr_exception a ->
+               let a = self#type_exception ctx a in Pstr_exception a
++          | Pstr_effect a -> failwith "unimplemented"
++              (* let a = self#parsetree__effect_constructor ctx a in
++              Pstr_effect a *)
+           | Pstr_module a ->
+               let a = self#module_binding ctx a in Pstr_module a
+           | Pstr_recmodule a ->
+@@ -6041,6 +6067,9 @@ class virtual ['res] lift =
+             self#constr "Ppat_unpack" [a]
+         | Ppat_exception a ->
+             let a = self#pattern a in self#constr "Ppat_exception" [a]
++        | Ppat_effect (a, b) ->
++            let a = self#pattern a in
++            let b = self#pattern b in self#constr "Ppat_effect" [a; b]
+         | Ppat_extension a ->
+             let a = self#extension a in self#constr "Ppat_extension" [a]
+         | Ppat_open (a, b) ->
+@@ -6631,6 +6660,9 @@ class virtual ['res] lift =
+             let a = self#type_extension a in self#constr "Psig_typext" [a]
+         | Psig_exception a ->
+             let a = self#type_exception a in self#constr "Psig_exception" [a]
++        | Psig_effect a -> failwith "unimplemented"
++            (* let a = self#parsetree__effect_constructor a in
++            self#constr "Psig_effect" [a] *)
+         | Psig_module a ->
+             let a = self#module_declaration a in
+             self#constr "Psig_module" [a]
+@@ -6797,6 +6829,7 @@ class virtual ['res] lift =
+             let a = self#type_extension a in self#constr "Pstr_typext" [a]
+         | Pstr_exception a ->
+             let a = self#type_exception a in self#constr "Pstr_exception" [a]
++        | Pstr_effect a -> failwith "unimplemented"
+         | Pstr_module a ->
+             let a = self#module_binding a in self#constr "Pstr_module" [a]
+         | Pstr_recmodule a ->
+diff --git a/ast/pprintast.ml b/ast/pprintast.ml
+index 91d771b..3c37771 100644
+--- a/ast/pprintast.ml
++++ b/ast/pprintast.ml
+@@ -1094,6 +1094,7 @@ and signature_item ctxt f x : unit =
+       type_extension ctxt f te
+   | Psig_exception ed ->
+       exception_declaration ctxt f ed
++  | Psig_effect ec -> failwith "unimplemented"
+   | Psig_class l ->
+       let class_description kwd f ({pci_params=ls;pci_name={txt;_};_} as x) =
+         pp f "@[<2>%s %a%a%s@;:@;%a@]%a" kwd
+@@ -1319,6 +1320,7 @@ and structure_item ctxt f x =
+       pp f "@[<2>%a@]" (bindings ctxt) (rf,l)
+   | Pstr_typext te -> type_extension ctxt f te
+   | Pstr_exception ed -> exception_declaration ctxt f ed
++  | Pstr_effect ec -> failwith "unimplemented"
+   | Pstr_module x ->
+       let rec module_helper = function
+         | {pmod_desc=Pmod_functor(arg_opt,me'); pmod_attributes = []} ->
+-- 
+2.17.1
+
