@@ -121,8 +121,13 @@ Ensure that the respective .json configuration files have the
 appropriate settings.
 
 If using `RUN_BENCH_TARGET=run_orunchrt` then the benchmarks will
-run using `chrt -r 1`. You may need to give the user permissions
-to execute `chrt`, one way to do this can be:
+run using `chrt -r 1`. `chrt -r 1` is **necessary** when using 
+`taskset` to run parallel programs. Otherwise, all the domains will be
+scheduled on the same core and you will see slowdown with increasing
+number of domains.
+
+You may need to give the user permissions to execute `chrt`, one way 
+to do this can be:
 ```
 sudo setcap cap_sys_nice=ep /usr/bin/chrt
 ```
