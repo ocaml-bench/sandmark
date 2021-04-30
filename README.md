@@ -116,12 +116,13 @@ location from sandboxing.
 
 You can execute both serial and parallel benchmarks using the
 `run_all_serial.sh` and `run_all_parallel.sh` scripts.
-
 Ensure that the respective .json configuration files have the
 appropriate settings.
 
 If using `RUN_BENCH_TARGET=run_orunchrt` then the benchmarks will
-run using `chrt -r 1`. `chrt -r 1` is **necessary** when using 
+run using `chrt -r 1`. 
+
+**IMPORTANT:** `chrt -r 1` is **necessary** when using 
 `taskset` to run parallel programs. Otherwise, all the domains will be
 scheduled on the same core and you will see slowdown with increasing
 number of domains.
