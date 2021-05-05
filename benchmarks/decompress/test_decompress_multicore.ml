@@ -1,4 +1,5 @@
 open Zl
+module T = Domainslib.Task
 
 let num_domains = try int_of_string(Sys.argv.(1)) with _ -> 1
 let iterations = try int_of_string(Sys.argv.(2)) with _ -> 64
@@ -56,7 +57,7 @@ let uncompress data =
     let len =
       (min : int -> int -> int) (Bigstringaf.length v) (String.length data - !p) in
     Bigstringaf.blit_from_string
-      data ~src_off:!p 
+      data ~src_off:!p
       v ~dst_off:0 ~len ; p := !p + len ; len in
   let flush v len = blit_to_buffer t b v len in
 
@@ -69,28 +70,19 @@ let uncompress data =
 let () = Random.init(42)
 
 let data_to_compress =
-  let buf = Bytes.create data_size in
-  for i = 0 to data_size - 1 do
-    Bytes.set buf i (Char.chr (97 + Random.int 26))
-  done ;
-  Bytes.to_string buf
+  let fn _ = Char.chr (97 + Random.int 26) in
+  String.init data_size fn
 
-let work i () =
-  for _run = 0 to i do
-    let result = compress data_to_compress in
-    let original = uncompress result in
-    ignore original
-  done
+let iter_count = Atomic.make 0
 
-let rec distribute iters num_doms doms =
-  if num_doms = 1 then
-    begin
-      work iters ();
-      List.map Domain.join doms
-    end
-  else
-    let w = iters / num_doms in
-    distribute (iters - w) (num_doms - 1)
-      ((Domain.spawn (work w))::doms)
+let work _i =
+  let result = compress data_to_compress in
+  let original = uncompress result in
+  ignore original;
+  ignore (Atomic.fetch_and_add iter_count 1)
 
-let _ = distribute iterations num_domains []
+let () =
+  let pool = T.setup_pool ~num_domains:(num_domains - 1) in
+  T.parallel_for pool ~start:1 ~finish:iterations ~body:work;
+  T.teardown_pool pool;
+  assert ((Atomic.get iter_count) = iterations)
