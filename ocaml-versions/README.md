@@ -5,12 +5,9 @@
 As far as Multicore OCaml is concerned, these are the relevant compiler
 variants:
 
-* `4.06.1+stock` -- Stock OCaml compiler 4.06.1
-* `4.06.1+multicore` -- Multicore OCaml compiler 4.06.1
-* `4.06.1+multicore+stw` -- Multicore OCaml compiler 4.06.1 with stop-the-world
-  parallel minor collector.
-* `4.10.0+stock` -- Stock OCaml compiler 4.10.0
-* `4.10.0+multicore` -- Multicore OCaml compiler 4.10.0 with stop-the-world parallel minor collector
+* `4.12.0+stock` -- Stock OCaml compiler 4.12.0
+* `4.12.0+domains` -- Multicore OCaml compiler 4.12.0 with only domains
+* `4.12.0+domains+effects` -- Multicore OCaml compiler 4.12.0 with domains and effects
 
 We want to get throughput (how fast does it go) and latency (how responsive is
 it) results. We also care about serial performance of the multicore compilers.
@@ -23,6 +20,7 @@ following versions:
   + `4.06.1+multicore+stw.json`
   + `4.10.0+stock.json`
   + `4.10.0+multicore.json`
+  + `4.12.0+stock.json`
 2. Serial + Latency
   + `4.06.1+stock+instrumented.json` -- compiled with tracing on, which slows
   down the execution.
@@ -36,6 +34,8 @@ following versions:
   + `4.06.1+multicore+parallel.json` -- same as `4.06.1+multicore.json`
   + `4.06.1+multicore+stw+parallel.json` -- same as `4.06.1+multicore+stw.json`
   + `4.10.0+multicore+parallel.json` -- same as `4.10.0+multicore.json`
+  + `4.12.0+domains.json`
+  + `4.12.0+domains+effects.json`
 4. Parallel + Latency.
   + `4.06.1+multicore+pausetimes+parallel.json` -- same as
     `4.06.1+multicore.json`
