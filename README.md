@@ -64,13 +64,13 @@ These stages are implemented in:
    `run_config.json` and specified via the `RUN_BENCH_TARGET` variable
    passed to the makefile.
 
-## Configuration
+## Configuration of the compiler build
 
 The compiler variant and its configuration options can be specified in
 a .json file in the ocaml-versions/ directory. It uses the JSON syntax
 as shown in the following example:
 
-```
+```json
 {
   "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/parallel_minor_gc.tar.gz",
   "configure" : "-q",
@@ -87,7 +87,8 @@ The various options are described below:
   specific flags to the `configure` script.
 
 - `runparams` is OPTIONAL, and its values are passed to OCAMLRUNPARAM
-  when building the compiler.
+  when building the compiler. _Notice this variable is not used for
+  the running of benchmarks, just the build of the compiler_
 
 ## Execution
 
@@ -120,14 +121,14 @@ Ensure that the respective .json configuration files have the
 appropriate settings.
 
 If using `RUN_BENCH_TARGET=run_orunchrt` then the benchmarks will
-run using `chrt -r 1`. 
+run using `chrt -r 1`.
 
-**IMPORTANT:** `chrt -r 1` is **necessary** when using 
+**IMPORTANT:** `chrt -r 1` is **necessary** when using
 `taskset` to run parallel programs. Otherwise, all the domains will be
 scheduled on the same core and you will see slowdown with increasing
 number of domains.
 
-You may need to give the user permissions to execute `chrt`, one way 
+You may need to give the user permissions to execute `chrt`, one way
 to do this can be:
 ```
 sudo setcap cap_sys_nice=ep /usr/bin/chrt
@@ -139,6 +140,23 @@ A config file can be specified with the environment variable `RUN_CONFIG_JSON`,
 and the default value is `run_config.json`. This file lists the executable to
 run and the wrapper which will be used to collect data (e.g. orun or perf). You
 can edit this file to change benchmark parameters or wrappers.
+
+The `environment` within which a wrapper runs allows the user to configure
+variables such as `OCAMLRUNPARAM` or `LD_PRELOAD`. For example this wrapper
+configuration:
+```json
+{
+  "name": "orun-2M",
+  "environment": "OCAMLRUNPARAM='s=2M'",
+  "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
+}
+```
+would allow
+```sh
+$ RUN_BENCH_TARGET=run_orun-2M make ocaml-versions/4.12.0+stock.bench
+```
+to run the benchmarks on 4.12.0+stock with a 2M minor heap setting taskset
+onto CPU 5.
 
 The benchmarks also have associated tags which classify the benchmarks. The
 current tags are:
@@ -170,10 +188,10 @@ value is `buildbench` which runs the serial benchmarks. For executing the
 parallel benchmarks use `multibench_parallel`. You can also setup a custom
 bench and add only the benchmarks you care about.
 
-We can obtain throughput and latency results for the benchmarks. For obtaining 
-latency results, we can adjust the environment variable `RUN_BENCH_TARGET`. 
-The scripts for latencies are present in the `pausetimes/` directory. The 
-`pausetimes_trunk` Bash script obtains the latencies for stock OCaml and the 
+We can obtain throughput and latency results for the benchmarks. For obtaining
+latency results, we can adjust the environment variable `RUN_BENCH_TARGET`.
+The scripts for latencies are present in the `pausetimes/` directory. The
+`pausetimes_trunk` Bash script obtains the latencies for stock OCaml and the
 `pausetimes_multicore` Bash script for Multicore OCaml.
 
 ### Results
