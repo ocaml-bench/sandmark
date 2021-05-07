@@ -1,58 +1,57 @@
 let n = try int_of_string Sys.argv.(1) with _ -> 4
 
-type e =
-      | None
-      | Some of int
-
-let sum x y =
-  match x , y with
-  | Some x ,Some y -> Some (x+y)
-  | _ , _-> None
+type edge =
+  | Infinity
+  | Value of int
 
 let print_inf x =
   match  x with
-  | Some x -> print_int x
-  | None -> print_string "∞"
+  | Value x -> print_int x
+  | Infinity -> print_string "∞"
 
+let print_mat adjacency =
+  print_endline " ";
+  let rows = Array.length adjacency in
+  let columns = Array.length adjacency.(0) in
+  for i = 0 to (rows - 1) do
+    for j = 0 to (columns - 1) do
+      print_inf adjacency.(i).(j); print_string " "
+    done;
+    print_endline " "
+  done
 
-let my_formula () =
-  let r = Random.int 100 in
-  let r1 = Random.int 2 in
-  match r1 with
-  |0 ->None
-  |_-> Some r
-
-
-let adj = Array.init n (fun _ -> Array.init n (fun _ -> my_formula ()))
-
-let edit_diagonal mat =
-  Array.iteri (fun i _ -> mat.(i).(i) <- Some 0) mat
-
+(* setup the adjacency matrix for the test *)
+let make_adj n =
+  let random_init _i =
+    match Random.int 2 with
+    | 0 -> Infinity
+    | _ -> Value (Random.int 100) in
+  let mat = Array.init n (fun _ -> Array.init n random_init) in
+  (* zero the diagonal *)
+  for i = 0 to (n-1) do
+    mat.(i).(i) <- Value 0
+  done;
+  mat
 
 let f_w adj =
   for k = 0 to n-1 do
     for i = 0 to n-1 do
-      if adj.(i).(k) <> None then
+      match adj.(i).(k) with
+      | Value a_ik ->
         for j = 0 to n-1 do
-          if adj.(k).(j) <> None && (adj.(i).(j) = None || ( sum  adj.(i).(k)   adj.(k).(j) ) <  adj.(i).(j) ) then
-            adj.(i).(j) <- (sum adj.(i).(k)  adj.(k).(j))
+          match adj.(i).(j), adj.(k).(j) with
+            | Infinity, Value a_kj ->
+              adj.(i).(j) <- Value (a_ik + a_kj)
+            | Value a_ij, Value a_kj when a_ik + a_kj < a_ij ->
+              adj.(i).(j) <- Value (a_ik + a_kj)
+            | _, _ -> ()
         done
+      | Infinity -> ()
     done
   done
 
-let print_mat adjacency =
-print_endline " ";
-let rows = Array.length adjacency in
-let columns = Array.length adjacency.(0) in
-   for i = 0 to (rows - 1) do
-       for j = 0 to (columns - 1) do
-           print_inf adjacency.(i).(j); print_string " "
-       done;
-       print_endline " "
-   done
-
-
-let ()=
-  edit_diagonal adj;
+let () =
+  Random.init 512;
+  let adj = make_adj n in
   f_w adj
  (* print_mat adj*)
