@@ -21,8 +21,9 @@ $ opam install dune.2.6.0
 
 $ git clone https://github.com/ocaml-bench/sandmark.git
 $ cd sandmark
-$ make ocaml-versions/4.10.0+stock.bench
-$ make ocaml-versions/4.10.0+multicore.bench
+$ make ocaml-versions/4.12.0+stock.bench
+$ make ocaml-versions/4.12.0+domains.bench
+$ make ocaml-versions/4.12.0+domains+effects.bench
 ```
 
 You can now find the results in the `_results/` folder.
