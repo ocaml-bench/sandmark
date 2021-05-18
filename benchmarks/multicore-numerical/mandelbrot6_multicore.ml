@@ -35,7 +35,7 @@ let worker w h_lo h_hi =
       and zr = ref 0. and zi = ref 0. and trmti = ref 0. and n = ref 0 in
       begin try
   while true do
-          Domain.Sync.poll ();
+    Domain.Sync.poll ();
     zi := 2. *. !zr *. !zi +. ci;
     zr := !trmti +. cr;
     let tr = !zr *. !zr and ti = !zi *. !zi in
@@ -51,9 +51,9 @@ let worker w h_lo h_hi =
       with Exit -> ()
       end;
       if x mod 8 = 7 then begin
-  Bytes.set buf !ptr (Char.chr !byte);
-  incr ptr;
-  byte := 0
+        Bytes.set buf !ptr (Char.chr !byte);
+        incr ptr;
+        byte := 0
       end
     done;
     let rem = w mod 8 in
@@ -67,14 +67,9 @@ let worker w h_lo h_hi =
 
 let _ =
   let pool = T.setup_pool ~num_domains:(num_domains - 1) in
-  let rows = w / num_domains and rem = w mod num_domains in
   Printf.printf "P4\n%i %i\n%!" w w;
-  let work i () =
-    worker w (i * rows + min i rem) ((i+1) * rows + min (i+1) rem)
-  in
-  let doms = 
-    Array.init (num_domains - 1) (fun i -> T.async pool (work i)) in
-  let r = work (num_domains-1) () in
-  Array.iter (fun d -> Printf.printf "%a%!" output_bytes (T.await pool d)) doms;
-  Printf.printf "%a%!" output_bytes r;
+  let out = Array.init w (fun _ -> Bytes.create 0) in
+  let work i = out.(i) <- worker w i (i+1) in
+  T.parallel_for pool ~start:0 ~finish:(w-1) ~body:work;
+  Array.iter (fun o -> Printf.printf "%a%!" output_bytes o) out;
   T.teardown_pool pool
