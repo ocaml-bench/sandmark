@@ -32,7 +32,7 @@ PACKAGES = \
 	cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib \
 	menhir minilight base stdio dune-private-libs dune-configurator camlimages \
 	yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum \
-	sexplib0 irmin cubicle conf-findutils index logs \
+	sexplib0 eventlog-tools irmin cubicle conf-findutils index logs \
 	mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
@@ -92,6 +92,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json setup_sys_dune
 	$(eval OCAML_RUN_PARAM     = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	opam update
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
+	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore_wip
 	opam pin add -n --yes --switch $* orun orun/
 	opam pin add -n --yes --switch $* rungen rungen/
 

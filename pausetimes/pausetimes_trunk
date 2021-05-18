@@ -1,10 +1,11 @@
 #!/bin/bash
 
-export OCAML_INSTR_FILE=instrlog
-#O=1000000 disables compaction, a=1 is first-fit policy
-#export OCAMLRUNPARAM="O=1000000,a=1"
+export OCAML_EVENTLOG_ENABLED="1"
 OUTFILE=$1
+BENCH_NAME=$(basename $OUTFILE .pausetimes_trunk.bench)
 shift
 eval $@
-python3 $OPAM_SWITCH_PREFIX/bin/process_instrlog.py $OUTFILE instrlog > $OUTFILE
-rm instrlog
+echo $BENCH_NAME
+echo $OUTFILE
+ocaml-eventlog-pausetimes *.eventlog $BENCH_NAME > $OUTFILE
+rm *.eventlog
