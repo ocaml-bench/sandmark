@@ -18,7 +18,9 @@ let population_size = Array.length
 let chromosome { chromosome=x; fitness=_ } = x
 let evaluate f x = { chromosome=x; fitness=(f x) }
 
-let fittest x y = if x.fitness > y.fitness then x else y
+let fittest x y =
+  Domain.Sync.poll ();
+  if x.fitness > y.fitness then x else y
 let pop_fittest pop = Array.fold_left fittest pop.(0) pop
 
 let random_bitstring n =
@@ -41,13 +43,12 @@ let rec k_tournament k pop =
     let y = k_tournament (k-1) pop in
     fittest x y
 
-let flip_coin p =
-  let s = Domain.DLS.get my_key in
-  (Random.State.float s 1.0) < p
-
 let xor a b = if a then not b else b
+
 (* Naive Theta(n) implementation of mutation. *)
 let mutate chi x =
+  let s = Domain.DLS.get my_key in
+  let flip_coin p = (Random.State.float s 1.0) < p in
   let n = chromosome_length x in
   let p = chi /. (float n) in
   Array.map (fun b -> xor b (flip_coin p)) x
@@ -94,7 +95,7 @@ let evolutionary_algorithm
   let rec generation time pop =
     let next_pop =
       init_pop lambda
-	(fun _ ->
+       (fun _ ->
              (k_tournament k pop)
           |> chromosome
           |> (mutate chi)
