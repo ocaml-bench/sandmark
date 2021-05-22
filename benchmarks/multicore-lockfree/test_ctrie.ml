@@ -136,6 +136,6 @@ let work tree _ =
 let _ =
   let tree = Ctrie.empty () in
   let work = work tree in
-  for i in range 0 to (num_elems - 1) do
+  for i = 0 to (num_elems - 1) do
     work i
   done
