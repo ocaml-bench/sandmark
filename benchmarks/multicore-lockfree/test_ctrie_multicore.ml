@@ -124,7 +124,7 @@ let num_domains = try int_of_string Sys.argv.(1) with _  -> 4
 let num_elems   = try int_of_string Sys.argv.(2) with _ -> 10_000_000
 let ins_percent = try int_of_string Sys.argv.(3) with _ -> 50
 
-let state_key = Domain.DLS.new_key Random.State.make_self_init in
+let state_key = Domain.DLS.new_key Random.State.make_self_init
 
 let rand_int n =
   let state = Domain.DLS.get state_key in
