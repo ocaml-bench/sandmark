@@ -50,8 +50,7 @@
 
 (executable
   (name test_ctrie)
-  (modules test_ctrie)
-  (libraries domainslib))
+  (modules test_ctrie))
 
 (executable
   (name test_ctrie_multicore)

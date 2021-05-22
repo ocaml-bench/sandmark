@@ -118,31 +118,24 @@ module Ctrie = struct
   let mem k t = mem k 0 t
 end
 
-module T = Domainslib.Task
-
-let num_domains = try int_of_string Sys.argv.(1) with _ -> 4
-let num_elems   = try int_of_string Sys.argv.(2) with _ -> 1000000
-let ins_ratio   = try float_of_string Sys.argv.(3) with _ -> 0.5
+let num_elems   = try int_of_string Sys.argv.(1) with _ -> 10_000_000
+let ins_percent = try int_of_string Sys.argv.(2) with _ -> 50
 
 let state_key = Domain.DLS.new_key Random.State.make_self_init in
 
-let rand_int () =
+let rand_int n =
   let state = Domain.DLS.get state_key in
-  Random.State.int state 10000
+  Random.State.int state n
 
-let rand_float () =
-  let state = Domain.DLS.get state_key in
-  Random.State.float state 1.0
-
-let work tree int =
-  if rand_float () > ins_ratio then
-    ignore (Ctrie.mem (rand_int ()) tree)
+let work tree _ =
+  if rand_int 100 >= ins_percent then
+    ignore (Ctrie.mem (rand_int 10000) tree)
   else
-    ignore (Ctrie.insert (rand_int ()) 0 tree)
+    ignore (Ctrie.insert (rand_int 10000) 0 tree)
 
 let _ =
-  let pool = T.setup_pool num_domains in
   let tree = Ctrie.empty () in
   let work = work tree in
-  T.parallel_for ~start:0 ~finish:(num_elems - 1) ~body:work pool;
-  T.teardown_pool pool
+  for i in range 0 to (num_elems - 1) do
+    work i
+  done
