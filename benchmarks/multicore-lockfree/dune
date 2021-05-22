@@ -1,39 +1,73 @@
 (executable
-  (name hash_sequential)
-  (modules hash_sequential)
+  (name test_bag)
+  (modules test_bag)
   (libraries lockfree))
 
 (executable
-  (name hash_parallel)
-  (modules hash_parallel)
+  (name test_bag_multicore)
+  (modules test_bag_multicore)
   (libraries lockfree))
 
 (executable
-  (name ctrie_sequential)
-  (modules ctrie_seqeuntial)
+  (name test_list)
+  (modules test_list)
+  (libraries lockfree))
+
+(executable
+  (name test_list_multicore)
+  (modules test_list_multicore)
+  (libraries lockfree))
+
+(executable
+  (name test_hash)
+  (modules test_hash)
+  (libraries lockfree))
+
+(executable
+  (name test_hash_multicore)
+  (modules test_hash_multicore)
+  (libraries lockfree))
+
+(executable
+  (name test_msqueue)
+  (modules test_msqueue)
+  (libraries lockfree))
+
+(executable
+  (name test_msqueue_multicore)
+  (modules test_msqueue_multicore)
+  (libraries lockfree))
+
+(executable
+  (name test_wsqueue)
+  (modules test_wsqueue)
+  (libraries lockfree))
+
+(executable
+  (name test_wsqueue_multicore)
+  (modules test_wsqueue_multicore)
+  (libraries lockfree))
+
+(executable
+  (name test_ctrie)
+  (modules test_ctrie)
   (libraries domainslib))
 
 (executable
-  (name ctrie_parallel)
-  (modules ctrie_parallel)
+  (name test_ctrie_multicore)
+  (modules test_ctrie_multicore)
   (libraries domainslib))
-
-(executable
-	(name wsqueue_seqeuntial)
-	(modules wsqueue_sequential)
-	(libraries lockfree))
-
-(executable
-	(name wsqueue_parallel)
-	(modules wsqueue_parallel)
-	(libraries lockfree))
 
 (alias (name multibench_parallel)
-       (deps hash_parallel.exe
-             ctrie_parallel.exe
-             wsqueue_parallel.exe))
-
-(alias (name buildbench)
-       (deps hash_sequential.exe
-             ctrie_sequential.exe
-             wsqueue_sequential.exe))
+       (deps test_bag.exe
+             test_list.exe
+             test_hash.exe
+             test_msqueue.exe
+             test_wsqueue.exe
+             test_ctrie.exe
+             test_bag_multicore.exe
+             test_list_multicore.exe
+             test_hash_multicore.exe
+             test_msqueue_multicore.exe
+             test_wsqueue_multicore.exe
+             test_ctrie_multicore.exe))
