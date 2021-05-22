@@ -1,6 +1,39 @@
-(include hash-dune.inc)
-(include wsqueue-dune.inc)
-(include bag-dune.inc)
-(include msqueue-dune.inc)
-(include list-dune.inc)
-(include ctrie-dune.inc)
+(executable
+  (name hash_sequential)
+  (modules hash_sequential)
+  (libraries lockfree))
+
+(executable
+  (name hash_parallel)
+  (modules hash_parallel)
+  (libraries lockfree))
+
+(executable
+  (name ctrie_sequential)
+  (modules ctrie_seqeuntial)
+  (libraries domainslib))
+
+(executable
+  (name ctrie_parallel)
+  (modules ctrie_parallel)
+  (libraries domainslib))
+
+(executable
+	(name wsqueue_seqeuntial)
+	(modules wsqueue_sequential)
+	(libraries lockfree))
+
+(executable
+	(name wsqueue_parallel)
+	(modules wsqueue_parallel)
+	(libraries lockfree))
+
+(alias (name multibench_parallel)
+       (deps hash_parallel.exe
+             ctrie_parallel.exe
+             wsqueue_parallel.exe))
+
+(alias (name buildbench)
+       (deps hash_sequential.exe
+             ctrie_sequential.exe
+             wsqueue_sequential.exe))
