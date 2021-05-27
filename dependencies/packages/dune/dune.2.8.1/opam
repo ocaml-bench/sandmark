@@ -19,8 +19,8 @@ several opam roots/switches simultaneously. This helps maintaining
 packages across several versions of OCaml and gives cross-compilation
 for free.
 """
-maintainer: ["Jane Street Group, LLC <opensource@janestreet.com>"]
-authors: ["Jane Street Group, LLC <opensource@janestreet.com>"]
+maintainer: ["Jane Street Group, LLC"]
+authors: ["Jane Street Group, LLC"]
 license: "MIT"
 homepage: "https://github.com/ocaml/dune"
 doc: "https://dune.readthedocs.io/"
@@ -37,9 +37,9 @@ conflicts: [
 dev-repo: "git+https://github.com/ocaml/dune.git"
 build: [
   # opam 2 sets OPAM_SWITCH_PREFIX, so we don't need a hardcoded path
-  ["ocaml" "configure.ml" "--libdir" lib] {opam-version < "2"}
-  ["ocaml" "bootstrap.ml" "-j" jobs]
-  ["./dune.exe" "build" "-p" name "--profile" "dune-bootstrap" "-j" jobs]
+#  ["ocaml" "configure.ml" "--libdir" lib] {opam-version < "2"}
+#  ["ocaml" "bootstrap.ml" "-j" jobs]
+#  ["./dune.exe" "build" "-p" name "--profile" "dune-bootstrap" "-j" jobs]
 ]
 depends: [
   # Please keep the lower bound in sync with .github/workflows/workflow.yml,
@@ -47,6 +47,14 @@ depends: [
   ("ocaml" {>= "4.08"} | ("ocaml" {< "4.08~~"} & "ocamlfind-secondary"))
   "base-unix"
   "base-threads"
+]
+# HACK: link out to a system dune installation setup in the master makefile
+# This was done as a workaround for dune breakage with trunk until better
+# solutions arrive
+install: [
+  ["ln" "-s" "%{root}%/sys_dune/bin/dune" "%{bin}%/dune"]
+  ["ln" "-s" "%{root}%/sys_dune/bin/jbuilder" "%{bin}%/jbuilder"]
+  ["ln" "-s" "%{root}%/sys_dune/lib/dune" "%{lib}%/dune"]
 ]
 x-commit-hash: "b796156167490e777131403f651e83779e954000"
 url {
