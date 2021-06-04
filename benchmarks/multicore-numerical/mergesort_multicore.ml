@@ -3,7 +3,7 @@ module T = Domainslib.Task
 let num_domains = try int_of_string @@ Sys.argv.(1) with _ -> 1
 let n = try int_of_string @@ Sys.argv.(2) with _ -> 1024
 let min = 128
-let pool = T.setup_pool ~num_domains:(num_domains - 1)
+let pool = T.setup_pool ~num_additional_domains:(num_domains - 1)
 
 let _ = Random.init 42
 let a = Array.init n (fun _ -> Random.int n)

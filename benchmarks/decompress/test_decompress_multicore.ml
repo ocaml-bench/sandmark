@@ -82,7 +82,7 @@ let work _i =
   ignore (Atomic.fetch_and_add iter_count 1)
 
 let () =
-  let pool = T.setup_pool ~num_domains:(num_domains - 1) in
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
   T.parallel_for pool ~start:1 ~finish:iterations ~body:work;
   T.teardown_pool pool;
   assert ((Atomic.get iter_count) = iterations)

@@ -66,7 +66,7 @@ let worker w h_lo h_hi =
   buf
 
 let _ =
-  let pool = T.setup_pool ~num_domains:(num_domains - 1) in
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
   Printf.printf "P4\n%i %i\n%!" w w;
   let out = Array.init w (fun _ -> Bytes.create 0) in
   let work i = out.(i) <- worker w i (i+1) in

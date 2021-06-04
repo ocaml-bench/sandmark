@@ -26,7 +26,7 @@ let print_matrix m =
   done
 
 let _ =
-    let pool = T.setup_pool ~num_domains:(num_domains - 1) in
+    let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
 
     let m1 = Array.init size (fun _ -> Array.init size (fun _ -> Random.int 100)) in
     let m2 = Array.init size (fun _ -> Array.init size (fun _ -> Random.int 100)) in
