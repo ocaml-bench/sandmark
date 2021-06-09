@@ -60,7 +60,7 @@ let f_w pool adj =
 let ()=
   Random.init 512;
   let adj = make_adj n in
-  let pool = T.setup_pool ~num_domains:(num_domains - 1) in
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
   (*
   let adj = [|
     [| Value 0; Value 8; Infinity; Value 1 |];

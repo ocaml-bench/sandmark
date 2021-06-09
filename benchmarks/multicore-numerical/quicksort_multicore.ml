@@ -40,7 +40,7 @@ let rec quicksort arr low high d pool =
   end
 
 let () =
-  let pool = T.setup_pool ~num_domains:(num_domains - 1) in
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
   let arr = Array.init n (fun _ -> Random.int n) in
   quicksort arr 0 (Array.length arr - 1) num_domains pool;
   (* for i = 0 to  Array.length arr - 1 do
