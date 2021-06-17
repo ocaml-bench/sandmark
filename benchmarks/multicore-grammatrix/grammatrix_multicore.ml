@@ -23,10 +23,9 @@ let dot_product xs ys =
   done;
   !res
 
-let compute_gram_matrix samples pool =
+let compute_gram_matrix samples pool res =
   let n = A.length samples in
   assert(n > 0);
-  let res = A.init n (fun _ -> A.create_float n) in
   T.parallel_for ~start:0 ~finish:(n - 1) ~body:(fun i ->
     for j = i to n - 1 do
       let x = dot_product samples.(i) samples.(j) in
@@ -45,9 +44,12 @@ let parse_line line =
   res
 
 let _ =
-  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
   let samples = A.of_list (Utls.map_on_lines_of_file input_fn parse_line) in
   Printf.printf "samples: %d features: %d\n"
       (A.length samples) (A.length samples.(0));
-  let r = compute_gram_matrix samples pool in
-  Utls.print_matrix r
+  let n = A.length samples in
+  let res = A.init n (fun _ -> A.create_float n) in
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
+  let r = compute_gram_matrix samples pool res in
+  Utls.print_matrix r;
+  T.teardown_pool pool
