@@ -7,5 +7,7 @@ shift
 eval $@
 echo $BENCH_NAME
 echo $OUTFILE
-ocaml-eventlog-pausetimes *.eventlog $BENCH_NAME > $OUTFILE
-rm *.eventlog
+if ls *.eventlog 1> /dev/null 2>&1; then
+    ocaml-eventlog-pausetimes *.eventlog $BENCH_NAME > $OUTFILE
+    rm *.eventlog
+fi
