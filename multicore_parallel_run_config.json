@@ -1,0 +1,715 @@
+{
+  "wrappers": [
+    {
+      "name": "orun",
+      "command": "orun -o %{output} -- %{paramwrapper} %{command}"
+    },
+    {
+      "name": "orunchrt",
+      "command": "orun -o %{output} -- chrt -r 1 %{paramwrapper} %{command}"
+    },
+    {
+      "name": "perfstat",
+      "command": "perf stat -o %{output} -- %{paramwrapper} %{command}"
+    },
+    {
+      "name": "pausetimes_multicore",
+      "command": "bash pausetimes_multicore %{output} %{paramwrapper} %{command}"
+    }
+  ],
+
+  "benchmarks": [
+
+    {
+      "executable": "benchmarks/multicore-minilight/sequential/minilight.exe",
+      "name": "minilight",
+      "tags": ["10s_100s", "macro_bench"],
+      "runs": [
+        {
+          "params": "roomfront.ml.txt",
+          "short_name": "roomfront",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-minilight/parallel/minilight_multicore.exe",
+      "name": "minilight_multicore",
+      "tags": ["macro_bench", "run_in_ci","gt_100s"], 
+      "runs": [
+        {
+          "params": "1 roomfront.ml.txt",
+          "short_name": "1_roomfront",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "2 roomfront.ml.txt",
+          "short_name": "2_roomfront",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "4 roomfront.ml.txt",
+          "short_name": "4_roomfront",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "8 roomfront.ml.txt",
+          "short_name": "8_roomfront",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "12 roomfront.ml.txt",
+          "short_name": "12_roomfront",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "16 roomfront.ml.txt",
+          "short_name": "16_roomfront",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "20 roomfront.ml.txt",
+          "short_name": "20_roomfront",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "24 roomfront.ml.txt",
+          "short_name": "24_roomfront",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/benchmarksgame/spectralnorm2.exe",
+      "name": "spectralnorm2",
+      "tags": ["1s_10s", "macro_bench"],
+      "runs": [
+        { "params": "5_500" , "paramwrapper": "taskset --cpu-list 2-13"}
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/spectralnorm2_multicore.exe",
+      "name": "spectralnorm2_multicore",
+      "tags": ["macro_bench","1s_10s"],
+      "runs": [
+        { "params": "1 5_500", "paramwrapper": "taskset --cpu-list 2-13"}
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/spectralnorm2_multicore.exe",
+      "name": "spectralnorm2_multicore",
+      "tags": ["macro_bench","10s_100s"],
+      "runs": [
+        { "params": "2 5_500", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 5_500", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 5_500", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 5_500", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 5_500", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 5_500", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 5_500", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/benchmarksgame/mandelbrot6.exe",
+      "name": "mandelbrot6",
+      "tags": ["10s_100s", "macro_bench"],
+      "runs": [
+        { "params": "16_000", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/mandelbrot6_multicore.exe",
+      "name": "mandelbrot6_multicore",
+      "tags": ["macro_bench", "run_in_ci","10s_100s"],
+      "runs": [
+        { "params": "1 16_000", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 16_000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 16_000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 16_000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 16_000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 16_000", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 16_000", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 16_000", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/matrix_multiplication.exe",
+      "name": "matrix_multiplication",
+      "tags": ["1s_10s", "macro_bench"],
+      "runs": [
+        { "params": "1024", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/matrix_multiplication_multicore.exe",
+      "name": "matrix_multiplication_multicore",
+      "tags": ["macro_bench", "run_in_ci","1s_10s"],
+      "runs": [
+        { "params": "1 1024", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 1024", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 1024", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 1024", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 1024", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 1024", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 1024", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 1024", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/matrix_multiplication_tiling_multicore.exe",
+      "name": "matrix_multiplication_tiling_multicore",
+      "tags": [],
+      "runs": [
+        { "params": "1 1024", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 1024", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 1024", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 1024", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 1024", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/quicksort.exe",
+      "name": "quicksort",
+      "tags": ["1s_10s"],
+      "runs": [
+        { "params": "40_000_000", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/quicksort_multicore.exe",
+      "name": "quicksort_multicore",
+      "tags": [],
+      "runs": [
+        { "params": "1 40_000_000", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 40_000_000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 40_000_000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 40_000_000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 40_000_000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 40_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 40_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 40_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/benchmarksgame/binarytrees5.exe",
+      "name": "binarytrees5",
+      "tags": ["10s_100s", "macro_bench"],
+      "runs": [
+        { "params": "23", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/binarytrees5_multicore.exe",
+      "name": "binarytrees5_multicore",
+      "tags": ["macro_bench","10s_100s"],
+      "runs": [
+        { "params": "1 23", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 23", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/binarytrees5_multicore.exe",
+      "name": "binarytrees5_multicore",
+      "tags": ["macro_bench","gt_100s"],
+      "runs": [
+        { "params": "4 23", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 23", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 23", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 23", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 23", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 23", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/multicore-numerical/game_of_life.exe",
+      "name": "game_of_life",
+      "tags": ["10s_100s", "macro_bench"],
+      "runs": [
+        { "params": "256", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/game_of_life_multicore.exe",
+      "name": "game_of_life_multicore",
+      "tags": ["macro_bench","10s_100s"],
+      "runs": [
+        { "params": "1 256", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 256", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 256", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 256", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 256", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 256", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 256", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 256", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/LU_decomposition.exe",
+      "name": "LU_decomposition",
+      "tags": ["1s_10s", "macro_bench"],
+      "runs": [
+        { "params": "2048", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/LU_decomposition_multicore.exe",
+      "name": "LU_decomposition_multicore",
+      "tags": ["macro_bench","10s_100s"],
+      "runs": [
+        { "params": "1 2048", "paramwrapper": "taskset --cpu-list 2-13"}
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/LU_decomposition_multicore.exe",
+      "name": "LU_decomposition_multicore",
+      "tags": ["macro_bench","gt_100s"],
+      "runs": [
+        { "params": "2 2048", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 2048", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 2048", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 2048", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 2048", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 2048", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 2048", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/floyd_warshall.exe",
+      "name": "floyd_warshall",
+      "tags": ["1s_10s", "macro_bench"],
+      "runs": [
+        { "params": "1024", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/floyd_warshall_multicore.exe",
+      "name": "floyd_warshall_multicore",
+      "tags": ["macro_bench","10s_100s"],
+      "runs": [
+        { "params": "1 1024", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 1024", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/floyd_warshall_multicore.exe",
+      "name": "floyd_warshall_multicore",
+      "tags": ["macro_bench","gt_100s"],
+      "runs": [
+        { "params": "4 1024", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 1024", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 1024", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 1024", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 1024", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 1024", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/nbody.exe",
+      "name": "nbody",
+      "tags": ["1s_10s", "macro_bench"],
+      "runs": [
+        { "params": "512 2048", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/nbody_multicore.exe",
+      "name": "nbody_multicore",
+      "tags": ["macro_bench","10s_100s"],
+      "runs": [
+        { "params": "1 512 2048", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 512 2048", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 512 2048", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 512 2048", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 512 2048", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/nbody_multicore.exe",
+      "name": "nbody_multicore",
+      "tags": ["macro_bench","gt_100s"],
+      "runs": [
+        { "params": "16 512 2048", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 512 2048", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 512 2048", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/evolutionary_algorithm.exe",
+      "name": "evolutionary_algorithm",
+      "tags": ["10s_100s", "macro_bench"],
+      "runs": [
+        { "params": "10000 10000", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/evolutionary_algorithm_multicore.exe",
+      "name": "evolutionary_algorithm_multicore",
+      "tags": ["macro_bench", "run_in_ci","10s_100s"],
+      "runs": [
+        { "params": "1 10000 10000", "paramwrapper": "taskset --cpu-list 2-13"}
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/evolutionary_algorithm_multicore.exe",
+      "name": "evolutionary_algorithm_multicore",
+      "tags": ["macro_bench", "run_in_ci","gt_100s"],
+      "runs": [
+        { "params": "2 10000 10000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 10000 10000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 10000 10000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 10000 10000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 10000 10000", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 10000 10000", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 10000 10000", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+
+    {
+      "executable": "benchmarks/decompress/test_decompress.exe",
+      "name": "test_decompress",
+      "tags": ["1s_10s", "macro_bench"],
+      "runs": [
+        { "params": "64 1_048_576", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/decompress/test_decompress_multicore.exe",
+      "name": "test_decompress_multicore",
+      "tags": ["macro_bench", "run_in_ci","1s_10s"],
+      "runs": [
+        { "params": "1 64 1_048_576", "paramwrapper": "taskset --cpu-list 2-13"}
+      ]
+    },
+    {
+      "executable": "benchmarks/decompress/test_decompress_multicore.exe",
+      "name": "test_decompress_multicore",
+      "tags": ["macro_bench", "run_in_ci","10s_100s"],
+      "runs": [
+        { "params": "2 64 1_048_576", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 64 1_048_576", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 64 1_048_576", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 64 1_048_576", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 64 1_048_576", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 64 1_048_576", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 64 1_048_576", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-grammatrix/grammatrix.exe",
+      "name": "grammatrix",
+      "tags": ["10s_100s", "macro_bench"],
+      "runs": [
+        { "params": "16", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-grammatrix/grammatrix_multicore.exe",
+      "name": "grammatrix_multicore",
+      "tags": ["macro_bench","10s_100s"],
+      "runs": [
+        { "params": "1 16", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 16", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 16", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 16", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 16", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 16", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 16", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 16", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/pingpong_multicore.exe",
+      "name": "pingpong_multicore",
+      "tags": [],
+      "runs": [
+        { "params": "1 256 1000000", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 256 1000000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 256 1000000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 256 1000000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 256 1000000", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 256 1000000", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 256 1000000", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 256 1000000", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-structures/test_queue_parallel.exe",
+      "name": "mpmc_queue_parallel",
+      "tags": [],
+      "runs": [
+        {
+          "params": "10000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-structures/test_spsc_queue_parallel.exe",
+      "name": "spsc_queue_parallel",
+      "tags": [],
+      "runs": [
+        {
+          "params": "10000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-structures/test_spsc_queue_pingpong_parallel.exe",
+      "name": "spsc_queue_pingpong_parallel",
+      "tags": [],
+      "runs": [
+        {
+          "params": "1 10000000"
+        },
+        {
+          "params": "2 10000000"
+        },
+        {
+          "params": "4 10000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_wsqueue.exe",
+      "name": "test_wsqueue",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "10_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_wsqueue_multicore.exe",
+      "name": "test_wsqueue_multicore",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "1 10_000_000", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "2 10_000_000", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "4 10_000_000", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "8 10_000_000", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "12 10_000_000", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "16 10_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "20 10_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "24 10_000_000", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_msqueue.exe",
+      "name": "test_msqueue",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "10_000_000 50"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_msqueue_multicore.exe",
+      "name": "test_msqueue_multicore",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "1 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "2 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "4 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "8 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "12 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "16 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "20 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "24 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_hash.exe",
+      "name": "test_hash",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "10_000_000 50"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_hash_multicore.exe",
+      "name": "test_hash_multicore",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "1 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "2 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "4 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "8 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "12 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "16 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "20 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "24 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_bag.exe",
+      "name": "test_bag",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "10_000_000 50"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_bag_multicore.exe",
+      "name": "test_bag_multicore",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "1 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "2 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "4 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "8 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "12 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "16 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "20 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "24 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_list.exe",
+      "name": "test_list",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "10_000_000 50"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_list_multicore.exe",
+      "name": "test_list_multicore",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "1 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "2 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "4 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "8 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "12 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "16 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "20 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "24 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/alloc_multicore.exe",
+      "name": "alloc_multicore",
+      "tags": [],
+      "runs": [
+        {
+          "params": "1 1000000"
+        },
+        {
+          "params": "2 1000000"
+        },
+        {
+          "params": "4 1000000"
+        },
+        {
+          "params": "8 1000000"
+        },
+        {
+          "params": "16 1000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-structures/test_stack_parallel.exe",
+      "name": "stack_parallel",
+      "tags": [],
+      "runs": [
+        {
+          "params": "100000"
+        }
+      ]
+    }
+  ]
+}

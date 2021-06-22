@@ -63,7 +63,7 @@ steps:
   - opam install dune.2.6.0
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
-  - TAG='"run_in_ci"' make multicore_parallel_iitm_run_config_filtered.json
-  - TAG='"macro_bench"' make multicore_parallel_iitm_run_config_filtered_filtered.json
-  - make multicore_parallel_iitm_run_config_filtered_filtered_2domains.json
-  - BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_iitm_run_config_filtered_filtered_2domains.json make ocaml-versions/4.12.0+domains.bench
+  - TAG='"run_in_ci"' make multicore_parallel_run_config_filtered.json
+  - TAG='"macro_bench"' make multicore_parallel_run_config_filtered_filtered.json
+  - make multicore_parallel_run_config_filtered_filtered_2domains.json
+  - BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/4.12.0+domains.bench
