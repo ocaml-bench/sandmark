@@ -245,7 +245,7 @@ You can add new benchmarks as follows:
  - **Add commands to run your applications:**
     Add an entry for your benchmark run to the appropriate config file;
     `run_config.json` for sequential benchmarks and
-    `multicore_parallel_run_config.json` for parallel benchmarks.
+    `multicore_parallel_iitm_run_config.json` for parallel benchmarks.
 
 ## UI
 
