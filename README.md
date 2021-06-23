@@ -247,6 +247,16 @@ You can add new benchmarks as follows:
     `run_config.json` for sequential benchmarks and
     `multicore_parallel_run_config.json` for parallel benchmarks.
 
+### Config files
+
+The `*_config.json` files used to build benchmarks
+
+ - **run_config.json** : Runs sequential benchmarks with stock OCaml variants in CI and sandmark-nightly on the IITM machine(turing)
+ - **multicore_parallel_run_config.json** : Runs parallel benchmarks with multicore OCaml in CI and sandmark-nightly on the IITM machine(turing)
+ - **multicore_effects_run_config.json** : Runs parallel benchmarks in `benchmarks/multicore-effects` directory with multicore OCaml in CI
+ - **multicore_parallel_navajo_run_config.json** : Runs parallel benchmarks with multicore OCaml in sandmark-nightly on Navajo (AMD EPYC 7551 32-Core Processor) machine
+ - **micro_multicore.json** : To locally run multicore specific micro benchmarks
+
 ## UI
 
 JupyterHub is a multi-user server for hosting Jupyter notebooks. The
