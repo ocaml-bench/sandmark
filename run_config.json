@@ -2,7 +2,7 @@
   "wrappers": [
     {
       "name": "orun",
-      "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
+      "command": "orun -o %{output} -- taskset --cpu-list 1 %{command}"
     },
     {
       "name": "perfstat",

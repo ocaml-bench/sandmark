@@ -40,7 +40,7 @@ WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
 PACKAGES = \
 	dune sexplib0 re yojson decompress irmin-mem zarith bigstringaf \
-	num lwt react uuidm cpdf menhir menhirLib ocaml-config nbcodec minilight cubicle
+	num lwt react uuidm cpdf menhir menhirLib ocaml-config nbcodec minilight cubicle orun rungen
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += lockfree domainslib kcas # ctypes.0.14.0+multicore
@@ -90,7 +90,8 @@ override_packages/%: _opam/%
 			done; 										\
 		fi; \
 		for i in ${PACKAGES}; do 							\
-			if [ -v $${OVERRIDE["$${i}"]} ]; then 					\
+                        name="$${OVERRIDE[$${i}]}";                                                 \
+                        if [ -z "$${name}" ]; then                                              \
 				OVERRIDE["$${i}"]="\"$${i}\""; 					\
 			fi; 									\
 		done; 										\
@@ -98,7 +99,7 @@ override_packages/%: _opam/%
 			echo " $${OVERRIDE[$${key}]}" >> $(DEV_OPAM); 	\
 		done; 										\
 		echo "]" >> $(DEV_OPAM); 	\
-	        opam install $(DEV_OPAM) --switch=$(CONFIG_SWITCH_NAME) --yes --deps-only || $(CONTINUE_ON_OPAM_INSTALL_ERROR);	\
+	        opam install $(DEV_OPAM) --switch=$(CONFIG_SWITCH_NAME) --yes --deps-only;	\
 		opam list --switch=$(CONFIG_SWITCH_NAME); \
 	};
 
@@ -166,9 +167,6 @@ ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash o
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	$(eval ENVIRONMENT         = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
-	opam pin add -n --yes --switch $(CONFIG_SWITCH_NAME) orun ../orun/
-	opam pin add -n --yes --switch $(CONFIG_SWITCH_NAME) rungen ../rungen/
-	opam install --switch=$(CONFIG_SWITCH_NAME) --yes rungen orun
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $(CONFIG_SWITCH_NAME)) (name $(CONFIG_SWITCH_NAME)_$$i)))"; \
@@ -191,7 +189,7 @@ ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash o
 				s="$${key}=$${result}"; \
 			else \
 				s="$${s} $${key}=$${result}"; \
-			fi \
+			fi; \
 			done; \
 			header_entry=`jo -p $${s} | jq -c`; \
 			echo "$${header_entry}" > _results/$(CONFIG_SWITCH_NAME)_$$i.$(WRAPPER).summary.bench; \
@@ -203,23 +201,31 @@ ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash o
 	   fi };
 
 json:
-	output=data.json; \
-	tmp=test.json; \
-	count=0; \
-	while read line; do \
-	    if [ "$${count}" -eq 0 ]; then \
-		echo "$${line}" | jq '. | {config: ., results: []}' > "$${output}"; \
-	        count=1; \
-	    else \
-	        bench=`echo "$${line}" | jq '. | {name: .name, metrics: {time_secs: .time_secs, maxrss_kB: .maxrss_kB}}'`; \
-		string=".results += [$${bench}]"; \
-	        jq "$${string}" "$${output}" > "$${tmp}" && mv "$${tmp}" "$${output}"; \
-	    fi \
-	done < _results/*.bench
+	@{	output=data.json; \
+		tmp=test.json; \
+		count=0; \
+		while read line; do \
+			if [ "$${count}" -eq 0 ]; then \
+				echo "$${line}" | jq '. | {config: ., results: []}' > "$${output}"; \
+				count=1; \
+			else \
+				bench=`echo "$${line}" | jq '. | {name: .name, metrics: {time_secs: .time_secs, maxrss_kB: .maxrss_kB}}'`; \
+				string=".results += [$${bench}]"; \
+				jq "$${string}" "$${output}" > "$${tmp}" && mv "$${tmp}" "$${output}"; \
+			fi; \
+		done < _results/*.bench; \
+	};
 
-bench:
-	OPAM_DISABLE_SANDBOXING=true RUN_CONFIG_JSON=run_config_filtered.json $(MAKE) ocaml-versions/4.10.0+multicore.bench; \
-	$(MAKE) json
+prep_bench:
+	@{ 	TAG='"run_in_ci"' $(MAKE) multicore_parallel_run_config_filtered.json; \
+		TAG='"macro_bench"' $(MAKE) multicore_parallel_run_config_filtered_filtered.json; \
+		$(MAKE) multicore_parallel_run_config_filtered_filtered_2domains.json; \
+		BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json $(MAKE) ocaml-versions/4.10.0+multicore.bench; \
+		$(MAKE) json; \
+	} > /dev/null 2>&1;
+
+bench: prep_bench
+	@cat data.json
 
 clean:
 	rm -rf dependencies/packages/ocaml/*
