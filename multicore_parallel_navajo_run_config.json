@@ -6,7 +6,7 @@
     },
     {
       "name": "orunchrt",
-      "command": "orun -o %{output} -- chrt -r 1 %{paramwrapper} %{command}"
+      "command": "orun -o %{output} -- %{paramwrapper} chrt -r 1 %{command}"
     },
     {
       "name": "perfstat",
@@ -14,7 +14,7 @@
     },
     {
       "name": "pausetimes_multicore",
-      "command": "bash pausetimes_multicore %{output} -- chrt -r 1 %{paramwrapper} %{command}"
+      "command": "bash pausetimes_multicore %{output} -- %{paramwrapper} chrt -r 1 %{command}"
     }
   ],
   "benchmarks": [
