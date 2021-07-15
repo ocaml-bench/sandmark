@@ -14,7 +14,7 @@
     },
     {
       "name": "pausetimes_multicore",
-      "command": "bash pausetimes_multicore %{output} %{paramwrapper} %{command}"
+      "command": "bash pausetimes_multicore %{output} -- chrt -r 1 %{paramwrapper} %{command}"
     }
   ],
 
