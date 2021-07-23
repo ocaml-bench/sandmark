@@ -6,7 +6,7 @@ platform:
   arch: amd64
 
 steps:
-- name: 4.14.0+stock
+- name: 4.14.0+trunk
   image: ocurrent/opam:ubuntu-18.04-ocaml-4.10
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
