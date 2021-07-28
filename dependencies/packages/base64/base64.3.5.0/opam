@@ -15,24 +15,23 @@ binary data in an ASCII string format by translating it into a radix-64
 representation.  It is specified in RFC 4648.
 """
 depends: [
-  "ocaml" {>="4.03.0"}
-  "base-bytes"
-  "dune-configurator"
+  "ocaml" {>= "4.03.0"}
   "dune" {>= "2.0"}
   "bos" {with-test}
   "rresult" {with-test}
   "alcotest" {with-test}
 ]
 build: [
-  ["dune" "subst"]
+  ["dune" "subst"] {dev}
   ["dune" "build" "-p" name "-j" jobs]
-  ["dune" "runtest" "-p" name] {with-test}
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
 ]
+x-commit-hash: "3a5e259895acef979a0fab8bb59d396e1bccead0"
 url {
   src:
-    "https://github.com/mirage/ocaml-base64/releases/download/v3.4.0/base64-v3.4.0.tbz"
+    "https://github.com/mirage/ocaml-base64/releases/download/v3.5.0/base64-v3.5.0.tbz"
   checksum: [
-    "sha256=1c9cf655bdd771a4d20014f7f29aadfde7e3821b01772b49f8ba4d4bda2b1634"
-    "sha512=e66a67302a9eb136044bebf66a89a1d6e38a96c70622bb6cd27916fec36dcaf4b5b7e7d00c25608f0a2363f2ca4264a5fe765fe7747590958325dbce06311db9"
+    "sha256=589de9c00578ebfe784198ac9818d3586c474b2316b6cd3e1c46ccb1f62ae3a4"
+    "sha512=82efc76ca75717dbd533eac20845ca8731f535233f6a3e6081114d7e3dc7ee8367ded16f402ef05ad0bf1217a3a6224161c92b9467023e44fc7f3598a314a432"
   ]
 }
