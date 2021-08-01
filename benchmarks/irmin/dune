@@ -8,4 +8,4 @@
 	(modules layers)
 	(libraries ppx_deriving_yojson.runtime irmin-pack irmin-pack.layered irmin-layers index fmt logs lwt lwt.unix yojson irmin unix cmdliner))
 
-(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))
+;;(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))

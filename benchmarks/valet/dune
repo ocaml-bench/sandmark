@@ -4,4 +4,4 @@
  (name test_lwt)
  (libraries uuidm ocplib-endian unix react lwt lwt.unix))
 
-(alias (name buildbench) (deps test_lwt.exe))
+;;(alias (name buildbench) (deps test_lwt.exe))
