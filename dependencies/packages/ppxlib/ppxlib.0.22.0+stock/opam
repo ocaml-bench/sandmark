@@ -18,6 +18,7 @@ license: "MIT"
 homepage: "https://github.com/ocaml-ppx/ppxlib"
 doc: "https://ocaml-ppx.github.io/ppxlib/"
 bug-reports: "https://github.com/ocaml-ppx/ppxlib/issues"
+# Upper bound constraint relaxed to make sure it builds with 4.14.0+trunk
 depends: [
   "dune" {>= "2.7"}
   "ocaml" {>= "4.04.1"}
