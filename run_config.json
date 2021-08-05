@@ -1479,7 +1479,7 @@
     },
     {
       "executable": "benchmarks/irmin/irmin_mem_rw.exe",
-      "name": "imrin_mem_rw",
+      "name": "irmin_mem_rw",
       "tags": [
         "1s_10s",
         "macro_bench",

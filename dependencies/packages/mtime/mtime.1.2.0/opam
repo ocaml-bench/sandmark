@@ -16,6 +16,7 @@ depends:
 ]
 depopts: [ "js_of_ocaml" ]
 conflicts: ["js_of_ocaml" {<= "3.3.0"} ]
+patches: [ "use-toploop-load-file.patch" ]
 build: [[
    "ocaml" "pkg/pkg.ml" "build"
    "--pinned" "%{pinned}%"

@@ -1,0 +1,13 @@
+diff --git a/src/rresult_top.ml b/src/rresult_top.ml
+index 217af5c..d41478c 100644
+--- a/src/rresult_top.ml
++++ b/src/rresult_top.ml
+@@ -4,7 +4,7 @@
+    rresult v0.6.0
+   ---------------------------------------------------------------------------*)
+ 
+-let () = ignore (Toploop.use_file Format.err_formatter "rresult_top_init.ml")
++let () = ignore (Toploop.load_file Format.err_formatter "rresult_top_init.ml")
+ 
+ (*---------------------------------------------------------------------------
+    Copyright (c) 2015 Daniel C. Bünzli

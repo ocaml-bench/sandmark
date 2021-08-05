@@ -20,6 +20,7 @@ depends: [
   "logs"
   "mtime" {with-test}
 ]
+patches: [ "use-toploop-load-file.patch" ]
 build: [[
   "ocaml" "pkg/pkg.ml" "build"
           "--dev-pkg" "%{pinned}%" ]]

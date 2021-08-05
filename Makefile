@@ -33,12 +33,12 @@ PACKAGES = \
 	menhir minilight base stdio dune-private-libs dune-configurator camlimages \
 	yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum \
 	sexplib0 eventlog-tools irmin cubicle conf-findutils index logs \
-	mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack
+	mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack irmin-mem
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += lockfree kcas domainslib ctypes.0.14.0+multicore
 else
-	PACKAGES += ctypes.0.14.0+stock frama-c coq fraplib alt-ergo js_of_ocaml-compiler
+	PACKAGES += ctypes.0.14.0+stock alt-ergo frama-c coq fraplib js_of_ocaml-compiler
 endif
 
 DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip pkg-config m4 # Ubuntu
@@ -116,7 +116,7 @@ ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json
 	@{ case "$*" in \
 		*multicore*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ;; \
 		*effects*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ;; \
-		*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+stock ppxlib.0.22.0+stock ;; \
+		*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.2.0+stock ppxlib.0.22.0+stock ;; \
 	esac }; \
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	opam exec --switch $* -- opam list

@@ -1,0 +1,13 @@
+diff --git a/src/astring_top.ml b/src/astring_top.ml
+index 167d365..6094d15 100644
+--- a/src/astring_top.ml
++++ b/src/astring_top.ml
+@@ -3,7 +3,7 @@
+    Distributed under the ISC license, see terms at the end of the file.
+   ---------------------------------------------------------------------------*)
+ 
+-let () = ignore (Toploop.use_file Format.err_formatter "astring_top_init.ml")
++let () = ignore (Toploop.load_file Format.err_formatter "astring_top_init.ml")
+ 
+ (*---------------------------------------------------------------------------
+    Copyright (c) 2015 The astring programmers
