@@ -33,12 +33,12 @@ PACKAGES = \
 	menhir minilight base stdio dune-private-libs dune-configurator camlimages \
 	yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum \
 	sexplib0 eventlog-tools irmin cubicle conf-findutils index logs \
-	mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack irmin-mem
+	mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack 
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += lockfree kcas domainslib ctypes.0.14.0+multicore
 else
-	PACKAGES += ctypes.0.14.0+stock alt-ergo frama-c coq fraplib js_of_ocaml-compiler
+	PACKAGES += ctypes.0.14.0+stock frama-c coq fraplib alt-ergo js_of_ocaml-compiler
 endif
 
 DEPENDENCIES = libgmp-dev libdw-dev jq python3-pip pkg-config m4 # Ubuntu
