@@ -14,7 +14,6 @@ depends: [
    "topkg" {build}
    "result"
 ]
-patches: [ "use-toploop-load-file.patch" ]
 build:[[
   "ocaml" "pkg/pkg.ml" "build"
           "--pinned" "%{pinned}%" ]]

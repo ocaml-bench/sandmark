@@ -40,7 +40,6 @@ depopts: ["js_of_ocaml" "fmt" "cmdliner" "lwt" "base-threads"]
 conflicts: [
   "js_of_ocaml" {< "3.3.0"}
 ]
-patches: [ "use-toploop-load-file.patch" ]
 build: [
   "ocaml"
   "pkg/pkg.ml"

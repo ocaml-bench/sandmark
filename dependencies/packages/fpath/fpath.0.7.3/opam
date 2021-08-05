@@ -14,7 +14,6 @@ depends: [
    "topkg" {build & >= "0.9.0"}
    "astring"
 ]
-patches: [ "use-toploop-load-file.patch" ]
 build: [[
   "ocaml" "pkg/pkg.ml" "build"
           "--dev-pkg=true" {dev} ]]

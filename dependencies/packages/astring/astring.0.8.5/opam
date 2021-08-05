@@ -12,7 +12,6 @@ depends: [
   "ocamlfind" {build}
   "ocamlbuild" {build}
   "topkg" {build} ]
-patches: [ "use-toploop-load-file.patch" ]
 build: [[ "ocaml" "pkg/pkg.ml" "build" "--pinned" "%{pinned}%" ]]
 
 synopsis: """Alternative String module for OCaml"""
