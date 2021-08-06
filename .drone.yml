@@ -7,14 +7,14 @@ platform:
 
 steps:
 - name: 4.14.0+trunk
-  image: ocurrent/opam:ubuntu-18.04-ocaml-4.10
+  image: ocaml/opam:ubuntu-20.04-ocaml-4.12
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
   - pip3 install intervaltree
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.6.0
+  - opam install dune.2.9.0
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - TAG='"run_in_ci"' make run_config_filtered.json
@@ -30,14 +30,14 @@ platform:
 
 steps:
 - name: 4.12.0+stock
-  image: ocurrent/opam:ubuntu-18.04-ocaml-4.10
+  image: ocaml/opam:ubuntu-20.04-ocaml-4.12
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
   - pip3 install intervaltree
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.6.0
+  - opam install dune.2.9.0
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - TAG='"run_in_ci"' make run_config_filtered.json
@@ -53,14 +53,14 @@ platform:
 
 steps:
 - name: 4.12.0+domains+serial
-  image: ocurrent/opam:ubuntu-18.04-ocaml-4.10
+  image: ocaml/opam:ubuntu-20.04-ocaml-4.12
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
   - pip3 install intervaltree
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.6.0
+  - opam install dune.2.9.0
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - TAG='"run_in_ci"' make run_config_filtered.json
@@ -76,14 +76,14 @@ platform:
 
 steps:
 - name: 4.12.0+domains+parallel
-  image: ocurrent/opam:ubuntu-18.04-ocaml-4.10
+  image: ocaml/opam:ubuntu-20.04-ocaml-4.12
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
   - pip3 install intervaltree
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.6.0
+  - opam install dune.2.9.0
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - TAG='"run_in_ci"' make multicore_parallel_run_config_filtered.json
