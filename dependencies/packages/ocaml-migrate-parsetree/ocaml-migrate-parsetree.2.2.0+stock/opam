@@ -34,3 +34,6 @@ url {
   ]
 }
 x-commit-hash: "aeeb9317936937d360aa6cdb0cab953d11ff2c5d"
+
+patches: "0001-works-with-414-trunk.patch"
+extra-files: ["0001-works-with-414-trunk.patch" "md5=27c645f1fb5ae3700874a3e183e441ff"]

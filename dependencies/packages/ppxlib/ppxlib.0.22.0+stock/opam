@@ -52,9 +52,5 @@ dev-repo: "git+https://github.com/ocaml-ppx/ppxlib.git"
 x-commit-hash: "06a2c9bdad8c1d3361a3d9430e9bf58476b08590"
 url {
   src:
-    "https://github.com/ocaml-ppx/ppxlib/releases/download/0.22.0/ppxlib-0.22.0.tbz"
-  checksum: [
-    "sha256=3eeb91e03966662284a3222e612dee7f4fa2b7637c53d9572d2a74134bb96d7a"
-    "sha512=425051dff9df53579a6edd17369d66c10f87a78daeddf1691e50997990ed643e874fcc6a30112a4dacbfd2d0097a19445354e04cd920d9522f76c51cdbc7f1db"
-  ]
+    "https://github.com/shubhamkumar13/ppxlib/archive/0.22.zip"
 }
