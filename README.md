@@ -257,6 +257,17 @@ The `*_config.json` files used to build benchmarks
  - **multicore_parallel_navajo_run_config.json** : Runs parallel benchmarks with multicore OCaml in sandmark-nightly on Navajo (AMD EPYC 7551 32-Core Processor) machine
  - **micro_multicore.json** : To locally run multicore specific micro benchmarks
 
+### Benchmarks that are known to fail
+
+The following table marks the benchmarks that are currently not working with any one of the variants that are used in the CI. These benchmarks are known to fail and have an issue tracking their progress.
+
+| Variants | Benchmarks | Issue Tracker |
+|---|---|---|
+| 4.12.0+stock.bench  | None  | None |
+| 4.12.0+domains+effects.bench (serial) | None  | None |
+| 4.12.0+domains+effects.bench (parallel)  | (coq.AbstractInterpretation.v.orun.bench, coq.BasicSyntax.v.orun.bench)  | [Sandmark#248](https://github.com/ocaml-bench/sandmark/issues/248) |
+| 4.14.0+trunk.bench  | None  | None |
+
 ## UI
 
 JupyterHub is a multi-user server for hosting Jupyter notebooks. The
