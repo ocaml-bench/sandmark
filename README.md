@@ -257,7 +257,7 @@ The `*_config.json` files used to build benchmarks
  - **multicore_parallel_navajo_run_config.json** : Runs parallel benchmarks with multicore OCaml in sandmark-nightly on Navajo (AMD EPYC 7551 32-Core Processor) machine
  - **micro_multicore.json** : To locally run multicore specific micro benchmarks
 
-### Benchmarks that are known to fail
+### Benchmarks status
 
 The following table marks the benchmarks that are currently not working with any one of the variants that are used in the CI. These benchmarks are known to fail and have an issue tracking their progress.
 
