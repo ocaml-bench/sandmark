@@ -2,23 +2,19 @@ opam-version: "2.0"
 maintainer: "KC Sivaramakrishnan <kc@kcsrk.info>"
 authors: ["KC Sivaramakrishnan <kc@kcsrk.info>"]
 homepage: "https://github.com/ocaml-multicore/domainslib"
-doc: "https://kayceesrk.github.io/domainslib/doc"
+doc: "https://ocaml-multicore.github.io/domainslib/"
 synopsis: "Parallel Structures over Domains for Multicore OCaml"
 license: "ISC"
 dev-repo: "git+https://github.com/ocaml-multicore/domainslib.git"
 bug-reports: "https://github.com/ocaml-multicore/domainslib/issues"
-tags: []
+tags: ["org:ocamllabs"]
 depends: [
-  "ocamlfind" {build}
-  "dune" {build}
+  "dune" {>= "1.8"}
+  "base-domains"
 ]
-depopts: []
-build: [
-  "dune" "build" "-p" name
-]
+build: ["dune" "build" "-p" name "-j" jobs]
 url {
-  src: "https://github.com/ocaml-multicore/domainslib/archive/0.2.2.tar.gz"
-  checksum: "md5=2f4b669c429db2650e64508f23ee7478"
+  src: "https://github.com/ocaml-multicore/domainslib/archive/0.3.0.tar.gz"
+  checksum: "md5=19ac2e92298b82a406bcb231a00bb3a4"
 }
-
 

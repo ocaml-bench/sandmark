@@ -6,7 +6,7 @@
 (executable
  (name test_decompress_multicore)
   (modules test_decompress_multicore)
-  (libraries bigstringaf checkseum.ocaml decompress.zl))
+  (libraries bigstringaf checkseum.ocaml decompress.zl domainslib))
 
 (alias (name buildbench)
        (deps test_decompress.exe))

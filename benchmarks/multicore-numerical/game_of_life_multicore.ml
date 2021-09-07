@@ -4,15 +4,16 @@ let board_size = try int_of_string Sys.argv.(3) with _ -> 1024
 
 module T = Domainslib.Task
 
+(* setup board buffers; rg contains initial state *)
 let rg =
   ref (Array.init board_size (fun _ -> Array.init board_size (fun _ -> Random.int 2)))
 let rg' =
-  ref (Array.init board_size (fun _ -> Array.init board_size (fun _ -> Random.int 2)))
-let buf = Bytes.create board_size
+  ref (Array.init board_size (fun _ -> Array.make board_size 0))
 
 let get g x y =
   try g.(x).(y)
   with _ -> 0
+  [@@inline]
 
 let neighbourhood g x y =
   (get g (x-1) (y-1)) +
@@ -23,6 +24,7 @@ let neighbourhood g x y =
   (get g (x+1) (y-1)) +
   (get g (x+1) (y  )) +
   (get g (x+1) (y+1))
+  [@@inline]
 
 let next_cell g x y =
   let n = neighbourhood g x y in
@@ -33,7 +35,8 @@ let next_cell g x y =
   | 0, 3                             -> 1  (* get birth *)
   | _ (* 0, (0|1|2|4|5|6|7|8) *)     -> 0  (* barren *)
 
-(* let print g =
+let print g =
+  let buf = Bytes.create board_size in
   for x = 0 to board_size - 1 do
     for y = 0 to board_size - 1 do
       if g.(x).(y) = 0
@@ -42,7 +45,7 @@ let next_cell g x y =
     done;
     print_endline (Bytes.unsafe_to_string buf)
   done;
-  print_endline "" *)
+  print_endline ""
 
 let next pool =
   let g = !rg in
@@ -62,7 +65,7 @@ let rec repeat pool n =
   | _-> next pool; repeat pool (n-1)
 
 let ()=
-  let pool = T.setup_pool ~num_domains:(num_domains - 1) in
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
   (* print !rg; *)
   repeat pool n_times;
   (* print !rg; *)

@@ -21,10 +21,9 @@ $ opam install dune.2.6.0
 
 $ git clone https://github.com/ocaml-bench/sandmark.git
 $ cd sandmark
-$ make depend
-
-$ TAG='"run_in_ci"' make run_config_filtered.json
-$ OPAMSOLVERTIMEOUT=0 BUILD_BENCH_TARGET=buildbench RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/4.10.0+multicore.bench
+$ make ocaml-versions/4.12.0+stock.bench
+$ make ocaml-versions/4.12.0+domains.bench
+$ make ocaml-versions/4.12.0+domains+effects.bench
 ```
 
 You can now find the results in the `_build/analytics` folder.
@@ -65,15 +64,15 @@ These stages are implemented in:
    `run_config.json` and specified via the `RUN_BENCH_TARGET` variable
    passed to the makefile.
 
-## Configuration
+## Configuration of the compiler build
 
-The compiler switch and its configuration options can be specified in
+The compiler variant and its configuration options can be specified in
 a .json file in the ocaml-versions/ directory. It uses the JSON syntax
 as shown in the following example:
 
-```
+```json
 {
-  "name" : "ocaml-multicore/ocaml-multicore:parallel_minor_gc",
+  "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/parallel_minor_gc.tar.gz",
   "configure" : "-q",
   "runparams" : "v=0x400"
 }
@@ -88,7 +87,8 @@ The various options are described below:
   specific flags to the `configure` script.
 
 - `runparams` is OPTIONAL, and its values are passed to OCAMLRUNPARAM
-  when building the compiler.
+  when building the compiler. _Notice this variable is not used for
+  the running of benchmarks, just the build of the compiler_
 
 ## Execution
 
@@ -114,12 +114,21 @@ location from sandboxing.
 
 ## Benchmarks
 
-Ensure that the respective .json configuration files have the
-appropriate settings.
+You can execute both serial and parallel benchmarks using the
+`run_all_serial.sh` and `run_all_parallel.sh` scripts. Ensure that the
+respective .json configuration files have the appropriate settings.
 
 If using `RUN_BENCH_TARGET=run_orunchrt` then the benchmarks will
-run using `chrt -r 1`. You may need to give the user permissions
-to execute `chrt`, one way to do this can be:
+run using `chrt -r 1`.
+
+**IMPORTANT:** `chrt -r 1` is **necessary** when using `taskset` to
+run parallel programs. Otherwise, all the domains will be scheduled on
+the same core and you will see slowdown with increasing number of
+domains.
+
+You may need to give the user permissions to execute `chrt`, one way
+to do this can be:
+
 ```
 sudo setcap cap_sys_nice=ep /usr/bin/chrt
 ```
@@ -130,6 +139,23 @@ A config file can be specified with the environment variable `RUN_CONFIG_JSON`,
 and the default value is `run_config.json`. This file lists the executable to
 run and the wrapper which will be used to collect data (e.g. orun or perf). You
 can edit this file to change benchmark parameters or wrappers.
+
+The `environment` within which a wrapper runs allows the user to configure
+variables such as `OCAMLRUNPARAM` or `LD_PRELOAD`. For example this wrapper
+configuration:
+```json
+{
+  "name": "orun-2M",
+  "environment": "OCAMLRUNPARAM='s=2M'",
+  "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
+}
+```
+would allow
+```sh
+$ RUN_BENCH_TARGET=run_orun-2M make ocaml-versions/4.12.0+stock.bench
+```
+to run the benchmarks on 4.12.0+stock with a 2M minor heap setting taskset
+onto CPU 5.
 
 The benchmarks also have associated tags which classify the benchmarks. The
 current tags are:
@@ -161,13 +187,30 @@ value is `buildbench` which runs the serial benchmarks. For executing the
 parallel benchmarks use `multibench_parallel`. You can also setup a custom
 bench and add only the benchmarks that you care about.
 
-We can obtain throughput and latency results for the benchmarks. For obtaining
-latency results, we can adjust the environment variable `RUN_BENCH_TARGET`.
+We can obtain throughput and latency results for the benchmarks. For
+obtaining latency results, we can adjust the environment variable
+`RUN_BENCH_TARGET`. The scripts for latencies are present in the
+`pausetimes/` directory. The `pausetimes_trunk` Bash script obtains
+the latencies for stock OCaml and the `pausetimes_multicore` Bash
+script for Multicore OCaml.
 
 ### Results
 
-After a run is complete, the results will be available in the `_build/analytics`
-directory.
+After a run is complete, the results will be available in the
+`_results` directory.
+
+Jupyter notebooks are available in the `notebooks` directory to parse and
+visualise the results, for both serial and parallel benchmarks. To run the
+Jupyter notebooks for your results, copy your results to `notebooks/
+sequential` folder for sequential benchmarks and `notebooks/parallel` folder
+for parallel benchmarks. It is sufficient to copy only the consolidated
+bench files, which are present as
+`_results/<comp-version>/<comp-version>.bench`. You can run the notebooks
+with
+
+```
+$ jupyter notebook
+```
 
 ### Adding benchmarks
 
@@ -202,6 +245,58 @@ You can add new benchmarks as follows:
     Add an entry for your benchmark run to the appropriate config file;
     `run_config.json` for sequential benchmarks and
     `multicore_parallel_run_config.json` for parallel benchmarks.
+
+### Config files
+
+The `*_config.json` files used to build benchmarks
+
+ - **run_config.json** : Runs sequential benchmarks with stock OCaml variants in CI and sandmark-nightly on the IITM machine (Turing)
+ - **multicore_parallel_run_config.json** : Runs parallel benchmarks with multicore OCaml in CI and sandmark-nightly on the IITM machine (Turing)
+ - **multicore_effects_run_config.json** : Runs parallel benchmarks in `benchmarks/multicore-effects` directory with multicore OCaml in CI
+ - **multicore_parallel_navajo_run_config.json** : Runs parallel benchmarks with multicore OCaml in sandmark-nightly on Navajo (AMD EPYC 7551 32-Core Processor) machine
+ - **micro_multicore.json** : To locally run multicore specific micro benchmarks
+
+## UI
+
+JupyterHub is a multi-user server for hosting Jupyter notebooks. The
+Littlest JupyterHub (TLJH) installation is capable of hosting 0-100
+users.
+
+The following steps can be used for installation on Ubuntu 18.04.4 LTS:
+
+```bash
+$ sudo apt install python3 python3-dev git curl
+$ curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py | \
+  sudo -E python3 - --admin adminuser
+```
+
+If you would like to run the the service on a specific port, say
+"8082", you need to update the same in /opt/tljh/state/traefix.toml
+file.
+
+You can verify that the services are running from:
+
+```bash
+$ sudo systemctl status traefik
+$ sudo systemctl status jupyterhub
+```
+
+By default, the hub login opens at hostname:15001/hub/login, which is
+used by the admin user to create user accounts. The users will be able
+to login using hostname:8082/user/username/tree.
+
+You can also setup HTTPS using Let's Encrypt with JuptyerHub using the
+following steps:
+
+```bash
+$ sudo tljh-config set https.enabled true
+$ sudo tljh-config set https.letsencrypt.email e-mail
+$ sudo tljh-config add-item https.letsencrypt.domains example.domain
+$ sudo tljh-config show
+$ sudo tljh-config reload proxy
+```
+
+Reference: https://tljh.jupyter.org/en/latest/install/custom-server.html
 
 ## Multicore Notes
 

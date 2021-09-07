@@ -38,14 +38,12 @@ CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
 WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
-PACKAGES = \
-	dune sexplib0 re yojson decompress irmin-mem zarith bigstringaf \
-	num lwt react uuidm cpdf menhir menhirLib ocaml-config nbcodec minilight cubicle orun rungen
+PACKAGES = sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen eventlog-tools
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
-	PACKAGES += lockfree domainslib kcas # ctypes.0.14.0+multicore
+	PACKAGES += base-domains ocaml-variants lockfree domainslib kcas # ctypes.0.14.0+multicore
 else
-	PACKAGES += fraplib coq alt-ergo #frama-c ctypes.0.14.0+stock  js_of_ocaml-compiler
+	PACKAGES += # fraplib coq frama-c ctypes.0.14.0+stock js_of_ocaml-compiler
 endif
 
 DEPENDENCIES = libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf # Ubuntu
@@ -56,93 +54,32 @@ export OPAMROOT=$(CURDIR)/_opam
 
 .PHONY: bash list depend clean
 
+# HACK: we are using the system installed dune to avoid breakages with
+# multicore and 4.09/trunk
+# This is a workaround for r14/4.09/trunk until better solutions arrive
+SYS_DUNE_BASE_DIR ?= $(subst /bin/dune,,$(shell which dune))
+
+setup_sys_dune:
+ifeq (,$(SYS_DUNE_BASE_DIR))
+	$(error Could not find a system installation of dune (try `opam install dune`?))
+else
+	@echo "Linking to system dune files found at: "$(SYS_DUNE_BASE_DIR)
+	@echo $(SYS_DUNE_BASE_DIR)"/bin/dune --version = "$(shell $(SYS_DUNE_BASE_DIR)/bin/dune --version)
+	@rm -rf $(CURDIR)/_opam/sys_dune
+	@mkdir -p $(CURDIR)/_opam/sys_dune/bin
+	@mkdir -p $(CURDIR)/_opam/sys_dune/lib
+	ln -s $(SYS_DUNE_BASE_DIR)/bin/dune $(CURDIR)/_opam/sys_dune/bin/dune
+	ln -s $(SYS_DUNE_BASE_DIR)/bin/jbuilder $(CURDIR)/_opam/sys_dune/bin/jbuilder
+	ln -s $(SYS_DUNE_BASE_DIR)/lib/dune $(CURDIR)/_opam/sys_dune/lib/dune
+endif
+
 ocamls=$(wildcard ocaml-versions/*.json)
-
-%_filtered.json: %.json
-	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index($(TAG)) != null)]}' < $< > $@
-
-%_2domains.json: %.json
-	jq '{wrappers : .wrappers, benchmarks : [.benchmarks | .[] | {executable : .executable, name: .name, tags: .tags, runs : [.runs | .[] as $$item | if ($$item | .params | split(" ") | .[0] ) == "2" then $$item | .paramwrapper |= "" else empty end ] } ] }' < $< > $@
-
-#
-# Build
-#
-
-list_tags:
-	@echo "List of Tags"
-	@jq '[.benchmarks[].tags] | add | flatten | .[]' *.json | sort -u
-
-override_packages/%: _opam/%
-	$(eval CONFIG_SWITCH_NAME = $*)
-	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
-	opam repo add upstream "https://opam.ocaml.org" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
-	cp dependencies/template/dev.opam $(DEV_OPAM)
-	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.2.6.0" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
-	opam update --switch=$(CONFIG_SWITCH_NAME)
-	@{	declare -A OVERRIDE=( ["dune"]="\"dune\" {= \"2.6.0\"}" ); 					\
-		do_overrides=`jq '.package_overrides' ocaml-versions/$*.json`; \
-		if [ "$${do_overrides}" != null ]; then \
-			for row in `cat ocaml-versions/$*.json | jq '.package_overrides | .[]'`; do	\
-				package=`echo $$row | xargs echo | tr -d '[:space:]'`; \
-				package_name=`cut -d '.' -f 1 <<< "$$package"`; \
-				package_version=`cut -d '.' -f 2- <<< "$$package"`; \
-				OVERRIDE["$${package_name}"]="\"$${package_name}\" {= \"$${package_version}\" }";			\
-			done; 										\
-		fi; \
-		for i in ${PACKAGES}; do 							\
-                        name="$${OVERRIDE[$${i}]}";                                                 \
-                        if [ -z "$${name}" ]; then                                              \
-				OVERRIDE["$${i}"]="\"$${i}\""; 					\
-			fi; 									\
-		done; 										\
-		for key in "$${!OVERRIDE[@]}"; do 						\
-			echo " $${OVERRIDE[$${key}]}" >> $(DEV_OPAM); 	\
-		done; 										\
-		echo "]" >> $(DEV_OPAM); 	\
-	        opam install $(DEV_OPAM) --switch=$(CONFIG_SWITCH_NAME) --yes --deps-only;	\
-		opam list --switch=$(CONFIG_SWITCH_NAME); \
-	};
-
-define check_dependency
-	$(if $(filter $(shell $(2) | grep $(1) | wc -l), 0),
-		@echo "$(1) is not installed. $(3)")
-endef
-
-check_url:
-	@{ for f in `find ocaml-versions/*.json`; do    	\
-		URL=`jq -r '.url' $$f`;                   	\
-		if [ -z "$$URL" ] ; then                  	\
-			echo "No URL (mandatory) for $$f";   	\
-		fi;                                       	\
-	    done;                                        	\
-	};
-
-depend:
-	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
-	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
-
-.PHONY: .FORCE
-.FORCE:
-
-# the file sandmark_git_hash.txt contains the current git hash for this version of sandmark
-log_sandmark_hash:
-	-git log -n 1
-
-.PHONY: blah
-blah:
-	@echo ${PACKAGES}
-
-list:
-	@echo $(ocamls)
-
-bash:
-	bash
-	@echo "[opam subshell completed]"
 
 # to build in a Dockerfile you need to disable sandboxing in opam
 ifeq ($(OPAM_DISABLE_SANDBOXING), true)
 	OPAM_INIT_EXTRA_FLAGS=--disable-sandboxing
 endif
+
 _opam/opam-init/init.sh:
 	opam init --bare --no-setup --no-opamrc $(OPAM_INIT_EXTRA_FLAGS) ./dependencies
 
@@ -161,6 +98,46 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	$(eval OCAML_RUN_PARAM     = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	opam update
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
+	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
+
+override_packages/%: _opam/%
+	$(eval CONFIG_SWITCH_NAME = $*)
+	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
+	opam repo add upstream "https://opam.ocaml.org" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
+	cp dependencies/template/dev.opam $(DEV_OPAM)
+	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.2.8.1" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
+	opam update --switch=$(CONFIG_SWITCH_NAME)
+	@{	for i in ${PACKAGES}; do \
+			sed -i "/^]/i \ \ \"$${i}\"" $(DEV_OPAM); \
+		done; \
+	};
+	@{	declare -A OVERRIDE=( ["dune"]="\"dune\" {= \"2.8.1\"}" ); 					\
+		do_overrides=`jq '.package_overrides' ocaml-versions/$*.json`; \
+		if [ "$${do_overrides}" != null ]; then \
+			for row in `cat ocaml-versions/$*.json | jq '.package_overrides | .[]'`; do	\
+				package=`echo $$row | xargs echo | tr -d '[:space:]'`; \
+				package_name=`cut -d '.' -f 1 <<< "$$package"`; \
+				package_version=`cut -d '.' -f 2- <<< "$$package"`; \
+				OVERRIDE["$${package_name}"]="\"$${package_name}\" {= \"$${package_version}\" }";			\
+			done; 										\
+		fi; \
+		for key in "$${!OVERRIDE[@]}"; do 						\
+                        sed -i "/\"$${key}\"/s/.*/  $${OVERRIDE[$${key}]}/" $(DEV_OPAM); \
+		done; 										\
+	        opam install $(DEV_OPAM) --switch=$(CONFIG_SWITCH_NAME) --yes --deps-only;	\
+		opam list --switch=$(CONFIG_SWITCH_NAME); \
+	};
+
+.PHONY: .FORCE
+.FORCE:
+
+# the file sandmark_git_hash.txt contains the current git hash for this version of sandmark
+log_sandmark_hash:
+	-git log -n 1
+
+.PHONY: blah
+blah:
+	@echo ${PACKAGES}
 
 ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
 	$(eval CONFIG_SWITCH_NAME = $*)
@@ -209,7 +186,7 @@ json:
 				echo "$${line}" | jq '. | {config: ., results: []}' > "$${output}"; \
 				count=1; \
 			else \
-				bench=`echo "$${line}" | jq '. | {name: .name, metrics: {time_secs: .time_secs, maxrss_kB: .maxrss_kB}}'`; \
+                                bench=`echo "$${line}" | jq '. | {name: .name, command: .command, metrics: {time_secs: .time_secs, maxrss_kB: .maxrss_kB, user_time_secs: .user_time_secs, sys_time_secs: .sys_time_secs, "ocaml.version": .ocaml.version, "ocaml.c_compiler": .ocaml.c_compiler, "ocaml.architecture": .ocaml.architecture, "ocaml.word_size": .ocaml.word_size, "ocaml.system": .ocaml.system, "ocaml.stats": .ocaml.stats, "ocaml.function_sections": .ocaml.function_sections, "ocaml.supports_shared_libraries": .ocaml.supports_shared_libraries, "gc.supports_shared_libraries": .gc.allocated_words, "gc.minor_words": .gc.minor_words, "gc.promoted_words": .gc.promoted_words, "gc.major_words": .gc.major_words, "gc.minor_collections": .gc.minor_collections, "gc.major_collections": .gc.major_collections, "gc.heap_words": .gc.heap_words, "gc.top_heap_words": .gc.top_heap_words, "gc.mean_space_overhead": .gc.mean_space_overhead, codesize: .codesize, ocaml_url: .ocaml_url}}'`; \
 				string=".results += [$${bench}]"; \
 				jq "$${string}" "$${output}" > "$${tmp}" && mv "$${tmp}" "$${output}"; \
 			fi; \
@@ -227,6 +204,28 @@ prep_bench:
 bench: prep_bench
 	@cat data.json
 
+define check_dependency
+	$(if $(filter $(shell $(2) | grep $(1) | wc -l), 0),
+		@echo "$(1) is not installed. $(3)")
+endef
+
+check_url:
+	@{ for f in `find ocaml-versions/*.json`; do    	\
+		URL=`jq -r '.url' $$f`;                   	\
+		if [ -z "$$URL" ] ; then                  	\
+			echo "No URL (mandatory) for $$f";   	\
+		fi;                                       	\
+	    done;                                        	\
+	};
+
+depend:
+	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
+	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
+
+benchclean:
+	rm -rf _build/
+	rm -rf _results/
+
 clean:
 	rm -rf dependencies/packages/ocaml/*
 	rm -rf dependencies/packages/ocaml-base-compiler/*
@@ -237,4 +236,21 @@ clean:
 	rm -rf _results
 	rm -rf *filtered.json
 	rm -rf *~
+
+list:
+	@echo $(ocamls)
+
+list_tags:
+	@echo "List of Tags"
+	@jq '[.benchmarks[].tags] | add | flatten | .[]' *.json | sort -u
+
+bash:
+	bash
+	@echo "[opam subshell completed]"
+
+%_filtered.json: %.json
+	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index($(TAG)) != null)]}' < $< > $@
+
+%_2domains.json: %.json
+	jq '{wrappers : .wrappers, benchmarks : [.benchmarks | .[] | {executable : .executable, name: .name, tags: .tags, runs : [.runs | .[] as $$item | if ($$item | .params | split(" ") | .[0] ) == "2" then $$item | .paramwrapper |= "" else empty end ] } ] }' < $< > $@
 

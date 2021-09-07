@@ -116,7 +116,7 @@ try
 
       (* create top-level rendering objects with model file, in this order
          (image is mutable) *)
-      let pool = T.setup_pool ~num_domains:(num_domains - 1) in
+      let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
       let image  = new Image.obj  modelFile in
       let camera = new Camera.obj modelFile pool in
       let scene  = new Scene.obj  modelFile camera#eyePoint in

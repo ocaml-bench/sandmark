@@ -1,0 +1,17 @@
+(executable
+ (name globroots_seq)
+ (modules globroots_seq)
+ (libraries globroots))
+
+(executable
+ (name globroots_sp)
+ (modules globroots_sp)
+ (libraries domainslib globroots))
+
+(executable
+ (name globroots_mp)
+ (modules globroots_mp)
+ (libraries globroots))
+
+(alias (name multibench_parallel)
+  (deps globroots_seq.exe globroots_sp.exe globroots_mp.exe))

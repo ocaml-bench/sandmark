@@ -55,7 +55,7 @@ let uncompress data =
     let len =
       (min : int -> int -> int) (Bigstringaf.length v) (String.length data - !p) in
     Bigstringaf.blit_from_string
-      data ~src_off:!p 
+      data ~src_off:!p
       v ~dst_off:0 ~len ; p := !p + len ; len in
   let flush v len = blit_to_buffer t b v len in
 
@@ -64,15 +64,15 @@ let uncompress data =
 let () = Random.init(42)
 
 let data_to_compress =
-  let buf = Bytes.create data_size in
-  for i = 0 to data_size - 1 do
-    Bytes.set buf i (Char.chr (97 + Random.int 26))
-  done ;
-  Bytes.to_string buf
+  let fn _ = Char.chr (97 + Random.int 26) in
+  String.init data_size fn
 
 let () =
-  for run = 0 to iterations do
+  let iter_count = ref 0 in
+  for run = 1 to iterations do
     let result = compress data_to_compress in
     let original = uncompress result in
-    ignore original
-  done
+    ignore original;
+    incr iter_count
+  done;
+  assert (!iter_count = iterations)

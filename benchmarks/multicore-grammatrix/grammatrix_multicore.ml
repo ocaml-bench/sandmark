@@ -23,6 +23,57 @@ let dot_product xs ys =
   done;
   !res
 
+(*
+*******************************************************************************
+
+This example is different from other parallel benchmarks in that this one does
+not use [parallel_for]. Instead, the following code uses handwritten task
+distribution through channels. A [parallel_for] would be fairly straightforward:
+
+let compute_gram_matrix samples res =
+  let n = A.length samples in
+  assert(n > 0);
+  Domainslib.Task.parallel_for ~start:0 ~finsih:(n - 1)
+  ~body:(fun i -> for j = i to n - 1 do
+    let x = dot_product samples.(i) samples.(j) in
+    res.(i).(j) <- x;
+    res.(j).(i) <- x (* symmetric matrix *)
+    done)
+
+There are shortcomings to using [parallel_for] in this particular case.
+We observerved that this explicit task distribution shows better
+performance, especially on larger number of cores. Listed below are some
+possible causes working against [parallel_for] in this example.
+
+The loop
+
+for i = 0 to (n - 1) do
+    for j = i to n - 1 do
+
+has decreasing work units every iteration as the index `i` increases, due to
+which initial iterations have more work than the subsequent ones. Order of work
+distribution is constant in the below version, arguably the ideal version since
+larger work units are finished first. However, work distribution is
+non-deterministic in [parallel_for] and is not always optimal.
+
+[parallel_for] has an optional parameter `chunk_size`. This parameter determines
+the size of the work unit in [parallel_for]. Our experiments have shown that the
+default chunk size works well for most loops. In rare cases such as this one,
+playing around with different values can help us find the ideal chunk size.
+
+The channels version below computes the work units beforehand, on the other hand
+[parallel_for] (task pool) internally uses a work-stealing queue to distribute
+work amongst available domains. This should not make a difference when tasks
+are long running, although might be adding overheads when tasks are small.
+
+One also needs to be careful while performing I/O with multiple domains alive,
+as it leads to more minor GC cycles.
+
+For reference: https://github.com/ocaml-bench/sandmark/pull/239
+
+*******************************************************************************
+*)
+
 let compute_gram_matrix samples res s e =
   let n = A.length samples in
   assert(n > 0);
