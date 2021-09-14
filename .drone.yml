@@ -14,7 +14,7 @@ steps:
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.6.0
+  - opam install dune.2.8.5
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - TAG='"run_in_ci"' make run_config_filtered.json
