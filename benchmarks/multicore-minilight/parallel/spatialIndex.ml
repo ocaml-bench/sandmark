@@ -71,7 +71,6 @@ and maxItems_k  =  8
  * @return (SpatialIndex.node)
  *)
 let rec construct bound items level =
-	 Domain.Sync.poll ();
    (* if items overflow leaf and tree not too deep --
       make branch: make subcells, and recurse construction *)
    if (List.length items > maxItems_k) && (level < (maxLevels_k - 1)) then
@@ -159,7 +158,6 @@ let create eyePosition items =
  * @return (Triangle.var, Vector3f.vT) object|null hit, and hit position
  *)
 let rec intersection octree rayOrigin rayDirection ?(start = rayOrigin) lastHit =
-	 Domain.Sync.poll();
    match octree with
 
    (* is branch: step through subcells and recurse *)
@@ -174,7 +172,6 @@ let rec intersection octree rayOrigin rayDirection ?(start = rayOrigin) lastHit 
 
       (* define subcell walker *)
       let rec walk subCell cellPosition =
-         Domain.Sync.poll();
 
          (* intersect subcell *)
          match intersection subCells.(subCell) rayOrigin rayDirection

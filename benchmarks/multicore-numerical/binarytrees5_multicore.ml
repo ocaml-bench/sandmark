@@ -12,7 +12,6 @@ let rec make d =
   else let d = d - 1 in Node(make d, make d)
 
 let rec check t =
-  Domain.Sync.poll ();
   match t with
   | Empty -> 0
   | Node(l, r) -> 1 + check l + check r
