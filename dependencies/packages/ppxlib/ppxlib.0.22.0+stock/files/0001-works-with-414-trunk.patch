@@ -1,0 +1,85 @@
+diff --git a/ast/supported_version/supported_version.ml b/ast/supported_version/supported_version.ml
+index b90d7e8..1cd4373 100644
+--- a/ast/supported_version/supported_version.ml
++++ b/ast/supported_version/supported_version.ml
+@@ -13,6 +13,7 @@ let all =
+   ; 4, 11
+   ; 4, 12
+   ; 4, 13
++  ; 4, 14
+   ]
+ 
+ let to_string (a, b) = Printf.sprintf "%d.%02d" a b
+diff --git a/ast/versions.ml b/ast/versions.ml
+index 4e22a1d..c07d102 100644
+--- a/ast/versions.ml
++++ b/ast/versions.ml
+@@ -492,6 +492,13 @@ module OCaml_413 = struct
+   let string_version = "4.13"
+ end
+ let ocaml_413 : OCaml_413.types ocaml_version = (module OCaml_413)
++module OCaml_414 = struct
++  module Ast = Migrate_parsetree.Ast_414
++  include Make_witness(Migrate_parsetree.Ast_414)
++  let version = 414
++  let string_version = "4.14"
++end
++let ocaml_414 : OCaml_414.types ocaml_version = (module OCaml_414)
+ (*$*)
+ 
+ let all_versions : (module OCaml_version) list = [
+@@ -509,6 +516,7 @@ let all_versions : (module OCaml_version) list = [
+ (module OCaml_411 : OCaml_version);
+ (module OCaml_412 : OCaml_version);
+ (module OCaml_413 : OCaml_version);
++(module OCaml_414 : OCaml_version);
+ (*$*)
+ ]
+ 
+@@ -539,6 +547,8 @@ include Register_migration(OCaml_411)(OCaml_412)
+     (Migrate_parsetree.Migrate_411_412)(Migrate_parsetree.Migrate_412_411)
+ include Register_migration(OCaml_412)(OCaml_413)
+     (Migrate_parsetree.Migrate_412_413)(Migrate_parsetree.Migrate_413_412)
++include Register_migration(OCaml_413)(OCaml_414)
++    (Migrate_parsetree.Migrate_413_414)(Migrate_parsetree.Migrate_414_413)
+ (*$*)
+ 
+ module OCaml_current = OCaml_OCAML_VERSION
+diff --git a/ast/versions.mli b/ast/versions.mli
+index df7576d..dd70713 100644
+--- a/ast/versions.mli
++++ b/ast/versions.mli
+@@ -127,6 +127,7 @@ module OCaml_410 : OCaml_version with module Ast = Migrate_parsetree.Ast_410
+ module OCaml_411 : OCaml_version with module Ast = Migrate_parsetree.Ast_411
+ module OCaml_412 : OCaml_version with module Ast = Migrate_parsetree.Ast_412
+ module OCaml_413 : OCaml_version with module Ast = Migrate_parsetree.Ast_413
++module OCaml_414 : OCaml_version with module Ast = Migrate_parsetree.Ast_414
+ (*$*)
+ 
+ (* An alias to the current compiler version *)
+diff --git a/dune-project b/dune-project
+index 4980b1e..7660d04 100644
+--- a/dune-project
++++ b/dune-project
+@@ -15,7 +15,7 @@
+ (package
+  (name ppxlib)
+  (depends
+-  (ocaml (and (>= 4.04.1) (< 4.14)))
++  (ocaml (and (>= 4.04.1) (<= 4.14)))
+   (ocaml-compiler-libs (>= v0.11.0))
+   (ocaml-migrate-parsetree (>= 2.2.0))
+   (ppx_derivers (>= 1.0))
+diff --git a/ppxlib.opam b/ppxlib.opam
+index 324db6e..289eac1 100644
+--- a/ppxlib.opam
++++ b/ppxlib.opam
+@@ -21,7 +21,7 @@ doc: "https://ocaml-ppx.github.io/ppxlib/"
+ bug-reports: "https://github.com/ocaml-ppx/ppxlib/issues"
+ depends: [
+   "dune" {>= "2.7"}
+-  "ocaml" {>= "4.04.1" & < "4.14"}
++  "ocaml" {>= "4.04.1" & <= "4.14"}
+   "ocaml-compiler-libs" {>= "v0.11.0"}
+   "ocaml-migrate-parsetree" {>= "2.2.0"}
+   "ppx_derivers" {>= "1.0"}
