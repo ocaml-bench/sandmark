@@ -1,3 +1,4 @@
 {
-  "url" : "https://github.com/ocaml/ocaml/archive/4.12.0.tar.gz"
+  "url" : "https://github.com/ocaml/ocaml/archive/4.12.0.tar.gz",
+  "package_overrides" : ["dune.2.8.5"]
 }

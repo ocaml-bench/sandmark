@@ -17,6 +17,12 @@ BUILD_BENCH_TARGET ?= buildbench
 # configurations.
 RUN_CONFIG_JSON ?= run_config.json
 
+# Default dune version to be used
+DEFAULT_DUNE_VERSION ?= 2.8.1
+
+# Flag to select whether to use sys_dune_hack
+USE_SYS_DUNE_HACK ?= 0
+
 # benchmark run target type:
 #  run_<wrapper> where wrapper is one of the wrappers defined in
 #  RUN_CONFIG_JSON. The default RUN_CONFIG_JSON defines two wrappers: perf and
@@ -59,10 +65,14 @@ export OPAMROOT=$(CURDIR)/_opam
 # This is a workaround for r14/4.09/trunk until better solutions arrive
 SYS_DUNE_BASE_DIR ?= $(subst /bin/dune,,$(shell which dune))
 
-setup_sys_dune:
-ifeq (,$(SYS_DUNE_BASE_DIR))
-	$(error Could not find a system installation of dune (try `opam install dune`?))
-else
+setup_sys_dune/%: _opam/%
+	$(eval OVERRIDE_DUNE = $(shell sed -n 's/.*dune\.\([0-9]\.[0-9]\.[0-9]\).*/\1/p' ocaml-versions/$*.json))
+	$(if $(strip $(OVERRIDE_DUNE)), 				\
+		$(eval DEFAULT_DUNE_VERSION = "$(OVERRIDE_DUNE)") 	\
+		@echo "Overriding dune with "$(DEFAULT_DUNE_VERSION),	\
+		@echo "Using default dune.$(DEFAULT_DUNE_VERSION)")
+ifeq (1, $(USE_SYS_DUNE_HACK))
+	@echo $(SYS_DUNE_BASE_DIR)
 	@echo "Linking to system dune files found at: "$(SYS_DUNE_BASE_DIR)
 	@echo $(SYS_DUNE_BASE_DIR)"/bin/dune --version = "$(shell $(SYS_DUNE_BASE_DIR)/bin/dune --version)
 	@rm -rf $(CURDIR)/_opam/sys_dune
@@ -100,18 +110,20 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
 
-override_packages/%: _opam/%
+override_packages/%: setup_sys_dune/%
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
 	opam repo add upstream "https://opam.ocaml.org" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	cp dependencies/template/dev.opam $(DEV_OPAM)
-	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.2.8.1" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
+ifeq (0, $(USE_SYS_DUNE_HACK))
+	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(DEFAULT_DUNE_VERSION)" "dune-configurator.$(DEFAULT_DUNE_VERSION)" "dune-private-libs.$(DEFAULT_DUNE_VERSION)" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
+endif
 	opam update --switch=$(CONFIG_SWITCH_NAME)
 	@{	for i in ${PACKAGES}; do \
 			sed -i "/^]/i \ \ \"$${i}\"" $(DEV_OPAM); \
 		done; \
 	};
-	@{	declare -A OVERRIDE=( ["dune"]="\"dune\" {= \"2.8.1\"}" ); 					\
+	@{	declare -A OVERRIDE=( ["ocaml-config"]="\"ocaml-config\" {= \"1\"}" ); 					\
 		do_overrides=`jq '.package_overrides' ocaml-versions/$*.json`; \
 		if [ "$${do_overrides}" != null ]; then \
 			for row in `cat ocaml-versions/$*.json | jq '.package_overrides | .[]'`; do	\
