@@ -19,7 +19,6 @@ let chromosome { chromosome=x; fitness=_ } = x
 let evaluate f x = { chromosome=x; fitness=(f x) }
 
 let fittest x y =
-  Domain.Sync.poll ();
   if x.fitness > y.fitness then x else y
 let pop_fittest pop = Array.fold_left fittest pop.(0) pop
 

@@ -85,7 +85,7 @@ object (__)
     * @return (Vector3f.vT) light value in radiance
     *)
    method radiance rayOrigin rayDirection ?lastHit random =
-			Domain.Sync.poll();
+
       (* intersect ray with scene *)
       match scene_m#intersection rayOrigin rayDirection lastHit with
 

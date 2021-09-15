@@ -44,7 +44,6 @@ class obj inBuffer_i =
       three vertexs, then reflectivity, then emitivity *)
    let vectors_c = 
        let rec readVectors vs i = 
-         Domain.Sync.poll();
          if i = 0 then vs else
          readVectors ((vRead inBuffer_i) :: vs) (i - 1) in readVectors [] 5 
    in

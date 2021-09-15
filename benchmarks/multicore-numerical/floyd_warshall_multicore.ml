@@ -51,9 +51,9 @@ let f_w pool adj =
               adj.(i).(j) <- Value (a_ik + a_kj)
             | Value a_ij, Value a_kj when a_ik + a_kj < a_ij ->
               adj.(i).(j) <- Value (a_ik + a_kj)
-            | _, _ -> Domain.Sync.poll()
+            | _, _ -> ()
         done
-      | Infinity -> Domain.Sync.poll()
+      | Infinity -> ()
       );
   done
 

@@ -13,7 +13,6 @@ let partition arr low high =
   if (high-low > 0) then
     begin
       for j= low to high - 1 do
-        Domain.Sync.poll ();
         if arr.(j) <= x then
           begin
             i := !i+1;
