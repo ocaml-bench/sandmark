@@ -42,7 +42,6 @@ class obj inBuffer_i eyePosition_i =
 
    (* read triangles in sequence *)
    let triangles_c = let rec readTriangle ts i =
-         Domain.Sync.poll ();
          try
             if i = 0 then
                ts else readTriangle ((new Triangle.obj inBuffer_i) :: ts) (i-1)
