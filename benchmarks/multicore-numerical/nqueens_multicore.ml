@@ -45,7 +45,7 @@ let num_domains = try int_of_string Sys.argv.(1) with _ -> 2
 let board_size = try int_of_string Sys.argv.(2) with _ -> 13
 
 let () =
-  let pool = T.setup_pool ~num_domains:(num_domains - 1) in
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
   let n_solutions = nqueens pool board_size 0 [] in
   T.teardown_pool pool;
 
