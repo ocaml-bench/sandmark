@@ -47,9 +47,9 @@ WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 PACKAGES = sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen eventlog-tools
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
-	PACKAGES += base-domains ocaml-variants lockfree domainslib kcas # ctypes.0.14.0+multicore
+	PACKAGES +=  lockfree kcas domainslib ctypes # TODO: base-domains ocaml-variants
 else
-	PACKAGES += # fraplib coq frama-c ctypes.0.14.0+stock js_of_ocaml-compiler
+	PACKAGES += ctypes js_of_ocaml-compiler # fraplib coq frama-c 
 endif
 
 DEPENDENCIES = libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf # Ubuntu
