@@ -36,7 +36,7 @@ depends: [
   "menhirSdk" {= "20200612"}
   "mtime" {= "1.2.0"}
   "num" {= "1.3"}
-  "ocaml-config" {= "1"}
+  "ocaml-config" {= "2"}
   "ocamlgraph" {= "2.0.0"}
   "optint" {= "0.0.4"}
   "ppx_derivers" {= "1.2.1"}

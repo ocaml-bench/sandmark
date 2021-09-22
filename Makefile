@@ -94,24 +94,15 @@ _opam/opam-init/init.sh:
 	opam init --bare --no-setup --no-opamrc $(OPAM_INIT_EXTRA_FLAGS) ./dependencies
 
 _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
-	rm -rf dependencies/packages/ocaml/ocaml.$*
-	rm -rf dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
-	mkdir -p dependencies/packages/ocaml/ocaml.$*
-	cp -R dependencies/template/ocaml/* dependencies/packages/ocaml/ocaml.$*/
-	mkdir -p dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
-	cp -R dependencies/template/ocaml-base-compiler/* \
-          dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/
-	{ url="$$(jq -r '.url // empty' ocaml-versions/$*.json)"; echo "url { src: \"$$url\" }"; echo "setenv: [ [ ORUN_CONFIG_ocaml_url = \"$$url\" ] ]"; } \
-\
-          >> dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/opam
 	$(eval OCAML_CONFIG_OPTION = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval OCAML_RUN_PARAM     = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	opam update
-	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
-	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
+	opam list
+	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes ocaml-variants.$*
+	opam pin add -n --yes --switch ocaml-variants.$* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
 
 override_packages/%: setup_sys_dune/%
-	$(eval CONFIG_SWITCH_NAME = $*)
+	$(eval CONFIG_SWITCH_NAME = ocaml-variants.$*)
 	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
 	opam repo add upstream "https://opam.ocaml.org" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	cp dependencies/template/dev.opam $(DEV_OPAM)
@@ -123,7 +114,7 @@ endif
 			sed -i "/^]/i \ \ \"$${i}\"" $(DEV_OPAM); \
 		done; \
 	};
-	@{	declare -A OVERRIDE=( ["ocaml-config"]="\"ocaml-config\" {= \"1\"}" ); 					\
+	@{	declare -A OVERRIDE=( ["ocaml-config"]="\"ocaml-config\" {= \"2\"}" ); 					\
 		do_overrides=`jq '.package_overrides' ocaml-versions/$*.json`; \
 		if [ "$${do_overrides}" != null ]; then \
 			for row in `cat ocaml-versions/$*.json | jq '.package_overrides | .[]'`; do	\
@@ -152,7 +143,7 @@ blah:
 	@echo ${PACKAGES}
 
 ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
-	$(eval CONFIG_SWITCH_NAME = $*)
+	$(eval CONFIG_SWITCH_NAME = ocaml-variants.$*)
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	$(eval ENVIRONMENT         = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
@@ -239,8 +230,6 @@ benchclean:
 	rm -rf _results/
 
 clean:
-	rm -rf dependencies/packages/ocaml/*
-	rm -rf dependencies/packages/ocaml-base-compiler/*
 	rm -rf ocaml-versions/.packages.*
 	rm -rf ocaml-versions/*.bench
 	rm -rf _build
