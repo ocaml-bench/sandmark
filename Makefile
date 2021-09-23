@@ -47,7 +47,7 @@ WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 PACKAGES = sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen eventlog-tools
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
-	PACKAGES +=  lockfree kcas domainslib ctypes # TODO: base-domains ocaml-variants
+	PACKAGES +=  lockfree kcas domainslib ctypes
 else
 	PACKAGES += ctypes js_of_ocaml-compiler # fraplib coq frama-c 
 endif
