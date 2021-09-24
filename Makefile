@@ -33,7 +33,7 @@ PACKAGES = \
 	menhir minilight base stdio dune-private-libs dune-configurator camlimages \
 	yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum \
 	sexplib0 eventlog-tools irmin cubicle conf-findutils index logs \
-	mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack 
+	mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += lockfree kcas domainslib ctypes.0.14.0+multicore
@@ -71,12 +71,8 @@ endif
 
 ocamls=$(wildcard ocaml-versions/*.json)
 
-# to build in a Dockerfile you need to disable sandboxing in opam
-ifeq ($(OPAM_DISABLE_SANDBOXING), true)
-     OPAM_INIT_EXTRA_FLAGS=--disable-sandboxing
-endif
 _opam/opam-init/init.sh:
-	opam init --bare --no-setup --no-opamrc $(OPAM_INIT_EXTRA_FLAGS) ./dependencies
+	opam init --bare --no-setup --no-opamrc --disable-sandboxing ./dependencies
 
 _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json setup_sys_dune
 	rm -rf dependencies/packages/ocaml/ocaml.$*
