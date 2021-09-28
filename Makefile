@@ -49,7 +49,7 @@ PACKAGES = sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun ru
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES +=  lockfree kcas domainslib ctypes
 else
-	PACKAGES += ctypes js_of_ocaml-compiler # fraplib coq frama-c 
+	PACKAGES += ctypes js_of_ocaml-compiler
 endif
 
 DEPENDENCIES = libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf # Ubuntu
@@ -85,24 +85,27 @@ endif
 
 ocamls=$(wildcard ocaml-versions/*.json)
 
-# to build in a Dockerfile you need to disable sandboxing in opam
-ifeq ($(OPAM_DISABLE_SANDBOXING), true)
-	OPAM_INIT_EXTRA_FLAGS=--disable-sandboxing
-endif
-
 _opam/opam-init/init.sh:
-	opam init --bare --no-setup --no-opamrc $(OPAM_INIT_EXTRA_FLAGS) ./dependencies
+	opam init --bare --no-setup --no-opamrc --disable-sandboxing ./dependencies
 
 _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
+	rm -rf dependencies/packages/ocaml/ocaml.$*
+	rm -rf dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
+	mkdir -p dependencies/packages/ocaml/ocaml.$*
+	cp -R dependencies/template/ocaml/* dependencies/packages/ocaml/ocaml.$*/
+	mkdir -p dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
+	cp -R dependencies/template/ocaml-base-compiler/* \
+	  dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/
+	{ url="$$(jq -r '.url // empty' ocaml-versions/$*.json)"; echo "url { src: \"$$url\" }"; echo "setenv: [ [ ORUN_CONFIG_ocaml_url = \"$$url\" ] ]"; } \
+	  >> dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/opam
 	$(eval OCAML_CONFIG_OPTION = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval OCAML_RUN_PARAM     = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	opam update
-	opam list
-	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes ocaml-variants.$*
-	opam pin add -n --yes --switch ocaml-variants.$* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
+	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
+	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
 
 override_packages/%: setup_sys_dune/%
-	$(eval CONFIG_SWITCH_NAME = ocaml-variants.$*)
+	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
 	opam repo add upstream "https://opam.ocaml.org" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	cp dependencies/template/dev.opam $(DEV_OPAM)
@@ -114,7 +117,7 @@ endif
 			sed -i "/^]/i \ \ \"$${i}\"" $(DEV_OPAM); \
 		done; \
 	};
-	@{	declare -A OVERRIDE=( ["ocaml-config"]="\"ocaml-config\" {= \"2\"}" ); 					\
+	@{	declare -A OVERRIDE=( ["ocaml-config"]="\"ocaml-config\" {= \"1\"}" ); 					\
 		do_overrides=`jq '.package_overrides' ocaml-versions/$*.json`; \
 		if [ "$${do_overrides}" != null ]; then \
 			for row in `cat ocaml-versions/$*.json | jq '.package_overrides | .[]'`; do	\
@@ -143,10 +146,17 @@ blah:
 	@echo ${PACKAGES}
 
 ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
-	$(eval CONFIG_SWITCH_NAME = ocaml-variants.$*)
+	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	$(eval ENVIRONMENT         = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
+	@# case statement to select the correct variant for omp and ppxlib
+	@{ case "$*" in \
+		*multicore*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ;; \
+		*effects*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ;; \
+		*domains*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.2.0+stock ppxlib.0.22.0+stock ;; \
+		*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.2.0+stock ppxlib.0.22.0+stock ;; \
+	esac };
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $(CONFIG_SWITCH_NAME)) (name $(CONFIG_SWITCH_NAME)_$$i)))"; \
@@ -230,6 +240,8 @@ benchclean:
 	rm -rf _results/
 
 clean:
+	rm -rf dependencies/packages/ocaml/*
+	rm -rf dependencies/packages/ocaml-base-compiler/*
 	rm -rf ocaml-versions/.packages.*
 	rm -rf ocaml-versions/*.bench
 	rm -rf _build

@@ -1,3 +1,4 @@
 {
-  "url" : "https://github.com/ocaml/ocaml/archive/trunk.tar.gz"
+    "url" : "https://github.com/ocaml/ocaml/archive/trunk.tar.gz",
+    "package_overrides": ["dune.2.8.5"]
 }

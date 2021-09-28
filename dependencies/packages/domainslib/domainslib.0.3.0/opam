@@ -10,7 +10,7 @@ bug-reports: "https://github.com/ocaml-multicore/domainslib/issues"
 tags: ["org:ocamllabs"]
 depends: [
   "dune" {>= "1.8"}
-  "base-domains"
+  # "base-domains" commented to avoid conflict with ocaml-base-compiler since it requires ocaml-variants
 ]
 build: ["dune" "build" "-p" name "-j" jobs]
 url {
