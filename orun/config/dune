@@ -1,3 +1,0 @@
-(executable
- (name detect_os)
- (libraries dune.configurator))
