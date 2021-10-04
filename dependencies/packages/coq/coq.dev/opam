@@ -24,7 +24,7 @@ depends: [
   "ocaml"     { >= "4.05.0" }
   "dune"      { >= "2.5.0"  }
   "ocamlfind" { build }
-  "num"
+  "zarith"    { >= "1.10" }
 ]
 
 build: [
@@ -33,6 +33,6 @@ build: [
 ]
 
 url {
-	src : "https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-24.zip"
-	checksum : "md5=2f832c939b78fce49e23e339bb70bb89"
+	src : "https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.zip"
+	checksum : "md5=dd63c484a1d09fb1ac0851ff2317a9e9"
 }

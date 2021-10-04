@@ -1498,7 +1498,9 @@
       "executable": "coqc",
       "name": "coq",
       "tags": [
-        "gt_100s"
+        "gt_100s",
+        "macro_bench",
+        "run_in_ci"
       ],
       "runs": [
         {

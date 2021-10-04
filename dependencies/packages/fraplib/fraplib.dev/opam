@@ -16,6 +16,8 @@ build: [ "dune" "build" "-p" name "-j" jobs ]
 
 depends: [
   "coq"
+  "coq-core"
+  "coq-stdlib"
 ]
 
 authors : [ "Adam Chlipala" ]
