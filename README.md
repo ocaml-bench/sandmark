@@ -349,12 +349,12 @@ work on OS X is to install GNU sed with homebrew and then update the
 - OCAML_RUN_PARAM : looks inside ocaml variant for `run_param` parameter
 
 ### used in building dependencies
-_(reffered in `_opam/%` target)_
+_(refered in `_opam/%` target)_
 - OCAML_CONFIG_OPTION
 - OCAML_RUN_PARAM
 
 ### used in building the benchmark
-_(reffered in `ocaml-version/%.bench` target)_
+_(refered in `ocaml-version/%.bench` target)_
 - BUILD_BENCH_TARGET
 - RUN_CONFIG_JSON
 - RUN_BENCH_TARGET
