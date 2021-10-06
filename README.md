@@ -329,3 +329,42 @@ sed. `sed` will default to a BSD sed on OS X. One way to make things
 work on OS X is to install GNU sed with homebrew and then update the
 `PATH` you run sandmark with to pick up the GNU version.
 
+## Makefile Variables
+
+### Variables
+- BUILD_BENCH_TARGET : benchmark build target type which helps in filtering out PACKAGES - buildbench for serial benchmarks and multibench for multicore benchmarks
+- RUN_CONFIG_JSON : run configuration json file that describes the benchmarks : run_config.json, multicore_parallel_run_config.json, multicore_effects_run_config.json, multicore_parallel_navajo_run_config.json
+- RUN_BENCH_TARGET : add wrapper which are defined inside the RUN_CONFIG_JSON
+- BUILD_ONLY : everything sans building benchmarks
+- ITER : number of iterations for running the benchmark
+- PRE_BENCH_EXEC : pre benchmark wrappers
+- CONTINUE_ON_OPAM_INSTALL_ERROR : allow benchmarks to continue even if the opam package install errors out
+- WRAPPER : get the wrapper out of `run_<wrapper>`
+- PACKAGES : list of all the sandmark dependencies
+- DEPENDENCIES : list of the ubuntu dependencies
+- PIP_DEPENDENCIES : list of the python dependencies
+- SYS_DUNE_BASE_DIR : substitute path of dune with the installed dune
+- ENVIRONMENT : get the environment variables present in the wrappers section of 
+- OCAML_CONFIG_OPTION : looks inside ocaml variant for `configure` parameter
+- OCAML_RUN_PARAM : looks inside ocaml variant for `run_param` parameter
+
+### used in building dependencies
+_(refered in `_opam/%` target)_
+- OCAML_CONFIG_OPTION
+- OCAML_RUN_PARAM
+
+### used in building the benchmark
+_(refered in `ocaml-version/%.bench` target)_
+- BUILD_BENCH_TARGET
+- RUN_CONFIG_JSON
+- RUN_BENCH_TARGET
+- BUILD_ONLY
+- ITER
+- PRE_BENCH_EXEC
+- CONTINUE_ON_OPAM_INSTALL_ERROR
+- WRAPPER
+- PACKAGES
+- DEPENDENCIES
+- PIP_DEPENDENCIES
+- SYS_DUNE_BASE_DIR
+- ENVIRONMENT
