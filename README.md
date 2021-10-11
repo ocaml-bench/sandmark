@@ -331,40 +331,20 @@ work on OS X is to install GNU sed with homebrew and then update the
 
 ## Makefile Variables
 
-### Variables
-- BUILD_BENCH_TARGET : benchmark build target type which helps in filtering out PACKAGES - buildbench for serial benchmarks and multibench for multicore benchmarks
-- RUN_CONFIG_JSON : run configuration json file that describes the benchmarks : run_config.json, multicore_parallel_run_config.json, multicore_effects_run_config.json, multicore_parallel_navajo_run_config.json
-- RUN_BENCH_TARGET : add wrapper which are defined inside the RUN_CONFIG_JSON
-- BUILD_ONLY : everything sans building benchmarks
-- ITER : number of iterations for running the benchmark
-- PRE_BENCH_EXEC : pre benchmark wrappers
-- CONTINUE_ON_OPAM_INSTALL_ERROR : allow benchmarks to continue even if the opam package install errors out
-- WRAPPER : get the wrapper out of `run_<wrapper>`
-- PACKAGES : list of all the sandmark dependencies
-- DEPENDENCIES : list of the ubuntu dependencies
-- PIP_DEPENDENCIES : list of the python dependencies
-- SYS_DUNE_BASE_DIR : substitute path of dune with the installed dune
-- ENVIRONMENT : get the environment variables present in the wrappers section of 
-- OCAML_CONFIG_OPTION : looks inside ocaml variant for `configure` parameter
-- OCAML_RUN_PARAM : looks inside ocaml variant for `run_param` parameter
-
-### used in building dependencies
-_(refered in `_opam/%` target)_
-- OCAML_CONFIG_OPTION
-- OCAML_RUN_PARAM
-
-### used in building the benchmark
-_(refered in `ocaml-version/%.bench` target)_
-- BUILD_BENCH_TARGET
-- RUN_CONFIG_JSON
-- RUN_BENCH_TARGET
-- BUILD_ONLY
-- ITER
-- PRE_BENCH_EXEC
-- CONTINUE_ON_OPAM_INSTALL_ERROR
-- WRAPPER
-- PACKAGES
-- DEPENDENCIES
-- PIP_DEPENDENCIES
-- SYS_DUNE_BASE_DIR
-- ENVIRONMENT
+| Name | Description | Default Values | Where in sandmark |
+| ---- | ----------- | -------------- | ----------------- |
+| BUILD_BENCH_TARGET | Target selection for sequential (buildbench) and parallel (multibench) benchmarks | `buildbench` | building benchmark |
+| RUN_CONFIG_JSON | Input file selection that contains the list of benchmarks | `run_config.json` | executing benchmark |
+| RUN_BENCH_TARGET | The executable to be used to run the benchmarks | `run_orun` | executing benchmark |
+| BUILD_ONLY | if the value is equal to 0 then execute the benchmarks otherwise skip the benchmark execution and exit the sandmark build process | 0 | building benchmark |
+| ITER | indicates the number of iterations the sandmark benchmarks would be executed | 1 | executing benchmark |
+| PRE_BENCH_EXEC | Any specific commands that needed to be executed before the benchmark. For eg. `PRE_BENCH_EXEC='taskset --cpu-list 3 setarch uname -m --addr-no-randomize'` | null string | executing benchmark |
+| CONTINUE_ON_OPAM_INSTALL_ERROR | allow benchmarks to continue even if the opam package install errors out | true | executing benchmark |
+| WRAPPER | function to get the wrapper out of `run_<wrapper-name>` | run_orun | executing benchmark |
+| PACKAGES | list of all the benchmark dependencies in sandmark | ```cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib menhir minilight base stdio dune-private-libs dune-configurator camlimages yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum sexplib0 eventlog-tools irmin cubicle conf-findutils index logs mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack ``` | building benchmark |
+| DEPENDENCIES | list of ubuntu dependencies | ```libgmp-dev libdw-dev jq python3-pip pkg-config m4``` | building dependencies |
+| PIP_DEPENDENCIES | list of python dependencies | ```intervaltree``` | building dependencies |
+| SYS_DUNE_BASE_DIR | function that returns the path of the system installed dune for use with benchmarking | dune package present in the local opam switch | building dependencies |
+| ENVIRONMENT | function that gets the `environment` parameter from wrappers in `*_config.json` | null string | building dependencies |
+| OCAML_CONFIG_OPTION | function that gets the `configure` parameter from the `ocaml-versions/*.json` | null string | building dependencies |
+| OCAML_RUN_PARAM | function that gets the `run_param` parameter from the `ocaml-versions/*.json` | null string | building depdencies |
