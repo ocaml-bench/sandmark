@@ -342,9 +342,9 @@ work on OS X is to install GNU sed with homebrew and then update the
 | CONTINUE_ON_OPAM_INSTALL_ERROR | allow benchmarks to continue even if the opam package install errors out | true | executing benchmark |
 | WRAPPER | function to get the wrapper out of `run_<wrapper-name>` | run_orun | executing benchmark |
 | PACKAGES | list of all the benchmark dependencies in sandmark | ```cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib menhir minilight base stdio dune-private-libs dune-configurator camlimages yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum sexplib0 eventlog-tools irmin cubicle conf-findutils index logs mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack ``` | building benchmark |
-| DEPENDENCIES | list of ubuntu dependencies | ```libgmp-dev libdw-dev jq python3-pip pkg-config m4``` | building dependencies |
-| PIP_DEPENDENCIES | list of python dependencies | ```intervaltree``` | building dependencies |
-| SYS_DUNE_BASE_DIR | function that returns the path of the system installed dune for use with benchmarking | dune package present in the local opam switch | building dependencies |
-| ENVIRONMENT | function that gets the `environment` parameter from wrappers in `*_config.json` | null string | building dependencies |
-| OCAML_CONFIG_OPTION | function that gets the `configure` parameter from the `ocaml-versions/*.json` | null string | building dependencies |
-| OCAML_RUN_PARAM | function that gets the `run_param` parameter from the `ocaml-versions/*.json` | null string | building depdencies |
+| DEPENDENCIES | list of ubuntu dependencies | ```libgmp-dev libdw-dev jq python3-pip pkg-config m4``` | building compiler and it's dependencies |
+| PIP_DEPENDENCIES | list of python dependencies | ```intervaltree``` | building compiler and it's dependencies |
+| SYS_DUNE_BASE_DIR | function that returns the path of the system installed dune for use with benchmarking | dune package present in the local opam switch | building compiler and it's dependencies |
+| ENVIRONMENT | function that gets the `environment` parameter from wrappers in `*_config.json` | null string | building compiler and it's dependencies |
+| OCAML_CONFIG_OPTION | function that gets the runtime parameters `configure` in `ocaml-versions/*.json` | null string | building compiler and it's dependencies |
+| OCAML_RUN_PARAM | function that gets the runtime parameters `run_param` in `ocaml-versions/*.json` | null string | building compiler and it's dependencies |
