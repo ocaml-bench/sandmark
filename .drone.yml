@@ -19,6 +19,8 @@ steps:
   - export OPAM_DISABLE_SANDBOXING=true
   - TAG='"run_in_ci"' make run_config_filtered.json
   - RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/4.14.0+trunk.bench
+  - ls _results
+  - cat _results/*
 
 ---
 kind: pipeline
@@ -42,6 +44,8 @@ steps:
   - export OPAM_DISABLE_SANDBOXING=true
   - TAG='"run_in_ci"' make run_config_filtered.json
   - RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/4.12.0+stock.bench
+  - ls _results
+  - cat _results/*
 
 ---
 kind: pipeline
@@ -65,6 +69,33 @@ steps:
   - export OPAM_DISABLE_SANDBOXING=true
   - TAG='"run_in_ci"' make run_config_filtered.json
   - RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/4.12.0+domains.bench
+  - ls _results
+  - cat _results/*
+
+---
+kind: pipeline
+name: 4.14.0+domains+serial
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: 4.14.0+domains+serial
+  image: ocaml/opam:ubuntu-20.04-ocaml-4.12
+  commands:
+  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
+  - pip3 install intervaltree
+  - sudo chown -R opam .
+  - eval $(opam env)
+  - opam update
+  - opam install dune.2.9.0
+  - export ITER=1
+  - export OPAM_DISABLE_SANDBOXING=true
+  - TAG='"run_in_ci"' make run_config_filtered.json
+  - RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/4.14.0+domains.bench
+  - ls _results
+  - cat _results/*
 
 ---
 kind: pipeline
@@ -90,3 +121,27 @@ steps:
   - TAG='"macro_bench"' make multicore_parallel_run_config_filtered_filtered.json
   - make multicore_parallel_run_config_filtered_filtered_2domains.json
   - BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/4.12.0+domains.bench
+  - ls _results
+  - cat _results/*
+
+---
+kind: pipeline
+name: test_notebooks
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: test_notebooks
+  image: ocaml/opam:ubuntu-20.04-ocaml-4.12
+  commands:
+  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
+  - export PATH=$PATH:/home/opam/.local/bin
+  - pip3 install jupyter nbconvert seaborn pandas
+  - cd notebooks/sequential
+  - sudo chmod 777 .
+  - jupyter nbconvert --to html --execute sequential.ipynb
+  - cd ../parallel
+  - sudo chmod 777 .
+  - jupyter nbconvert --to html --execute parallel.ipynb
