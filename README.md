@@ -327,3 +327,23 @@ The ocaml-update-c command in multicore needs to run with GNU
 sed. `sed` will default to a BSD sed on OS X. One way to make things
 work on OS X is to install GNU sed with homebrew and then update the
 `PATH` you run sandmark with to pick up the GNU version.
+
+## Makefile Variables
+
+| Name | Description | Default Values | Usage |
+| ---- | ----------- | -------------- | ----------------- |
+| BUILD_BENCH_TARGET | Target selection for sequential (buildbench) and parallel (multibench) benchmarks | `buildbench` | building benchmark |
+| RUN_CONFIG_JSON | Input file selection that contains the list of benchmarks | `run_config.json` | executing benchmark |
+| RUN_BENCH_TARGET | The executable to be used to run the benchmarks | `run_orun` | executing benchmark |
+| BUILD_ONLY | If the value is equal to 0 then execute the benchmarks otherwise skip the benchmark execution and exit the sandmark build process | 0 | building benchmark |
+| ITER | Indicates the number of iterations the sandmark benchmarks would be executed | 1 | executing benchmark |
+| PRE_BENCH_EXEC | Any specific commands that needed to be executed before the benchmark. For eg. `PRE_BENCH_EXEC='taskset --cpu-list 3 setarch uname -m --addr-no-randomize'` | null string | executing benchmark |
+| CONTINUE_ON_OPAM_INSTALL_ERROR | Allow benchmarks to continue even if the opam package install errors out | true | executing benchmark |
+| WRAPPER | Function to get the wrapper out of `run_<wrapper-name>` | run_orun | executing benchmark |
+| PACKAGES | List of all the benchmark dependencies in sandmark | ```cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib menhir minilight base stdio dune-private-libs dune-configurator camlimages yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum sexplib0 eventlog-tools irmin cubicle conf-findutils index logs mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack ``` | building benchmark |
+| DEPENDENCIES | List of Ubuntu dependencies | ```libgmp-dev libdw-dev jq python3-pip pkg-config m4``` | building compiler and its dependencies |
+| PIP_DEPENDENCIES | List of Python dependencies | ```intervaltree``` | building compiler and its dependencies |
+| SYS_DUNE_BASE_DIR | Function that returns the path of the system installed dune for use with benchmarking | dune package present in the local opam switch | building compiler and its dependencies |
+| ENVIRONMENT | Function that gets the `environment` parameter from wrappers in `*_config.json` | null string | building compiler and its dependencies |
+| OCAML_CONFIG_OPTION | Function that gets the runtime parameters `configure` in `ocaml-versions/*.json` | null string | building compiler and its dependencies |
+| OCAML_RUN_PARAM | Function that gets the runtime parameters `run_param` in `ocaml-versions/*.json` | null string | building compiler and its dependencies |
