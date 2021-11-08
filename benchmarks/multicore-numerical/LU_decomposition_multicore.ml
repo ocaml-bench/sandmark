@@ -14,8 +14,8 @@ module SquareMatrix = struct
     fa
   let parallel_create pool f : float array =
     let fa = Array.create_float (mat_size * mat_size) in
-    T.parallel_for pool ~start:0 ~finish:( mat_size * mat_size - 1)
-      ~body:(fun i -> fa.(i) <- f (i / mat_size) (i mod mat_size));
+    T.parallel_for ~start:0 ~finish:( mat_size * mat_size - 1)
+      ~body:(fun i -> fa.(i) <- f (i / mat_size) (i mod mat_size)) pool;
     fa
 
   let get (m : float array) r c = m.(r * mat_size + c)
@@ -54,7 +54,7 @@ let lup pool (a0 : float array) =
   a
 
 let () =
-  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
   let a = parallel_create pool
     (fun _ _ -> (Random.State.float (Domain.DLS.get k) 100.0) +. 1.0 ) in
   let lu = lup pool a in
