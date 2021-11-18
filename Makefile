@@ -113,6 +113,7 @@ ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json
 		*multicore*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ;; \
 		*effects*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ;; \
 		*domains*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.2.0+stock ppxlib.0.22.0+stock ;; \
+		*5.00*) sed 's/(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/; (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/g' ./benchmarks/irmin/dune > ./benchmarks/irmin/dune ;; \
 		*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.2.0+stock ppxlib.0.22.0+stock coq fraplib ;; \
 	esac }; \
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
