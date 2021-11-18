@@ -6,7 +6,7 @@ platform:
   arch: amd64
 
 steps:
-- name: 4.14.0+trunk
+- name: 5.00.0+trunk
   image: ocaml/opam:ubuntu-20.04-ocaml-4.12
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
@@ -18,7 +18,7 @@ steps:
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - TAG='"run_in_ci"' make run_config_filtered.json
-  - RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/4.14.0+trunk.bench
+  - RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.00.0+trunk.bench
   - ls _results
   - cat _results/*
 
