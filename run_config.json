@@ -1482,8 +1482,7 @@
       "name": "irmin_mem_rw",
       "tags": [
         "1s_10s",
-        "macro_bench",
-        "run_in_ci"
+        "macro_bench"
       ],
       "runs": [
         {
