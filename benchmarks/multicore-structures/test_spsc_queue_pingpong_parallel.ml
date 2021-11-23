@@ -12,11 +12,11 @@ let first_queue = !last_queue
 let rec spinning_enqueue q m =
     match Spsc_queue.enqueue q m with
     | true -> ()
-    | false -> Domain.Sync.cpu_relax(); spinning_enqueue q m
+    | false -> Domain.cpu_relax(); spinning_enqueue q m
 
 let rec ping_pong_messages n in_queue out_queue =
     match Spsc_queue.dequeue in_queue with
-    | None -> Domain.Sync.cpu_relax(); ping_pong_messages n in_queue out_queue
+    | None -> Domain.cpu_relax(); ping_pong_messages n in_queue out_queue
     | Some(m) -> 
     begin
         spinning_enqueue out_queue m;
