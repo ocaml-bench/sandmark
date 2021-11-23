@@ -91,7 +91,8 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json setup_sys_dune
 	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
 	opam pin add -n --yes --switch $* orun orun/
 	opam pin add -n --yes --switch $* rungen rungen/
-
+	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
+	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 
 .PHONY: .FORCE
 .FORCE:
@@ -107,7 +108,7 @@ blah:
 ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json _opam/% .FORCE
 	$(eval ENVIRONMENT = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
 	@opam update
-	opam install --switch=$* --keep-build-dir --yes rungen orun
+	opam install --switch=$* --keep-build-dir --yes rungen orun coq-core coq-stdlib coq fraplib
 	@# case statement to select the correct variant for omp and ppxlib
 	@{ case "$*" in \
 		*multicore*) opam install --switch=$* --keep-build-dir --yes stdio integers  ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ppx_deriving ppx_deriving_yojson irmin  ppx_irmin  ppx_repr irmin-layers irmin-pack index ;; \
