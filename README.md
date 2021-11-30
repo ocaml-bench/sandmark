@@ -17,13 +17,12 @@ $ pip3 install jupyter seaborn pandas intervaltree
 $ sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 $ opam init
 
-$ opam install dune.2.6.0
+$ opam install dune.2.9.0
 
 $ git clone https://github.com/ocaml-bench/sandmark.git
 $ cd sandmark
-$ make ocaml-versions/4.12.0+stock.bench
-$ make ocaml-versions/4.12.0+domains.bench
-$ make ocaml-versions/4.12.0+domains+effects.bench
+$ make ocaml-versions/5.00.0+trunk.bench
+$ make ocaml-versions/4.14.0+domains.bench
 ```
 
 You can now find the results in the `_results/` folder.
@@ -154,9 +153,9 @@ configuration:
 ```
 would allow
 ```sh
-$ RUN_BENCH_TARGET=run_orun-2M make ocaml-versions/4.12.0+stock.bench
+$ RUN_BENCH_TARGET=run_orun-2M make ocaml-versions/5.00.0+trunk.bench
 ```
-to run the benchmarks on 4.12.0+stock with a 2M minor heap setting taskset
+to run the benchmarks on 5.00.0+trunk with a 2M minor heap setting taskset
 onto CPU 5.
 
 The benchmarks also have associated tags which classify the benchmarks. The
@@ -253,7 +252,6 @@ The `*_config.json` files used to build benchmarks
 
  - **run_config.json** : Runs sequential benchmarks with stock OCaml variants in CI and sandmark-nightly on the IITM machine(turing)
  - **multicore_parallel_run_config.json** : Runs parallel benchmarks with multicore OCaml in CI and sandmark-nightly on the IITM machine(turing)
- - **multicore_effects_run_config.json** : Runs parallel benchmarks in `benchmarks/multicore-effects` directory with multicore OCaml in CI
  - **multicore_parallel_navajo_run_config.json** : Runs parallel benchmarks with multicore OCaml in sandmark-nightly on Navajo (AMD EPYC 7551 32-Core Processor) machine
  - **micro_multicore.json** : To locally run multicore specific micro benchmarks
 
@@ -263,10 +261,8 @@ The following table marks the benchmarks that are currently not working with any
 
 | Variants | Benchmarks | Issue Tracker |
 |---|---|---|
-| 4.12.0+stock.bench  | None  | None |
-| 4.12.0+domains+effects.bench (serial) | None  | None |
-| 4.12.0+domains+effects.bench (parallel)  | (coq.AbstractInterpretation.v.orun.bench, coq.BasicSyntax.v.orun.bench)  | [Sandmark#248](https://github.com/ocaml-bench/sandmark/issues/248) |
-| 4.14.0+trunk.bench  | None  | None |
+| 5.00.0+trunk.bench | irmin benchmarks | [sandmark#262](https://github.com/ocaml-bench/sandmark/issues/262) |
+| 4.14.0+domains.bench | irmin benchmarks | [sandmark#262](https://github.com/ocaml-bench/sandmark/issues/262) |
 
 ## UI
 

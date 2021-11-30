@@ -111,8 +111,6 @@ ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json
 	opam install --switch=$* --keep-build-dir --yes rungen orun coq-core coq-stdlib coq fraplib
 	@# case statement to select the correct variant for omp and ppxlib
 	@{ case "$*" in \
-		*multicore*) opam install --switch=$* --keep-build-dir --yes stdio integers  ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ppx_deriving ppx_deriving_yojson irmin  ppx_irmin  ppx_repr irmin-layers irmin-pack index ;; \
-		*effects*) opam install --switch=$* --keep-build-dir --yes stdio integers  ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ppx_deriving ppx_deriving_yojson irmin ppx_irmin  ppx_repr irmin-layers irmin-pack index ;; \
 		*domains*) opam install --switch=$* --keep-build-dir --yes stdio integers ocaml-migrate-parsetree.2.2.0+stock ppxlib.0.22.0+stock  ppx_deriving ppx_deriving_yojson irmin ppx_irmin ppx_repr irmin-layers irmin-pack index ;; \
 		*5.00*) sed 's/(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/; (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/g' ./benchmarks/irmin/dune > ./benchmarks/irmin/dune ;; \
 		*) opam install --switch=$* --keep-build-dir --yes stdio integers  ocaml-migrate-parsetree.2.2.0+stock ppxlib.0.22.0+stock js_of_ocaml-compiler coq fraplib ppx_deriving ppx_deriving_yojson irmin ppx_irmin ppx_repr irmin-layers irmin-pack index ;; \
