@@ -84,7 +84,7 @@ let bodies =
       mass=(Random.float 10.) *. solar_mass; })
 
 let () =
-  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
   offset_momentum bodies;
   Printf.printf "%.9f\n" (energy pool bodies);
   for _i = 1 to n do advance pool bodies 0.01 done;

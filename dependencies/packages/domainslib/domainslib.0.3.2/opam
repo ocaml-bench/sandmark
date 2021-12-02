@@ -10,10 +10,12 @@ bug-reports: "https://github.com/ocaml-multicore/domainslib/issues"
 tags: ["org:ocamllabs"]
 depends: [
   "dune" {>= "1.8"}
-  # "base-domains" commented to avoid conflict with ocaml-base-compiler since it requires ocaml-variants
+  "base-domains"
+  "mirage-clock-unix" {with-test}
 ]
 build: ["dune" "build" "-p" name "-j" jobs]
 url {
-  src: "https://github.com/ocaml-multicore/domainslib/archive/0.3.0.tar.gz"
-  checksum: "md5=19ac2e92298b82a406bcb231a00bb3a4"
+  src: "https://github.com/ocaml-multicore/domainslib/archive/0.3.2.tar.gz"
+  checksum: "md5=b4c1ed2ca16b82c40de9a64989094639"
 }
+

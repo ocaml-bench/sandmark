@@ -1,0 +1,18 @@
+{
+  "url" : "https://github.com/ocaml/ocaml/archive/trunk.tar.gz",
+  "package_overrides": ["dune.2.9.0"],
+  "package_remove": [
+    "index",
+    "integers",
+    "irmin",
+    "irmin-layers",
+    "irmin-pack",
+    "js_of_ocaml-compiler",
+    "ppx_derivers",
+    "ppx_deriving",
+    "ppx_deriving_yojson",
+    "ppx_irmin",
+    "ppx_repr",
+    "stdio"
+  ]
+}
