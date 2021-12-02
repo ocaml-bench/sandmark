@@ -1,3 +1,4 @@
 {
-  "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/refs/heads/5.00.zip"
+  "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/refs/heads/5.00.zip",
+  "package_overrides": ["dune.2.9.0"]
 }
