@@ -10,7 +10,7 @@ bug-reports: "https://github.com/ocaml-multicore/domainslib/issues"
 tags: ["org:ocamllabs"]
 depends: [
   "dune" {>= "1.8"}
-  "base-domains"
+  # "base-domains" ; Brings in ocaml-variants that conflicts with ocaml-base-compiler
   "mirage-clock-unix" {with-test}
 ]
 build: ["dune" "build" "-p" name "-j" jobs]
