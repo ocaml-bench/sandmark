@@ -18,7 +18,7 @@ BUILD_BENCH_TARGET ?= buildbench
 RUN_CONFIG_JSON ?= run_config.json
 
 # Default dune version to be used
-DEFAULT_DUNE_VERSION ?= 2.8.1
+DEFAULT_DUNE_VERSION ?= 2.9.0
 
 # Flag to select whether to use sys_dune_hack
 USE_SYS_DUNE_HACK ?= 0
