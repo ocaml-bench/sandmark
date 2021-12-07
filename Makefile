@@ -21,7 +21,7 @@ BUILD_BENCH_TARGET ?= buildbench
 RUN_CONFIG_JSON ?= run_config.json
 
 # Default dune version to be used
-DEFAULT_DUNE_VERSION ?= 2.8.1
+DEFAULT_DUNE_VERSION ?= 2.9.0
 
 # Flag to select whether to use sys_dune_hack
 USE_SYS_DUNE_HACK ?= 0
@@ -118,6 +118,9 @@ ifeq (0, $(USE_SYS_DUNE_HACK))
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(DEFAULT_DUNE_VERSION)" "dune-configurator.$(DEFAULT_DUNE_VERSION)" "dune-private-libs.$(DEFAULT_DUNE_VERSION)" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 endif
 	opam update --switch=$(CONFIG_SWITCH_NAME)
+	@{ case "$*" in \
+		*5.00*) sed 's/(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/; (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/g' ./benchmarks/irmin/dune > ./benchmarks/irmin/dune ;; \
+	esac };
 	@{	for i in ${PACKAGES}; do \
 			sed -i "/^]/i \ \ \"$${i}\"" $(DEV_OPAM); \
 		done; \
@@ -134,7 +137,17 @@ endif
 		fi; \
 		for key in "$${!OVERRIDE[@]}"; do 						\
                         sed -i "/\"$${key}\"/s/.*/  $${OVERRIDE[$${key}]}/" $(DEV_OPAM); \
-		done; 										\
+		done; \
+		do_removal=`jq '.package_remove' ocaml-versions/$*.json`; \
+		if [ "$${do_removal}" != null ]; then \
+			for row in `cat ocaml-versions/$*.json | jq '.package_remove | .[]'`; do \
+				name=`echo $$row | xargs echo | tr -d '[:space:]'`; \
+				if [ OVERRIDE["$${name}"] != null ]; then \
+					sed -i "/\"$${name}\"/s/.*/ /" $(DEV_OPAM); \
+				fi; \
+			done; \
+		fi; \
+		sed -i '/^\s*$$/d' $(DEV_OPAM); \
 	        opam install $(DEV_OPAM) --switch=$(CONFIG_SWITCH_NAME) --yes --deps-only;	\
 		opam list --switch=$(CONFIG_SWITCH_NAME); \
 	};
@@ -155,13 +168,6 @@ ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash o
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	$(eval ENVIRONMENT         = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
-	@# case statement to select the correct variant for omp and ppxlib
-	@{ case "$*" in \
-		*multicore*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ;; \
-		*effects*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.1.0+multicore ppxlib.0.22.0+multicore ;; \
-		*domains*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.2.0+stock ppxlib.0.22.0+stock ;; \
-		*) opam install --switch=$* --keep-build-dir --yes ocaml-migrate-parsetree.2.2.0+stock ppxlib.0.22.0+stock ;; \
-	esac };
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
 	     echo "(context (opam (switch $(CONFIG_SWITCH_NAME)) (name $(CONFIG_SWITCH_NAME)_$$i)))"; \
@@ -251,6 +257,7 @@ clean:
 	rm -rf _results
 	rm -rf *filtered.json
 	rm -rf *~
+	git restore ./benchmarks/irmin/dune
 
 list:
 	@echo $(ocamls)
