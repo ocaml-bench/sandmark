@@ -8,14 +8,14 @@ let matrix_multiply pool res x y =
   let j_n = Array.length y.(0) in
   let k_n = Array.length y in
 
-  T.parallel_for pool ~start:0 ~finish:(i_n - 1) ~body:(fun i ->
+  T.parallel_for ~start:0 ~finish:(i_n - 1) ~body:(fun i ->
     for j = 0 to j_n -1 do
       let w = ref 0 in
       for k = 0 to k_n - 1 do
         w := !w + x.(i).(k) * y.(k).(j);
       done;
       res.(i).(j) <- !w
-    done)
+    done) pool
 
 let print_matrix m =
   for i = 0 to pred (Array.length m) do
@@ -26,7 +26,7 @@ let print_matrix m =
   done
 
 let _ =
-    let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
+    let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
 
     let m1 = Array.init size (fun _ -> Array.init size (fun _ -> Random.int 100)) in
     let m2 = Array.init size (fun _ -> Array.init size (fun _ -> Random.int 100)) in

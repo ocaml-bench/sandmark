@@ -1,3 +1,6 @@
 {
-  "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/refs/heads/5.00.zip"
+  "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/refs/heads/5.00.zip",
+  "package_remove": [
+    "js_of_ocaml-compiler"
+  ]
 }

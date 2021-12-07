@@ -50,11 +50,11 @@ let print g =
 let next pool =
   let g = !rg in
   let new_g = !rg' in
-  T.parallel_for pool ~start:0 ~finish:(board_size - 1)
+  T.parallel_for ~start:0 ~finish:(board_size - 1)
     ~body:(fun x ->
       for y = 0 to board_size - 1 do
         new_g.(x).(y) <- next_cell g x y
-      done);
+      done) pool;
   rg := new_g;
   rg' := g
 
@@ -65,7 +65,7 @@ let rec repeat pool n =
   | _-> next pool; repeat pool (n-1)
 
 let ()=
-  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
   (* print !rg; *)
   repeat pool n_times;
   (* print !rg; *)

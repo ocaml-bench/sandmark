@@ -69,8 +69,8 @@ let n = try int_of_string Sys.argv.(2) with _ -> 1000
 let multicore_init pool num_domains x0 n f =
   let a = Array.make n x0 in
   T.parallel_for
-    pool ~start:0 ~finish:(n-1)
-    ~body:(fun i -> a.(i) <- f ());
+    ~start:0 ~finish:(n-1)
+    ~body:(fun i -> a.(i) <- f ()) pool;
   a
 
 let evolutionary_algorithm
@@ -85,7 +85,7 @@ let evolutionary_algorithm
 
   =
 
-  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) in
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
   let adam = random_individual n fitness in
   let init_pop = multicore_init pool num_domains adam in
   let pop0 = init_pop lambda (fun _ -> random_individual n fitness) in

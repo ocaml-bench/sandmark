@@ -17,16 +17,15 @@ $ pip3 install jupyter seaborn pandas intervaltree
 $ sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 $ opam init
 
-$ opam install dune.2.6.0
+$ opam install dune.2.9.0
 
 $ git clone https://github.com/ocaml-bench/sandmark.git
 $ cd sandmark
-$ make ocaml-versions/4.12.0+stock.bench
-$ make ocaml-versions/4.12.0+domains.bench
-$ make ocaml-versions/4.12.0+domains+effects.bench
+$ make ocaml-versions/5.00.0+trunk.bench
+$ make ocaml-versions/4.14.0+domains.bench
 ```
 
-You can now find the results in the `_build/analytics` folder.
+You can now find the results in the `_results/` folder.
 
 ## Pre-requisites
 
@@ -39,17 +38,18 @@ dependencies.
 
 ## Overview
 
-Sandmark uses opam to build external libraries and applications. It
-then builds any sandmark OCaml benchmarks and any data
-dependencies. Following this it runs the benchmarks as defined in the
-`run_config.json`
+Sandmark uses opam, with a static local repository, to build external
+libraries and applications. It then builds any sandmark OCaml
+benchmarks and any data dependencies. Following this it runs the
+benchmarks as defined in the `run_config.json`
 
 These stages are implemented in:
 
  - Opam setup: the `Makefile` handles the creation of an opam switch
    that builds a custom compiler as specified in the
-   `ocaml-versions/<version>.json` file.  It then installs all the
-   required packages and their `dependencies`.
+   `ocaml-versions/<version>.var` file.  It then installs all the
+   required packages; these packages are statically defined by their
+   opam files in the `dependencies` directory.
 
  - Runplan: the list of benchmarks which will run along with the
    measurement wrapper (e.g. orun or perf) is specified in
@@ -59,7 +59,7 @@ These stages are implemented in:
  - Build: dune is used to build all the sandmark OCaml benchmarks that
    are in the `benchmarks` directory.
 
- - Execute: dune is used to execute all the benchmarks specified in
+ - Execute: dune is used to execute all the benchmarks sepcified in
    the runplan using the benchmark wrapper defined in
    `run_config.json` and specified via the `RUN_BENCH_TARGET` variable
    passed to the makefile.
@@ -80,8 +80,8 @@ as shown in the following example:
 
 The various options are described below:
 
-- `name` is MANDATORY and specifies the ocaml compiler switch to be
-  installed.
+- `url` is MANDATORY and provides the web URL to download the source
+  for the ocaml-base-compiler.
 
 - `configure` is OPTIONAL, and you can use this setting to pass
   specific flags to the `configure` script.
@@ -94,10 +94,11 @@ The various options are described below:
 
 ### orun
 
-The orun wrapper collects runtime and OCaml garbage collector
-statistics producing output in a JSON format. You can use orun
-independently of the sandmark benchmarking suite after installion from
-opam.ocaml.org.
+The orun wrapper is packaged in `orun/`, it collects runtime and OCaml
+garbage collector statistics producing output in a JSON format. You
+can use orun independently of the sandmark benchmarking suite, by
+installing it as an opam pin (e.g. `opam install .` from within
+`orun/`).
 
 ### Using a directory different than /home
 
@@ -115,20 +116,20 @@ location from sandboxing.
 ## Benchmarks
 
 You can execute both serial and parallel benchmarks using the
-`run_all_serial.sh` and `run_all_parallel.sh` scripts. Ensure that the
-respective .json configuration files have the appropriate settings.
+`run_all_serial.sh` and `run_all_parallel.sh` scripts.
+Ensure that the respective .json configuration files have the
+appropriate settings.
 
 If using `RUN_BENCH_TARGET=run_orunchrt` then the benchmarks will
 run using `chrt -r 1`.
 
-**IMPORTANT:** `chrt -r 1` is **necessary** when using `taskset` to
-run parallel programs. Otherwise, all the domains will be scheduled on
-the same core and you will see slowdown with increasing number of
-domains.
+**IMPORTANT:** `chrt -r 1` is **necessary** when using
+`taskset` to run parallel programs. Otherwise, all the domains will be
+scheduled on the same core and you will see slowdown with increasing
+number of domains.
 
 You may need to give the user permissions to execute `chrt`, one way
 to do this can be:
-
 ```
 sudo setcap cap_sys_nice=ep /usr/bin/chrt
 ```
@@ -152,9 +153,9 @@ configuration:
 ```
 would allow
 ```sh
-$ RUN_BENCH_TARGET=run_orun-2M make ocaml-versions/4.12.0+stock.bench
+$ RUN_BENCH_TARGET=run_orun-2M make ocaml-versions/5.00.0+trunk.bench
 ```
-to run the benchmarks on 4.12.0+stock with a 2M minor heap setting taskset
+to run the benchmarks on 5.00.0+trunk with a 2M minor heap setting taskset
 onto CPU 5.
 
 The benchmarks also have associated tags which classify the benchmarks. The
@@ -185,19 +186,18 @@ The build bench target determines the type of benchmark being built. It can be
 specified with the environment variable `BUILD_BENCH_TARGET`, and the default
 value is `buildbench` which runs the serial benchmarks. For executing the
 parallel benchmarks use `multibench_parallel`. You can also setup a custom
-bench and add only the benchmarks that you care about.
+bench and add only the benchmarks you care about.
 
-We can obtain throughput and latency results for the benchmarks. For
-obtaining latency results, we can adjust the environment variable
-`RUN_BENCH_TARGET`. The scripts for latencies are present in the
-`pausetimes/` directory. The `pausetimes_trunk` Bash script obtains
-the latencies for stock OCaml and the `pausetimes_multicore` Bash
-script for Multicore OCaml.
+We can obtain throughput and latency results for the benchmarks. For obtaining
+latency results, we can adjust the environment variable `RUN_BENCH_TARGET`.
+The scripts for latencies are present in the `pausetimes/` directory. The
+`pausetimes_trunk` Bash script obtains the latencies for stock OCaml and the
+`pausetimes_multicore` Bash script for Multicore OCaml.
 
 ### Results
 
-After a run is complete, the results will be available in the
-`_results` directory.
+After a run is complete, the results will be available in the `_results`
+directory.
 
 Jupyter notebooks are available in the `notebooks` directory to parse and
 visualise the results, for both serial and parallel benchmarks. To run the
@@ -250,9 +250,8 @@ You can add new benchmarks as follows:
 
 The `*_config.json` files used to build benchmarks
 
- - **run_config.json** : Runs sequential benchmarks with stock OCaml variants in CI and sandmark-nightly on the IITM machine (Turing)
- - **multicore_parallel_run_config.json** : Runs parallel benchmarks with multicore OCaml in CI and sandmark-nightly on the IITM machine (Turing)
- - **multicore_effects_run_config.json** : Runs parallel benchmarks in `benchmarks/multicore-effects` directory with multicore OCaml in CI
+ - **run_config.json** : Runs sequential benchmarks with stock OCaml variants in CI and sandmark-nightly on the IITM machine(turing)
+ - **multicore_parallel_run_config.json** : Runs parallel benchmarks with multicore OCaml in CI and sandmark-nightly on the IITM machine(turing)
  - **multicore_parallel_navajo_run_config.json** : Runs parallel benchmarks with multicore OCaml in sandmark-nightly on Navajo (AMD EPYC 7551 32-Core Processor) machine
  - **micro_multicore.json** : To locally run multicore specific micro benchmarks
 
@@ -262,10 +261,8 @@ The following table marks the benchmarks that are currently not working with any
 
 | Variants | Benchmarks | Issue Tracker |
 |---|---|---|
-| 4.12.0+stock.bench  | None  | None |
-| 4.12.0+domains+effects.bench (serial) | None  | None |
-| 4.12.0+domains+effects.bench (parallel)  | (coq.AbstractInterpretation.v.orun.bench, coq.BasicSyntax.v.orun.bench)  | [Sandmark#248](https://github.com/ocaml-bench/sandmark/issues/248) |
-| 4.14.0+trunk.bench  | None  | None |
+| 5.00.0+trunk.bench | irmin benchmarks | [sandmark#262](https://github.com/ocaml-bench/sandmark/issues/262) |
+| 4.14.0+domains.bench | irmin benchmarks | [sandmark#262](https://github.com/ocaml-bench/sandmark/issues/262) |
 
 ## UI
 
