@@ -220,7 +220,7 @@ json:
 prep_bench:
 	@{ 	$(BENCH_COMMAND); \
 		$(MAKE) json; \
-	} > /dev/null 2>&1;
+	};
 
 bench: prep_bench
 	@cat data.json

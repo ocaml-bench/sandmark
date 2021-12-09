@@ -7,12 +7,12 @@ WORKDIR /app
 RUN sudo apt-get update
 RUN sudo apt-get -y install libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf
 
+RUN opam update
+RUN opam install dune.2.9.0
+
 COPY . .
 
 RUN sudo chown -R opam /app
 RUN eval $(opam env)
-
-RUN opam update
-RUN opam install dune.2.9.0
 
 RUN export ITER=1
