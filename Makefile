@@ -8,6 +8,9 @@ SHELL=/bin/bash
 # Make variable
 MAKE=/usr/bin/make
 
+# Set bench command from Dockerfile
+BENCH_COMMAND=$(BENCHCMD)
+
 # options for running the benchmarks
 # benchmark build target type:
 #  - buildbench: build all single threaded tests
@@ -215,12 +218,9 @@ json:
 	};
 
 prep_bench:
-	@{ 	TAG='"run_in_ci"' $(MAKE) multicore_parallel_run_config_filtered.json; \
-		TAG='"macro_bench"' $(MAKE) multicore_parallel_run_config_filtered_filtered.json; \
-		$(MAKE) multicore_parallel_run_config_filtered_filtered_2domains.json; \
-		BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json $(MAKE) ocaml-versions/4.10.0+multicore.bench; \
+	@{ 	$(BENCH_COMMAND); \
 		$(MAKE) json; \
-	} > /dev/null 2>&1;
+	};
 
 bench: prep_bench
 	@cat data.json

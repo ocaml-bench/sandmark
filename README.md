@@ -330,6 +330,7 @@ work on OS X is to install GNU sed with homebrew and then update the
 | Name | Description | Default Values | Usage |
 | ---- | ----------- | -------------- | ----------------- |
 | BUILD_BENCH_TARGET | Target selection for sequential (buildbench) and parallel (multibench) benchmarks | `buildbench` | building benchmark |
+| BENCH_COMMAND | TAG selection and make command to run benchmarks | 4.14.0+domains for CI | With current-bench |
 | RUN_CONFIG_JSON | Input file selection that contains the list of benchmarks | `run_config.json` | executing benchmark |
 | RUN_BENCH_TARGET | The executable to be used to run the benchmarks | `run_orun` | executing benchmark |
 | BUILD_ONLY | If the value is equal to 0 then execute the benchmarks otherwise skip the benchmark execution and exit the sandmark build process | 0 | building benchmark |
