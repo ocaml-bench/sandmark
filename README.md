@@ -2,7 +2,7 @@
 
 # Sandmark
 
-A benchmark suite for OCaml.
+Sandmark is a suite of OCaml benchmarks and a collection of tools to configure different compiler variants, run and visulaise the results. Sandmark includes both sequential and parallel benchmarks. The results from the nightly benchmark runs are available at [sandmark.ocamllabs.io](https://sandmark.ocamllabs.io). 
 
 ## Quick Start
 
