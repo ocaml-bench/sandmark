@@ -4,22 +4,16 @@ on: [push, pull_request]
 
 jobs:
 
-  configure:
-    runs-on: ubuntu-latest
-    outputs:
-      containerUser: ${{ steps.get-user.outputs.containerUser }}
-    steps:
-      - id: get-user
-        run: echo "::set-output name=containerUser::`id -u`:`id -g`"
-
+jobs:
   build:
     name: '5.00.0+trunk'
-    needs: configure
     runs-on: 'ubuntu-latest'
     container:
       image: ocaml/opam:ubuntu-20.04-ocaml-4.12
-      options: --user ${{ needs.configure.outputs.containerUser }}
     steps:
+      - name: Cleaning up the $GITHUB_WORKSPACE as root from a Docker image
+        # Volume auto mounted by gh actions pointing to the current working-directory
+        run: find /__w/${{ github.event.repository.name }}/${{ github.event.repository.name }}/. -name . -o -prune -exec rm -rf -- {} + || true
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install dependencies
