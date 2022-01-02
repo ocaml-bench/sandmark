@@ -3,7 +3,6 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-
   build:
     name: '5.00.0+trunk'
     runs-on: 'ubuntu-latest'
