@@ -9,9 +9,8 @@ jobs:
     container:
       image: ocaml/opam:ubuntu-20.04-ocaml-4.12
     steps:
-      - name: Cleaning up the $GITHUB_WORKSPACE as root from a Docker image
-        # Volume auto mounted by gh actions pointing to the current working-directory
-        run: find /__w/${{ github.event.repository.name }}/${{ github.event.repository.name }}/. -name . -o -prune -exec rm -rf -- {} + || true
+      - name: Try changing file permissions
+        run: sudo chown -R $USER:$USER /home/github/actions-runner/_work/sandmark
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install dependencies
