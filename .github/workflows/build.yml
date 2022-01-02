@@ -9,8 +9,7 @@ jobs:
     container:
       image: ocaml/opam:ubuntu-20.04-ocaml-4.12
       steps:
-        - name: Checkout
-          uses: actions/checkout@v2
+        - uses: actions/checkout@v2
         - name: Install dependencies
           run: |
             sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
