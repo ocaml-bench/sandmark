@@ -22,10 +22,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Debug
+        run: |
+          whomai
+          cat /etc/os-release
       - name: Install dependencies
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
-          pip3 install intervaltree
+          apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
       - name: Opam update
         run: |
           sudo chown -R opam .
