@@ -1,0 +1,44 @@
+name: CI Build
+
+on: [push, pull_request]
+
+jobs:
+
+  build:
+    name: '5.00.0+trunk'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: ocaml/opam:ubuntu-20.04-ocaml-4.12
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        - name: Install dependencies
+          run: |
+            sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip
+            pip3 install intervaltree
+
+        - name: Opam update
+          run: |
+            sudo chown -R opam .
+            eval $(opam env)
+            opam update
+
+        - name: Install dune
+          run: |
+            opam install dune.2.9.0
+
+        - name: Export environment variables
+          run: |
+            export ITER=1
+            export OPAM_DISABLE_SANDBOXING=true
+
+        - name: Build and run benchmarks
+          run: |
+            TAG='"run_in_ci"' make run_config_filtered.json
+            RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.00.0+trunk.bench
+
+        - name: View results
+          run: |
+            ls _results
+            cat _results/*
