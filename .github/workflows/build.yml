@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Debug
         run: |
-          whomai
+          whoami
           cat /etc/os-release
       - name: Install dependencies
         run: |
