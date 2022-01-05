@@ -31,7 +31,7 @@ WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 PACKAGES = \
 	cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib \
 	menhir minilight base dune-private-libs dune-configurator camlimages \
-	yojson lwt zarith uuidm react ocplib-endian nbcodec checkseum \
+	yojson lwt zarith uuidm react ocplib-endian nbcodec checkseum ppxlib \
 	sexplib0 eventlog-tools cubicle conf-findutils logs \
 	mtime  repr 
 
@@ -88,11 +88,11 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json setup_sys_dune
 	$(eval OCAML_RUN_PARAM     = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	opam update
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
+	opam pin add -n --yes --switch $* base.v0.15.0 https://github.com/janestreet/base.git#v0.15.0
 	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
+	opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shubhamkumar13/sexplib0.git#multicore
 	opam pin add -n --yes --switch $* orun orun/
 	opam pin add -n --yes --switch $* rungen rungen/
-	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
-	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 
 .PHONY: .FORCE
 .FORCE:
@@ -108,12 +108,11 @@ blah:
 ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json _opam/% .FORCE
 	$(eval ENVIRONMENT = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
 	@opam update
-	opam install --switch=$* --keep-build-dir --yes rungen orun coq-core coq-stdlib coq fraplib
+	opam install --switch=$* --keep-build-dir --yes rungen orun 
 	@# case statement to select the correct variant for omp and ppxlib
 	@{ case "$*" in \
-		*domains*) opam install --switch=$* --keep-build-dir --yes stdio integers ocaml-migrate-parsetree.2.2.0+stock ppxlib.0.22.0+stock  ppx_deriving ppx_deriving_yojson irmin ppx_irmin ppx_repr irmin-layers irmin-pack index ;; \
-		*5.00*) sed 's/(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/; (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/g' ./benchmarks/irmin/dune > ./benchmarks/irmin/dune ;; \
-		*) opam install --switch=$* --keep-build-dir --yes stdio integers  ocaml-migrate-parsetree.2.2.0+stock ppxlib.0.22.0+stock js_of_ocaml-compiler coq fraplib ppx_deriving ppx_deriving_yojson irmin ppx_irmin ppx_repr irmin-layers irmin-pack index ;; \
+		*domains*) opam install --switch=$* --keep-build-dir --yes stdio integers   ppx_deriving ppx_deriving_yojson index ;; \
+		*) opam install --switch=$* --keep-build-dir --yes stdio integers js_of_ocaml-compiler ;; \
 	esac }; \
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	opam exec --switch $* -- opam list
@@ -173,7 +172,6 @@ clean:
 	rm -rf _results
 	rm -rf *filtered.json
 	rm -rf *~
-	git restore ./benchmarks/irmin/dune
 
 list:
 	@echo $(ocamls)
