@@ -1,3 +1,0 @@
-(alias
-  (name buildbench)
-  (deps AbstractInterpretation.v BasicSyntax.v ))
