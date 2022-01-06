@@ -111,7 +111,7 @@ ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json
 	opam install --switch=$* --keep-build-dir --yes rungen orun 
 	@# case statement to select the correct variant for omp and ppxlib
 	@{ case "$*" in \
-		*domains*) opam install --switch=$* --keep-build-dir --yes stdio integers   ppx_deriving ppx_deriving_yojson index ;; \
+		*5.00*) sed 's/(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/; (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/g' ./benchmarks/irmin/dune > ./benchmarks/irmin/dune; echo "5.00" ;; \
 		*) opam install --switch=$* --keep-build-dir --yes stdio integers js_of_ocaml-compiler ;; \
 	esac }; \
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
@@ -172,6 +172,7 @@ clean:
 	rm -rf _results
 	rm -rf *filtered.json
 	rm -rf *~
+	git restore ./benchmarks/irmin/dune
 
 list:
 	@echo $(ocamls)
