@@ -21,7 +21,16 @@ BUILD_BENCH_TARGET ?= buildbench
 RUN_CONFIG_JSON ?= run_config.json
 
 # Default dune version to be used
-DEFAULT_DUNE_VERSION ?= 2.9.0
+SANDMARK_DUNE_VERSION ?= 2.9.0
+
+# Default URL
+SANDMARK_URL ?= ""
+
+# Default packages to remove
+SANDMARK_REMOVE_PACKAGES ?= ""
+
+# Default list of packages to override
+SANDMARK_OVERRIDE_PACKAGES ?= ""
 
 # Flag to select whether to use sys_dune_hack
 USE_SYS_DUNE_HACK ?= 0
@@ -71,9 +80,9 @@ SYS_DUNE_BASE_DIR ?= $(subst /bin/dune,,$(shell which dune))
 setup_sys_dune/%: _opam/%
 	$(eval OVERRIDE_DUNE = $(shell sed -n 's/.*dune\.\([0-9]\.[0-9]\.[0-9]\).*/\1/p' ocaml-versions/$*.json))
 	$(if $(strip $(OVERRIDE_DUNE)), 				\
-		$(eval DEFAULT_DUNE_VERSION = "$(OVERRIDE_DUNE)") 	\
-		@echo "Overriding dune with "$(DEFAULT_DUNE_VERSION),	\
-		@echo "Using default dune.$(DEFAULT_DUNE_VERSION)")
+		$(eval SANDMARK_DUNE_VERSION = "$(OVERRIDE_DUNE)") 	\
+		@echo "Overriding dune with "$(SANDMARK_DUNE_VERSION),	\
+		@echo "Using default dune.$(SANDMARK_DUNE_VERSION)")
 ifeq (1, $(USE_SYS_DUNE_HACK))
 	@echo $(SYS_DUNE_BASE_DIR)
 	@echo "Linking to system dune files found at: "$(SYS_DUNE_BASE_DIR)
@@ -99,8 +108,13 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	mkdir -p dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*
 	cp -R dependencies/template/ocaml-base-compiler/* \
 	  dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/
-	{ url="$$(jq -r '.url // empty' ocaml-versions/$*.json)"; echo "url { src: \"$$url\" }"; echo "setenv: [ [ ORUN_CONFIG_ocaml_url = \"$$url\" ] ]"; } \
-	  >> dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/opam
+	{	if [ "$(SANDMARK_URL)" == "" ]; then	\
+			url="$$(jq -r '.url // empty' ocaml-versions/$*.json)"; \
+		else \
+			url="$(SANDMARK_URL)"; \
+		fi; \
+		echo "url { src: \"$$url\" }"; echo "setenv: [ [ ORUN_CONFIG_ocaml_url = \"$$url\" ] ]"; } \
+	>> dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/opam;
 	$(eval OCAML_CONFIG_OPTION = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval OCAML_RUN_PARAM     = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	opam update
@@ -115,7 +129,7 @@ override_packages/%: setup_sys_dune/%
 	opam repo add upstream "https://opam.ocaml.org" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	cp dependencies/template/dev.opam $(DEV_OPAM)
 ifeq (0, $(USE_SYS_DUNE_HACK))
-	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(DEFAULT_DUNE_VERSION)" "dune-configurator.$(DEFAULT_DUNE_VERSION)" "dune-private-libs.$(DEFAULT_DUNE_VERSION)" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
+	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)" "dune-private-libs.$(SANDMARK_DUNE_VERSION)" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 endif
 	opam update --switch=$(CONFIG_SWITCH_NAME)
 	@{ case "$*" in \
@@ -125,25 +139,42 @@ endif
 			sed -i "/^]/i \ \ \"$${i}\"" $(DEV_OPAM); \
 		done; \
 	};
-	@{	declare -A OVERRIDE=( ["ocaml-config"]="\"ocaml-config\" {= \"1\"}" ); 					\
-		do_overrides=`jq '.package_overrides' ocaml-versions/$*.json`; \
-		if [ "$${do_overrides}" != null ]; then \
-			for row in `cat ocaml-versions/$*.json | jq '.package_overrides | .[]'`; do	\
-				package=`echo $$row | xargs echo | tr -d '[:space:]'`; \
-				package_name=`cut -d '.' -f 1 <<< "$$package"`; \
-				package_version=`cut -d '.' -f 2- <<< "$$package"`; \
-				OVERRIDE["$${package_name}"]="\"$${package_name}\" {= \"$${package_version}\" }";			\
-			done; 										\
+	@{	declare -A OVERRIDE=( ["ocaml-config"]="\"ocaml-config\" {= \"1\"}" ); 	\
+		if [ -z "$(SANDMARK_OVERRIDE_PACKAGES)" ]; then \
+			do_overrides=`jq '.package_overrides' ocaml-versions/$*.json`; \
+			if [ "$${do_overrides}" != null ]; then \
+				for row in `cat ocaml-versions/$*.json | jq '.package_overrides | .[]'`; do	\
+					package=`echo $$row | xargs echo | tr -d '[:space:]'`; \
+					package_name=`cut -d '.' -f 1 <<< "$$package"`; \
+					package_version=`cut -d '.' -f 2- <<< "$$package"`; \
+					OVERRIDE["$${package_name}"]="\"$${package_name}\" {= \"$${package_version}\" }";	\
+				done; 	\
+			fi; \
+		else \
+			for p in ${SANDMARK_OVERRIDE_PACKAGES}; do \
+				package="$${p}"; \
+				package_name=`cut -d '.' -f 1 <<< "$${package}"`; \
+				package_version=`cut -d '.' -f 2- <<< "$${package}"`; \
+				OVERRIDE["$${package_name}"]="\"$${package_name}\" {= \"$${package_version}\" }"; \
+			done; \
 		fi; \
 		for key in "$${!OVERRIDE[@]}"; do 						\
                         sed -i "/\"$${key}\"/s/.*/  $${OVERRIDE[$${key}]}/" $(DEV_OPAM); \
 		done; \
-		do_removal=`jq '.package_remove' ocaml-versions/$*.json`; \
-		if [ "$${do_removal}" != null ]; then \
-			for row in `cat ocaml-versions/$*.json | jq '.package_remove | .[]'`; do \
-				name=`echo $$row | xargs echo | tr -d '[:space:]'`; \
-				if [ OVERRIDE["$${name}"] != null ]; then \
-					sed -i "/\"$${name}\"/s/.*/ /" $(DEV_OPAM); \
+		if [ -z "$(SANDMARK_REMOVE_PACKAGES)" ]; then \
+			do_removal=`jq '.package_remove' ocaml-versions/$*.json`; \
+			if [ "$${do_removal}" != null ]; then \
+				for row in `cat ocaml-versions/$*.json | jq '.package_remove | .[]'`; do \
+					name=`echo $$row | xargs echo | tr -d '[:space:]'`; \
+					if [ OVERRIDE["$${name}"] != null ]; then \
+						sed -i "/\"$${name}\"/s/.*/ /" $(DEV_OPAM); \
+					fi; \
+				done; \
+			fi; \
+		else \
+			for p in ${SANDMARK_REMOVE_PACKAGES}; do \
+				if [ OVERRIDE["$${p}"] != null ]; then \
+					sed -i "/\"$${p}\"/s/.*/ /" $(DEV_OPAM); \
 				fi; \
 			done; \
 		fi; \
