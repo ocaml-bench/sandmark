@@ -1481,7 +1481,7 @@
       "executable": "benchmarks/irmin/irmin_mem_rw.exe",
       "name": "irmin_mem_rw",
       "tags": [
-        "1s_10s",
+        "1s_10s"
       ],
       "runs": [
         {
@@ -1496,7 +1496,7 @@
       "executable": "coqc",
       "name": "coq",
       "tags": [
-        "gt_100s",
+        "gt_100s"
       ],
       "runs": [
         {
