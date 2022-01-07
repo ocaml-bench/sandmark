@@ -91,6 +91,8 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json setup_sys_dune
 	opam pin add -n --yes --switch $* base.v0.15.0 https://github.com/janestreet/base.git#v0.15.0
 	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
 	opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shubhamkumar13/sexplib0.git#multicore
+	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
+	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* orun orun/
 	opam pin add -n --yes --switch $* rungen rungen/
 
@@ -112,7 +114,7 @@ ocaml-versions/%.bench: check_url depend log_sandmark_hash ocaml-versions/%.json
 	@# case statement to select the correct variant for omp and ppxlib
 	@{ case "$*" in \
 		*5.00*) sed 's/(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/; (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/g' ./benchmarks/irmin/dune > ./benchmarks/irmin/dune; echo "5.00" ;; \
-		*) opam install --switch=$* --keep-build-dir --yes stdio integers js_of_ocaml-compiler ;; \
+		*) opam install --switch=$* --keep-build-dir --yes stdio integers js_of_ocaml-compiler coq-core coq-stdlib coq fraplib ;; \
 	esac }; \
 	opam install --switch=$* --best-effort --keep-build-dir --yes $(PACKAGES) || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 	opam exec --switch $* -- opam list
