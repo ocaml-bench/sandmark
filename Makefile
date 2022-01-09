@@ -105,6 +105,8 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	$(eval OCAML_RUN_PARAM     = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	opam update
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
+	opam pin add -n --yes --switch $* base.v0.15.0 https://github.com/janestreet/base.git#v0.15.0
+	opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shubhamkumar13/sexplib0.git#multicore
 	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz

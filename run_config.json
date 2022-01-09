@@ -1482,7 +1482,6 @@
       "name": "irmin_mem_rw",
       "tags": [
         "1s_10s",
-        "macro_bench"
       ],
       "runs": [
         {
@@ -1498,8 +1497,6 @@
       "name": "coq",
       "tags": [
         "gt_100s",
-        "macro_bench",
-        "run_in_ci"
       ],
       "runs": [
         {
