@@ -1,0 +1,24 @@
+{
+  "url" : "https://github.com/ocaml-multicore/ocaml-multicore/archive/refs/heads/5.00.zip",
+  "package_overrides": [
+    "fmt.0.9.0"
+  ],
+  "package_remove": [
+    "coq",
+    "coq-core",
+    "coq-stdlib",
+    "fraplib",
+    "index",
+    "integers",
+    "irmin",
+    "irmin-layers",
+    "irmin-pack",
+    "js_of_ocaml-compiler",
+    "ppx_derivers",
+    "ppx_deriving",
+    "ppx_deriving_yojson",
+    "ppx_irmin",
+    "ppx_repr",
+    "stdio"
+  ]
+}
