@@ -1,6 +1,13 @@
 {
   "url" : "https://github.com/ocaml/ocaml/archive/trunk.tar.gz",
+  "package_overrides": [
+    "fmt.0.9.0"
+  ],
   "package_remove": [
+    "coq",
+    "coq-core",
+    "coq-stdlib",
+    "fraplib",
     "index",
     "integers",
     "irmin",
