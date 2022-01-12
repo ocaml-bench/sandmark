@@ -1,0 +1,123 @@
+diff --git a/flatestubs.c b/flatestubs.c
+index 6a35182..4525a6f 100644
+--- a/flatestubs.c
++++ b/flatestubs.c
+@@ -41,22 +41,22 @@ static void camlzip_error(char * fn, value vzs)
+   if (camlzip_error_exn == NULL) {
+     camlzip_error_exn = caml_named_value("Zlib.Error");
+     if (camlzip_error_exn == NULL)
+-      invalid_argument("Exception Zlib.Error not initialized");
++      caml_invalid_argument("Exception Zlib.Error not initialized");
+   }
+   Begin_roots3(s1, s2, bucket);
+-    s1 = copy_string(fn);
+-    s2 = copy_string(msg);
+-    bucket = alloc_small(3, 0);
++    s1 = caml_copy_string(fn);
++    s2 = caml_copy_string(msg);
++    bucket = caml_alloc_small(3, 0);
+     Field(bucket, 0) = *camlzip_error_exn;
+     Field(bucket, 1) = s1;
+     Field(bucket, 2) = s2;
+   End_roots();
+-  mlraise(bucket);
++  caml_raise(bucket);
+ }
+ 
+ static value camlzip_new_stream(void)
+ {
+-  value res = alloc((sizeof(z_stream) + sizeof(value) - 1) / sizeof(value),
++  value res = caml_alloc((sizeof(z_stream) + sizeof(value) - 1) / sizeof(value),
+                     Abstract_tag);
+   ZStream_val(res)->zalloc = NULL;
+   ZStream_val(res)->zfree = NULL;
+@@ -101,7 +101,7 @@ value camlzip_deflate(value vzs, value srcbuf, value srcpos, value srclen,
+   used_out = Long_val(dstlen) - zs->avail_out;
+   zs->next_in = NULL;         /* not required, but cleaner */
+   zs->next_out = NULL;        /* (avoid dangling pointers into Caml heap) */
+-  res = alloc_small(3, 0);
++  res = caml_alloc_small(3, 0);
+   Field(res, 0) = Val_bool(retcode == Z_STREAM_END);
+   Field(res, 1) = Val_int(used_in);
+   Field(res, 2) = Val_int(used_out);
+@@ -150,7 +150,7 @@ value camlzip_inflate(value vzs, value srcbuf, value srcpos, value srclen,
+   used_out = Long_val(dstlen) - zs->avail_out;
+   zs->next_in = NULL;           /* not required, but cleaner */
+   zs->next_out = NULL;          /* (avoid dangling pointers into Caml heap) */
+-  res = alloc_small(3, 0);
++  res = caml_alloc_small(3, 0);
+   Field(res, 0) = Val_bool(retcode == Z_STREAM_END);
+   Field(res, 1) = Val_int(used_in);
+   Field(res, 2) = Val_int(used_out);
+@@ -172,7 +172,7 @@ value camlzip_inflateEnd(value vzs)
+ 
+ value camlzip_update_crc32(value crc, value buf, value pos, value len)
+ {
+-  return copy_int32(crc32((uint32_t) Int32_val(crc), 
++  return caml_copy_int32(crc32((uint32_t) Int32_val(crc),
+                           &Byte_u(buf, Long_val(pos)),
+                           Long_val(len)));
+ }
+diff --git a/stubs-aes.c b/stubs-aes.c
+index 36c5ab4..20cc62d 100644
+--- a/stubs-aes.c
++++ b/stubs-aes.c
+@@ -26,11 +26,11 @@
+ CAMLprim value caml_aes_cook_encrypt_key(value key)
+ {
+   CAMLparam1(key);
+-  value ckey = alloc_string(Cooked_key_size);
++  value ckey = caml_alloc_string(Cooked_key_size);
+   int nr =
+     rijndaelKeySetupEnc((u32 *) String_val(ckey),
+                         (const u8 *) String_val(key),
+-                        8 * string_length(key));
++                        8 * caml_string_length(key));
+   Byte(ckey, Cooked_key_NR_offset) = nr;
+   CAMLreturn(ckey);
+ }
+@@ -38,11 +38,11 @@ CAMLprim value caml_aes_cook_encrypt_key(value key)
+ CAMLprim value caml_aes_cook_decrypt_key(value key)
+ {
+   CAMLparam1(key);
+-  value ckey = alloc_string(Cooked_key_size);
++  value ckey = caml_alloc_string(Cooked_key_size);
+   int nr =
+     rijndaelKeySetupDec((u32 *) String_val(ckey),
+                         (const u8 *) String_val(key),
+-                        8 * string_length(key));
++                        8 * caml_string_length(key));
+   Byte(ckey, Cooked_key_NR_offset) = nr;
+   CAMLreturn(ckey);
+ }
+diff --git a/stubs-sha2.c b/stubs-sha2.c
+index 73b0cc2..f3bff71 100644
+--- a/stubs-sha2.c
++++ b/stubs-sha2.c
+@@ -6,7 +6,7 @@
+ CAMLprim value caml_sha256(value message)
+ {
+   CAMLparam1(message);
+-  value digest = alloc_string(32);
++  value digest = caml_alloc_string(32);
+   sha256((const unsigned char *) (String_val(message)),
+          caml_string_length(message),
+          ((unsigned char *) String_val(digest)));
+@@ -16,7 +16,7 @@ CAMLprim value caml_sha256(value message)
+ CAMLprim value caml_sha384(value message)
+ {
+   CAMLparam1(message);
+-  value digest = alloc_string(48);
++  value digest = caml_alloc_string(48);
+   sha384((const unsigned char *) (String_val(message)),
+          caml_string_length(message),
+          ((unsigned char *) String_val(digest)));
+@@ -26,7 +26,7 @@ CAMLprim value caml_sha384(value message)
+ CAMLprim value caml_sha512(value message)
+ {
+   CAMLparam1(message);
+-  value digest = alloc_string(64);
++  value digest = caml_alloc_string(64);
+   sha512((const unsigned char *) (String_val(message)),
+          caml_string_length(message),
+          ((unsigned char *) String_val(digest)));
