@@ -87,7 +87,7 @@ The various options are described below:
   specific flags to the `configure` script.
 
 - `runparams` is OPTIONAL, and its values are passed to OCAMLRUNPARAM
-  when building the compiler. _Notice this variable is not used for
+  when building the compiler. _Note that this variable is not used for
   the running of benchmarks, just the build of the compiler_
 
 ## Execution
