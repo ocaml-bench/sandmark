@@ -1,0 +1,34 @@
+From 0e70742b494503b3b3687270c167639471acb4e1 Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Sun, 16 Jan 2022 18:21:44 +0530
+Subject: [PATCH] Remove String.copy
+
+---
+ pdfgenlex.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pdfgenlex.ml b/pdfgenlex.ml
+index 53467de..f84dd5d 100644
+--- a/pdfgenlex.ml
++++ b/pdfgenlex.ml
+@@ -56,7 +56,7 @@ let lex_item s =
+       try
+         match String.unsafe_get s 0 with
+         | 'a'..'z' | 'A'..'Z' ->
+-            LexName (String.copy s)
++            LexName s
+         | '\"' when len >= 2 ->
+             LexString (String.sub s 1 (len - 2))
+         | _ ->
+@@ -73,7 +73,7 @@ let lex_item s =
+                   end
+                 else LexReal (float_of_string s)
+       with
+-        _ -> LexName (String.copy s)
++        _ -> LexName s
+ 
+ (* Return the string between and including the current position and before the
+ next character satisfying a given predicate, leaving the position at the
+-- 
+2.34.1
+

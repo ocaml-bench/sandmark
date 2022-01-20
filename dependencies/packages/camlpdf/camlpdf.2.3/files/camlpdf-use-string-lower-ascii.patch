@@ -1,0 +1,39 @@
+From e6d46234575af7c7d25abe353e37f28a88a8780a Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Sun, 16 Jan 2022 17:34:21 +0530
+Subject: [PATCH] Use String.lowercase_ascii
+
+---
+ pdfpagelabels.ml | 2 +-
+ pdfutil.ml       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pdfpagelabels.ml b/pdfpagelabels.ml
+index 6333894..2800ec4 100644
+--- a/pdfpagelabels.ml
++++ b/pdfpagelabels.ml
+@@ -115,7 +115,7 @@ let string_of_pagenumber n = function
+   | UppercaseRoman -> roman_upper n
+   | LowercaseRoman -> roman_lower n
+   | UppercaseLetters -> letter_string n
+-  | LowercaseLetters -> String.lowercase (letter_string n)
++  | LowercaseLetters -> String.lowercase_ascii (letter_string n)
+ 
+ let pagelabeltext_of_single n l =
+   let realnumber =
+diff --git a/pdfutil.ml b/pdfutil.ml
+index 1ba5de5..f0897c3 100644
+--- a/pdfutil.ml
++++ b/pdfutil.ml
+@@ -1236,7 +1236,7 @@ let rec roman n =
+ 
+ let roman_upper = roman
+ 
+-let roman_lower n = String.lowercase (roman n)
++let roman_lower n = String.lowercase_ascii (roman n)
+ 
+ let memoize f =
+   let result = ref None in
+-- 
+2.34.1
+

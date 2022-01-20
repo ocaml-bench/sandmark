@@ -78,6 +78,7 @@ export OPAMROOT=$(CURDIR)/_opam
 SYS_DUNE_BASE_DIR ?= $(subst /bin/dune,,$(shell which dune))
 
 setup_sys_dune/%: _opam/%
+	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval OVERRIDE_DUNE = $(shell sed -n 's/.*dune\.\([0-9]\.[0-9]\.[0-9]\).*/\1/p' ocaml-versions/$*.json))
 	$(if $(strip $(OVERRIDE_DUNE)), 				\
 		$(eval SANDMARK_DUNE_VERSION = "$(OVERRIDE_DUNE)") 	\
@@ -93,6 +94,7 @@ ifeq (1, $(USE_SYS_DUNE_HACK))
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/dune $(CURDIR)/_opam/sys_dune/bin/dune
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/jbuilder $(CURDIR)/_opam/sys_dune/bin/jbuilder
 	ln -s $(SYS_DUNE_BASE_DIR)/lib/dune $(CURDIR)/_opam/sys_dune/lib/dune
+	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)"
 endif
 
 ocamls=$(wildcard ocaml-versions/*.json)
@@ -120,7 +122,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	opam update
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	opam pin add -n --yes --switch $* base.v0.15.0 https://github.com/janestreet/base.git#v0.15.0
-	opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shubhamkumar13/sexplib0.git#multicore
+	opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore
 	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz

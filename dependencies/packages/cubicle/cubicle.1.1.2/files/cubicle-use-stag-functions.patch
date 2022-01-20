@@ -1,0 +1,99 @@
+From a9e9bd5ead5cd5a6e083035a101c57219f080c31 Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Tue, 18 Jan 2022 22:25:53 +0530
+Subject: [PATCH] Use _stag functions
+
+---
+ enumerative.ml |  2 +-
+ pretty.ml      | 52 ++++++++++++++++++++++++++------------------------
+ 2 files changed, 28 insertions(+), 26 deletions(-)
+
+diff --git a/enumerative.ml b/enumerative.ml
+index 7428c3e..02990cf 100644
+--- a/enumerative.ml
++++ b/enumerative.ml
+@@ -1184,7 +1184,7 @@ let shuffle d =
+ let no_scan_states env =
+   (* Prevent the GC from scanning the list env.states as it is going to be
+      kept in memory all the time. *)
+-  List.iter (fun s -> Obj.set_tag (Obj.repr s) (Obj.no_scan_tag)) env.states
++  List.iter (fun s -> Obj.with_tag (Obj.repr s) (Obj.no_scan_tag)) env.states
+ 
+ let finalize_search env =
+   let st = HST.stats env.explicit_states in
+diff --git a/pretty.ml b/pretty.ml
+index 504eb7d..df3abc4 100644
+--- a/pretty.ml
++++ b/pretty.ml
+@@ -200,41 +200,43 @@ let style_of_tag = function
+   | "bg_default_b" -> BG_Default_B
+   | _ -> raise Not_found
+ 
++let start_tag = function
++  | String_tag t ->
++     try Printf.sprintf "[%sm" (assoc_style (style_of_tag t))
++     with Not_found -> ""
++  | _ -> ""
+ 
+-let start_tag t = 
+-  try Printf.sprintf "[%sm" (assoc_style (style_of_tag t))
+-  with Not_found -> ""
++let stop_tag = function
++  | String_tag t ->
++     let st = match style_of_tag t with
++       | Bold -> Bold_off
++       | Underline -> Underline_off
++       | Inverse -> Inverse_off
+ 
+-let stop_tag t = 
+-  let st = match style_of_tag t with
+-    | Bold -> Bold_off
+-    | Underline -> Underline_off
+-    | Inverse -> Inverse_off
++       | FG_Black | FG_Red | FG_Green | FG_Yellow | FG_Blue
++       | FG_Magenta | FG_Cyan | FG_Gray | FG_Default -> FG_Default
+ 
+-    | FG_Black | FG_Red | FG_Green | FG_Yellow | FG_Blue
+-    | FG_Magenta | FG_Cyan | FG_Gray | FG_Default -> FG_Default
++       | BG_Black | BG_Red | BG_Green | BG_Yellow | BG_Blue
++       | BG_Magenta | BG_Cyan | BG_Gray | BG_Default -> BG_Default
+ 
+-    | BG_Black | BG_Red | BG_Green | BG_Yellow | BG_Blue 
+-    | BG_Magenta | BG_Cyan | BG_Gray | BG_Default -> BG_Default
++       | FG_Black_B | FG_Red_B | FG_Green_B | FG_Yellow_B | FG_Blue_B
++       | FG_Magenta_B | FG_Cyan_B | FG_Gray_B | FG_Default_B -> FG_Default
+ 
+-    | FG_Black_B | FG_Red_B | FG_Green_B | FG_Yellow_B | FG_Blue_B 
+-    | FG_Magenta_B | FG_Cyan_B | FG_Gray_B | FG_Default_B -> FG_Default
+- 
+-    | BG_Black_B | BG_Red_B | BG_Green_B | BG_Yellow_B | BG_Blue_B
+-    | BG_Magenta_B | BG_Cyan_B | BG_Gray_B | BG_Default_B -> BG_Default
++       | BG_Black_B | BG_Red_B | BG_Green_B | BG_Yellow_B | BG_Blue_B
++       | BG_Magenta_B | BG_Cyan_B | BG_Gray_B | BG_Default_B -> BG_Default
+ 
+-    | _ -> Normal
+-  in
+-  Printf.sprintf "[%sm" (assoc_style st)
+-        
++       | _ -> Normal
++     in
++     Printf.sprintf "[%sm" (assoc_style st)
++  | _ -> ""
+ 
+ let add_colors formatter =
+   pp_set_tags formatter true;
+-  let old_fs = Format.pp_get_formatter_tag_functions formatter () in
+-  Format.pp_set_formatter_tag_functions formatter
++  let old_fs = Format.pp_get_formatter_stag_functions formatter () in
++  Format.pp_set_formatter_stag_functions formatter
+     { old_fs with
+-      Format.mark_open_tag = start_tag;
+-      Format.mark_close_tag = stop_tag }
++      Format.mark_open_stag =  start_tag;
++      Format.mark_close_stag = stop_tag }
+ 
+ let _ =
+   if not nocolor then begin
+-- 
+2.34.1
+

@@ -1,0 +1,25 @@
+From 33a84a15624c3c9843ebff41ecbd328f39f667f7 Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Sun, 16 Jan 2022 16:56:13 +0530
+Subject: [PATCH] Use String.uppercase_ascii
+
+---
+ src/unix/config/discover.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/unix/config/discover.ml b/src/unix/config/discover.ml
+index 0449bcd..d612ff0 100644
+--- a/src/unix/config/discover.ml
++++ b/src/unix/config/discover.ml
+@@ -64,7 +64,7 @@
+ 
+ module Configurator = Configurator.V1
+ let split = Configurator.Flags.extract_blank_separated_words
+-let uppercase = String.uppercase [@ocaml.warning "-3"]
++let uppercase = String.uppercase_ascii [@ocaml.warning "-3"]
+ 
+ 
+ 
+-- 
+2.34.1
+

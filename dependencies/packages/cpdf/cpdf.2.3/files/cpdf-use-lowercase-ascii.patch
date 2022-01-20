@@ -1,0 +1,43 @@
+From 106fe48a62df1d9751b7b07cdfd515e4859d832f Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Sun, 16 Jan 2022 19:24:16 +0530
+Subject: [PATCH] Use lowercase ascii
+
+---
+ xmlm.ml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/xmlm.ml b/xmlm.ml
+index 3430e91..e39dad1 100644
+--- a/xmlm.ml
++++ b/xmlm.ml
+@@ -650,7 +650,7 @@ struct
+     if i.c <> u_gt then skip_pi i else nextc_eof i
+ 
+   let rec skip_misc i ~allow_xmlpi = match i.limit with          (* {Misc}* *)
+-  | Pi (p,l) when (str_empty p && str_eq n_xml (String.lowercase l)) ->
++  | Pi (p,l) when (str_empty p && str_eq n_xml (String.lowercase_ascii l)) ->
+       if allow_xmlpi then () else err i (`Illegal_char_seq l)
+   | Pi _ -> skip_pi i; p_limit i; skip_misc i ~allow_xmlpi
+   | Comment -> skip_comment i; p_limit i; skip_misc i ~allow_xmlpi
+@@ -707,7 +707,7 @@ struct
+         if i.c <> u_qmark then begin
+           let n = p_ncname i in
+           if str_eq n n_encoding then begin
+-            let enc = String.lowercase (p_val i) in
++            let enc = String.lowercase_ascii (p_val i) in
+             if not ignore_enc then begin
+               if str_eq enc v_utf_8 then i.uchar <- uchar_utf8 else
+               if str_eq enc v_utf_16be then i.uchar <- uchar_utf16be else
+@@ -1125,7 +1125,7 @@ module String = struct
+   let empty = ""
+   let length = String.length
+   let append = ( ^ )
+-  let lowercase = String.lowercase
++  let lowercase = String.lowercase_ascii
+   let iter f s =
+     let len = Std_string.length s in
+     let pos = ref ~-1 in
+-- 
+2.34.1
+

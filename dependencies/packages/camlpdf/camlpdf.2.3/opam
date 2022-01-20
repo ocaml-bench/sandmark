@@ -11,7 +11,7 @@ depends: [
   "ocamlfind" {build}
 ]
 synopsis: "Read, write and modify PDF files"
-patches: [ "build-camlpdf-for-trunk.patch" ]
+patches: [ "build-camlpdf-for-trunk.patch" "camlpdf-use-string-lower-ascii.patch" "camlpdf-remove-string-copy.patch" ]
 url {
   src: "https://github.com/johnwhitington/camlpdf/archive/v2.3.zip"
   checksum: "md5=61631634e5e91017281676253ff690e5"

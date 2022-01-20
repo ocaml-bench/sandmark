@@ -1,0 +1,62 @@
+From 7db464e9efe8ea28e6cd93ad343e09c32f4fe122 Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Sun, 16 Jan 2022 19:43:54 +0530
+Subject: [PATCH] Additional lower-case ascii checks
+
+---
+ cpdfcommand.ml | 2 +-
+ xmlm.ml        | 4 ++--
+ xmlm.mli       | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/cpdfcommand.ml b/cpdfcommand.ml
+index 44ee12b..2aba818 100644
+--- a/cpdfcommand.ml
++++ b/cpdfcommand.ml
+@@ -1205,7 +1205,7 @@ let setaddtext s =
+   setop (AddText s) ()
+ 
+ let parse_color s =
+-  match String.lowercase s with
++  match String.lowercase_ascii s with
+   | "white" -> 1., 1., 1.
+   | "black" -> 0., 0., 0.
+   | "red" -> 1., 0., 0.
+diff --git a/xmlm.ml b/xmlm.ml
+index e39dad1..762130b 100644
+--- a/xmlm.ml
++++ b/xmlm.ml
+@@ -15,7 +15,7 @@ module type String = sig
+   val empty : t
+   val length : t -> int
+   val append : t -> t -> t
+-  val lowercase : t -> t
++  val lowercase_ascii : t -> t
+   val iter : (int -> unit) -> t -> unit
+   val of_string : std_string -> t
+   val to_utf_8 : ('a -> std_string -> 'a) -> 'a -> t -> 'a
+@@ -1125,7 +1125,7 @@ module String = struct
+   let empty = ""
+   let length = String.length
+   let append = ( ^ )
+-  let lowercase = String.lowercase_ascii
++  let lowercase_ascii = String.lowercase_ascii
+   let iter f s =
+     let len = Std_string.length s in
+     let pos = ref ~-1 in
+diff --git a/xmlm.mli b/xmlm.mli
+index b8339ab..edaf279 100755
+--- a/xmlm.mli
++++ b/xmlm.mli
+@@ -294,7 +294,7 @@ module type String = sig
+   val append : t -> t -> t
+   (** Concatenates two strings. *)
+ 
+-  val lowercase : t -> t
++  val lowercase_ascii : t -> t
+   (** New string with uppercase letter translated
+       to lowercase (correctness is only needed for ASCII
+       {{:http://www.unicode.org/glossary/#code_point}code point}). *)
+-- 
+2.34.1
+

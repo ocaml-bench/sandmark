@@ -18,7 +18,7 @@ steps:
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - TAG='"run_in_ci"' make run_config_filtered.json
-  - RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.00.0+trunk.bench
+  - USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.00.0+trunk.bench
   - ls _results
   - cat _results/*
 
