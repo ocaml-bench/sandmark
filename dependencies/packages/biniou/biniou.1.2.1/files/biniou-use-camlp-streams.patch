@@ -1,0 +1,34 @@
+From cc5c328506330b5d94a161a2be98a4c4512db9ec Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Mon, 24 Jan 2022 22:42:27 +0530
+Subject: [PATCH] Use library camlp-streams
+
+---
+ dune-project | 1 +
+ src/dune     | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/dune-project b/dune-project
+index 9152277..b2ce7b6 100644
+--- a/dune-project
++++ b/dune-project
+@@ -31,5 +31,6 @@ from type definitions.
+ Biniou format specification: mjambon.github.io/atdgen-doc/biniou-format.txt")
+  (depends
+   easy-format
++  camlp-streams
+   (dune (>= 1.10))
+   (ocaml (>= "4.02.3"))))
+diff --git a/src/dune b/src/dune
+index 03b18e1..6d558de 100644
+--- a/src/dune
++++ b/src/dune
+@@ -4,4 +4,4 @@
+  (synopsis "Extensible binary serialization format")
+  (wrapped false)
+  (flags -safe-string)
+- (libraries easy-format))
++ (libraries easy-format camlp-streams))
+-- 
+2.34.1
+

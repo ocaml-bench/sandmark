@@ -8,7 +8,7 @@ homepage: "http://cubicle.lri.fr"
 license: "Apache-2.0"
 bug-reports: "https://github.com/cubicle-model-checker/cubicle/issues"
 dev-repo: "git+https://github.com/cubicle-model-checker/cubicle.git"
-patches: [ "0001-Replace-Obj.set_tag-with-Obj.with_tag.patch" "cubicle-use-stag-functions-in-pretty.patch" ]
+patches: [ "cubicle-use-stag-stdlib-functions.patch" ]
 build: [
   ["./configure" "--prefix" prefix]
   [make]

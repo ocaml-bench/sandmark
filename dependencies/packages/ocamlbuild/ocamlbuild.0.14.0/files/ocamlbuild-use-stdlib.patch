@@ -1,0 +1,80 @@
+From 3cc6919f83102fd10746ae5381327866e4eb7321 Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Sun, 23 Jan 2022 22:02:49 +0530
+Subject: [PATCH] Use Stdlib instead of deprecated Pervasives
+
+---
+ src/main.ml                 | 6 +++---
+ src/my_std.ml               | 2 +-
+ src/ocamlbuild_executor.ml  | 2 +-
+ src/ocamlbuild_executor.mli | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/main.ml b/src/main.ml
+index 1d2ea0e..1194efc 100644
+--- a/src/main.ml
++++ b/src/main.ml
+@@ -286,7 +286,7 @@ open Exit_codes;;
+ let main () =
+   let exit rc =
+     Log.finish ~how:(if rc <> 0 then `Error else `Success) ();
+-    Pervasives.exit rc
++    Stdlib.exit rc
+   in
+   try
+     proceed ()
+@@ -307,10 +307,10 @@ let main () =
+           exit rc
+       | Exit_silently ->
+           Log.finish ~how:`Quiet ();
+-          Pervasives.exit rc_ok
++          Stdlib.exit rc_ok
+       | Exit_silently_with_code rc ->
+           Log.finish ~how:`Quiet ();
+-          Pervasives.exit rc
++          Stdlib.exit rc
+       | Solver.Failed backtrace ->
+           Log.raw_dprintf (-1) "@[<v0>@[<2>Solver failed:@ %a@]@."
+             Report.print_backtrace_analyze backtrace;
+diff --git a/src/my_std.ml b/src/my_std.ml
+index c6a2c17..dfa1c27 100644
+--- a/src/my_std.ml
++++ b/src/my_std.ml
+@@ -124,7 +124,7 @@ module List = struct
+   let ordered_unique (type el) (lst : el list)  =
+     let module Set = Set.Make(struct
+       type t = el
+-      let compare = Pervasives.compare
++      let compare = Stdlib.compare
+       let print _ _ = ()
+     end)
+     in
+diff --git a/src/ocamlbuild_executor.ml b/src/ocamlbuild_executor.ml
+index 30c1a16..01da6ad 100644
+--- a/src/ocamlbuild_executor.ml
++++ b/src/ocamlbuild_executor.ml
+@@ -83,7 +83,7 @@ let execute
+   ?(max_jobs=max_int)
+   ?(ticker=ignore)
+   ?(period=0.1)
+-  ?(display=(fun f -> f Pervasives.stdout))
++  ?(display=(fun f -> f Stdlib.stdout))
+   ~exit
+   (commands : task list list)
+     =
+diff --git a/src/ocamlbuild_executor.mli b/src/ocamlbuild_executor.mli
+index 746aaf0..8ea597f 100644
+--- a/src/ocamlbuild_executor.mli
++++ b/src/ocamlbuild_executor.mli
+@@ -44,7 +44,7 @@ type error =
+     calling [cleanup] before.
+ 
+     All  exits  are  done  trough the call to the given [exit] function, if not
+-    supplied Pervasives.exit is used.
++    supplied Stdlib.exit is used.
+ *)
+ val execute :
+   ?max_jobs:int ->
+-- 
+2.34.1
+

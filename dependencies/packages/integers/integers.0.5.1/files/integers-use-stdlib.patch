@@ -1,0 +1,151 @@
+From 463c703f1ca6ae3c46ca7527dd762947da502ba6 Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Sun, 23 Jan 2022 22:07:15 +0530
+Subject: [PATCH] Use Stdlib instead of the deprecated Pervasives
+
+---
+ src/signed.ml    | 28 +++++++++++++---------------
+ src/unsigned.ml  | 14 ++++++--------
+ src/unsigned.mli |  4 ++--
+ 3 files changed, 21 insertions(+), 25 deletions(-)
+
+diff --git a/src/signed.ml b/src/signed.ml
+index fed70fc..8714c30 100644
+--- a/src/signed.ml
++++ b/src/signed.ml
+@@ -6,8 +6,6 @@
+  * See the file LICENSE for details.
+  *)
+ 
+-module Pervasives = Pervasives [@@ocaml.warning "-3"]
+-
+ module type Infix = sig
+   type t
+   include Unsigned.Infix with type t := t
+@@ -76,8 +74,8 @@ struct
+     let mul = ( * )
+     let div = ( / )
+     let rem = ( mod )
+-    let max_int = Pervasives.max_int
+-    let min_int = Pervasives.min_int
++    let max_int = Stdlib.max_int
++    let min_int = Stdlib.min_int
+     let logand = ( land )
+     let logor = ( lor )
+     let logxor = ( lxor )
+@@ -94,12 +92,12 @@ struct
+     let one = 1
+     let minus_one = -1
+     let lognot = lnot
+-    let succ = Pervasives.succ
+-    let pred = Pervasives.pred
+-    let compare = Pervasives.compare
+-    let equal = Pervasives.(=)
+-    let max = Pervasives.max
+-    let min = Pervasives.min
++    let succ = Stdlib.succ
++    let pred = Stdlib.pred
++    let compare = Stdlib.compare
++    let equal = Stdlib.(=)
++    let max = Stdlib.max
++    let min = Stdlib.min
+   end
+   include Basics
+   module Infix = MakeInfix(Basics)
+@@ -107,7 +105,7 @@ struct
+   let of_int64 = Int64.to_int
+   let to_nativeint = Nativeint.of_int
+   let of_nativeint = Nativeint.to_int
+-  let abs = Pervasives.abs
++  let abs = Stdlib.abs
+   let neg x = -x
+   let pp fmt n = Format.fprintf fmt "%d" n
+   let pp_hex fmt n = Format.fprintf fmt "%x" n
+@@ -126,8 +124,8 @@ struct
+   let to_nativeint = Nativeint.of_int32
+   let of_int64 = Int64.to_int32
+   let to_int64 = Int64.of_int32
+-  let max = Pervasives.max
+-  let min = Pervasives.min
++  let max = Stdlib.max
++  let min = Stdlib.min
+   let pp fmt n = Format.fprintf fmt "%ld" n
+   let pp_hex fmt n = Format.fprintf fmt "%lx" n
+   let to_hexstring n = Format.asprintf "%lx" n
+@@ -144,8 +142,8 @@ struct
+   module Infix = MakeInfix(Int64)
+   let of_int64 x = x
+   let to_int64 x = x
+-  let max = Pervasives.max
+-  let min = Pervasives.min
++  let max = Stdlib.max
++  let min = Stdlib.min
+   let pp fmt n = Format.fprintf fmt "%Ld" n
+   let pp_hex fmt n = Format.fprintf fmt "%Lx" n
+   let to_hexstring n = Format.asprintf "%Lx" n
+diff --git a/src/unsigned.ml b/src/unsigned.ml
+index d48309a..08f6aa6 100644
+--- a/src/unsigned.ml
++++ b/src/unsigned.ml
+@@ -6,8 +6,6 @@
+  * See the file LICENSE for details.
+  *)
+ 
+-module Pervasives = Pervasives [@@ocaml.warning "-3"]
+-
+ external init : unit -> unit = "integers_unsigned_init"
+ let () = init ()
+ 
+@@ -101,10 +99,10 @@ struct
+   let succ n = add n one
+   let pred n = sub n one
+   let lognot n = logxor n max_int
+-  let compare (x : t) (y : t) = Pervasives.compare x y
+-  let equal (x : t) (y : t) = Pervasives.(=) x y
+-  let max (x : t) (y : t) = Pervasives.max x y
+-  let min (x : t) (y : t) = Pervasives.min x y
++  let compare (x : t) (y : t) = Stdlib.compare x y
++  let equal (x : t) (y : t) = Stdlib.(=) x y
++  let max (x : t) (y : t) = Stdlib.max x y
++  let min (x : t) (y : t) = Stdlib.min x y
+   let of_string_opt (s : string) = try Some (of_string s) with Failure _ -> None
+   let pp fmt x = Format.fprintf fmt "%s" (to_string x)
+   let pp_hex fmt x = Format.fprintf fmt "%s" (to_hexstring x)
+@@ -213,7 +211,7 @@ struct
+     external to_int32 : t -> int32 = "integers_int32_of_uint32"
+     let max_signed = of_int32 Int32.max_int
+     let to_int32 u32 =
+-       if Pervasives.compare u32 max_signed <= 0 then
++       if Stdlib.compare u32 max_signed <= 0 then
+           to_int32 u32
+        else
+           Int32.sub (to_int32 (sub u32 half_max_plus_two)) half_max_minus_one_signed
+@@ -266,7 +264,7 @@ struct
+     external to_int64 : t -> int64 = "integers_uint64_to_int64"
+     let max_signed = of_int64 Int64.max_int
+     let to_int64 u64 =
+-       if Pervasives.compare u64 max_signed <= 0 then
++       if Stdlib.compare u64 max_signed <= 0 then
+           to_int64 u64
+        else
+           Int64.sub (to_int64 (sub u64 half_max_plus_two)) half_max_minus_one_signed
+diff --git a/src/unsigned.mli b/src/unsigned.mli
+index 48b8fd1..12347ed 100644
+--- a/src/unsigned.mli
++++ b/src/unsigned.mli
+@@ -121,10 +121,10 @@ module type S = sig
+ 
+   val compare : t -> t -> int
+   (** The comparison function for unsigned integers, with the same
+-      specification as {!Pervasives.compare}. *)
++      specification as {!Stdlib.compare}. *)
+ 
+   val equal : t -> t -> bool
+-  (** Tests for equality, with the same specification as {!Pervasives.(=)}. *)
++  (** Tests for equality, with the same specification as {!Stdlib.(=)}. *)
+ 
+   val max : t -> t -> t
+   (** [max x y] is the greater of [x] and [y] *)
+-- 
+2.34.1
+
