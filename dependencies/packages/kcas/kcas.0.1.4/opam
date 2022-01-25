@@ -8,6 +8,7 @@ doc: "https://kayceesrk.github.io/kcas/doc"
 license: "ISC"
 dev-repo: "git+https://github.com/kayceesrk/kcas.git"
 bug-reports: "https://github.com/kayceesrk/kcas/issues"
+patches: [ "kcas-use-stdlib.patch" ]
 depends: [
   "ocaml"
   "ocamlfind" {build}
