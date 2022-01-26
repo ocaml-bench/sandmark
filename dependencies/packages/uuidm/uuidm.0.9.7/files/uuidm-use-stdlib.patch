@@ -1,0 +1,25 @@
+From b629908591ac2726ec10f4288afa8fc6e5801d83 Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Mon, 24 Jan 2022 19:07:38 +0530
+Subject: [PATCH] Use Stdlib instead of deprecated Pervasives
+
+---
+ src/uuidm.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/uuidm.ml b/src/uuidm.ml
+index 9869e85..b82892f 100644
+--- a/src/uuidm.ml
++++ b/src/uuidm.ml
+@@ -183,7 +183,7 @@ let ns_X500 ="\x6b\xa7\xb8\x14\x9d\xad\x11\xd1\x80\xb4\x00\xc0\x4f\xd4\x30\xc8"
+ (* Comparing *)
+ 
+ let equal u u' = (compare : string -> string -> int) u u' = 0
+-let compare : string -> string -> int = Pervasives.compare
++let compare : string -> string -> int = Stdlib.compare
+ 
+ (* Standard binary format *)
+ 
+-- 
+2.34.1
+

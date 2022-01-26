@@ -1,0 +1,120 @@
+From a67d698ce61ea6078d1f3d7a4ee9f34ca70c9aad Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Wed, 19 Jan 2022 15:22:49 +0530
+Subject: [PATCH] Use _stag functions
+
+---
+ src/easy_format.ml | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/src/easy_format.ml b/src/easy_format.ml
+index a074de3..9a3dace 100644
+--- a/src/easy_format.ml
++++ b/src/easy_format.ml
+@@ -193,25 +193,25 @@ struct
+   let rewrite x = propagate_forced_breaks x
+ 
+   (*
+-    Relies on the fact that mark_open_tag and mark_close_tag
++    Relies on the fact that mark_open_stag and mark_close_stag
+     are called exactly once before calling pp_output_string once.
+     It's a reasonable assumption although not guaranteed by the
+     documentation of the Format module.
+   *)
+   let set_escape fmt escape =
+     let print0, flush0 = pp_get_formatter_output_functions fmt () in
+-    let tagf0 = pp_get_formatter_tag_functions fmt () in
++    let tagf0 = pp_get_formatter_stag_functions fmt () in
+ 
+     let is_tag = ref false in
+ 
+     let mot tag =
+       is_tag := true;
+-      tagf0.mark_open_tag tag
++      tagf0.mark_open_stag tag
+     in
+ 
+     let mct tag =
+       is_tag := true;
+-      tagf0.mark_close_tag tag
++      tagf0.mark_close_stag tag
+     in
+ 
+     let print s p n =
+@@ -224,12 +224,12 @@ struct
+ 
+     let tagf = {
+       tagf0 with
+-        mark_open_tag = mot;
+-        mark_close_tag = mct
++        mark_open_stag = mot;
++        mark_close_stag = mct
+     }
+     in
+     pp_set_formatter_output_functions fmt print flush0;
+-    pp_set_formatter_tag_functions fmt tagf
++    pp_set_formatter_stag_functions fmt tagf
+ 
+ 
+   let set_escape_string fmt esc =
+@@ -251,22 +251,22 @@ struct
+           Hashtbl.add tbl1 style_name style.tag_open;
+           Hashtbl.add tbl2 style_name style.tag_close
+       ) l;
+-      let mark_open_tag style_name =
++      let mark_open_stag style_name =
+         try Hashtbl.find tbl1 style_name
+         with Not_found -> ""
+       in
+-      let mark_close_tag style_name =
++      let mark_close_stag style_name =
+         try Hashtbl.find tbl2 style_name
+         with Not_found -> ""
+       in
+ 
+       let tagf = {
+-        (pp_get_formatter_tag_functions fmt ()) with
+-          mark_open_tag = mark_open_tag;
+-          mark_close_tag = mark_close_tag
++        (pp_get_formatter_stag_functions fmt ()) with
++          mark_open_stag = mark_open_stag;
++          mark_close_stag = mark_close_stag
+       }
+       in
+-      pp_set_formatter_tag_functions fmt tagf
++      pp_set_formatter_stag_functions fmt tagf
+     );
+ 
+     (match escape with
+@@ -319,23 +319,23 @@ struct
+ 
+   let open_tag fmt = function
+       None -> ()
+-    | Some s -> pp_open_tag fmt s
++    | Some s -> pp_open_stag fmt s
+ 
+   let close_tag fmt = function
+       None -> ()
+-    | Some _ -> pp_close_tag fmt ()
++    | Some _ -> pp_close_stag fmt ()
+ 
+   let tag_string fmt o s =
+     match o with
+         None -> pp_print_string fmt s
+       | Some tag ->
+-          pp_open_tag fmt tag;
++          pp_open_stag fmt (String_tag s);
+           pp_print_string fmt s;
+-          pp_close_tag fmt ()
++          pp_close_stag fmt ()
+ 
+   let rec fprint_t fmt = function
+       Atom (s, p) ->
+-        tag_string fmt p.atom_style s;
++       tag_string fmt p.atom_style s;
+ 
+     | List ((_, _, _, p) as param, l) ->
+         open_tag fmt p.list_style;
+-- 
+2.34.1
+

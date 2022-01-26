@@ -1,0 +1,25 @@
+From 75e2b0e12cf0b5c0baadacb9d1b44f1d08807894 Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Sun, 16 Jan 2022 16:58:39 +0530
+Subject: [PATCH] Use String.uppercase_ascii
+
+---
+ src/uutf.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/uutf.ml b/src/uutf.ml
+index e0fc60c..a2f033b 100644
+--- a/src/uutf.ml
++++ b/src/uutf.ml
+@@ -31,7 +31,7 @@ let u_rep = Uchar.unsafe_of_int 0xFFFD             (* replacement character. *)
+ type encoding = [ `UTF_8 | `UTF_16 | `UTF_16BE | `UTF_16LE ]
+ type decoder_encoding = [ encoding | `US_ASCII | `ISO_8859_1 ]
+ 
+-let encoding_of_string s = match String.uppercase s with      (* IANA names. *)
++let encoding_of_string s = match String.uppercase_ascii s with      (* IANA names. *)
+ | "UTF-8" -> Some `UTF_8
+ | "UTF-16" -> Some `UTF_16
+ | "UTF-16LE" -> Some `UTF_16LE
+-- 
+2.34.1
+

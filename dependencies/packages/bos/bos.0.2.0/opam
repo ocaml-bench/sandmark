@@ -7,6 +7,7 @@ dev-repo: "git+http://erratique.ch/repos/bos.git"
 bug-reports: "https://github.com/dbuenzli/bos/issues"
 tags: [ "os" "system" "cli" "command" "file" "path" "log" "unix" "org:erratique" ]
 license: "ISC"
+patches: [ "bos-use-stdlib.patch" ]
 depends: [
   "ocaml" {>= "4.01.0"}
   "ocamlfind" {build}

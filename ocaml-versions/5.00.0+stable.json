@@ -1,14 +1,16 @@
 {
-  "url" : "https://github.com/ocaml/ocaml/archive/trunk.tar.gz",
+  "url" : "https://github.com/ocaml/ocaml/archive/ad8e6eb60285e69c71d09942d68b28abf51cbe93.zip",
   "package_overrides": [
-    "camlpdf.2.3",
-    "cpdf.2.3",
-    "fmt.0.9.0"
+    "fmt.0.9.0",
+    "ocamlfind.1.9.3"
   ],
   "package_remove": [
+    "camlpdf",
+    "cpdf",
     "coq",
     "coq-core",
     "coq-stdlib",
+    "ctypes",
     "fraplib",
     "index",
     "integers",

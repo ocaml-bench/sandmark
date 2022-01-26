@@ -1,0 +1,130 @@
+From 78e3e5ca63bf53afdede150e58387e704f5dcd17 Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Mon, 24 Jan 2022 22:24:43 +0530
+Subject: [PATCH] Use stdlib instead of deprecated Pervasives
+
+---
+ src/bos.mli       | 18 +++++++++---------
+ src/bos_cmd.ml    |  2 +-
+ src/bos_pat.ml    |  2 +-
+ src/bos_setup.mli |  2 +-
+ 4 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/src/bos.mli b/src/bos.mli
+index 67312d6..ecf4610 100644
+--- a/src/bos.mli
++++ b/src/bos.mli
+@@ -50,7 +50,7 @@ module Pat : sig
+   (** [equal p p'] is [p = p']. *)
+ 
+   val compare : t -> t -> int
+-  (** [compare p p'] is {!Pervasives.compare}[ p p']. *)
++  (** [compare p p'] is {!Stdlib.compare}[ p p']. *)
+ 
+   val of_string : string -> (t, [> R.msg]) Result.result
+   (** [of_string s] parses [s] according to the pattern syntax
+@@ -571,7 +571,7 @@ let timeout : int option =
+         map to the corresponding value of type ['a].
+ 
+         {b Warning.} The type ['a] must be comparable with
+-        {!Pervasives.compare}.
++        {!Stdlib.compare}.
+ 
+         @raise Invalid_argument if [l] is empty. *)
+ 
+@@ -845,7 +845,7 @@ let main () = main ()
+     (** [with_ic file f v] opens [file] as a channel [ic] and returns
+         [Ok (f ic v)]. After the function returns (normally or via an
+         exception), [ic] is ensured to be closed.  If [file] is
+-        {!dash}, [ic] is {!Pervasives.stdin} and not closed when the
++        {!dash}, [ic] is {!Stdlib.stdin} and not closed when the
+         function returns. [End_of_file] exceptions raised by [f] are
+         turned it into an error message. *)
+ 
+@@ -902,14 +902,14 @@ let main () = main ()
+         [Ok (f oc v)]. After the function returns (normally or via an
+         exception) [oc] is closed. [file] is not written if [f]
+         returns an error. If [file] is {!dash}, [oc] is
+-        {!Pervasives.stdout} and not closed when the function
++        {!Stdlib.stdout} and not closed when the function
+         returns. *)
+ 
+     val write :
+       ?mode:int -> Fpath.t -> string -> (unit, 'e) result
+     (** [write file content] outputs [content] to [file]. If [file]
+-        is {!dash}, writes to {!Pervasives.stdout}. If an error is
+-        returned [file] is left untouched except if {!Pervasives.stdout}
++        is {!dash}, writes to {!Stdlib.stdout}. If an error is
++        returned [file] is left untouched except if {!Stdlib.stdout}
+         is written. *)
+ 
+     val writef :
+@@ -937,7 +937,7 @@ let main () = main ()
+         (defaults to {!Dir.default_tmp}) named according to [pat] and
+         created with permissions [mode] (defaults to [0o600] only
+         readable and writable by the user). The file is deleted at the
+-        end of program execution using a {!Pervasives.at_exit}
++        end of program execution using a {!Stdlib.at_exit}
+         handler.
+ 
+         {b Warning.} If you want to write to the file, using
+@@ -1058,7 +1058,7 @@ contents d >>= Path.fold err dotfiles elements traverse f acc
+         with permissions [mode] (defaults to [0o700] only readable and
+         writable by the user). The directory path and its content is
+         deleted at the end of program execution using a
+-        {!Pervasives.at_exit} handler. *)
++        {!Stdlib.at_exit} handler. *)
+ 
+     val with_tmp :
+       ?mode:int -> ?dir:Fpath.t -> tmp_name_pat -> (Fpath.t -> 'a -> 'b) ->
+@@ -1140,7 +1140,7 @@ contents d >>= Path.fold err dotfiles elements traverse f acc
+     (** {1:run Command runs}
+ 
+         The following set of combinators are designed to be used with
+-        {!Pervasives.(|>)} operator. See a few {{!ex}examples}.
++        {!Stdlib.(|>)} operator. See a few {{!ex}examples}.
+ 
+         {b WARNING Windows.} The [~append:true] options for appending
+         to files are unsupported on Windows.
+diff --git a/src/bos_cmd.ml b/src/bos_cmd.ml
+index 80001c3..fd24970 100644
+--- a/src/bos_cmd.ml
++++ b/src/bos_cmd.ml
+@@ -40,7 +40,7 @@ let get_line_exec = get_line_tool
+ (* Predicates and comparison *)
+ 
+ let equal l l' = l = l'
+-let compare l l' = Pervasives.compare l l'
++let compare l l' = Stdlib.compare l l'
+ 
+ (* Conversions and pretty printing *)
+ 
+diff --git a/src/bos_pat.ml b/src/bos_pat.ml
+index d9d89c3..b20bd1a 100644
+--- a/src/bos_pat.ml
++++ b/src/bos_pat.ml
+@@ -23,7 +23,7 @@ let dom p =
+   List.fold_left add String.Set.empty p
+ 
+ let equal p p' = p = p'
+-let compare p p' = Pervasives.compare p p'
++let compare p p' = Stdlib.compare p p'
+ 
+ type parse_state = S_lit | S_dollar | S_var
+ 
+diff --git a/src/bos_setup.mli b/src/bos_setup.mli
+index 998b33d..11493f6 100644
+--- a/src/bos_setup.mli
++++ b/src/bos_setup.mli
+@@ -49,7 +49,7 @@ end
+ 
+ (** {1 Astring} *)
+ 
+-val strf : ('a, Format.formatter, unit, string) Pervasives.format4 -> 'a
++val strf : ('a, Format.formatter, unit, string) Stdlib.format4 -> 'a
+ (** [strf] is {!Astring.strf}. *)
+ 
+ val (^) : string -> string -> string
+-- 
+2.34.1
+

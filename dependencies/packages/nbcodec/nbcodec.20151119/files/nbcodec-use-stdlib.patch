@@ -1,0 +1,25 @@
+From b3647c4543c7b180fc43c79ff65367719c27f055 Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Mon, 24 Jan 2022 18:50:09 +0530
+Subject: [PATCH] Use Stdlib instead of deprecated Pervasivez
+
+---
+ src/se.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/se.ml b/src/se.ml
+index 10c23eb..f74f4a2 100644
+--- a/src/se.ml
++++ b/src/se.ml
+@@ -137,7 +137,7 @@ module Nb = struct
+ 
+   (* Decoding *)
+ 
+-  type src = [ `Channel of Pervasives.in_channel | `Bytes of bytes | `Manual ]
++  type src = [ `Channel of Stdlib.in_channel | `Bytes of bytes | `Manual ]
+   type decoder =
+     { src : src;                                            (* Input source. *)
+       mutable i : bytes;                             (* Current input chunk. *)
+-- 
+2.34.1
+

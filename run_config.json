@@ -184,8 +184,7 @@
       "name": "cpdf",
       "tags": [
         "10s_100s",
-        "macro_bench",
-        "run_in_ci"
+        "macro_bench"
       ],
       "runs": [
         {

@@ -1,0 +1,639 @@
+From 82d14aff15d04477d057da12ba5e9b246200e3dc Mon Sep 17 00:00:00 2001
+From: Shakthi Kannan <author@shakthimaan.com>
+Date: Mon, 24 Jan 2022 19:01:29 +0530
+Subject: [PATCH] Use _stag and Stdlib functions
+
+---
+ approx.ml       |  8 +++---
+ enumerative.ml  | 71 ++++++++++++++++++++++++++++++++-----------------
+ enumerative.mli |  5 +++-
+ forward.ml      |  1 -
+ muparser.mly    |  6 ++---
+ murphi.ml       |  2 +-
+ node.ml         | 18 ++++++-------
+ pretty.ml       | 52 +++++++++++++++++++-----------------
+ smt/alt_ergo.ml |  2 +-
+ smt/combine.ml  |  2 +-
+ smt/literal.ml  |  2 +-
+ smt/symbols.ml  |  2 +-
+ smt/term.ml     |  2 +-
+ smt/ty.ml       |  2 +-
+ trace.ml        | 12 ++++-----
+ types.ml        | 10 +++----
+ typing.ml       |  1 -
+ 17 files changed, 111 insertions(+), 87 deletions(-)
+
+diff --git a/approx.ml b/approx.ml
+index 00ab027..7dc72e5 100644
+--- a/approx.ml
++++ b/approx.ml
+@@ -283,16 +283,16 @@ let approximations s =
+   (* Sorting heuristic of approximations with most general ones first *)
+   List.fast_sort
+     (fun s1 s2 ->
+-       let c = Pervasives.compare (Node.dim s1) (Node.dim s2) in
++       let c = Stdlib.compare (Node.dim s1) (Node.dim s2) in
+      if c <> 0 then c
+      else 
+-     let c = Pervasives.compare (Node.size s1) (Node.size s2) in
++     let c = Stdlib.compare (Node.size s1) (Node.size s2) in
+        if c <> 0 then c
+        else 
+-         let c = Pervasives.compare (nb_neq s2) (nb_neq s1) in
++         let c = Stdlib.compare (nb_neq s2) (nb_neq s1) in
+          if c <> 0 then c
+          else
+-           Pervasives.compare (nb_arrays s1) (nb_arrays s2)
++           Stdlib.compare (nb_arrays s1) (nb_arrays s2)
+          (* if c <> 0 then c *)
+          (* else *)
+          (*   SAtom.compare (Node.litterals s1) (Node.litterals s1) *)
+diff --git a/enumerative.ml b/enumerative.ml
+index 7428c3e..6d1ebce 100644
+--- a/enumerative.ml
++++ b/enumerative.ml
+@@ -37,24 +37,48 @@ end)
+ 
+ module SI = Set.Make (struct
+     type t = int
+-    let compare = Pervasives.compare
++    let compare = Stdlib.compare
+   end)
+ 
+ module SLI = Set.Make (struct
+     type t = int list
+-    let compare = Pervasives.compare
++    let compare = Stdlib.compare
+   end)
+ 
+ module TMap = Map.Make (Term)
+ 
+-type state = int array
++module State : sig
++  type t
++  val make : int -> int -> t
++  val copy : t -> t
++  val length : t -> int
++  val get : t -> int -> int
++  val set : t -> int -> int -> unit
++  val fold_left : ('a -> int -> 'a) -> 'a -> t -> 'a
++  val iteri : (int -> int -> unit) -> t -> unit
++  val as_array : t -> int array
++end = struct
++  type t = int array
++  let copy a = Obj.(obj (with_tag abstract_tag (repr a)))
++  let make len elt = copy (Array.make len elt)
++  let length = Array.length
++  let get = Array.get
++  let set = Array.set
++  let fold_left = Array.fold_left
++  let iteri = Array.iteri
++  let as_array x = x
++end
++
++module Array = State
+ 
++type state = State.t
++let state_as_array = State.as_array
+ 
+ type state_info = int HT.t
+ 
+ let equal_state a1 a2 =
+-  let n = Array.length a1 in
+-  let n2 = Array.length a2 in
++  let n = State.length a1 in
++  let n2 = State.length a2 in
+   if n <> n2 then false
+   else
+     let res = ref true in
+@@ -217,7 +241,7 @@ let id_to_term env id =
+ (* inefficient but only used for debug *)
+ let state_to_cube env st =
+   let i = ref 0 in
+-  Array.fold_left (fun sa sti ->
++  State.fold_left (fun sa sti ->
+     let sa = 
+       if sti <> -1 then
+ 	let t1 = id_to_term env !i in
+@@ -243,7 +267,7 @@ let swap a i j =
+ let swap_c a (i,j) = swap a i j
+ 
+ let apply_perm_state env st (_, p_vars, p_procs) =
+-  let st' = Array.copy st in
++  let st' = State.copy st in
+   List.iter (swap_c st') p_vars;
+   for i = 0 to env.nb_vars - 1 do
+     try let v = List.assoc st'.(i) p_procs in st'.(i) <- v
+@@ -313,7 +337,7 @@ let apply_subst_in_place env st sigma =
+   end
+ 
+ let apply_subst env st sigma =
+-  let st' = Array.copy st in
++  let st' = State.copy st in
+   apply_subst_in_place env st' sigma;
+   st'
+ 
+@@ -326,7 +350,7 @@ let find_subst_for_norm env st =
+   let met = ref [] in
+   let remaining = ref env.proc_ids in
+   let sigma = HI.create env.model_cardinal in
+-  for i = 0 to Array.length st - 1 do
++  for i = 0 to State.length st - 1 do
+     let v = st.(i) in
+     match !remaining with
+     | r :: tail ->
+@@ -365,13 +389,13 @@ let find_subst_for_norm2 sigma env st =
+   
+ 
+ let normalize_state env st =
+-  (* let old = Array.copy st in *)
++  (* let old = State.copy st in *)
+   let sigma = find_subst_for_norm env st in
+   apply_subst_in_place env st sigma (* ; *)
+   (* find_subst_for_norm2 sigma env st *)
+   (* ; *)
+   (* let same = ref true in *)
+-  (* for i = 0 to Array.length st - 1 do *)
++  (* for i = 0 to State.length st - 1 do *)
+   (*   same := !same && st.(i) = old.(i) *)
+   (* done; *)
+   (* if not !same then eprintf "\nNormalize :@.%a@.->@.%a@." *)
+@@ -631,7 +655,7 @@ let write_atom_to_states env sts = function
+       let l = ref [] in
+       for i2 = env.low_int_abstr to (if op = Lt then v2 - 1 else v2) do
+         List.iter (fun st ->
+-          let st = Array.copy st in
++          let st = State.copy st in
+           st.(i1) <- i2;
+           l := st :: !l
+         ) sts
+@@ -643,7 +667,7 @@ let write_atom_to_states env sts = function
+       let l = ref [] in
+       for i1 = (if op = Lt then v1 + 1 else v1) to env.up_int_abstr do
+         List.iter (fun st ->
+-          let st = Array.copy st in
++          let st = State.copy st in
+           st.(i2) <- i1;
+           l := st :: !l
+         ) sts
+@@ -668,7 +692,7 @@ let init_to_states env procs s =
+   let l_inits = mkinits procs s in
+   let sts =
+     List.fold_left (fun acc init -> 
+-      let st_init = Array.make nb (-1) in
++      let st_init = State.make nb (-1) in
+       let sts = write_cube_to_states env st_init init in
+       List.rev_append sts acc
+     ) [] l_inits in
+@@ -865,13 +889,13 @@ let rec apply_action env st sts' = function
+   | St_ite (reqs, a1, a2) -> (* explore both branches if possible *)
+       let sts'1 = 
+         if check_reqs env st reqs then 
+-          let sts' = List.map Array.copy sts' in 
++          let sts' = List.map State.copy sts' in 
+           apply_action env st sts' a1
+         else [] in
+       let sts'2 =
+         if List.exists (fun req -> check_req env st (neg_req env req)) reqs
+         then 
+-          let sts' = List.map Array.copy sts' in
++          let sts' = List.map State.copy sts' in
+           apply_action env st sts' a2
+         else [] in
+       begin
+@@ -884,7 +908,7 @@ let rec apply_action env st sts' = function
+   | _ (* St_ignore or St_arith when ignoring nums *) -> sts'
+ 
+ let apply_actions env st acts =
+-  let st' = Array.copy st in
++  let st' = State.copy st in
+   List.fold_left (apply_action env st) [st'] acts
+ 
+ 
+@@ -1181,10 +1205,7 @@ let shuffle d =
+     let sond = List.sort compare nd in
+     List.rev_map snd sond
+ 
+-let no_scan_states env =
+-  (* Prevent the GC from scanning the list env.states as it is going to be
+-     kept in memory all the time. *)
+-  List.iter (fun s -> Obj.set_tag (Obj.repr s) (Obj.no_scan_tag)) env.states
++let no_scan_states env = ()
+ 
+ let finalize_search env =
+   let st = HST.stats env.explicit_states in
+@@ -1197,7 +1218,7 @@ let finalize_search env =
+     printf "Buckets          : %d@." st.Hashtbl.num_buckets;
+     printf "Max bucket size  : %d@." st.Hashtbl.max_bucket_length;
+     printf "Bucket histogram : @?";
+-    Array.iteri (fun i v -> if v <> 0 then printf "[%d->%d]" i v )
++    Stdlib.Array.iteri (fun i v -> if v <> 0 then printf "[%d->%d]" i v )
+       st.Hashtbl.bucket_histogram;
+     printf "@.";
+   end;
+@@ -1443,7 +1464,7 @@ let fast_resist_on_trace ls =
+ module SCand =
+   Set.Make (struct
+       type t = st_req * Atom.t
+-      let compare (t,_) (t',_) = Pervasives.compare t t'
++      let compare (t,_) (t',_) = Stdlib.compare t t'
+   end)
+ 
+ 
+@@ -1492,10 +1513,10 @@ let int_of_term env t =
+ 
+ let next_id env = env.pinf_int_abstr + 1
+ 
+-let empty_state = [||]
++let empty_state = (Obj.magic [||] : state)
+ 
+ let new_undef_state env =
+-  Array.make env.nb_vars (-1)
++  State.make env.nb_vars (-1)
+   (* env.states <- st :: env.states; *)
+   (* eprintf "nb states : %d@." (List.length env.states); *)
+   (* st *)
+diff --git a/enumerative.mli b/enumerative.mli
+index 942ae30..668bdde 100644
+--- a/enumerative.mli
++++ b/enumerative.mli
+@@ -35,10 +35,13 @@ val smallest_to_resist_on_trace : Node.t list -> Node.t list
+ type env
+ (** The type of environments for enumerative explorations *)
+ 
+-type state = private int array
++type state
+ (** The type of states, we allow states to be constructed from the outside by
+     calling the function [new_undef_state]. *)
+ 
++(** Cast a state as an int array *)
++val state_as_array : state -> int array
++
+ val print_state : env -> Format.formatter -> state -> unit
+ (** Printing a state. It is decoded to an {!SAtom} in a very inefficient
+     manner. This function should only be used for debugging. *)
+diff --git a/forward.ml b/forward.ml
+index c854cb7..066f9d1 100644
+--- a/forward.ml
++++ b/forward.ml
+@@ -18,7 +18,6 @@ open Options
+ open Ast
+ open Types
+ open Atom
+-open Pervasives
+ 
+ module H = Hstring
+ 
+diff --git a/muparser.mly b/muparser.mly
+index 0de3500..23fa2f3 100644
+--- a/muparser.mly
++++ b/muparser.mly
+@@ -120,7 +120,7 @@ affectation:
+         (* eprintf "%s -> %s@." v x; *)
+         let id_var = Hashtbl.find encoding v in
+         let id_value = Hashtbl.find encoding x in
+-        let si = (!st :> int array) in
++        let si = Enumerative.state_as_array !st in
+         si.(id_var) <- id_value
+       with Not_found -> ()
+     }
+@@ -130,7 +130,7 @@ affectation:
+     { try
+         let id_var = Hashtbl.find encoding $1 in
+         let id_value = Hashtbl.find encoding $3 in
+-        let si = (!st :> int array) in
++        let si = Enumerative.state_as_array !st in
+         si..(id_var) <- id_value
+       with Not_found -> ()
+     }
+@@ -146,7 +146,7 @@ trace_step:
+       if verbose > 0 then
+         printf "@ %a" (Enumerative.print_state !env) !st;
+       printf "@ @]@,";
+-      let si = (!st :> int array) in
++      let si = Enumerative.state_as_array !st in
+       for i = 0 to Array.length si - 1 do si.(i) <- -1 done
+     }
+ ;
+diff --git a/murphi.ml b/murphi.ml
+index 2eb3502..0596fd2 100644
+--- a/murphi.ml
++++ b/murphi.ml
+@@ -885,7 +885,7 @@ let simple_parser ic =
+                             (* eprintf "  %s -> %s@." v x; *)
+                             let id_var = Hashtbl.find encoding v in
+                             let id_value = Hashtbl.find encoding x in
+-                            let si = (!st :> int array) in
++                            let si = Enumerative.state_as_array !st in
+                             si.(id_var) <- id_value
+                           with Not_found -> ())
+                     done;
+diff --git a/node.ml b/node.ml
+index 56953df..139bf23 100644
+--- a/node.ml
++++ b/node.ml
+@@ -38,37 +38,37 @@ let compare_kind s1 s2 =
+   | Approx, Approx -> 0
+   | Approx, _ -> -1
+   | _, Approx -> 1
+-  | k1, k2 -> Pervasives.compare k1 k2
++  | k1, k2 -> Stdlib.compare k1 k2
+ 
+ let compare_by_breadth s1 s2 =
+   let v1 = dim s1 in
+   let v2 = dim s2 in
+-  let c = Pervasives.compare v1 v2 in
++  let c = Stdlib.compare v1 v2 in
+   if c <> 0 then c else
+     let c1 = size s1 in
+     let c2 = size s2 in
+-    let c = Pervasives.compare c1 c2 in
++    let c = Stdlib.compare c1 c2 in
+     if c <> 0 then c else
+       let c =  compare_kind s1 s2 in
+       if c <> 0 then c else
+-        let c = Pervasives.compare s1.depth s2.depth in 
++        let c = Stdlib.compare s1.depth s2.depth in 
+         if c <> 0 then c else
+-          Pervasives.compare (abs s1.tag) (abs s2.tag)
++          Stdlib.compare (abs s1.tag) (abs s2.tag)
+ 
+ let compare_by_depth  s1 s2 =
+   let v1 = dim s1 in
+   let v2 = dim s2 in
+-  let c = Pervasives.compare v1 v2 in
++  let c = Stdlib.compare v1 v2 in
+   if c <> 0 then c else
+     let c1 = size s1 in
+     let c2 = size s2 in
+-    let c = Pervasives.compare c1 c2 in
++    let c = Stdlib.compare c1 c2 in
+     if c <> 0 then c else
+       let c =  compare_kind s1 s2 in
+       if c <> 0 then c else
+-        let c = Pervasives.compare s2.depth s1.depth in 
++        let c = Stdlib.compare s2.depth s1.depth in 
+         if c <> 0 then c else
+-          Pervasives.compare (abs s1.tag) (abs s2.tag)
++          Stdlib.compare (abs s1.tag) (abs s2.tag)
+ 
+ let rec origin n = match n.from with
+   | [] -> n
+diff --git a/pretty.ml b/pretty.ml
+index 504eb7d..df3abc4 100644
+--- a/pretty.ml
++++ b/pretty.ml
+@@ -200,41 +200,43 @@ let style_of_tag = function
+   | "bg_default_b" -> BG_Default_B
+   | _ -> raise Not_found
+ 
++let start_tag = function
++  | String_tag t ->
++     try Printf.sprintf "[%sm" (assoc_style (style_of_tag t))
++     with Not_found -> ""
++  | _ -> ""
+ 
+-let start_tag t = 
+-  try Printf.sprintf "[%sm" (assoc_style (style_of_tag t))
+-  with Not_found -> ""
++let stop_tag = function
++  | String_tag t ->
++     let st = match style_of_tag t with
++       | Bold -> Bold_off
++       | Underline -> Underline_off
++       | Inverse -> Inverse_off
+ 
+-let stop_tag t = 
+-  let st = match style_of_tag t with
+-    | Bold -> Bold_off
+-    | Underline -> Underline_off
+-    | Inverse -> Inverse_off
++       | FG_Black | FG_Red | FG_Green | FG_Yellow | FG_Blue
++       | FG_Magenta | FG_Cyan | FG_Gray | FG_Default -> FG_Default
+ 
+-    | FG_Black | FG_Red | FG_Green | FG_Yellow | FG_Blue
+-    | FG_Magenta | FG_Cyan | FG_Gray | FG_Default -> FG_Default
++       | BG_Black | BG_Red | BG_Green | BG_Yellow | BG_Blue
++       | BG_Magenta | BG_Cyan | BG_Gray | BG_Default -> BG_Default
+ 
+-    | BG_Black | BG_Red | BG_Green | BG_Yellow | BG_Blue 
+-    | BG_Magenta | BG_Cyan | BG_Gray | BG_Default -> BG_Default
++       | FG_Black_B | FG_Red_B | FG_Green_B | FG_Yellow_B | FG_Blue_B
++       | FG_Magenta_B | FG_Cyan_B | FG_Gray_B | FG_Default_B -> FG_Default
+ 
+-    | FG_Black_B | FG_Red_B | FG_Green_B | FG_Yellow_B | FG_Blue_B 
+-    | FG_Magenta_B | FG_Cyan_B | FG_Gray_B | FG_Default_B -> FG_Default
+- 
+-    | BG_Black_B | BG_Red_B | BG_Green_B | BG_Yellow_B | BG_Blue_B
+-    | BG_Magenta_B | BG_Cyan_B | BG_Gray_B | BG_Default_B -> BG_Default
++       | BG_Black_B | BG_Red_B | BG_Green_B | BG_Yellow_B | BG_Blue_B
++       | BG_Magenta_B | BG_Cyan_B | BG_Gray_B | BG_Default_B -> BG_Default
+ 
+-    | _ -> Normal
+-  in
+-  Printf.sprintf "[%sm" (assoc_style st)
+-        
++       | _ -> Normal
++     in
++     Printf.sprintf "[%sm" (assoc_style st)
++  | _ -> ""
+ 
+ let add_colors formatter =
+   pp_set_tags formatter true;
+-  let old_fs = Format.pp_get_formatter_tag_functions formatter () in
+-  Format.pp_set_formatter_tag_functions formatter
++  let old_fs = Format.pp_get_formatter_stag_functions formatter () in
++  Format.pp_set_formatter_stag_functions formatter
+     { old_fs with
+-      Format.mark_open_tag = start_tag;
+-      Format.mark_close_tag = stop_tag }
++      Format.mark_open_stag =  start_tag;
++      Format.mark_close_stag = stop_tag }
+ 
+ let _ =
+   if not nocolor then begin
+diff --git a/smt/alt_ergo.ml b/smt/alt_ergo.ml
+index 06db6c5..2bff6ed 100644
+--- a/smt/alt_ergo.ml
++++ b/smt/alt_ergo.ml
+@@ -521,7 +521,7 @@ module Make (Options : sig val profiling : bool end) = struct
+     uc
+ 
+   module SInt = 
+-    Set.Make (struct type t = int let compare = Pervasives.compare end)
++    Set.Make (struct type t = int let compare = Stdlib.compare end)
+ 
+   let export_unsatcore2 cl =
+     let s = 
+diff --git a/smt/combine.ml b/smt/combine.ml
+index 2d9bb84..bf883a6 100644
+--- a/smt/combine.ml
++++ b/smt/combine.ml
+@@ -61,7 +61,7 @@ struct
+     if c = 0 then comparei a b else c
+ 
+   and compare_tag a b = 
+-    Pervasives.compare (theory_num a) (theory_num b)
++    Stdlib.compare (theory_num a) (theory_num b)
+       
+   and comparei a b = 
+     match a, b with
+diff --git a/smt/literal.ml b/smt/literal.ml
+index b5cb93a..599e154 100644
+--- a/smt/literal.ml
++++ b/smt/literal.ml
+@@ -90,7 +90,7 @@ module Make (X : OrderedType) : S with type elt = X.t = struct
+ 
+   module H = Make_consed(V)
+ 
+-  let compare a1 a2 = Pervasives.compare a1.tag a2.tag
++  let compare a1 a2 = Stdlib.compare a1.tag a2.tag
+   let equal a1 a2 = a1 == a2
+   let hash a1 = a1.tag
+ 
+diff --git a/smt/symbols.ml b/smt/symbols.ml
+index 131d3be..e8b8ede 100644
+--- a/smt/symbols.ml
++++ b/smt/symbols.ml
+@@ -60,7 +60,7 @@ let compare s1 s2 =  match s1, s2 with
+   | Int i1, Int i2 -> Hstring.compare i1 i2
+   | Int _, _ -> -1
+   | _ ,Int _ -> 1
+-  | _  -> Pervasives.compare s1 s2
++  | _  -> Stdlib.compare s1 s2
+   
+ let equal s1 s2 = compare s1 s2 = 0
+ 
+diff --git a/smt/term.ml b/smt/term.ml
+index bf5ef85..5cc77f5 100644
+--- a/smt/term.ml
++++ b/smt/term.ml
+@@ -54,7 +54,7 @@ and print_list fmt = function
+   | t::l -> Format.fprintf fmt "%a,%a" print t print_list l
+ 
+ let compare t1 t2 =
+-  let c = Pervasives.compare t2.tag t1.tag in
++  let c = Stdlib.compare t2.tag t1.tag in
+   if c = 0 then c else
+   match (view t1).f, (view t2).f with
+     | (Sy.True | Sy.False ), (Sy.True | Sy.False ) -> c
+diff --git a/smt/ty.ml b/smt/ty.ml
+index d898d7e..e1811f6 100644
+--- a/smt/ty.ml
++++ b/smt/ty.ml
+@@ -49,7 +49,7 @@ let compare t1 t2 =
+     | Tsum (s1, _), Tsum(s2, _) ->
+ 	Hstring.compare s1 s2
+     | Tsum _, _ -> -1 | _ , Tsum _ -> 1
+-    | t1, t2 -> Pervasives.compare t1 t2
++    | t1, t2 -> Stdlib.compare t1 t2
+ 
+ let print fmt ty = 
+   match ty with
+diff --git a/trace.ml b/trace.ml
+index db8c730..84013b4 100644
+--- a/trace.ml
++++ b/trace.ml
+@@ -542,11 +542,11 @@ end
+ module Why3 = struct
+     
+ 
+-  module CompInt = struct type t = int let compare = Pervasives.compare end
++  module CompInt = struct type t = int let compare = Stdlib.compare end
+ 
+   module NodeH = struct
+     type t = Node.t
+-    let compare n1 n2 = Pervasives.compare n1.tag n2.tag
++    let compare n1 n2 = Stdlib.compare n1.tag n2.tag
+     let equal n1 n2 = n1.tag == n2.tag
+     let hash n = n.tag
+   end
+@@ -1358,11 +1358,11 @@ end
+ module Why3_INST = struct
+     
+ 
+-  module CompInt = struct type t = int let compare = Pervasives.compare end
++  module CompInt = struct type t = int let compare = Stdlib.compare end
+ 
+   module NodeH = struct
+     type t = Node.t
+-    let compare n1 n2 = Pervasives.compare n1.tag n2.tag
++    let compare n1 n2 = Stdlib.compare n1.tag n2.tag
+     let equal n1 n2 = n1.tag == n2.tag
+     let hash n = n.tag
+   end
+@@ -1370,8 +1370,8 @@ module Why3_INST = struct
+   module SPinst = Set.Make (struct
+     type t = Node.t * Variable.subst
+     let compare (n1, s1) (n2, s2) = 
+-      let c = Pervasives.compare n1.tag n2.tag in
+-      if c = 0 then Pervasives.compare s1 s2 else c
++      let c = Stdlib.compare n1.tag n2.tag in
++      if c = 0 then Stdlib.compare s1 s2 else c
+   end)
+ 
+   module SI = Set.Make(CompInt)
+diff --git a/types.ml b/types.ml
+index 2663e1f..126826e 100644
+--- a/types.ml
++++ b/types.ml
+@@ -64,7 +64,7 @@ module Var = struct
+     let compare x y =
+       match x, y with
+       | V(a1,s1), V(a2, s2) ->
+-	 let c = Pervasives.compare s1 s2 in
++	 let c = Stdlib.compare s1 s2 in
+ 	 if c <> 0 then c
+ 	 else Hstring.compare a1 a2
+ 
+@@ -97,7 +97,7 @@ let is_int_const = function
+      Hstring.equal (snd (Smt.Symbol.type_of n)) Smt.Type.type_int
+ 
+ 
+-let compare_constants = MConst.compare Pervasives.compare 
++let compare_constants = MConst.compare Stdlib.compare 
+ 
+ 
+ let num_of_const = function
+@@ -307,7 +307,7 @@ end = struct
+ 	  let c1 = Term.compare x1 x2 in
+ 	  if c1 <> 0  then c1 
+ 	  else 
+-	    let c0 = Pervasives.compare op1 op2 in
++	    let c0 = Stdlib.compare op1 op2 in
+ 	    if c0 <> 0 then c0 
+ 	    else 
+ 	      let c2 = Term.compare y1 y2 in c2
+@@ -559,7 +559,7 @@ module ArrayAtom = struct
+     !cpt + (n1 - !i1)
+ 
+   let compare_nb_diff a p1 p2 =
+-    Pervasives.compare (nb_diff p1 a) (nb_diff p2 a)
++    Stdlib.compare (nb_diff p1 a) (nb_diff p2 a)
+ 
+ 
+   let nb_common a1 a2 =
+@@ -580,7 +580,7 @@ module ArrayAtom = struct
+ 
+ 
+   let compare_nb_common a p1 p2 =
+-    Pervasives.compare (nb_common p2 a) (nb_common p1 a)
++    Stdlib.compare (nb_common p2 a) (nb_common p1 a)
+ 
+   let diff a1 a2 =
+     let n1 = Array.length a1 in
+diff --git a/typing.ml b/typing.ml
+index 79f5047..f1f1b69 100644
+--- a/typing.ml
++++ b/typing.ml
+@@ -18,7 +18,6 @@ open Util
+ open Ast
+ open Types
+ open Atom
+-open Pervasives
+ 
+ type error = 
+   | UnknownConstr of Hstring.t
+-- 
+2.34.1
+
