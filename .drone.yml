@@ -51,6 +51,7 @@ steps:
   - ls _results
   - cat _results/*
 
+---
 kind: pipeline
 name: 5.00.0+trunk+serial
 
