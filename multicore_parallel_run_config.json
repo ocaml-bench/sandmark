@@ -680,6 +680,47 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-lockfree/test_ctrie.exe",
+      "name": "test_ctrie",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "10_000_000 50"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-lockfree/test_ctrie_multicore.exe",
+      "name": "test_ctrie_multicore",
+      "tags": ["lockfree_bench"],
+      "runs": [
+        {
+          "params": "1 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "2 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "4 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "8 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "12 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "16 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "20 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "24 10_000_000 50", "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
+    {
       "executable": "benchmarks/simple-tests/alloc_multicore.exe",
       "name": "alloc_multicore",
       "tags": [],

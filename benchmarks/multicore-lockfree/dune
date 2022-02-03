@@ -1,5 +1,73 @@
-(include hash-dune.inc)
-(include wsqueue-dune.inc)
-(include bag-dune.inc)
-(include msqueue-dune.inc)
-(include list-dune.inc)
+(executable
+  (name test_bag)
+  (modules test_bag)
+  (libraries lockfree))
+
+(executable
+  (name test_bag_multicore)
+  (modules test_bag_multicore)
+  (libraries lockfree))
+
+(executable
+  (name test_list)
+  (modules test_list)
+  (libraries lockfree))
+
+(executable
+  (name test_list_multicore)
+  (modules test_list_multicore)
+  (libraries lockfree))
+
+(executable
+  (name test_hash)
+  (modules test_hash)
+  (libraries lockfree))
+
+(executable
+  (name test_hash_multicore)
+  (modules test_hash_multicore)
+  (libraries lockfree))
+
+(executable
+  (name test_msqueue)
+  (modules test_msqueue)
+  (libraries lockfree))
+
+(executable
+  (name test_msqueue_multicore)
+  (modules test_msqueue_multicore)
+  (libraries lockfree))
+
+(executable
+  (name test_wsqueue)
+  (modules test_wsqueue)
+  (libraries lockfree))
+
+(executable
+  (name test_wsqueue_multicore)
+  (modules test_wsqueue_multicore)
+  (libraries lockfree))
+
+(executable
+  (name test_ctrie)
+  (modules test_ctrie)
+  (libraries base))
+
+(executable
+  (name test_ctrie_multicore)
+  (modules test_ctrie_multicore)
+  (libraries base domainslib))
+
+(alias (name multibench_parallel)
+       (deps test_bag.exe
+             test_list.exe
+             test_hash.exe
+             test_msqueue.exe
+             test_wsqueue.exe
+             test_ctrie.exe
+             test_bag_multicore.exe
+             test_list_multicore.exe
+             test_hash_multicore.exe
+             test_msqueue_multicore.exe
+             test_wsqueue_multicore.exe
+             test_ctrie_multicore.exe))
