@@ -8,7 +8,8 @@
 
 TAG='"macro_bench"' make multicore_parallel_run_config_filtered.json
 
-RUN_BENCH_TARGET=run_orunchrt \
-	BUILD_BENCH_TARGET=multibench_parallel \
-	RUN_CONFIG_JSON=multicore_parallel_run_config_filtered.json \
-	make ocaml-versions/4.14.0+domains.bench
+USE_SYS_DUNE_HACK=1 \
+                 RUN_BENCH_TARGET=run_orunchrt \
+                 BUILD_BENCH_TARGET=multibench_parallel \
+                 RUN_CONFIG_JSON=multicore_parallel_run_config_filtered.json \
+                 make ocaml-versions/5.00.0+stable.bench
