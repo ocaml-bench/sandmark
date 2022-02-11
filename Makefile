@@ -267,12 +267,15 @@ define check_dependency
 endef
 
 check_url:
-	@{ for f in `find ocaml-versions/*.json`; do    	\
-		URL=`jq -r '.url' $$f`;                   	\
-		if [ -z "$$URL" ] ; then                  	\
-			echo "No URL (mandatory) for $$f";   	\
-		fi;                                       	\
-	    done;                                        	\
+	@{ for f in `find ocaml-versions/*.json`; do    		\
+                if [ "$$f" == "ocaml-versions/custom.json" ]; then	\
+                        continue;                               	\
+                fi;                                           		\
+		URL=`jq -r '.url' $$f`;                  		\
+		if [ -z "$$URL" ] ; then                  		\
+			echo "No URL (mandatory) for $$f";   		\
+		fi;                                       		\
+	    done;                                        		\
 	};
 
 depend:
