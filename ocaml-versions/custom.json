@@ -1,0 +1,23 @@
+[
+  {
+    "url": "https://github.com/ocaml/ocaml/archive/trunk.tar.gz",
+    "tag": "run_in_ci",
+    "config_json": "run_config_filtered.json",
+    "name": "5.00+trunk+kc+pr23423",
+    "expiry": "2022-02-15"
+  },
+  {
+    "url": "https://github.com/ocaml/ocaml/archive/b73cbbea4bc40ffd26a459d594a39b99cec4273d.zip",
+    "tag": "run_in_ci",
+    "config_json": "run_config_filtered.json",
+    "name": "5.00+trunk+kc+pr23423",
+    "expiry": "2022-02-15"
+  },
+  {
+    "url": "https://github.com/sadiqj/ocaml/archive/refs/heads/eventring-pr.zip",
+    "tag": "run_in_ci",
+    "config_json": "run_config_filtered.json",
+    "name": "5.00+trunk+kc+pr23423",
+    "expiry": "2022-02-15"
+  }
+]
