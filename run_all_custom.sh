@@ -54,6 +54,7 @@ while [ $i -lt ${COUNT} ]; do
     CONFIG_URL=`jq -r '.['$i'].url' "${CUSTOM_FILE}"`
     CONFIG_TAG=`jq -r '.['$i'].tag' "${CUSTOM_FILE}"`
     CONFIG_RUN_JSON=`jq -r '.['$i'].config_json' "${CUSTOM_FILE}"`
+    CONFIG_NAME=`jq -r '.['$i'].name' "${CUSTOM_FILE}"`
     CONFIG_OPTIONS=`jq -r '.['$i'].configure // empty' "${CUSTOM_FILE}"`
     CONFIG_RUN_PARAMS=`jq -r '.['$i'].runparams // empty' "${CUSTOM_FILE}"`
     CONFIG_ENVIRONMENT=`jq -r '.['$i'].environment // empty' "${CUSTOM_FILE}"`
@@ -72,12 +73,25 @@ while [ $i -lt ${COUNT} ]; do
         TAG=`echo "${TAG_STRING}"` make `echo ${CONFIG_RUN_JSON}`
 
         # Build and execute benchmarks
-        USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
-                         RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
-                         ENVIRONMENT="`echo ${CONFIG_ENVIRONMENT}`" \
-                         OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
-                         OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
-                         make ocaml-versions/5.00.0+stable.bench
+        if [[ ${SEQPAR} == "sequential" ]]; then
+            USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
+                             RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
+                             ENVIRONMENT="`echo ${CONFIG_ENVIRONMENT}`" \
+                             OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
+                             OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
+                             SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
+                             make ocaml-versions/5.00.0+stable.bench
+        else
+            USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
+                             RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
+                             ENVIRONMENT="`echo ${CONFIG_ENVIRONMENT}`" \
+                             OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
+                             OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
+                             SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
+                             RUN_BENCH_TARGET=run_orunchrt \
+                             BUILD_BENCH_TARGET=multibench_parallel \
+                             make ocaml-versions/5.00.0+stable.bench
+        fi
 
         # Copy results
         RESULTS_DIR="${SANDMARK_NIGHTLY_DIR}/sandmark-nightly/${SEQPAR}/${HOSTNAME}/${TIMESTAMP}/${COMMIT}"

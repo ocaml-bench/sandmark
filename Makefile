@@ -32,6 +32,9 @@ SANDMARK_REMOVE_PACKAGES ?= ""
 # Default list of packages to override
 SANDMARK_OVERRIDE_PACKAGES ?= ""
 
+# Override orun with custom name
+SANDMARK_CUSTOM_NAME ?= ""
+
 # Flag to select whether to use sys_dune_hack
 USE_SYS_DUNE_HACK ?= 0
 
@@ -229,8 +232,8 @@ ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash o
 			fi; \
 			done; \
 			header_entry=`jo -p $${s} | jq -c`; \
-			echo "$${header_entry}" > _results/$(CONFIG_SWITCH_NAME)_$$i.$(WRAPPER).summary.bench; \
-			find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat >> _results/$(CONFIG_SWITCH_NAME)_$$i.$(WRAPPER).summary.bench;		\
+			echo "$${header_entry}" > _results/$(SANDMARK_CUSTOM_NAME)_$$i.$(WRAPPER).summary.bench; \
+			find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat >> _results/$(SANDMARK_CUSTOM_NAME)_$$i.$(WRAPPER).summary.bench;		\
 	        done; 															\
 		exit $$ex; 														\
 	   else 															\
