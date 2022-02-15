@@ -1,0 +1,37 @@
+[
+  {
+    "url": "https://github.com/ocaml/ocaml/archive/trunk.tar.gz",
+    "tag": "macro_bench",
+    "config_json": "run_config_filtered.json",
+    "name": "5.00+trunk+sequential",
+    "expiry": "2100-01-01"
+  },
+  {
+    "url": "https://github.com/ocaml/ocaml/archive/b73cbbea4bc40ffd26a459d594a39b99cec4273d.zip",
+    "tag": "macro_bench",
+    "config_json": "run_config_filtered.json",
+    "name": "5.00+stable+sequential",
+    "expiry": "2100-01-01"
+  },
+  {
+    "url": "https://github.com/ocaml/ocaml/archive/trunk.tar.gz",
+    "tag": "macro_bench",
+    "config_json": "multicore_parallel_navajo_run_config_filtered.json",
+    "name": "5.00+trunk+parallel",
+    "expiry": "2100-01-01"
+  },
+  {
+    "url": "https://github.com/ocaml/ocaml/archive/b73cbbea4bc40ffd26a459d594a39b99cec4273d.zip",
+    "tag": "macro_bench",
+    "config_json": "multicore_parallel_navajo_run_config_filtered.json",
+    "name": "5.00+stable+parallel",
+    "expiry": "2100-01-01"
+  },
+  {
+    "url": "https://github.com/sadiqj/ocaml/archive/refs/heads/eventring-pr.zip",
+    "tag": "run_in_ci",
+    "config_json": "run_config_filtered.json",
+    "name": "5.00+trunk+sadiqj+pr10964",
+    "expiry": "2022-02-25"
+  }
+]
