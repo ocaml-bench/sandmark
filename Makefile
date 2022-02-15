@@ -202,7 +202,7 @@ log_sandmark_hash:
 blah:
 	@echo ${PACKAGES}
 
-ocaml-versions/%.bench: check_url depend override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
+ocaml-versions/%.bench: depend override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))

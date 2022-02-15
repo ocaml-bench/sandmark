@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# Variables
-CUSTOM_FILE="ocaml-versions/custom.json"
-HOSTNAME=`hostname`
+# Environment variables
+CUSTOM_FILE=${CUSTOM_FILE:-"ocaml-versions/custom.json"}
 SANDMARK_NIGHTLY_DIR=${SANDMARK_NIGHTLY_DIR:-/tmp}
+
+# Host
+HOSTNAME=`hostname`
 
 # Number of Custom variants
 COUNT=`jq '. | length' "${CUSTOM_FILE}"` 
