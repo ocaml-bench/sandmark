@@ -25,7 +25,8 @@ check_not_expired () {
     CURRENT_DATE=$(date -d "${TODAY}" +%s)
     if [[ "${CURRENT_DATE}" -le "${EXPIRY_DATE}" ]]; then
         return 0
-    else                                                                                                                                                                                                                  return 1
+    else
+        return 1
     fi
 }         
 
