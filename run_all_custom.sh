@@ -3,12 +3,10 @@
 # Environment variables
 CUSTOM_FILE=${CUSTOM_FILE:-"ocaml-versions/custom.json"}
 SANDMARK_NIGHTLY_DIR=${SANDMARK_NIGHTLY_DIR:-/tmp}
+TMP_CUSTOM_FILE="/tmp/custom.json"
 
 # Host
 HOSTNAME=`hostname`
-
-# Number of Custom variants
-COUNT=`jq '. | length' "${CUSTOM_FILE}"` 
 
 # Functions
 check_sequential_parallel () {
@@ -46,6 +44,15 @@ find_commit () {
     fi
     echo "${COMMIT}" 
 }
+
+# Override with raw GitHub configuration file (if provided)
+if [[ ${CUSTOM_FILE} == *"github"* ]]; then
+    wget -O "${TMP_CUSTOM_FILE}" "${CUSTOM_FILE}"
+    CUSTOM_FILE=$(echo "${TMP_CUSTOM_FILE}")
+fi
+
+# Number of Custom variants
+COUNT=`jq '. | length' "${CUSTOM_FILE}"`
 
 # Iterate through each variant
 i=0
@@ -109,3 +116,6 @@ while [ $i -lt ${COUNT} ]; do
     # Next custom variant
     i=$((i+1))
 done
+
+# Cleanup
+rm -f "${TMP_CUSTOM_FILE}"
