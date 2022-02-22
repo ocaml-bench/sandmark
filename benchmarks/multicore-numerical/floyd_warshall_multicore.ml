@@ -39,22 +39,23 @@ let make_adj n =
 
 let f_w pool adj =
   for k = 0 to (n-1) do
-    T.parallel_for pool
-    ~start:0
-    ~finish:(n - 1)
-    ~body:(fun i ->
-      match adj.(i).(k) with
-      | Value a_ik ->
-        for j = 0 to n-1 do
-          match adj.(i).(j), adj.(k).(j) with
-            | Infinity, Value a_kj ->
-              adj.(i).(j) <- Value (a_ik + a_kj)
-            | Value a_ij, Value a_kj when a_ik + a_kj < a_ij ->
-              adj.(i).(j) <- Value (a_ik + a_kj)
-            | _, _ -> ()
-        done
-      | Infinity -> ()
-      );
+    T.run pool (fun _ ->
+      T.parallel_for pool
+        ~start:0
+        ~finish:(n - 1)
+        ~body:(fun i ->
+          match adj.(i).(k) with
+          | Value a_ik ->
+             for j = 0 to n-1 do
+               match adj.(i).(j), adj.(k).(j) with
+               | Infinity, Value a_kj ->
+                  adj.(i).(j) <- Value (a_ik + a_kj)
+               | Value a_ij, Value a_kj when a_ik + a_kj < a_ij ->
+                  adj.(i).(j) <- Value (a_ik + a_kj)
+               | _, _ -> ()
+             done
+          | Infinity -> ()
+      ))
   done
 
 let ()=

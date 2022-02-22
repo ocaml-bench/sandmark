@@ -69,6 +69,8 @@ let _ =
   Printf.printf "P4\n%i %i\n%!" w w;
   let out = Array.init w (fun _ -> Bytes.create 0) in
   let work i = out.(i) <- worker w i (i+1) in
-  T.parallel_for pool ~start:0 ~finish:(w-1) ~body:work;
+  T.run pool (fun _ ->
+      T.parallel_for pool ~start:0 ~finish:(w-1) ~body:work
+    );
   Array.iter (fun o -> Printf.printf "%a%!" output_bytes o) out;
   T.teardown_pool pool

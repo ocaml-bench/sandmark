@@ -78,8 +78,9 @@ object (__)
 
       (* do image sampling pixel loop *)
       let () =
-        T.parallel_for ~start:0 ~finish:(image#height - 1)
-        ~body:(fun y -> for x = image#width - 1 downto 0 do
+        T.run pool (fun _ ->
+          T.parallel_for ~start:0 ~finish:(image#height - 1)
+            ~body:(fun y -> for x = image#width - 1 downto 0 do
 
             let random = Domain.DLS.get k in
             (* make sample ray direction, stratified by pixels *)
@@ -104,9 +105,7 @@ object (__)
             (* add radiance to pixel *)
             image#addToPixel x y radiance
 
-         done ) pool
-       in
-
-      image
-
+         done) pool)
+      in
+        image
 end

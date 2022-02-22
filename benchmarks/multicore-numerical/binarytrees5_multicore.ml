@@ -45,7 +45,7 @@ let loop_depths d =
     let niter = 1 lsl (max_depth - d + min_depth) in
     let rec loop acc i num_domains =
       if i = num_domains then begin
-        List.rev acc |> List.iter (fun pr -> T.await pool pr)
+        List.rev acc |> List.iter (fun pr -> T.run pool (fun _ -> T.await pool pr))
       end else begin 
         loop 
           ((T.async pool (fun _ -> 

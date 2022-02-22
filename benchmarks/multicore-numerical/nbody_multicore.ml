@@ -19,26 +19,28 @@ type planet = { mutable x : float;  mutable y : float;  mutable z : float;
                 mass : float }
 
 let advance pool bodies dt =
-  T.parallel_for pool
-    ~start:0
-    ~finish:(num_bodies - 1)
-    ~body:(fun i ->
-      let b = bodies.(i) in
-      let vx, vy, vz = ref b.vx, ref b.vy, ref b.vz in
-      for j = 0 to Array.length bodies - 1 do
-        let b' = bodies.(j) in
-        if (i!=j) then begin
-          let dx = b.x -. b'.x  and dy = b.y -. b'.y  and dz = b.z -. b'.z in
-          let dist2 = dx *. dx +. dy *. dy +. dz *. dz in
-          let mag = dt /. (dist2 *. sqrt(dist2)) in
-          vx := !vx -. dx *. b'.mass *. mag;
-          vy := !vy -. dy *. b'.mass *. mag;
-          vz := !vz -. dz *. b'.mass *. mag;
-        end
-      done;
-      b.vx <- !vx;
-      b.vy <- !vy;
-      b.vz <- !vz);
+  T.run pool (fun _ ->
+    T.parallel_for pool
+      ~start:0
+      ~finish:(num_bodies - 1)
+      ~body:(fun i ->
+        let b = bodies.(i) in
+        let vx, vy, vz = ref b.vx, ref b.vy, ref b.vz in
+        for j = 0 to Array.length bodies - 1 do
+          let b' = bodies.(j) in
+          if (i!=j) then begin
+            let dx = b.x -. b'.x  and dy = b.y -. b'.y  and dz = b.z -. b'.z in
+            let dist2 = dx *. dx +. dy *. dy +. dz *. dz in
+            let mag = dt /. (dist2 *. sqrt(dist2)) in
+            vx := !vx -. dx *. b'.mass *. mag;
+            vy := !vy -. dy *. b'.mass *. mag;
+            vz := !vz -. dz *. b'.mass *. mag;
+          end
+        done;
+        b.vx <- !vx;
+        b.vy <- !vy;
+        b.vz <- !vz)
+    );
   for i = 0 to num_bodies - 1 do
     let b = bodies.(i) in
     b.x <- b.x +. dt *. b.vx;
@@ -47,19 +49,21 @@ let advance pool bodies dt =
   done
 
 let energy pool bodies =
-  T.parallel_for_reduce pool (+.) 0.
-    ~start:0
-    ~finish:(Array.length bodies -1)
-    ~body:(fun i ->
-      let b = bodies.(i) and e = ref 0. in
-      e := !e +. 0.5 *. b.mass *. (b.vx *. b.vx +. b.vy *. b.vy +. b.vz *. b.vz);
-      for j = i+1 to Array.length bodies - 1 do
-        let b' = bodies.(j) in
-        let dx = b.x -. b'.x  and dy = b.y -. b'.y  and dz = b.z -. b'.z in
-        let distance = sqrt(dx *. dx +. dy *. dy +. dz *. dz) in
-        e := !e -. (b.mass *. b'.mass) /. distance;
-      done;
+  T.run pool (fun _ ->
+    T.parallel_for_reduce pool (+.) 0.
+      ~start:0
+      ~finish:(Array.length bodies -1)
+      ~body:(fun i ->
+        let b = bodies.(i) and e = ref 0. in
+        e := !e +. 0.5 *. b.mass *. (b.vx *. b.vx +. b.vy *. b.vy +. b.vz *. b.vz);
+        for j = i+1 to Array.length bodies - 1 do
+          let b' = bodies.(j) in
+          let dx = b.x -. b'.x  and dy = b.y -. b'.y  and dz = b.z -. b'.z in
+          let distance = sqrt(dx *. dx +. dy *. dy +. dz *. dz) in
+          e := !e -. (b.mass *. b'.mass) /. distance;
+        done;
       !e)
+    )
 
 let offset_momentum bodies =
   let px = ref 0. and py = ref 0. and pz = ref 0. in
