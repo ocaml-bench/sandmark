@@ -68,9 +68,11 @@ let n = try int_of_string Sys.argv.(2) with _ -> 1000
 
 let multicore_init pool num_domains x0 n f =
   let a = Array.make n x0 in
-  T.parallel_for
-    ~start:0 ~finish:(n-1)
-    ~body:(fun i -> a.(i) <- f ()) pool;
+  T.run pool (fun _ ->
+    T.parallel_for
+      ~start:0 ~finish:(n-1)
+      ~body:(fun i -> a.(i) <- f ()) pool
+    );
   a
 
 let evolutionary_algorithm

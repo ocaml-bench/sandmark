@@ -50,11 +50,12 @@ let print g =
 let next pool =
   let g = !rg in
   let new_g = !rg' in
+  T.run pool (fun _ ->
   T.parallel_for ~start:0 ~finish:(board_size - 1)
     ~body:(fun x ->
       for y = 0 to board_size - 1 do
         new_g.(x).(y) <- next_cell g x y
-      done) pool;
+      done) pool);
   rg := new_g;
   rg' := g
 
