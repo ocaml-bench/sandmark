@@ -299,6 +299,8 @@ clean:
 	rm -rf _results
 	rm -rf *filtered.json
 	rm -rf *~
+	git checkout -- dependencies
+	git clean -fd dependencies/packages/ocaml-base-compiler dependencies/packages/ocaml
 	git restore ./benchmarks/irmin/dune
 	git restore ./benchmarks/cpdf/dune
 
