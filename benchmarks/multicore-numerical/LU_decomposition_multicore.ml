@@ -14,9 +14,8 @@ module SquareMatrix = struct
     fa
   let parallel_create pool f : float array =
     let fa = Array.create_float (mat_size * mat_size) in
-    T.run pool (fun _ ->
       T.parallel_for ~start:0 ~finish:( mat_size * mat_size - 1)
-        ~body:(fun i -> fa.(i) <- f (i / mat_size) (i mod mat_size)) pool);
+        ~body:(fun i -> fa.(i) <- f (i / mat_size) (i mod mat_size)) pool;
     fa
 
   let get (m : float array) r c = m.(r * mat_size + c)
@@ -30,7 +29,7 @@ module SquareMatrix = struct
     let b = Array.create_float n in
     let rec aux acc num_domains i =
       if (i = num_domains) then
-        (List.iter (fun e -> T.run pool (fun _ -> T.await pool e) acc))
+        (List.iter (fun e -> T.await pool e) acc)
       else begin
         aux ((T.async pool (fun _ -> copy_part a b i))::acc) num_domains (i+1)
       end
@@ -44,23 +43,23 @@ open SquareMatrix
 let lup pool (a0 : float array) =
   let a = parallel_copy pool a0 in
   for k = 0 to (mat_size - 2) do
-    T.run pool (fun _ ->
       T.parallel_for pool ~start:(k + 1) ~finish:(mat_size  -1)
         ~body:(fun row ->
           let factor = get a row k /. get a k k in
           for col = k + 1 to mat_size-1 do
             set a row col (get a row col -. factor *. (get a k col))
           done;
-          set a row k factor )
-      );
+          set a row k factor);
   done;
   a
 
 let () =
   let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
+  T.run pool (fun _ ->
   let a = parallel_create pool
     (fun _ _ -> (Random.State.float (Domain.DLS.get k) 100.0) +. 1.0 ) in
   let lu = lup pool a in
   let _l = parallel_create pool (fun i j -> if i > j then get lu i j else if i = j then 1.0 else 0.0) in
   let _u = parallel_create pool (fun i j -> if i <= j then get lu i j else 0.0) in
+  ());
   T.teardown_pool pool

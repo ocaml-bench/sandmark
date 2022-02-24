@@ -19,7 +19,6 @@ type planet = { mutable x : float;  mutable y : float;  mutable z : float;
                 mass : float }
 
 let advance pool bodies dt =
-  T.run pool (fun _ ->
     T.parallel_for pool
       ~start:0
       ~finish:(num_bodies - 1)
@@ -39,8 +38,7 @@ let advance pool bodies dt =
         done;
         b.vx <- !vx;
         b.vy <- !vy;
-        b.vz <- !vz)
-    );
+        b.vz <- !vz);
   for i = 0 to num_bodies - 1 do
     let b = bodies.(i) in
     b.x <- b.x +. dt *. b.vx;
@@ -49,7 +47,6 @@ let advance pool bodies dt =
   done
 
 let energy pool bodies =
-  T.run pool (fun _ ->
     T.parallel_for_reduce pool (+.) 0.
       ~start:0
       ~finish:(Array.length bodies -1)
@@ -63,7 +60,7 @@ let energy pool bodies =
           e := !e -. (b.mass *. b'.mass) /. distance;
         done;
       !e)
-    )
+
 
 let offset_momentum bodies =
   let px = ref 0. and py = ref 0. and pz = ref 0. in
@@ -90,7 +87,8 @@ let bodies =
 let () =
   let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
   offset_momentum bodies;
+  T.run pool (fun _ ->
   Printf.printf "%.9f\n" (energy pool bodies);
   for _i = 1 to n do advance pool bodies 0.01 done;
-  Printf.printf "%.9f\n" (energy pool bodies);
+  Printf.printf "%.9f\n" (energy pool bodies));
   T.teardown_pool pool
