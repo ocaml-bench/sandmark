@@ -30,7 +30,7 @@ module SquareMatrix = struct
     let b = Array.create_float n in
     let rec aux acc num_domains i =
       if (i = num_domains) then
-        (List.iter (fun e -> T.run pool (fun _ -> T.await pool e) acc))
+        (List.iter (fun e -> T.await pool e) acc)
       else begin
         aux ((T.async pool (fun _ -> copy_part a b i))::acc) num_domains (i+1)
       end
@@ -42,7 +42,7 @@ end
 open SquareMatrix
 
 let lup pool (a0 : float array) =
-  let a = parallel_copy pool a0 in
+  let a = T.run pool (fun _ -> parallel_copy pool a0) in
   for k = 0 to (mat_size - 2) do
     T.run pool (fun _ ->
       T.parallel_for pool ~start:(k + 1) ~finish:(mat_size  -1)
