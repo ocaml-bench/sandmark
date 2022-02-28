@@ -140,7 +140,7 @@ ifeq (0, $(USE_SYS_DUNE_HACK))
 endif
 	opam update --switch=$(CONFIG_SWITCH_NAME)
 	@{ case "$*" in \
-		*5.00*) sed 's/(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/; (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/g' ./benchmarks/irmin/dune > ./benchmarks/irmin/dune ; \
+		*5.0*) sed 's/(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/; (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/g' ./benchmarks/irmin/dune > ./benchmarks/irmin/dune ; \
 			sed 's/(alias (name buildbench) (deps metro_geo.pdf PDFReference16.pdf_toobig))/; (alias (name buildbench) (deps metro_geo.pdf PDFReference16.pdf_toobig))/g' ./benchmarks/cpdf/dune ;; \
 	esac };
 	@{	for i in ${PACKAGES}; do \
