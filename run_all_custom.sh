@@ -69,6 +69,8 @@ while [ $i -lt ${COUNT} ]; do
     CONFIG_RUN_PARAMS=`jq -r '.['$i'].runparams // empty' "${CUSTOM_FILE}"`
     CONFIG_ENVIRONMENT=`jq -r '.['$i'].environment // empty' "${CUSTOM_FILE}"`
     CONFIG_EXPIRY=`jq -r '.['$i'].expiry // empty' "${CUSTOM_FILE}"`
+    CONFIG_OVERRIDE_PACKAGES=`jq -r '.['$i'].override_packages // empty' "${CUSTOM_FILE}"`
+    CONFIG_REMOVE_PACKAGES=`jq -r '.['$i'].remove_packages // empty' "${CUSTOM_FILE}"`
     TAG_STRING=`echo \"${CONFIG_TAG}\"`
 
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)    
@@ -94,6 +96,8 @@ while [ $i -lt ${COUNT} ]; do
                              OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
                              OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
                              SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
+                             SANDMARK_OVERRIDE_PACKAGES="`echo ${CONFIG_OVERRIDE_PACKAGES}`" \
+                             SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
                              make ocaml-versions/5.00.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
         else
             USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
@@ -102,6 +106,8 @@ while [ $i -lt ${COUNT} ]; do
                              OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
                              OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
                              SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
+                             SANDMARK_OVERRIDE_PACKAGES="`echo ${CONFIG_OVERRIDE_PACKAGES}`" \
+                             SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
                              RUN_BENCH_TARGET=run_orunchrt \
                              BUILD_BENCH_TARGET=multibench_parallel \
                              make ocaml-versions/5.00.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
