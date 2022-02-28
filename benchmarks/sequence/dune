@@ -1,6 +1,8 @@
 ;; Adapted from OCamlPro's ocamlbench-repo
 ;; See https://github.com/OCamlPro/ocamlbench-repo
 (executable
- (name sequence_cps))
+ (name sequence_cps)
+ (modes native byte))
 
 (alias (name buildbench) (deps sequence_cps.exe))
+(alias (name bytebench) (deps sequence_cps.bc))

@@ -1,5 +1,6 @@
 (executable
  (name grammatrix)
+ (modes native byte)
  (modules grammatrix)
  (libraries unix utls))
 ;;
@@ -10,6 +11,10 @@
 
 (alias (name buildbench)
        (deps grammatrix.exe data/tox21_nrar_ligands_std_rand_01.csv
+			       data/1k.csv data/4k.csv))
+
+(alias (name bytebench)
+       (deps grammatrix.bc data/tox21_nrar_ligands_std_rand_01.csv
 			       data/1k.csv data/4k.csv))
 
 (alias (name multibench_parallel)

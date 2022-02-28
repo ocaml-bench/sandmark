@@ -1,3 +1,3 @@
-(executable (name map_bench) (modules map_bench))
+(executable (name map_bench) (modes native byte) (modules map_bench))
 
-(alias (name buildbench) (deps map_bench.exe))
+(alias (name bytebench) (deps map_bench.bc))

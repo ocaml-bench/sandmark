@@ -1,6 +1,9 @@
 ;; Adapted from OCamlPro's ocamlbench-repo
 ;; See https://github.com/OCamlPro/ocamlbench-repo
 (executable
- (name main))
+ (name main)
+ (modes native byte))
 
 (alias (name buildbench) (deps main.exe))
+
+(alias (name bytebench) (deps main.bc))

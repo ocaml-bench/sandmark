@@ -1,0 +1,6 @@
+{
+  "url" : "https://github.com/ocaml/ocaml/archive/refs/tags/4.13.1.zip",
+  "package_remove": [
+    "js_of_ocaml-compiler"
+  ]
+}
