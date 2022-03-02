@@ -110,7 +110,7 @@ while [ $i -lt ${COUNT} ]; do
                              SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
                              RUN_BENCH_TARGET=run_orunchrt \
                              BUILD_BENCH_TARGET=multibench_parallel \
-                             make ocaml-versions/5.00.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
+                             make ocaml-versions/5.0.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
         fi
 
         # Copy results
