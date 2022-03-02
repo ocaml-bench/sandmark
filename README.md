@@ -200,8 +200,8 @@ benchmarks in byte mode:
 
 ```bash
 $ opam install dune.2.9.0
-$ USE_SYS_DUNE_HACK=1 SANDMARK_CUSTOM_NAME=5.00.0 BUILD_BENCH_TARGET=bytebench \
-    RUN_CONFIG_JSON=run_config_byte.json make ocaml-versions/5.00.0+stable.bench
+$ USE_SYS_DUNE_HACK=1 SANDMARK_CUSTOM_NAME=5.0.0 BUILD_BENCH_TARGET=bytebench \
+    RUN_CONFIG_JSON=run_config_byte.json make ocaml-versions/5.0.0+stable.bench
 ```
 
 We can obtain throughput and latency results for the benchmarks. For obtaining
