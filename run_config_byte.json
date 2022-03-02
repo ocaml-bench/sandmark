@@ -1,0 +1,674 @@
+{
+  "wrappers": [
+    {
+      "name": "orun",
+      "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
+    },
+    {
+      "name": "perfstat",
+      "command": "perf stat -o %{output} -- taskset --cpu-list 5 %{command}"
+    },
+    {
+      "name": "pausetimes_trunk",
+      "command": "bash pausetimes_trunk %{output} taskset --cpu-list 5 %{command}"
+    },
+    {
+      "name": "pausetimes_multicore",
+      "command": "bash pausetimes_multicore %{output} taskset --cpu-list 5 %{command}"
+    }
+  ],
+  "benchmarks": [
+    {
+      "executable": "benchmarks/decompress/test_decompress.bc",
+      "name": "test_decompress.bc",
+      "runs": [
+        {
+          "params": "64 524_288"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/yojson/ydump.bc",
+      "name": "yojson_ydump.bc",
+      "runs": [
+        {
+          "params": "-c sample.json",
+          "short_name": "sample.json"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/zarith/zarith_fact.bc",
+      "name": "zarith_fact.bc",
+      "runs": [
+        {
+          "params": "40 1_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/zarith/zarith_fib.bc",
+      "name": "zarith_fib.bc",
+      "runs": [
+        {
+          "params": "Z 40"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/zarith/zarith_pi.bc",
+      "name": "zarith_pi.bc",
+      "runs": [
+        {
+          "params": "5000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/zarith/zarith_tak.bc",
+      "name": "zarith_tak.bc",
+      "runs": [
+        {
+          "params": "Z 2500"
+        }
+      ]
+    },
+   {
+      "executable": "benchmarks/benchmarksgame/binarytrees5.bc",
+      "name": "binarytrees5.bc",
+      "runs": [
+        {
+          "params": "21"
+        }
+      ]
+   },
+    {
+      "executable": "benchmarks/benchmarksgame/fannkuchredux.bc",
+      "name": "fannkuchredux.bc",
+      "runs": [
+        {
+          "params": "12"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/fannkuchredux2.bc",
+      "name": "fannkuchredux2.bc",
+      "runs": [
+        {
+          "params": "12"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/fasta3.bc",
+      "name": "fasta3.bc",
+      "runs": [
+        {
+          "params": "25_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/fasta6.bc",
+      "name": "fasta6.bc",
+      "runs": [
+        {
+          "params": "25_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/knucleotide.bc",
+      "name": "knucleotide.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/knucleotide3.bc",
+      "name": "knucleotide3.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/nbody.bc",
+      "name": "nbody.bc",
+      "runs": [
+        {
+          "params": "50_000_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/pidigits5.bc",
+      "name": "pidigits5.bc",
+      "runs": [
+        {
+          "params": "10_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/revcomp2.bc",
+      "name": "revcomp2.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/benchmarksgame/spectralnorm2.bc",
+      "name": "spectralnorm2.bc",
+      "runs": [
+        {
+          "params": "5_500"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/sequence/sequence_cps.bc",
+      "name": "sequence_cps.bc",
+      "runs": [
+        {
+          "params": "10000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/thread-lwt/thread_ring_lwt_mvar.bc",
+      "name": "thread_ring_lwt_mvar.bc",
+      "runs": [
+        {
+          "params": "20_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/thread-lwt/thread_ring_lwt_stream.bc",
+      "name": "thread_ring_lwt_stream.bc",
+      "runs": [
+        {
+          "params": "20_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-grammatrix/grammatrix.bc",
+      "name": "grammatrix.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/valet/test_lwt.bc",
+      "name": "test_lwt.bc",
+      "runs": [
+        {
+          "params": "200"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/bdd/bdd.bc",
+      "name": "bdd.bc",
+      "runs": [
+        {
+          "params": "26"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/lexifi-g2pp/main.bc",
+      "name": "lexifi-g2pp.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/kb/kb.bc",
+      "name": "kb.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/kb/kb_no_exc.bc",
+      "name": "kb_no_exc.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/chameneos/chameneos_redux_lwt.bc",
+      "name": "chameneos_redux_lwt.bc",
+      "runs": [
+        {
+          "params": "600000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/lists.bc",
+      "name": "lists.bc",
+      "runs": [
+      	{
+          "params": "int-option-array 100000"
+        },
+        {
+          "params": "string 100000"
+        },
+        {
+          "params": "record 100000"
+        },
+        {
+          "params": "float-array 100000"
+        },
+        {
+          "params": "float-tuple 100000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/morestacks.bc",
+      "name": "morestacks.bc",
+      "runs": [
+        {
+          "params": "1_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/alloc.bc",
+      "name": "alloc.bc",
+      "runs": [
+        {
+          "params": "200_000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/stress.bc",
+      "name": "stress.bc",
+      "runs": [
+        {
+          "params": "10000 10"
+        },
+        {
+          "params": "100000 100"
+        },
+        {
+          "params": "1 100"
+        },
+        {
+        	"params":"100000 10"
+        },
+        {
+        	"params":"10000 100"
+        },
+        {
+        	"params":"1 10"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/stacks.bc",
+      "name": "stacks.bc",
+      "runs": [
+        {
+          "params": "100000 ints-small"
+        },
+        {
+          "params": "20000 ints-large"
+        },
+        {
+          "params": "100000 floats-small"
+        },
+        {
+          "params": "20000 floats-large"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/weakretain.bc",
+      "name": "weakretain.bc",
+      "runs": [
+        {
+          "params": "25 1000"
+        },
+        {
+          "params": "25 100000"
+        },
+        {
+          "params": "25 10000000"
+        },
+        {
+          "params": "50 1000"
+        },
+        {
+          "params": "50 100000"
+        },
+        {
+          "params": "50 10000000"
+        },
+        {
+          "params": "75 1000"
+        },
+        {
+          "params": "75 100000"
+        },
+        {
+          "params": "75 10000000"
+        },
+        {
+          "params": "100 1000"
+        },
+        {
+          "params": "100 100000"
+        },
+        {
+          "params": "100 10000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/simple-tests/lazylist.bc",
+      "name": "lazylist.bc",
+      "runs": [
+        {
+          "params": "100000 100"
+        }
+    ]
+  },
+  {
+      "executable": "benchmarks/simple-tests/finalise.bc",
+      "name": "finalise.bc",
+      "runs": [
+        {
+          "params": "50"
+        },
+        {
+          "params": "60"
+        },
+        {
+          "params": "70"
+        },
+        {
+          "params": "80"
+        },
+        {
+          "params": "90"
+        },
+        {
+          "params": "100"
+        }
+     ]
+  },
+  {
+      "executable": "benchmarks/stdlib/stack_bench.bc",
+      "name": "stack_bench.bc",
+      "runs": [
+        {
+          "params": "stack_push_pop 100000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/array_bench.bc",
+      "name": "array_bench.bc",
+      "runs": [
+        {
+          "params": "array_forall 1000 100000"
+        },
+        {
+          "params": "array_fold 1000 100000"
+        },
+        {
+          "params": "array_iter 1000 100000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/bytes_bench.bc",
+      "name": "bytes_bench.bc",
+      "runs": [
+      	{
+          "params": "bytes_map 1000000"
+        },
+        {
+          "params": "bytes_uppercase_ascii 1000000"
+        },
+        {
+          "params": "bytes_contains 100000000"
+        },
+        {
+          "params": "bytes_iter 1000000"
+        },
+        {
+          "params": "bytes_get 100000000"
+        },
+        {
+          "params": "bytes_sub 100000000"
+        }
+      ]
+  },
+    {
+      "executable": "benchmarks/stdlib/set_bench.bc",
+      "name": "set_bench.bc",
+      "runs": [
+        {
+          "params": "set_fold 1000000"
+        },
+        {
+          "params": "set_add_rem 20000000"
+        },
+        {
+          "params": "set_mem 50000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/hashtbl_bench.bc",
+      "name": "hashtbl_bench.bc",
+      "runs": [
+      	{
+          "params": "int_replace1 10000"
+        },
+        {
+          "params": "hashtbl_remove 4000000"
+        },
+        {
+          "params": "hashtbl_find 6000000"
+        },
+        {
+          "params": "int_find1 20000"
+        }
+      ]
+  },
+  {
+      "executable": "benchmarks/stdlib/hashtbl_bench.bc",
+      "name": "hashtbl_bench.bc",
+      "runs": [
+        {
+          "params": "caml_hash_int 200000"
+        },
+        {
+          "params": "caml_hash_tuple 100000"
+        },
+        {
+          "params": "int_replace2 100000"
+        },
+        {
+          "params": "int_find2 300000"
+        },
+        {
+          "params": "hashtbl_iter 200000"
+        },
+        {
+          "params": "hashtbl_fold 200000"
+        },
+        {
+          "params": "hashtbl_add_resizing 4000000"
+        },
+        {
+          "params": "hashtbl_add_sized 6000000"
+        },
+        {
+          "params": "hashtbl_add_duplicate 2000000"
+        },
+        {
+          "params": "hashtbl_filter_map 100000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/string_bench.bc",
+      "name": "string_bench.bc",
+      "runs": [
+        {
+          "params": "string_sub 50000000"
+        },
+        {
+          "params": "string_concat 20000000"
+        },
+        {
+          "params": "string_iter 1000000"
+        },
+        {
+          "params": "string_uppercase_ascii 1000000"
+        },
+        {
+          "params": "string_split_on_char 500000"
+        },
+        {
+          "params": "string_compare 10000"
+        },
+        {
+          "params": "string_equal 25000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/str_bench.bc",
+      "name": "str_bench.bc",
+      "runs": [
+        {
+          "params": "str_search_forward 5000000"
+        },
+        {
+          "params": "str_split 2000000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/pervasives_bench.bc",
+      "name": "pervasives_bench.bc",
+      "runs": [
+        {
+          "params": "pervasives_compare_lists 100000000"
+        },
+        {
+          "params": "pervasives_compare_ints 1000000000"
+        },
+        {
+          "params": "pervasives_equal_floats 1000000000"
+        },
+        {
+          "params": "pervasives_equal_strings 20000000"
+        },
+        {
+          "params": "pervasives_compare_strings 20000000"
+        }
+      ]
+    },
+  {
+      "executable": "benchmarks/stdlib/map_bench.bc",
+      "name": "map_bench.bc",
+      "runs": [
+        {
+          "params": "map_map 10000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/stdlib/big_array_bench.bc",
+      "name": "big_array_bench.bc",
+      "runs": [
+        {
+          "params": "big_array_int_rev 1024 50000"
+        },
+        {
+          "params": "big_array_int32_rev 1024 50000"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/durand_kerner_aberth.bc",
+      "name": "durand-kerner-aberth.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/fft.bc",
+      "name": "fft.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/levinson_durbin.bc",
+      "name": "levinson-durbin.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/crout_decomposition.bc",
+      "name": "crout-decomposition.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/naive_multilayer.bc",
+      "name": "naive-multilayer.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/numerical-analysis/qr_decomposition.bc",
+      "name": "qr-decomposition.bc",
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    }
+  ]
+}

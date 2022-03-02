@@ -1,15 +1,17 @@
 ;; Adapted from OCamlPro's ocamlbench-repo
 ;; See https://github.com/OCamlPro/ocamlbench-repo
-(executable (name durand_kerner_aberth) (modules durand_kerner_aberth))
-(executable (name fft) (modules fft))
-(executable (name crout_decomposition) (modules crout_decomposition))
-(executable (name qr_decomposition) (modules qr_decomposition))
+(executable (name durand_kerner_aberth) (modes native byte) (modules durand_kerner_aberth))
+(executable (name fft) (modes native byte) (modules fft))
+(executable (name crout_decomposition) (modes native byte) (modules crout_decomposition))
+(executable (name qr_decomposition) (modes native byte) (modules qr_decomposition))
 
 (executable
  (name levinson_durbin)
+ (modes native byte)
  (modules levinson_durbin levinson_durbin_dataset))
 (executable
  (name naive_multilayer)
+ (modes native byte)
  (modules naive_multilayer naive_multilayer_dataset))
 
 (alias (name buildbench)
@@ -20,3 +22,12 @@
    qr_decomposition.exe
    levinson_durbin.exe
    naive_multilayer.exe))
+
+(alias (name bytebench)
+ (deps
+   durand_kerner_aberth.bc
+   fft.bc
+   crout_decomposition.bc
+   qr_decomposition.bc
+   levinson_durbin.bc
+   naive_multilayer.bc))

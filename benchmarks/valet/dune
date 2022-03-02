@@ -2,6 +2,8 @@
 ;; See https://github.com/OCamlPro/ocamlbench-repo
 (executable
  (name test_lwt)
+ (modes native byte)
  (libraries uuidm ocplib-endian unix react lwt lwt.unix))
 
 (alias (name buildbench) (deps test_lwt.exe))
+(alias (name bytebench) (deps test_lwt.bc))

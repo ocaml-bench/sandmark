@@ -15,6 +15,7 @@
 
 (executable
  (name quicksort)
+ (modes native byte)
  (modules quicksort))
 
 (executable
@@ -29,6 +30,7 @@
 
 (executable
  (name game_of_life)
+ (modes native byte)
  (modules game_of_life))
 
 (executable
@@ -38,6 +40,7 @@
 
 (executable
  (name matrix_multiplication)
+ (modes native byte)
  (modules matrix_multiplication))
 
 (executable
@@ -52,6 +55,7 @@
 
 (executable
  (name LU_decomposition)
+ (modes native byte)
  (modules LU_decomposition))
 
 (executable
@@ -61,6 +65,7 @@
 
 (executable
  (name floyd_warshall)
+ (modes native byte)
  (modules floyd_warshall))
 
 (executable
@@ -70,6 +75,7 @@
 
 (executable
  (name nbody)
+ (modes native byte)
  (modules nbody))
 
 (executable
@@ -84,10 +90,12 @@
 
 (executable
  (name mergesort)
+ (modes native byte)
  (modules mergesort))
 
 (executable
  (name evolutionary_algorithm)
+ (modes native byte)
  (modules evolutionary_algorithm))
 
 (executable
@@ -112,3 +120,9 @@
   (deps game_of_life.exe matrix_multiplication.exe quicksort.exe
         mergesort.exe floyd_warshall.exe LU_decomposition.exe
         evolutionary_algorithm.exe))
+
+(alias
+  (name bytebench)
+  (deps game_of_life.bc matrix_multiplication.bc quicksort.bc
+        mergesort.bc floyd_warshall.bc evolutionary_algorithm.bc
+        LU_decomposition.bc nbody.bc mergesort.bc))

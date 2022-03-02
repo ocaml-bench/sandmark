@@ -1,6 +1,9 @@
 ;; Adapted from OCamlPro's ocamlbench-repo
 ;; See https://github.com/OCamlPro/ocamlbench-repo
 (executables
- (names kb kb_no_exc))
+ (names kb kb_no_exc)
+ (modes native byte))
 
 (alias (name buildbench) (deps kb.exe kb_no_exc.exe))
+
+(alias (name bytebench) (deps kb.bc kb_no_exc.bc))

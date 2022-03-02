@@ -192,6 +192,18 @@ value is `buildbench` which runs the serial benchmarks. For executing the
 parallel benchmarks use `multibench_parallel`. You can also setup a custom
 bench and add only the benchmarks you care about.
 
+Sandmark has support to build and execute the serial benchmarks in
+byte mode. A separate `run_config_byte.json` file has been created for
+the same. These benchmarks are relatively slower compared to their
+native execution. You can use the following commands to run the serial
+benchmarks in byte mode:
+
+```bash
+$ opam install dune.2.9.0
+$ USE_SYS_DUNE_HACK=1 SANDMARK_CUSTOM_NAME=5.0.0 BUILD_BENCH_TARGET=bytebench \
+    RUN_CONFIG_JSON=run_config_byte.json make ocaml-versions/5.0.0+stable.bench
+```
+
 We can obtain throughput and latency results for the benchmarks. For obtaining
 latency results, we can adjust the environment variable `RUN_BENCH_TARGET`.
 The scripts for latencies are present in the `pausetimes/` directory. The
