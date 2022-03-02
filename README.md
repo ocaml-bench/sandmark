@@ -25,7 +25,7 @@ $ opam install dune.2.9.0
 
 $ git clone https://github.com/ocaml-bench/sandmark.git
 $ cd sandmark
-$ make ocaml-versions/5.00.0+trunk.bench
+$ make ocaml-versions/5.0.0+trunk.bench
 $ make ocaml-versions/4.14.0+domains.bench
 ```
 
@@ -157,9 +157,9 @@ configuration:
 ```
 would allow
 ```sh
-$ RUN_BENCH_TARGET=run_orun-2M make ocaml-versions/5.00.0+trunk.bench
+$ RUN_BENCH_TARGET=run_orun-2M make ocaml-versions/5.0.0+trunk.bench
 ```
-to run the benchmarks on 5.00.0+trunk with a 2M minor heap setting taskset
+to run the benchmarks on 5.0.0+trunk with a 2M minor heap setting taskset
 onto CPU 5.
 
 The benchmarks also have associated tags which classify the benchmarks. The
@@ -277,7 +277,7 @@ The following table marks the benchmarks that are currently not working with any
 
 | Variants | Benchmarks | Issue Tracker |
 |---|---|---|
-| 5.00.0+trunk.bench | irmin benchmarks | [sandmark#262](https://github.com/ocaml-bench/sandmark/issues/262) |
+| 5.0.0+trunk.bench | irmin benchmarks | [sandmark#262](https://github.com/ocaml-bench/sandmark/issues/262) |
 | 4.14.0+domains.bench | irmin benchmarks | [sandmark#262](https://github.com/ocaml-bench/sandmark/issues/262) |
 
 ## UI
