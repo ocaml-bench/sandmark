@@ -162,6 +162,8 @@ $ RUN_BENCH_TARGET=run_orun-2M make ocaml-versions/5.0.0+trunk.bench
 to run the benchmarks on 5.0.0+trunk with a 2M minor heap setting taskset
 onto CPU 5.
 
+#### Tags
+
 The benchmarks also have associated tags which classify the benchmarks. The
 current tags are:
 
