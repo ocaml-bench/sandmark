@@ -12,5 +12,19 @@
     "config_json": "multicore_parallel_navajo_run_config_filtered.json",
     "name": "5.0.0+trunk+parallel",
     "expiry": "2100-01-01"
+  },
+  {
+    "url": "https://github.com/gadmm/ocaml/archive/refs/heads/multicore_async_actions.zip",
+    "tag": "macro_bench",
+    "config_json": "run_config_filtered.json",
+    "name": "5.0.0+trunk+sequential+gadmm+pr11057",
+    "expiry": "2022-03-20"
+  },
+  {
+    "url": "https://github.com/gadmm/ocaml/archive/refs/heads/multicore_async_actions.zip",
+    "tag": "macro_bench",
+    "config_json": "multicore_parallel_navajo_run_config_filtered.json",
+    "name": "5.0.0+trunk+parallel+gadmm+pr11057",
+    "expiry": "2022-03-20"
   }
 ]
