@@ -3,7 +3,9 @@
 # Environment variables
 CUSTOM_FILE=${CUSTOM_FILE:-"ocaml-versions/custom.json"}
 SANDMARK_NIGHTLY_DIR=${SANDMARK_NIGHTLY_DIR:-/tmp}
+SANDMARK_REPO="https://github.com/ocaml-bench/sandmark.git"
 TMP_CUSTOM_FILE="/tmp/custom.json"
+TMP_DIR="/tmp"
 
 # Host
 HOSTNAME=`hostname`
@@ -57,67 +59,86 @@ COUNT=`jq '. | length' "${CUSTOM_FILE}"`
 # Iterate through each variant
 i=0
 while [ $i -lt ${COUNT} ]; do
-    # Start new build
-    make clean
+    j=0
+    while [ $j -lt 2 ]; do
+        # Obtain configuration options
+        CONFIG_URL=`jq -r '.['$i'].url' "${CUSTOM_FILE}"`
+        CONFIG_NAME=`jq -r '.['$i'].name' "${CUSTOM_FILE}"`
+        CONFIG_EXPIRY=`jq -r '.['$i'].expiry // empty' "${CUSTOM_FILE}"`
+        CONFIG_TAG=`jq -r '.['$i'].tag // "macro_bench"' "${CUSTOM_FILE}"`
 
-    # Obtain configuration options
-    CONFIG_URL=`jq -r '.['$i'].url' "${CUSTOM_FILE}"`
-    CONFIG_TAG=`jq -r '.['$i'].tag' "${CUSTOM_FILE}"`
-    CONFIG_RUN_JSON=`jq -r '.['$i'].config_json' "${CUSTOM_FILE}"`
-    CONFIG_NAME=`jq -r '.['$i'].name' "${CUSTOM_FILE}"`
-    CONFIG_OPTIONS=`jq -r '.['$i'].configure // empty' "${CUSTOM_FILE}"`
-    CONFIG_RUN_PARAMS=`jq -r '.['$i'].runparams // empty' "${CUSTOM_FILE}"`
-    CONFIG_ENVIRONMENT=`jq -r '.['$i'].environment // empty' "${CUSTOM_FILE}"`
-    CONFIG_EXPIRY=`jq -r '.['$i'].expiry // empty' "${CUSTOM_FILE}"`
-    CONFIG_OVERRIDE_PACKAGES=`jq -r '.['$i'].override_packages // empty' "${CUSTOM_FILE}"`
-    CONFIG_REMOVE_PACKAGES=`jq -r '.['$i'].remove_packages // empty' "${CUSTOM_FILE}"`
-    TAG_STRING=`echo \"${CONFIG_TAG}\"`
-
-    TIMESTAMP=$(date +%Y%m%d_%H%M%S)    
-    SEQPAR=$(check_sequential_parallel ${CONFIG_RUN_JSON})
-    COMMIT=$(find_commit ${CONFIG_URL})
-    NOT_EXPIRED=$(check_not_expired ${CONFIG_EXPIRY})
-    
-    echo "INFO: ${TIMESTAMP} Running benchmarks for URL=${CONFIG_URL}, CONFIG_TAG=${CONFIG_TAG}, CONFIG_RUN_JSON=${CONFIG_RUN_JSON} for COMMIT=${COMMIT}"
-    
-    if [[ ! -z "${COMMIT}" ]] && check_not_expired ${CONFIG_EXPIRY} ; then
-        # Create results directory
-        RESULTS_DIR="${SANDMARK_NIGHTLY_DIR}/sandmark-nightly/${SEQPAR}/${HOSTNAME}/${TIMESTAMP}/${COMMIT}"
-        mkdir -p "${RESULTS_DIR}"
-
-        # Prepare run JSON
-        TAG=`echo "${TAG_STRING}"` make `echo ${CONFIG_RUN_JSON}`
-
-        # Build and execute benchmarks
-        if [[ ${SEQPAR} == "sequential" ]]; then
-            USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
-                             RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
-                             ENVIRONMENT="`echo ${CONFIG_ENVIRONMENT}`" \
-                             OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
-                             OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
-                             SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
-                             SANDMARK_OVERRIDE_PACKAGES="`echo ${CONFIG_OVERRIDE_PACKAGES}`" \
-                             SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
-                             make ocaml-versions/5.0.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
+        if [ $j -eq 0 ]; then
+            CONFIG_RUN_JSON="run_config_filtered.json"
         else
-            USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
-                             RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
-                             ENVIRONMENT="`echo ${CONFIG_ENVIRONMENT}`" \
-                             OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
-                             OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
-                             SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
-                             SANDMARK_OVERRIDE_PACKAGES="`echo ${CONFIG_OVERRIDE_PACKAGES}`" \
-                             SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
-                             RUN_BENCH_TARGET=run_orunchrt \
-                             BUILD_BENCH_TARGET=multibench_parallel \
-                             make ocaml-versions/5.0.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
+            if [ "${HOSTNAME}" == "navajo" ]; then
+                CONFIG_RUN_JSON="multicore_parallel_navajo_run_config_filtered.json"
+            else
+                CONFIG_RUN_JSON="multicore_parallel_run_config_filtered.json"
+            fi
         fi
 
-        # Copy results
-        cp _results/* "${RESULTS_DIR}"
-    else
-        echo "WARNING: ${TIMESTAMP}: Not running URL=${CONFIG_URL}, CONFIG_TAG=${CONFIG_TAG}, CONFIG_RUN_JSON=${CONFIG_RUN_JSON} for COMMIT=${COMMIT} and EXPIRY=${CONFIG_EXPIRY}"
-    fi
+        CONFIG_OPTIONS=`jq -r '.['$i'].configure // empty' "${CUSTOM_FILE}"`
+        CONFIG_RUN_PARAMS=`jq -r '.['$i'].runparams // empty' "${CUSTOM_FILE}"`
+        CONFIG_ENVIRONMENT=`jq -r '.['$i'].environment // empty' "${CUSTOM_FILE}"`
+        CONFIG_OVERRIDE_PACKAGES=`jq -r '.['$i'].override_packages // empty' "${CUSTOM_FILE}"`
+        CONFIG_REMOVE_PACKAGES=`jq -r '.['$i'].remove_packages // empty' "${CUSTOM_FILE}"`
+        TAG_STRING=`echo \"${CONFIG_TAG}\"`
+
+        TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+        SEQPAR=$(check_sequential_parallel ${CONFIG_RUN_JSON})
+        COMMIT=$(find_commit ${CONFIG_URL})
+        NOT_EXPIRED=$(check_not_expired ${CONFIG_EXPIRY})
+
+        echo "INFO: ${TIMESTAMP} Running benchmarks for URL=${CONFIG_URL}, CONFIG_TAG=${CONFIG_TAG}, CONFIG_RUN_JSON=${CONFIG_RUN_JSON} for COMMIT=${COMMIT}"
+
+        if [[ ! -z "${COMMIT}" ]] && check_not_expired ${CONFIG_EXPIRY} ; then
+            # Create results directory
+            RESULTS_DIR="${SANDMARK_NIGHTLY_DIR}/sandmark-nightly/${SEQPAR}/${HOSTNAME}/${TIMESTAMP}/${COMMIT}"
+            mkdir -p "${RESULTS_DIR}"
+
+            # Clone fresh copy of Sandmark
+            CWD=$(pwd)
+            cd "${TMP_DIR}"; git clone "${SANDMARK_REPO}"; cd sandmark
+
+            # Prepare run JSON
+            TAG=`echo "${TAG_STRING}"` make `echo ${CONFIG_RUN_JSON}`
+
+            # Build and execute benchmarks
+            if [[ ${SEQPAR} == "sequential" ]]; then
+                USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
+                                 RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
+                                 ENVIRONMENT="`echo ${CONFIG_ENVIRONMENT}`" \
+                                 OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
+                                 OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
+                                 SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
+                                 SANDMARK_OVERRIDE_PACKAGES="`echo ${CONFIG_OVERRIDE_PACKAGES}`" \
+                                 SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
+                                 make ocaml-versions/5.0.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
+            else
+                USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
+                                 RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
+                                 ENVIRONMENT="`echo ${CONFIG_ENVIRONMENT}`" \
+                                 OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
+                                 OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
+                                 SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
+                                 SANDMARK_OVERRIDE_PACKAGES="`echo ${CONFIG_OVERRIDE_PACKAGES}`" \
+                                 SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
+                                 RUN_BENCH_TARGET=run_orunchrt \
+                                 BUILD_BENCH_TARGET=multibench_parallel \
+                                 make ocaml-versions/5.0.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
+            fi
+
+            # Copy results
+            ls _results/*
+            cp _results/* "${RESULTS_DIR}"
+
+            cd "${CWD}"
+            rm -rf "${TMP_DIR}/sandmark"
+        else
+            echo "WARNING: ${TIMESTAMP}: Not running URL=${CONFIG_URL}, CONFIG_TAG=${CONFIG_TAG}, CONFIG_RUN_JSON=${CONFIG_RUN_JSON} for COMMIT=${COMMIT} and EXPIRY=${CONFIG_EXPIRY}"
+        fi
+        j=$((j+1))
+    done
     
     # Next custom variant
     i=$((i+1))
