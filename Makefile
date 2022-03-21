@@ -272,19 +272,43 @@ define check_dependency
 		@echo "$(1) is not installed. $(3)")
 endef
 
-check_url:
-	@{ for f in `find ocaml-versions/*.json`; do    		\
-                if [ "$$f" == "ocaml-versions/custom.json" ]; then	\
-                        continue;                               	\
-                fi;                                           		\
-		URL=`jq -r '.url' $$f`;                  		\
-		if [ -z "$$URL" ] ; then                  		\
-			echo "No URL (mandatory) for $$f";   		\
-		fi;                                       		\
-	    done;                                        		\
+check_jq:
+	@{ for f in `find ocaml-versions/*.json`; do    	\
+		RESULT=`jq . $$f > /dev/null 2>&1; echo $$?`;	\
+                if [ "$${RESULT}" != 0 ]; then			\
+			echo "Error: jq parsing error in $$f"; 	\
+			exit 1; 				\
+                fi;                                           	\
+	    done; 						\
 	};
 
-depend:
+check_url: check_jq
+	@{ for f in `find ocaml-versions/*.json`; do    				\
+		HEAD=`head -1 $$f`; 							\
+		if [ "$$HEAD" == "{" ]; then 						\
+			URL=`jq -r '.url' $$f`;                  			\
+			if [ -z "$$URL" ] ; then                  			\
+				echo "No URL (mandatory) for $$f";   			\
+				exit 1; 						\
+			else 								\
+				URL_EXISTS=`wget --spider $$URL 2>/dev/null; echo $$?`; \
+				if [ "$${URL_EXISTS}" != 0 ]; then 			\
+					echo "Error: URL $$URL does not exist"; 	\
+				fi; 							\
+			fi;                                       			\
+		else 									\
+			URLS=`jq -r .[].url $$f`; 					\
+			for u in "$$URLS"; do 						\
+				URL_EXISTS=`wget --spider $$u 2>/dev/null; echo $$?`; 	\
+				if [ "$${URL_EXISTS}" != 0 ]; then 			\
+					echo "Error: URL $$u does not exist"; 		\
+				fi; 							\
+			done; 								\
+		fi; 									\
+	    done;                                        				\
+	};
+
+depend: check_url
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
 	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
 
