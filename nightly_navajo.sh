@@ -25,7 +25,7 @@ check_sandmark_subdir $SANDMARK_NIGHTLY_DIR
 eval $(opam env)
 
 # Run!
-SANDMARK_NIGHTLY_DIR=${SANDMARK_NIGHTLY_DIR} CUSTOM_FILE="https://raw.githubusercontent.com/ocaml-bench/sandmark-nightly-config/main/config/custom_navajo.json" bash run_all_custom.sh
+SANDMARK_NIGHTLY_DIR=${SANDMARK_NIGHTLY_DIR} CUSTOM_FILE="https://raw.githubusercontent.com/ocaml-bench/sandmark-nightly-config/main/config/custom_navajo.json" bash /home/sandmark/production/run_all_custom.sh
 
 # Push to sandmark-nightly
 cd $SANDMARK_NIGHTLY_DIR/sandmark-nightly/
