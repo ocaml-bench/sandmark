@@ -289,7 +289,6 @@ check_url: check_jq
 			URL=`jq -r '.url' $$f`;                  			\
 			if [ -z "$$URL" ] ; then                  			\
 				echo "No URL (mandatory) for $$f";   			\
-				exit 1; 						\
 			else 								\
 				URL_EXISTS=`wget --spider $$URL 2>/dev/null; echo $$?`; \
 				if [ "$${URL_EXISTS}" != 0 ]; then 			\
