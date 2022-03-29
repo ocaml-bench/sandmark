@@ -62,7 +62,6 @@ platform:
 steps:
 - name: 5.0.0+trunk+serial
   image: ocaml/opam:ubuntu-20.04-ocaml-4.12
-  failure: ignore
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
   - pip3 install intervaltree
@@ -89,7 +88,6 @@ platform:
 steps:
 - name: 5.0.0+trunk+parallel
   image: ocaml/opam:ubuntu-20.04-ocaml-4.12
-  failure: ignore
   commands:
   - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
   - pip3 install intervaltree
