@@ -216,6 +216,7 @@ ocaml-versions/%.bench: depend override_packages/% log_sandmark_hash ocaml-versi
 	   done } > ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME)
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- rungen _build/$(CONFIG_SWITCH_NAME)_1 $(RUN_CONFIG_JSON) > runs_dune.inc
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- dune build --profile=release --workspace=ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME) @$(BUILD_BENCH_TARGET);
+	@./loadavg.sh $(OPT_WAIT) $(START_TIME)
 	@{ if [ "$(BUILD_ONLY)" -eq 0 ]; then												\
 	        echo "Executing benchmarks with:"; 											\
 	        echo "  RUN_CONFIG_JSON=${RUN_CONFIG_JSON}"; 										\
