@@ -16,14 +16,14 @@
   {
     "url": "https://github.com/ocaml/ocaml/archive/trunk.tar.gz",
     "tag": "macro_bench",
-    "config_json": "multicore_parallel_run_config_filtered.json",
+    "config_json": "parallel_turing_filtered.json",
     "name": "5.0.0+trunk+parallel",
     "expiry": "2100-01-01"
   },
   {
     "url": "https://github.com/ocaml/ocaml/archive/b73cbbea4bc40ffd26a459d594a39b99cec4273d.zip",
     "tag": "macro_bench",
-    "config_json": "multicore_parallel_run_config_filtered.json",
+    "config_json": "parallel_turing_filtered.json",
     "name": "5.0.0+stable+parallel",
     "expiry": "2100-01-01"
   },

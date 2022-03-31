@@ -6,10 +6,10 @@
 #   sudo setcap cap_sys_nice=ep /usr/bin/chrt
 #
 
-TAG='"macro_bench"' make multicore_parallel_run_config_filtered.json
+TAG='"macro_bench"' make parallel_turing_filtered.json
 
 USE_SYS_DUNE_HACK=1 \
                  RUN_BENCH_TARGET=run_orunchrt \
                  BUILD_BENCH_TARGET=multibench_parallel \
-                 RUN_CONFIG_JSON=multicore_parallel_run_config_filtered.json \
+                 RUN_CONFIG_JSON=parallel_turing_filtered.json \
                  make ocaml-versions/5.0.0+stable.bench

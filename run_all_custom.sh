@@ -73,9 +73,9 @@ while [ $i -lt ${COUNT} ]; do
         else
 	    CONFIG_NAME="${CONFIG_NAME}+parallel"
             if [ "${HOSTNAME}" == "navajo" ]; then
-                CONFIG_RUN_JSON="multicore_parallel_navajo_run_config_filtered.json"
+                CONFIG_RUN_JSON="parallel_navajo_filtered.json"
             else
-                CONFIG_RUN_JSON="multicore_parallel_run_config_filtered.json"
+                CONFIG_RUN_JSON="parallel_turing_filtered.json"
             fi
         fi
 
