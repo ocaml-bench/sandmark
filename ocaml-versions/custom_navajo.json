@@ -2,7 +2,7 @@
   {
     "url": "https://github.com/ocaml/ocaml/archive/trunk.tar.gz",
     "tag": "macro_bench",
-    "config_json": "run_config_filtered.json",
+    "config_json": "sequential_filtered.json",
     "name": "5.0.0+trunk+sequential",
     "expiry": "2100-01-01"
   },
@@ -16,7 +16,7 @@
   {
     "url": "https://github.com/gadmm/ocaml/archive/refs/heads/multicore_async_actions.zip",
     "tag": "macro_bench",
-    "config_json": "run_config_filtered.json",
+    "config_json": "sequential_filtered.json",
     "name": "5.0.0+trunk+sequential+gadmm+pr11057",
     "expiry": "2022-03-20"
   },

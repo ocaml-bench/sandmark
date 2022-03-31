@@ -180,7 +180,7 @@ RAM housed at IITM.
 The `sequential.json` file may be filtered based on the tag. For example,
 
 ```bash
-$ TAG='"macro_bench"' make run_config_filtered.json
+$ TAG='"macro_bench"' make sequential_filtered.json
 ```
 
 filters the `sequential.json` file to only contain the benchmarks tagged as
