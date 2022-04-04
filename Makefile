@@ -57,6 +57,13 @@ PRE_BENCH_EXEC ?=
 # option to allow benchmarks to continue even if the opam package install errored
 CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
+# option to wait for loadavg to settle down once the dependencies are installed and 
+# before the benchmarks are executed
+OPT_WAIT ?= 1
+
+# The time when the wait for the loadavg to decrease begins
+START_TIME ?=
+
 WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
 PACKAGES = sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen eventlog-tools
@@ -216,6 +223,7 @@ ocaml-versions/%.bench: depend override_packages/% log_sandmark_hash ocaml-versi
 	   done } > ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME)
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- rungen _build/$(CONFIG_SWITCH_NAME)_1 $(RUN_CONFIG_JSON) > runs_dune.inc
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- dune build --profile=release --workspace=ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME) @$(BUILD_BENCH_TARGET);
+	$(eval START_TIME = $(shell date +%s))
 	@./loadavg.sh $(OPT_WAIT) $(START_TIME)
 	@{ if [ "$(BUILD_ONLY)" -eq 0 ]; then												\
 	        echo "Executing benchmarks with:"; 											\
