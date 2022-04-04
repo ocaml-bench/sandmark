@@ -1,0 +1,5 @@
+(executable
+  (name soli)
+  (modes byte exe))
+   
+   (alias (name buildbench) (deps soli.exe))

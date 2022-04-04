@@ -1520,6 +1520,32 @@
           "params": ""
         }
       ]
+    },
+    {
+      "executable": "benchmarks/soli/soli.exe",
+      "name": "soli",
+      "tags": [
+        "1s_10s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": "1024"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/hamming/hamming.exe",
+      "name": "hamming",
+      "tags": [
+        "1s_10s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": "1024"
+        }
+      ]
     }
   ]
 }

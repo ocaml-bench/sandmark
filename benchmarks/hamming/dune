@@ -1,0 +1,6 @@
+
+(executable
+  (name hamming)
+  (modes byte exe))
+  (alias (name hamming)
+       (deps hamming.exe))
