@@ -223,7 +223,6 @@ ocaml-versions/%.bench: depend override_packages/% log_sandmark_hash ocaml-versi
 	   done } > ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME)
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- rungen _build/$(CONFIG_SWITCH_NAME)_1 $(RUN_CONFIG_JSON) > runs_dune.inc
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- dune build --profile=release --workspace=ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME) @$(BUILD_BENCH_TARGET);
-	@./loadavg.sh $(OPT_WAIT) $(START_TIME)
 	@{ if [ "$(BUILD_ONLY)" -eq 0 ]; then												\
 	        echo "Executing benchmarks with:"; 											\
 	        echo "  RUN_CONFIG_JSON=${RUN_CONFIG_JSON}"; 										\
@@ -315,10 +314,11 @@ check_url: check_jq
 	    done;                                        				\
 	};
 
-set_START_TIME:
+load_check:
 	$(eval START_TIME = $(shell date +%s))
+	@./loadavg.sh $(OPT_WAIT) $(START_TIME)
 
-depend: check_url set_START_TIME
+depend: check_url load_check
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
 	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
 
