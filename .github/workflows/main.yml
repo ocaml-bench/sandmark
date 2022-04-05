@@ -2,7 +2,7 @@ name: main.yml
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+  # Triggers the workflow on push or pull request events but only for the main branch on PR
   push:
     branches: '**'
   pull_request:
@@ -38,7 +38,8 @@ jobs:
           TAG='"run_in_ci"' make run_config_filtered.json
           USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.0.0+stable.bench
           ls _results
-          cat _results/*
+          cat _results/*  
+          
       - name: 5.0.0+stable+parallel
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
@@ -56,6 +57,7 @@ jobs:
           USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.0.0+stable.bench
           ls _results
           cat _results/*
+            
       - name: 5.0.0+trunk+serial
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
@@ -71,6 +73,7 @@ jobs:
           USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.0.0+trunk.bench
           ls _results
           cat _results/*
+          
       - name: 5.0.0+trunk+parallel
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
@@ -88,6 +91,7 @@ jobs:
           USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.0.0+trunk.bench
           ls _results
           cat _results/*
+          
       - name: test_notebooks
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip jo
