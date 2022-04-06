@@ -2,5 +2,5 @@
 (executable
   (name hamming)
   (modes byte exe))
-  (alias (name hamming)
+  (alias (name buildbench)
        (deps hamming.exe))
