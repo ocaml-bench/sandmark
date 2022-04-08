@@ -42,7 +42,7 @@ jobs:
           eval $(opam env)
           export ITER=1
           export OPAM_DISABLE_SANDBOXING=true
-          sed 's/--cpu-list 5/--cpu-list 1/g' run_config_filtered.json
+          sed 's/--cpu-list 5/--cpu-list 1/g' run_config.json
           TAG='"run_in_ci"' make run_config_filtered.json
           USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.0.0+stable.bench
           ls _results
