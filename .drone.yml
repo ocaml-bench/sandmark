@@ -45,7 +45,7 @@ steps:
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
   - TAG='"run_in_ci"' make parallel_turing_filtered.json
-  - TAG='"macro_bench"' make parallel_turing_filtered.json
+  - TAG='"macro_bench"' make parallel_turing_filtered_filtered.json
   - make parallel_turing_filtered_filtered_2domains.json
   - USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=parallel_turing_filtered_filtered_2domains.json make ocaml-versions/5.0.0+stable.bench
   - ls _results
@@ -98,7 +98,7 @@ steps:
   - eval $(opam env)
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
-  - TAG='"run_in_ci"' make parallel_turing_filtered_filtered.json
+  - TAG='"run_in_ci"' make parallel_turing_filtered.json
   - TAG='"macro_bench"' make parallel_turing_filtered_filtered.json
   - make parallel_turing_filtered_filtered_2domains.json
   - USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=parallel_turing_filtered_filtered_2domains.json make ocaml-versions/5.0.0+trunk.bench
