@@ -331,9 +331,11 @@
     {
       "executable": "benchmarks/benchmarksgame/knucleotide3.exe",
       "name": "knucleotide3",
+      
       "tags": [
         "10s_100s",
         "macro_bench"
+         
       ],
       "runs": [
         {
@@ -491,7 +493,8 @@
       "name": "test_lwt",
       "tags": [
         "10s_100s",
-        "macro_bench"
+        "macro_bench",
+        "run_in_ci"
       ],
       "runs": [
         {
@@ -1527,10 +1530,11 @@
       "tags": [
         "1s_10s",
         "macro_bench"
+        
       ],
       "runs": [
         {
-          "params": "1024"
+          "params": "200"
         }
       ]
     },
@@ -1538,14 +1542,15 @@
       "executable": "benchmarks/hamming/hamming.exe",
       "name": "hamming",
       "tags": [
-        "1s_10s",
+        "10s_100s",
         "macro_bench"
+         
       ],
       "runs": [
         {
-          "params": "1024"
+          "params": "200"
         }
-      ]
+      ]  
     }
   ]
 }
