@@ -212,6 +212,15 @@ The scripts for latencies are present in the `pausetimes/` directory. The
 `pausetimes_trunk` Bash script obtains the latencies for stock OCaml and the
 `pausetimes_multicore` Bash script for Multicore OCaml.
 
+**NOTE**: You may need to modify the `--cpu-list` parameter in the config file
+you are using for your current build based on the machine you happen to be
+running the benchmarks on. For example, if your build is to use `run_config.json`
+and the commands contain a parameter such as `--cpu-list 5` then it is being
+assumed that your machine has at least 5 CPU cores. You may want to adjust the
+`--cpu-list` parameter based on whatever number of CPU cores your machine has
+or if you don't know how many cores it has then consider setting the parameter
+to `--cpu-list 1` to use only one CPU core.
+
 ### Results
 
 After a run is complete, the results will be available in the `_results`
