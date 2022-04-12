@@ -216,10 +216,13 @@ The scripts for latencies are present in the `pausetimes/` directory. The
 you are using for your current build based on the machine you happen to be
 running the benchmarks on. For example, if your build is to use `run_config.json`
 and the commands contain a parameter such as `--cpu-list 5` then it is being
-assumed that your machine has at least 5 CPU cores. You may want to adjust the
-`--cpu-list` parameter based on whatever number of CPU cores your machine has
-or if you don't know how many cores it has then consider setting the parameter
-to `--cpu-list 1` to use only one CPU core.
+assumed that your machine has a fifth core to use for the build. If your build
+fails then a possible reason might be that your machine doesn't have a fifth
+CPU core. In such a situation you might want to modify the parameter to use
+any number of cores less than or equal to the number of cores your machine
+has. If you do not know the number of cores your machine has then your safest
+option is to modify to the parameter to `--cpu-list 1` to simply use the first
+core.
 
 ### Results
 
