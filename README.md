@@ -170,7 +170,7 @@ current tags are:
 * `macro_bench` - A macro benchmark.
 * `run_in_ci` - This benchmark is run in the CI.
 * `lt_1s` - running time is less than 1s on the `turing` machine.
-* `1s_10s` - running time is between 1s and 10s on the `turning` machine.
+* `1s_10s` - running time is between 1s and 10s on the `turing` machine.
 * `10s_100s` - running time is between 10s and 100s on the `turing` machine.
 * `gt_100s` - running time is greater than 100s on the `turing` machine.
 

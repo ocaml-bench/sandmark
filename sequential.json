@@ -277,6 +277,20 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-numerical/nqueens.exe",
+      "name": "nqueens",
+      "tags": [
+        "1s_10s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": "14"
+        }
+      ]
+    },
+
+    {
       "executable": "benchmarks/multicore-grammatrix/grammatrix.exe",
       "name": "grammatrix",
       "tags": [
