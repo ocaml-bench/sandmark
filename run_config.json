@@ -2,19 +2,19 @@
   "wrappers": [
     {
       "name": "orun",
-      "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
+      "command": "orun -o %{output} -- taskset --cpu-list 1 %{command}"
     },
     {
       "name": "perfstat",
-      "command": "perf stat -o %{output} -- taskset --cpu-list 5 %{command}"
+      "command": "perf stat -o %{output} -- taskset --cpu-list 1 %{command}"
     },
     {
       "name": "pausetimes_trunk",
-      "command": "bash pausetimes_trunk %{output} taskset --cpu-list 5 %{command}"
+      "command": "bash pausetimes_trunk %{output} taskset --cpu-list 1 %{command}"
     },
     {
       "name": "pausetimes_multicore",
-      "command": "bash pausetimes_multicore %{output} taskset --cpu-list 5 %{command}"
+      "command": "bash pausetimes_multicore %{output} taskset --cpu-list 1 %{command}"
     }
   ],
   "benchmarks": [
@@ -91,8 +91,8 @@
       "name": "test_decompress",
       "tags": [
        	"1s_10s",
-       	"macro_bench",
-        "run_in_ci"
+       	"macro_bench"
+         
       ],
       "runs": [
         {
@@ -105,8 +105,8 @@
       "name": "yojson_ydump",
       "tags": [
         "lt_1s",
-        "macro_bench",
-        "run_in_ci"
+        "macro_bench"
+         
       ],
       "runs": [
         {
@@ -146,8 +146,8 @@
       "name": "thread_ring_lwt_mvar",
       "tags": [
         "1s_10s",
-        "macro_bench",
-        "run_in_ci"
+        "macro_bench"
+        
       ],
       "runs": [
         {
@@ -361,8 +361,8 @@
       "name": "revcomp2",
       "tags": [
         "1s_10s",
-        "macro_bench",
-        "run_in_ci"
+        "macro_bench"
+         
       ],
       "runs": [
         {
@@ -493,8 +493,8 @@
       "name": "test_lwt",
       "tags": [
         "10s_100s",
-        "macro_bench",
-        "run_in_ci"
+        "macro_bench"
+      
       ],
       "runs": [
         {
@@ -635,8 +635,8 @@
       "name": "zarith_pi",
       "tags": [
         "1s_10s",
-        "macro_bench",
-        "run_in_ci"
+        "macro_bench"
+         
       ],
       "runs": [
         {
@@ -673,8 +673,8 @@
       "name": "menhir",
       "tags": [
         "1s_10s",
-        "macro_bench",
-        "run_in_ci"
+        "macro_bench"
+         
       ],
       "runs": [
         {
@@ -1520,37 +1520,10 @@
       ],
       "runs": [
         {
-          "params": ""
-        }
-      ]
-    },
-    {
-      "executable": "benchmarks/soli/soli.exe",
-      "name": "soli",
-      "tags": [
-        "1s_10s",
-        "macro_bench"
-        
-      ],
-      "runs": [
-        {
           "params": "200"
         }
       ]
-    },
-    {
-      "executable": "benchmarks/hamming/hamming.exe",
-      "name": "hamming",
-      "tags": [
-        "10s_100s",
-        "macro_bench"
-         
-      ],
-      "runs": [
-        {
-          "params": "200"
-        }
-      ]  
     }
+    
   ]
 }

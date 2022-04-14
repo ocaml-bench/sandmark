@@ -1,0 +1,9 @@
+(executable
+ (name mergesort)
+ (libraries domainslib))
+
+(alias 
+  (name multibench_parallel)
+  (deps mergesort.exe))
+
+   

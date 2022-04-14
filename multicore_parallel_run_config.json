@@ -35,7 +35,7 @@
     {
       "executable": "benchmarks/multicore-minilight/parallel/minilight_multicore.exe",
       "name": "minilight_multicore",
-      "tags": ["macro_bench", "run_in_ci","gt_100s"], 
+      "tags": ["macro_bench","gt_100s"], 
       "runs": [
         {
           "params": "1 roomfront.ml.txt",
@@ -122,7 +122,7 @@
     {
       "executable": "benchmarks/multicore-numerical/mandelbrot6_multicore.exe",
       "name": "mandelbrot6_multicore",
-      "tags": ["macro_bench", "run_in_ci","10s_100s"],
+      "tags": ["macro_bench","10s_100s"],
       "runs": [
         { "params": "1 16_000", "paramwrapper": "taskset --cpu-list 2-13"},
         { "params": "2 16_000", "paramwrapper": "taskset --cpu-list 2-13" },
@@ -146,7 +146,7 @@
     {
       "executable": "benchmarks/multicore-numerical/matrix_multiplication_multicore.exe",
       "name": "matrix_multiplication_multicore",
-      "tags": ["macro_bench", "run_in_ci","1s_10s"],
+      "tags": ["macro_bench", "1s_10s"],
       "runs": [
         { "params": "1 1024", "paramwrapper": "taskset --cpu-list 2-13"},
         { "params": "2 1024", "paramwrapper": "taskset --cpu-list 2-13" },
@@ -350,7 +350,7 @@
     {
       "executable": "benchmarks/multicore-numerical/evolutionary_algorithm_multicore.exe",
       "name": "evolutionary_algorithm_multicore",
-      "tags": ["macro_bench", "run_in_ci","10s_100s"],
+      "tags": ["macro_bench", "10s_100s"],
       "runs": [
         { "params": "1 10000 10000", "paramwrapper": "taskset --cpu-list 2-13"}
       ]
@@ -358,7 +358,7 @@
     {
       "executable": "benchmarks/multicore-numerical/evolutionary_algorithm_multicore.exe",
       "name": "evolutionary_algorithm_multicore",
-      "tags": ["macro_bench", "run_in_ci","gt_100s"],
+      "tags": ["macro_bench","gt_100s"],
       "runs": [
         { "params": "2 10000 10000", "paramwrapper": "taskset --cpu-list 2-13" },
         { "params": "4 10000 10000", "paramwrapper": "taskset --cpu-list 2-13" },
@@ -381,7 +381,7 @@
     {
       "executable": "benchmarks/decompress/test_decompress_multicore.exe",
       "name": "test_decompress_multicore",
-      "tags": ["macro_bench", "run_in_ci","1s_10s"],
+      "tags": ["macro_bench","1s_10s"],
       "runs": [
         { "params": "1 64 1_048_576", "paramwrapper": "taskset --cpu-list 2-13"}
       ]
@@ -700,6 +700,31 @@
           "params": "16 1000000"
         }
       ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/mergesort_multicore.exe",
+      "name": "mergesort_multicore",
+      "tags": [
+        "run_in_ci",
+        "my_bench"
+      ],
+      "runs": [
+        { "params": "1024", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/mergesort/mergesort.exe",
+      "name": "mergesort",
+      "tags": ["run_in_ci",
+        "my_bench"
+      ],   
+      
+      "runs": [
+        
+          
+          { "params": "1024", "paramwrapper": "taskset --cpu-list 2-13" }
+        
+      ]  
     },
     {
       "executable": "benchmarks/multicore-structures/test_stack_parallel.exe",
