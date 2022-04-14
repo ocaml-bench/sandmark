@@ -1,6 +1,7 @@
 (executable
  (name mergesort)
- (libraries domainslib))
+ (modules mergesort)
+ (modes native byte))
 
 (alias 
   (name multibench_parallel)
