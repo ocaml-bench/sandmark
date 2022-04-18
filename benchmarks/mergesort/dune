@@ -1,7 +1,6 @@
 (executable
  (name mergesort)
- (modules mergesort)
- (modes native byte))
+ (modules mergesort))
 (executable
   (name common)
   (modes native)
