@@ -2,9 +2,14 @@
  (name mergesort)
  (modules mergesort)
  (modes native byte))
+(executable
+  (name common)
+  (modes native byte)
+  (modules common))
 
+(alias 
+  (name buildbench)
+  (deps common.exe))
 (alias 
   (name multibench_parallel)
   (deps mergesort.exe))
-
-   
