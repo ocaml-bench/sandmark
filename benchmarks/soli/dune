@@ -1,5 +1,6 @@
 (executable
   (name soli)
   (modes native byte))
-   
-   (alias (name buildbench) (deps soli.exe))
+    (alias (name buildbench) (deps soli.exe))
+(alias (name bytebench)
+    (deps hamming.bc))
