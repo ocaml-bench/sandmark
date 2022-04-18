@@ -4,7 +4,7 @@
  (modes native byte))
 (executable
   (name common)
-  (modes native byte)
+  (modes native)
   (modules common))
 
 (alias 
