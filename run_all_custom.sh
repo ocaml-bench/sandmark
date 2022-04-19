@@ -68,14 +68,14 @@ while [ $i -lt ${COUNT} ]; do
         CONFIG_TAG=`jq -r '.['$i'].tag // "macro_bench"' "${CUSTOM_FILE}"`
 
         if [ $j -eq 0 ]; then
-            CONFIG_RUN_JSON="run_config_filtered.json"
+            CONFIG_RUN_JSON="sequential_filtered.json"
 	    CONFIG_NAME="${CONFIG_NAME}+sequential"
         else
 	    CONFIG_NAME="${CONFIG_NAME}+parallel"
             if [ "${HOSTNAME}" == "navajo" ]; then
-                CONFIG_RUN_JSON="multicore_parallel_navajo_run_config_filtered.json"
+                CONFIG_RUN_JSON="parallel_navajo_filtered.json"
             else
-                CONFIG_RUN_JSON="multicore_parallel_run_config_filtered.json"
+                CONFIG_RUN_JSON="parallel_turing_filtered.json"
             fi
         fi
 

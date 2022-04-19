@@ -18,8 +18,8 @@ steps:
   - eval $(opam env)
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
-  - TAG='"run_in_ci"' make run_config_filtered.json
-  - USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.0.0+stable.bench
+  - TAG='"run_in_ci"' make sequential_filtered.json
+  - USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=sequential_filtered.json make ocaml-versions/5.0.0+stable.bench
   - ls _results
   - cat _results/*
 
@@ -44,10 +44,10 @@ steps:
   - eval $(opam env)
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
-  - TAG='"run_in_ci"' make multicore_parallel_run_config_filtered.json
-  - TAG='"macro_bench"' make multicore_parallel_run_config_filtered_filtered.json
-  - make multicore_parallel_run_config_filtered_filtered_2domains.json
-  - USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.0.0+stable.bench
+  - TAG='"run_in_ci"' make parallel_turing_filtered.json
+  - TAG='"macro_bench"' make parallel_turing_filtered_filtered.json
+  - make parallel_turing_filtered_filtered_2domains.json
+  - USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=parallel_turing_filtered_filtered_2domains.json make ocaml-versions/5.0.0+stable.bench
   - ls _results
   - cat _results/*
 
@@ -72,8 +72,8 @@ steps:
   - eval $(opam env)
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
-  - TAG='"run_in_ci"' make run_config_filtered.json
-  - USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.0.0+trunk.bench
+  - TAG='"run_in_ci"' make sequential_filtered.json
+  - USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=sequential_filtered.json make ocaml-versions/5.0.0+trunk.bench
   - ls _results
   - cat _results/*
 
@@ -98,10 +98,10 @@ steps:
   - eval $(opam env)
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
-  - TAG='"run_in_ci"' make multicore_parallel_run_config_filtered.json
-  - TAG='"macro_bench"' make multicore_parallel_run_config_filtered_filtered.json
-  - make multicore_parallel_run_config_filtered_filtered_2domains.json
-  - USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.0.0+trunk.bench
+  - TAG='"run_in_ci"' make parallel_turing_filtered.json
+  - TAG='"macro_bench"' make parallel_turing_filtered_filtered.json
+  - make parallel_turing_filtered_filtered_2domains.json
+  - USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=parallel_turing_filtered_filtered_2domains.json make ocaml-versions/5.0.0+trunk.bench
   - ls _results
   - cat _results/*
 

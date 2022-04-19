@@ -45,7 +45,7 @@ dependencies.
 Sandmark uses opam, with a static local repository, to build external
 libraries and applications. It then builds any sandmark OCaml
 benchmarks and any data dependencies. Following this it runs the
-benchmarks as defined in the `run_config.json`
+benchmarks as defined in the `sequential.json`
 
 These stages are implemented in:
 
@@ -57,7 +57,7 @@ These stages are implemented in:
 
  - Runplan: the list of benchmarks which will run along with the
    measurement wrapper (e.g. orun or perf) is specified in
-   `run_config.json`. This config file is used to generate dune files
+   `sequential.json`. This config file is used to generate dune files
    which will run the benchmarks.
 
  - Build: dune is used to build all the sandmark OCaml benchmarks that
@@ -65,7 +65,7 @@ These stages are implemented in:
 
  - Execute: dune is used to execute all the benchmarks sepcified in
    the runplan using the benchmark wrapper defined in
-   `run_config.json` and specified via the `RUN_BENCH_TARGET` variable
+   `sequential.json` and specified via the `RUN_BENCH_TARGET` variable
    passed to the makefile.
 
 ## Configuration of the compiler build
@@ -141,7 +141,7 @@ sudo setcap cap_sys_nice=ep /usr/bin/chrt
 ### Configuring the benchmark runs
 
 A config file can be specified with the environment variable `RUN_CONFIG_JSON`,
-and the default value is `run_config.json`. This file lists the executable to
+and the default value is `sequential.json`. This file lists the executable to
 run and the wrapper which will be used to collect data (e.g. orun or perf). You
 can edit this file to change benchmark parameters or wrappers.
 
@@ -177,13 +177,13 @@ current tags are:
 The benchmarking machine `turing` is an Intel Xeon Gold 5120 CPU with 64GB of
 RAM housed at IITM.
 
-The `run_config.json` file may be filtered based on the tag. For example,
+The `sequential.json` file may be filtered based on the tag. For example,
 
 ```bash
-$ TAG='"macro_bench"' make run_config_filtered.json
+$ TAG='"macro_bench"' make sequential_filtered.json
 ```
 
-filters the `run_config.json` file to only contain the benchmarks tagged as
+filters the `sequential.json` file to only contain the benchmarks tagged as
 `macro_bench`.
 
 ### Running benchmarks
@@ -261,17 +261,17 @@ You can add new benchmarks as follows:
 
  - **Add commands to run your applications:**
     Add an entry for your benchmark run to the appropriate config file;
-    `run_config.json` for sequential benchmarks and
-    `multicore_parallel_run_config.json` for parallel benchmarks.
+    `sequential.json` for sequential benchmarks and
+    `parallel_turing.json` for parallel benchmarks.
 
 ### Config files
 
 The `*_config.json` files used to build benchmarks
 
- - **run_config.json** : Runs sequential benchmarks with stock OCaml variants in CI and sandmark-nightly on the IITM machine(turing)
- - **multicore_parallel_run_config.json** : Runs parallel benchmarks with multicore OCaml in CI and sandmark-nightly on the IITM machine(turing)
- - **multicore_parallel_navajo_run_config.json** : Runs parallel benchmarks with multicore OCaml in sandmark-nightly on Navajo (AMD EPYC 7551 32-Core Processor) machine
- - **micro_multicore.json** : To locally run multicore specific micro benchmarks
+ - **sequential.json** : Runs sequential benchmarks with stock OCaml variants in CI and sandmark-nightly on the IITM machine(turing)
+ - **parallel_turing.json** : Runs parallel benchmarks with multicore OCaml in CI and sandmark-nightly on the IITM machine(turing)
+ - **parallel_navajo.json** : Runs parallel benchmarks with multicore OCaml in sandmark-nightly on Navajo (AMD EPYC 7551 32-Core Processor) machine
+ - **micro.json** : To locally run multicore specific micro benchmarks
 
 ### Benchmarks status
 
