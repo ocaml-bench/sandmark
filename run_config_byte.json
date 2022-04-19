@@ -209,6 +209,15 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-numerical/nqueens.bc",
+      "name": "nqueens.bc",
+      "runs": [
+        {
+          "params": "15"
+        }
+      ]
+    },
+    {
       "executable": "benchmarks/valet/test_lwt.bc",
       "name": "test_lwt.bc",
       "runs": [
