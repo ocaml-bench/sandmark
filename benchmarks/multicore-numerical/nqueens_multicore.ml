@@ -46,7 +46,7 @@ let board_size = try int_of_string Sys.argv.(2) with _ -> 13
 
 let () =
   let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
-  let n_solutions = nqueens pool board_size 0 [] in
+  let n_solutions = T.run pool (fun () -> nqueens pool board_size 0 []) in
   T.teardown_pool pool;
 
   Printf.printf "%i solutions for board of size %i\n" n_solutions board_size
