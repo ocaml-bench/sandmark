@@ -180,7 +180,7 @@ RAM housed at IITM.
 The `sequential.json` file may be filtered based on the tag. For example,
 
 ```bash
-$ TAG='"macro_bench"' make run_config_filtered.json
+$ TAG='"macro_bench"' make sequential_filtered.json
 ```
 
 filters the `sequential.json` file to only contain the benchmarks tagged as
@@ -195,7 +195,7 @@ parallel benchmarks use `multibench_parallel`. You can also setup a custom
 bench and add only the benchmarks you care about.
 
 Sandmark has support to build and execute the serial benchmarks in
-byte mode. A separate `run_config_byte.json` file has been created for
+byte mode. A separate `sequential_byte.json` file has been created for
 the same. These benchmarks are relatively slower compared to their
 native execution. You can use the following commands to run the serial
 benchmarks in byte mode:
@@ -203,7 +203,7 @@ benchmarks in byte mode:
 ```bash
 $ opam install dune.2.9.0
 $ USE_SYS_DUNE_HACK=1 SANDMARK_CUSTOM_NAME=5.0.0 BUILD_BENCH_TARGET=bytebench \
-    RUN_CONFIG_JSON=run_config_byte.json make ocaml-versions/5.0.0+stable.bench
+    SEQUENTIAL_JSON=sequential_byte.json make ocaml-versions/5.0.0+stable.bench
 ```
 
 We can obtain throughput and latency results for the benchmarks. For obtaining
@@ -360,7 +360,7 @@ work on OS X is to install GNU sed with homebrew and then update the
 | PIP_DEPENDENCIES | List of Python dependencies | ```intervaltree``` | building compiler and its dependencies |
 | PRE_BENCH_EXEC | Any specific commands that needed to be executed before the benchmark. For eg. `PRE_BENCH_EXEC='taskset --cpu-list 3 setarch uname -m --addr-no-randomize'` | null string | executing benchmark | RUN_BENCH_TARGET | The executable to be used to run the benchmarks | `run_orun` | executing benchmark |
 | RUN_BENCH_TARGET | The executable to be used to run the benchmarks | `run_orun` | executing benchmark |
-| RUN_CONFIG_JSON | Input file selection that contains the list of benchmarks | `sequential.json` | executing benchmark |
+| SEQUENTIAL_JSON | Input file selection that contains the list of benchmarks | `sequential.json` | executing benchmark |
 | SANDMARK_DUNE_VERSION | Default dune version to be used | 2.9.0 | building compiler and its dependencies |
 | SANDMARK_OVERRIDE_PACKAGES | A list of dependency packages with versions that can be overrided (optional) | "" | building compiler and its dependencies |
 | SANDMARK_REMOVE_PACKAGES | A list of dependency packages to be dynamically removed (optional) | "" | building compiler and its dependencies |
