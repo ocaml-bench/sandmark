@@ -1,14 +1,15 @@
 (executable
  (name mergesort)
- (modules mergesort))
-(executable
+ (modules mergesort)
+ (modes native)
+ (libraries domainslib containers))
+
+ (executable
   (name common)
+  (modules common)
   (modes native)
-  (modules common))
+  (libraries domainslib containers))
 
 (alias 
-  (name buildbench)
-  (deps common.exe))
-(alias 
   (name multibench_parallel)
-  (deps mergesort.exe))
+  (deps mergesort.exe common.exe))
