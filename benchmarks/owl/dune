@@ -1,0 +1,8 @@
+
+(executable
+ (name test_owl)
+ (modes native byte)
+ (libraries owl))
+
+(alias (name buildbench) (deps test_owl.exe))
+(alias (name bytebench) (deps test_owl.bc))

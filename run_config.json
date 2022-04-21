@@ -19,6 +19,16 @@
   ],
   "benchmarks": [
     {
+      "executable": "benchmarks/owl/test_owl.exe",
+      "name": "test_owl",
+      "tags": [
+        "run_in_ci"
+      ],
+      "runs": [
+        { "params": " -n 16000" }
+      ]
+    },
+    {
       "executable": "benchmarks/irmin/layers.exe",
       "name": "irmin_pack_layered_1",
       "tags": [
