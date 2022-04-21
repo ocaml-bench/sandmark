@@ -24,6 +24,6 @@ description: """
 PLplot is a library for creating scientific plots.
 http://plplot.sf.net/"""
 url {
-  src: "https://github.com/Sudha247/ocaml-plplot/tree/500"
+  src: "https://github.com/moazzammoriani/ocaml-plplot/blob/main/archive/ocaml-plplot.tar.gz"
   checksum: "md5=b73c6801b42187695d9d3aae96696143"
 }
