@@ -84,6 +84,16 @@
  (libraries domainslib))
 
 (executable
+ (name nqueens)
+ (modes native byte)
+ (modules nqueens))
+
+(executable
+ (name nqueens_multicore)
+ (modules nqueens_multicore)
+ (libraries domainslib))
+
+(executable
  (name mergesort_multicore)
  (modules mergesort_multicore)
  (libraries domainslib))
@@ -103,26 +113,26 @@
  (modules evolutionary_algorithm_multicore)
  (libraries domainslib))
 
-(alias 
+(alias
   (name multibench_parallel)
   (deps mandelbrot6_multicore.exe spectralnorm2_multicore.exe quicksort.exe
         quicksort_multicore.exe binarytrees5_multicore.exe
 	game_of_life.exe game_of_life_multicore.exe
 	matrix_multiplication.exe matrix_multiplication_multicore.exe
 	matrix_multiplication_tiling_multicore.exe nbody.exe
-	nbody_multicore.exe mergesort.exe mergesort_multicore.exe
+	nbody_multicore.exe nqueens_multicore.exe mergesort.exe mergesort_multicore.exe
 	floyd_warshall.exe floyd_warshall_multicore.exe
 	LU_decomposition.exe LU_decomposition_multicore.exe
         evolutionary_algorithm_multicore.exe evolutionary_algorithm.exe))
 
-(alias 
+(alias
   (name buildbench)
   (deps game_of_life.exe matrix_multiplication.exe quicksort.exe
         mergesort.exe floyd_warshall.exe LU_decomposition.exe
-        evolutionary_algorithm.exe))
+        evolutionary_algorithm.exe nqueens.exe))
 
 (alias
   (name bytebench)
   (deps game_of_life.bc matrix_multiplication.bc quicksort.bc
         mergesort.bc floyd_warshall.bc evolutionary_algorithm.bc
-        LU_decomposition.bc nbody.bc mergesort.bc))
+        LU_decomposition.bc nbody.bc mergesort.bc nqueens.bc))

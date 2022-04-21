@@ -57,9 +57,16 @@ PRE_BENCH_EXEC ?=
 # option to allow benchmarks to continue even if the opam package install errored
 CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
+# option to wait for loadavg to settle down once the dependencies are installed and 
+# before the benchmarks are executed
+OPT_WAIT ?= 1
+
+# The time when the wait for the loadavg to decrease begins
+START_TIME ?=
+
 WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
-PACKAGES = sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen eventlog-tools
+PACKAGES = sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES +=  lockfree kcas domainslib ctypes
@@ -129,7 +136,6 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 		*5.0*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore; \
 	esac };
 	opam pin add -n --yes --switch $* base.v0.14.3 https://github.com/janestreet/base.git#v0.14.3
-	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 
@@ -307,7 +313,11 @@ check_url: check_jq
 	    done;                                        				\
 	};
 
-depend: check_url
+load_check:
+	$(eval START_TIME = $(shell date +%s))
+	@./loadavg.sh $(OPT_WAIT) $(START_TIME)
+
+depend: check_url load_check
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
 	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
 

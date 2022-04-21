@@ -610,6 +610,57 @@
 	  "paramwrapper": "taskset --cpu-list 4-63,68-127"
         }
       ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/nqueens.exe",
+      "name": "nqueens",
+      "tags": [
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": "15",
+          "paramwrapper": "taskset --cpu-list 4"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/nqueens_multicore.exe",
+      "name": "nqueens_multicore",
+      "tags": [
+        "macro_bench",
+        "run_in_ci"
+      ],
+      "runs": [
+        {
+          "params": "1 15",
+          "paramwrapper": "taskset --cpu-list 4"
+        },
+        {
+          "params": "8 15",
+          "paramwrapper": "taskset --cpu-list 4-11"
+        },
+        {
+          "params": "16 15",
+          "paramwrapper": "taskset --cpu-list 4-19"
+        },
+        {
+          "params": "32 15",
+          "paramwrapper": "taskset --cpu-list 4-35"
+        },
+        {
+          "params": "64 15",
+          "paramwrapper": "taskset --cpu-list 4-63,68-71"
+        },
+        {
+          "params": "96 15",
+          "paramwrapper": "taskset --cpu-list 4-63,68-103"
+        },
+        {
+          "params": "120 15",
+          "paramwrapper": "taskset --cpu-list 4-63,68-127"
+        }
+      ]
     }
   ]
 }
