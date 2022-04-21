@@ -1,0 +1,6 @@
+(executable
+  (name soli)
+  (modes native byte)
+   (modules soli))
+(alias (name buildbench) (deps soli.exe))
+(alias (name bytebench) (deps soli.bc))

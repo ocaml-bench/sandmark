@@ -678,6 +678,24 @@
           "params": ""
         }
       ]
+    },
+    {
+      "executable": "benchmarks/hamming/hamming.bc",
+      "name": "hamming.bc",
+      "runs": [
+        {
+           "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/soli/soli.bc",
+      "name": "soli.bc",
+      "runs": [
+             {
+               "params": ""
+             }
+      ]
     }
   ]
 }
