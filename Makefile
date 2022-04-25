@@ -135,7 +135,12 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	@{ case "$*" in \
 		*5.0*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore; \
 	esac };
+<<<<<<< HEAD
 	opam pin add -n --yes --switch $* base.v0.14.3 https://github.com/janestreet/base.git#v0.14.3
+=======
+	opam pin add -n --yes --switch $* base.v0.15.0 https://github.com/janestreet/base.git#v0.15.0
+	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
+>>>>>>> be86e47 (Require owl dependencies to be installed)
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
