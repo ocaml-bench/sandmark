@@ -741,7 +741,7 @@
       "tags": ["my_bench"],
       "runs": [
         {
-          "params": ""
+          "params": "", "paramwrapper": "taskset --cpu-list 1"
         }
       ]
     }

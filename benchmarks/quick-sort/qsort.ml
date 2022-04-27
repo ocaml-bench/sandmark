@@ -1,4 +1,4 @@
-module AS = CCArray_slice
+module AS = CCArray
 module A = Array
 
 let swap (arr : 'a AS.t) (i : int) (j : int) =
@@ -44,5 +44,5 @@ let sortInPlace (f : 'a -> 'a -> int) (arr : 'a AS.t) : unit =
 
 let sort (f : 'a -> 'a -> int) (arr : 'a array) : 'a array =
   let result = A.copy arr in
-  quicksort f (AS.full result) 0 (A.length arr - 1) ;
+  quicksort f (A.fill result) 0 (A.length arr - 1) ;
   result
