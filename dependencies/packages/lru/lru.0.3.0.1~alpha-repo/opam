@@ -1,0 +1,28 @@
+opam-version: "2.0"
+synopsis: "Scalable LRU caches"
+description: """\
+Lru provides weight-bounded finite maps that can remove the least-recently-used
+(LRU) bindings in order to maintain a weight constraint."""
+maintainer: "David Kaloper Meršinjak <dk505@cam.ac.uk>"
+authors: "David Kaloper Meršinjak <dk505@cam.ac.uk>"
+license: "ISC"
+homepage: "https://github.com/pqwy/lru"
+doc: "https://pqwy.github.io/lru/doc"
+bug-reports: "https://github.com/pqwy/lru/issues"
+depends: [
+  "ocaml" {>= "5.00"}
+  "dune" {>= "1.7"}
+  "psq" {>= "0.2.0"}
+  "qcheck-core" {with-test}
+  "qcheck-alcotest" {with-test}
+  "alcotest" {with-test}
+]
+build: [
+  ["dune" "subst"] {dev}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name] {with-test}
+]
+dev-repo: "git+https://github.com/pqwy/lru.git"
+url {
+  src: "git+https://github.com/samoht/lru#500"
+}

@@ -138,6 +138,8 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	opam pin add -n --yes --switch $* base.v0.14.3 https://github.com/janestreet/base.git#v0.14.3
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
+	opam pin add -n --yes --switch $* irmin-bench.3.2.1 https://github.com/mirage/irmin.git
+	opam pin add -n --yes --switch $* memtrace.0.2.2.1~alpha-repo git+https://github.com/samoht/memtrace#500
 
 override_packages/%: setup_sys_dune/%
 	$(eval CONFIG_SWITCH_NAME = $*)
