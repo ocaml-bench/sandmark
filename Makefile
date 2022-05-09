@@ -323,9 +323,7 @@ check_url: check_jq
 	};
 
 load_irmin_data:
-	@{
 		wget http://data.tarides.com/irmin/data4_100066commits.repr -P $(IRMIN_DATA_DIR)
-	};
 
 load_check:
 	$(eval START_TIME = $(shell date +%s))
