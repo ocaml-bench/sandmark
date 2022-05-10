@@ -1,5 +1,7 @@
 open Lwt.Syntax
 
+let n_commits = try int_of_string Sys.argv.(1) with _ -> 42
+
 module Maker = Irmin_pack_unix.Maker (Irmin_tezos.Conf)
 (** For an in-memory irmin store, change to [Irmin_pack_mem] and add
    [irmin-pack.mem] in dune file. *)
@@ -23,11 +25,11 @@ let main () =
   let conf =
     Irmin_traces.Trace_replay.
       {
-        number_of_commits_to_replay = 42;
+        number_of_commits_to_replay = n_commits;
         path_conversion = `None;
         inode_config = (32, 256);
         store_type = `Pack;
-        replay_trace_path = "/Users/nico/tz/data5.repr";
+        replay_trace_path = "/tmp/irmin-data/data4_100066commits.repr";
         artefacts_path = "/tmp/irmin_trace_replay_arefacts";
         keep_store = false;
         keep_stat_trace = false;
