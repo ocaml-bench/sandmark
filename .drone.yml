@@ -9,7 +9,7 @@ steps:
 - name: 5.0.0+stable
   image: ocaml/opam:ubuntu-20.04-ocaml-4.12
   commands:
-  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
+  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
   - pip3 install intervaltree
   - sudo chown -R opam .
   - eval $(opam env)
@@ -35,7 +35,7 @@ steps:
 - name: 5.0.0+stable+parallel
   image: ocaml/opam:ubuntu-20.04-ocaml-4.12
   commands:
-  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
+  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
   - pip3 install intervaltree
   - sudo chown -R opam .
   - eval $(opam env)
@@ -63,7 +63,7 @@ steps:
 - name: 5.0.0+trunk+serial
   image: ocaml/opam:ubuntu-20.04-ocaml-4.12
   commands:
-  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
+  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
   - pip3 install intervaltree
   - sudo chown -R opam .
   - eval $(opam env)
@@ -89,7 +89,7 @@ steps:
 - name: 5.0.0+trunk+parallel
   image: ocaml/opam:ubuntu-20.04-ocaml-4.12
   commands:
-  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
+  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
   - pip3 install intervaltree
   - sudo chown -R opam .
   - eval $(opam env)
@@ -117,7 +117,7 @@ steps:
 - name: test_notebooks
   image: ocaml/opam:ubuntu-20.04-ocaml-4.12
   commands:
-  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip jo
+  - sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip jo gnuplot-x11 libgmp-dev
   - export PATH=$PATH:/home/opam/.local/bin
   - pip3 install jupyter nbconvert seaborn pandas
   - cd notebooks/sequential

@@ -34,7 +34,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: 5.0.0+stable
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
+          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
           pip3 install intervaltree
           eval $(opam env)
           opam update
@@ -50,7 +50,7 @@ jobs:
           
       - name: 5.0.0+stable+parallel
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
+          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
           pip3 install intervaltree
           eval $(opam env)
           opam update
@@ -68,7 +68,7 @@ jobs:
             
       - name: 5.0.0+trunk+serial
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
+          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
           pip3 install intervaltree
           eval $(opam env)
           opam update
@@ -84,7 +84,7 @@ jobs:
           
       - name: 5.0.0+trunk+parallel
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
+          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
           pip3 install intervaltree
           eval $(opam env)
           opam update
@@ -103,7 +103,7 @@ jobs:
           
       - name: test_notebooks
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip jo
+          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip jo gnuplot-x11 libgmp-dev
           python3 -m pip install markupsafe==2.0.1
           export PATH=$PATH:/home/opam/.local/bin
           pip3 install jupyter nbconvert seaborn pandas
