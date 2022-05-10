@@ -23,7 +23,7 @@ RUN_CONFIG_JSON ?= run_config.json
 # Default dune version to be used
 SANDMARK_DUNE_VERSION ?= 2.9.0
 
-# Default URL
+# Default URLf652c02139bc471f6f317035709ee6285dad1b58
 SANDMARK_URL ?= ""
 
 # Default packages to remove

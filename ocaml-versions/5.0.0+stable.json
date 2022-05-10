@@ -1,5 +1,5 @@
 {
-  "url" : "https://github.com/ocaml/ocaml/archive/2422a5984a8cc597a44c214946677e562d8808bf.zip",
+  "url" : "https://github.com/ocaml/ocaml/archive/f652c02139bc471f6f317035709ee6285dad1b58.zip",
   "package_overrides": [
     "fmt.0.9.0",
     "ocamlfind.1.9.3"
@@ -14,9 +14,6 @@
     "fraplib",
     "index",
     "integers",
-    "irmin",
-    "irmin-layers",
-    "irmin-pack",
     "js_of_ocaml-compiler",
     "ppx_derivers",
     "ppx_deriving",
