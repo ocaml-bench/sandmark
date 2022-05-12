@@ -34,11 +34,9 @@ let main () =
         keep_store = false;
         keep_stat_trace = false;
         empty_blobs = false;
-        return_type = Summary;
+        return_type = Unit;
       }
   in
-  let+ summary = Replay.run () conf in
-  (* [summary] contains tons of stats *)
-  Printf.eprintf "Elapsed seconds %.3f\n%!" summary.elapsed_wall
+  Replay.run () conf
 
 let () = Lwt_main.run (main ())
