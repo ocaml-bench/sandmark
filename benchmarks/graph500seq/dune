@@ -1,4 +1,16 @@
 (executables
 	(names kronecker kernel1 kernel2 kernel3))
 
-(alias (name buildbench) (deps kronecker.exe kernel1.exe kernel2.exe kernel3.exe))
+
+(rule
+	(targets kronecker.txt)
+	(deps (:prog kronecker.exe))
+	(action (with-stdout-to %{targets} (run %{prog} 12 10))))
+
+(alias
+	(name test1done)
+	(deps kronecker.txt kronecker.exe kernel1.exe))
+
+(alias
+	(name buildbench)
+	(deps (alias test1done) kernel2.exe kernel3.exe))
