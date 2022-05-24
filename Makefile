@@ -23,7 +23,7 @@ RUN_CONFIG_JSON ?= run_config.json
 # Default dune version to be used
 SANDMARK_DUNE_VERSION ?= 2.9.0
 
-# Default URLf652c02139bc471f6f317035709ee6285dad1b58
+# Default URL
 SANDMARK_URL ?= ""
 
 # Default packages to remove
@@ -322,7 +322,9 @@ check_url: check_jq
 	};
 
 load_irmin_data:
-		wget http://data.tarides.com/irmin/data4_100066commits.repr -P $(IRMIN_DATA_DIR)
+ifeq (,$(wildcard $(IRMIN_DATA_DIR)/data4_100066commits.repr))
+	wget http://data.tarides.com/irmin/data4_100066commits.repr -P $(IRMIN_DATA_DIR)
+endif
 
 load_check:
 	$(eval START_TIME = $(shell date +%s))
