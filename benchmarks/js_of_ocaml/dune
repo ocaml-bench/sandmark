@@ -1,0 +1,3 @@
+(executable 
+  (name frankenstein)
+  (modes byte))
