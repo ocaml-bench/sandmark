@@ -17,7 +17,6 @@
     "irmin",
     "irmin-layers",
     "irmin-pack",
-    "js_of_ocaml-compiler",
     "ppx_derivers",
     "ppx_deriving",
     "ppx_deriving_yojson",

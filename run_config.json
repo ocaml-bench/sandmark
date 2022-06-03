@@ -543,12 +543,12 @@
       "executable": "js_of_ocaml",
       "name": "js_of_ocaml",
       "tags": [
-        "jsoo"
+        "macro_bench"
       ],
       "runs": [
         {
-          "params": "--disable=check-magic-number %{bin:js_of_ocaml.byte}",
-          "short_name": "js_of_ocaml"
+          "params": "--disable=check-magic-number %{bin:frankenstein.byte}",
+          "short_name": "frankenstein_byte"
         }
       ]
     },
