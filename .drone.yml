@@ -14,7 +14,8 @@ steps:
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.9.0
+  - opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+  - opam install dune
   - eval $(opam env)
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
@@ -40,7 +41,8 @@ steps:
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.9.0
+  - opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+  - opam install dune
   - eval $(opam env)
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
@@ -68,7 +70,8 @@ steps:
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.9.0
+  - opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+  - opam install dune
   - eval $(opam env)
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true
@@ -94,7 +97,8 @@ steps:
   - sudo chown -R opam .
   - eval $(opam env)
   - opam update
-  - opam install dune.2.9.0
+  - opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+  - opam install dune
   - eval $(opam env)
   - export ITER=1
   - export OPAM_DISABLE_SANDBOXING=true

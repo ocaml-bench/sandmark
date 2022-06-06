@@ -1,8 +1,8 @@
 {
-  "url" : "https://github.com/ocaml/ocaml/archive/2422a5984a8cc597a44c214946677e562d8808bf.zip",
+  "url" : "https://github.com/ocaml/ocaml/archive/09ed8dfa28fd1d4a6576aac0ada6d1e0fde7a0e7.zip",
   "package_overrides": [
     "fmt.0.9.0",
-    "ocamlfind.1.9.3"
+    "ocamlfind.1.9.3.git"
   ],
   "package_remove": [
     "camlpdf",
