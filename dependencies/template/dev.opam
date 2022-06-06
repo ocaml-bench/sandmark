@@ -41,7 +41,6 @@ depends: [
   "menhirSdk" {= "20200612"}
   "mtime" {= "1.2.0"}
   "num" {= "1.3"}
-  "npy" {= "0.0.9"}
   "ocaml-config" {= "1"}
   "ocamlgraph" {= "2.0.0"}
   "optint" {= "0.0.4"}

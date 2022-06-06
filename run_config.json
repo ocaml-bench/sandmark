@@ -22,7 +22,7 @@
       "executable": "benchmarks/owl/test_owl.exe",
       "name": "test_owl",
       "tags": [
-        "run_in_ci"
+        "buildbench"
       ],
       "runs": [
         { "params": "8192" }

@@ -66,7 +66,7 @@ START_TIME ?=
 
 WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
-PACKAGES = sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen
+PACKAGES = owl npy sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES +=  lockfree kcas domainslib ctypes
@@ -135,11 +135,14 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	@{ case "$*" in \
 		*5.0*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore; \
 	esac };
-	opam pin add -n --yes --switch $* base.0.15.0 git+https://github.com/patricoferris/base.git#500+random
-	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
+	opam pin add -n --yes --switch $* base https://github.com/kit-ty-kate/base/archive/500-015.tar.gz
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
-	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
+	opam pin add -n --yes --switch $* npy https://github.com/Sudha247/npy-ocaml.git#500
+	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
+	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz 
+	opam pin add -n --yes --switch $* ocplib-endian https://github.com/kit-ty-kate/ocplib-endian/archive/500.tar.gz
+	opam pin add -n --yes --switch $* owl https://github.com/Sudha247/owl.git#500
 
 override_packages/%: setup_sys_dune/%
 	$(eval CONFIG_SWITCH_NAME = $*)
