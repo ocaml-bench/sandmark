@@ -135,6 +135,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	@{ case "$*" in \
 		*5.0*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore; \
 	esac };
+	opam pin add -n --yes --switch $* dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
 	opam pin add -n --yes --switch $* base https://github.com/kit-ty-kate/base/archive/500-015.tar.gz
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
