@@ -21,7 +21,8 @@ $ pip3 install jupyter seaborn pandas intervaltree
 $ sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 $ opam init
 
-$ opam install dune.2.9.0
+$ opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+$ opam install dune
 
 $ git clone https://github.com/ocaml-bench/sandmark.git
 $ cd sandmark
