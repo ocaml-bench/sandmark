@@ -13,7 +13,7 @@ at [sandmark.ocamllabs.io](https://sandmark.ocamllabs.io).
 On Ubuntu 18.04.4 LTS you can try the following commands:
 
 ```bash
-$ sudo apt-get install curl git libgmp-dev libdw-dev python3-pip jq bubblewrap \
+$ sudo apt-get install curl git libgmp-dev libdw-dev python3-pip jq jo bubblewrap \
 	pkg-config m4 unzip
 $ pip3 install jupyter seaborn pandas intervaltree
 
