@@ -21,13 +21,20 @@ $ pip3 install jupyter seaborn pandas intervaltree
 $ sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 $ opam init
 
+$ git clone https://github.com/ocaml-bench/sandmark.git
+$ cd sandmark
+
+## For 4.14.0+domains
+
+$ make ocaml-versions/4.14.0+domains.bench
+
+## For 5.0.0+trunk
+
 $ opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
 $ opam install dune
 
-$ git clone https://github.com/ocaml-bench/sandmark.git
-$ cd sandmark
-$ make ocaml-versions/5.0.0+trunk.bench
-$ make ocaml-versions/4.14.0+domains.bench
+$ TAG='"run_in_ci"' make run_config_filtered.json
+$ USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.0.0+trunk.bench
 ```
 
 You can now find the results in the `_results/` folder.
