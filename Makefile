@@ -66,7 +66,7 @@ START_TIME ?=
 
 WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
-PACKAGES = owl npy sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen
+PACKAGES = owl sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES +=  lockfree kcas domainslib ctypes
@@ -144,6 +144,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz 
 	opam pin add -n --yes --switch $* ocplib-endian https://github.com/kit-ty-kate/ocplib-endian/archive/500.tar.gz
 	opam pin add -n --yes --switch $* owl https://github.com/Sudha247/owl.git#500
+	opam pin add -n --yes --switch $* owl-base https://github.com/Sudha247/owl.git#500
 
 override_packages/%: setup_sys_dune/%
 	$(eval CONFIG_SWITCH_NAME = $*)

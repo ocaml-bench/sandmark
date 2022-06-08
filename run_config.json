@@ -1,5 +1,4 @@
-{
-  "wrappers": [
+{ "wrappers": [
     {
       "name": "orun",
       "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
