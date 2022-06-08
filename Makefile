@@ -143,8 +143,9 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	opam pin add -n --yes --switch $* eventlog-tools https://github.com/ocaml-multicore/eventlog-tools.git#multicore
 	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz 
 	opam pin add -n --yes --switch $* ocplib-endian https://github.com/kit-ty-kate/ocplib-endian/archive/500.tar.gz
-	opam pin add -n --yes --switch $* owl https://github.com/Sudha247/owl.git#500
-	opam pin add -n --yes --switch $* owl-base https://github.com/Sudha247/owl.git#500
+	opam pin add -n --yes --switch $* owl https://github.com/moazzammoriani/owl.git#500+arm64
+	opam pin add -n --yes --switch $* owl-base https://github.com/moazzammoriani/owl.git#500+arm64
+ 
 
 override_packages/%: setup_sys_dune/%
 	$(eval CONFIG_SWITCH_NAME = $*)
