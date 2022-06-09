@@ -133,7 +133,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	opam update
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	@{ case "$*" in \
-		*5.0*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore; \
+		*5.1*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore; \
 	esac };
 	opam pin add -n --yes --switch $* base.v0.14.3 https://github.com/janestreet/base.git#v0.14.3
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
@@ -150,7 +150,7 @@ ifeq (0, $(USE_SYS_DUNE_HACK))
 endif
 	opam update --switch=$(CONFIG_SWITCH_NAME)
 	@{ case "$*" in \
-		*5.0*) sed 's/(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/; (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/g' ./benchmarks/irmin/dune > ./benchmarks/irmin/dune ; \
+		*5.1*) sed 's/(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/; (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/g' ./benchmarks/irmin/dune > ./benchmarks/irmin/dune ; \
 			sed 's/(alias (name buildbench) (deps metro_geo.pdf PDFReference16.pdf_toobig))/; (alias (name buildbench) (deps metro_geo.pdf PDFReference16.pdf_toobig))/g' ./benchmarks/cpdf/dune ;; \
 	esac };
 	@{	for i in ${PACKAGES}; do \
