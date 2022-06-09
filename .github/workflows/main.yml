@@ -36,6 +36,16 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
           pip3 install intervaltree
+          # Work-around for Ubuntu-OpenBLAS issue for Owl by building OpenBLAS from source
+          sudo apt-get -y install unzip aspcud libshp-dev libplplot-dev gfortran pkg-config git
+          git clone https://github.com/xianyi/OpenBLAS OpenBLAS
+          cd OpenBLAS/
+          make 
+          cd ..
+          ldconfig /opt/OpenBLAS/lib/
+          OWL_DISABLE_LAPACKE_LINKING_FLAG=1
+          OWL_COMPILE_CFLAGS="-I/opt/OpenBLAS/include -I/home/opam/OpenBLAS/lapack-netlib/LAPACKE/include/ -L/opt/OpenBLAS/lib"
+          CFLAGS=${OWL_COMPILE_CFLAGS}
           eval $(opam env)
           opam update
           opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
