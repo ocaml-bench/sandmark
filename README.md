@@ -28,13 +28,13 @@ $ cd sandmark
 
 $ make ocaml-versions/4.14.0+domains.bench
 
-## For 5.0.0+trunk
+## For 5.1.0+trunk
 
 $ opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
 $ opam install dune
 
 $ TAG='"run_in_ci"' make run_config_filtered.json
-$ USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.0.0+trunk.bench
+$ USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+trunk.bench
 ```
 
 You can now find the results in the `_results/` folder.
