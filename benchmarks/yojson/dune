@@ -4,7 +4,7 @@
 (executable
  (name ydump)
  (modes native byte)
- (libraries yojson))
+ (libraries yojson camlp-streams))
 
 (alias (name buildbench) (deps ydump.exe sample.json))
 (alias (name bytebench) (deps ydump.bc sample.json))
