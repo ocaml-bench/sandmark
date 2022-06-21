@@ -1,4 +1,4 @@
-[![Build Status](http://cloud.drone.io/api/badges/ocaml-bench/sandmark/status.svg?branch=main)](http://cloud.drone.io/ocaml-bench/sandmark)
+[![Build Status](https://github.com/ocaml-bench/sandmark/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/ocaml-bench/sandmark/actions/workflows/main.yml/badge.svg?branch=main)
 
 # Sandmark
 
