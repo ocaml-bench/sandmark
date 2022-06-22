@@ -19,23 +19,16 @@
   ],
   "benchmarks": [
     {
-      "executable": "benchmarks/irmin/layers.exe",
-      "name": "irmin_pack_layered_1",
+      "executable": "benchmarks/irmin/replay.exe",
+      "name": "irmin_replay",
       "tags": [
-        "gt_100s"
+        "gt_100s",
+        "macro_bench"
       ],
       "runs": [
-        { "params": " -n 16000" }
-      ]
-    },
-    {
-      "executable": "benchmarks/irmin/layers.exe",
-      "name": "irmin_pack_layered_2",
-      "tags": [
-        "gt_100s"
-      ],
-      "runs": [
-	{ "params": " -n 100 -b 100" }
+        {
+          "params": "100000"
+        }
       ]
     },
     {
