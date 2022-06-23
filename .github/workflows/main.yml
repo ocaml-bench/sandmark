@@ -32,29 +32,31 @@ jobs:
       - run: opam install . --deps-only --with-test
 
       # Runs a set of commands using the runners shell
-      - name: 5.0.0+stable
+      - name: 5.1.0+stable
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
           pip3 install intervaltree
           eval $(opam env)
           opam update
-          opam install dune.2.9.0
+          opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+          opam install dune
           eval $(opam env)
           export ITER=1
           export OPAM_DISABLE_SANDBOXING=true
           TAG='"run_in_ci"' make run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' run_config_filtered.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.0.0+stable.bench
+          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+stable.bench
           ls _results
           cat _results/*  
           
-      - name: 5.0.0+stable+parallel
+      - name: 5.1.0+stable+parallel
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
           pip3 install intervaltree
           eval $(opam env)
           opam update
-          opam install dune.2.9.0
+          opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+          opam install dune
           eval $(opam env)
           export ITER=1
           export OPAM_DISABLE_SANDBOXING=true
@@ -62,33 +64,35 @@ jobs:
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered.json
           TAG='"macro_bench"' make multicore_parallel_run_config_filtered_filtered.json
           make multicore_parallel_run_config_filtered_filtered_2domains.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.0.0+stable.bench
+          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.1.0+stable.bench
           ls _results
           cat _results/*
             
-      - name: 5.0.0+trunk+serial
+      - name: 5.1.0+trunk+serial
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
           pip3 install intervaltree
           eval $(opam env)
           opam update
-          opam install dune.2.9.0
+          opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+          opam install dune
           eval $(opam env)
           export ITER=1
           export OPAM_DISABLE_SANDBOXING=true
           TAG='"run_in_ci"' make run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' run_config_filtered.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.0.0+trunk.bench  
+          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+trunk.bench  
           ls _results
           cat _results/*
           
-      - name: 5.0.0+trunk+parallel
+      - name: 5.1.0+trunk+parallel
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
           pip3 install intervaltree
           eval $(opam env)
           opam update
-          opam install dune.2.9.0
+          opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+          opam install dune
           eval $(opam env)
           export ITER=1
           export OPAM_DISABLE_SANDBOXING=true
@@ -97,7 +101,7 @@ jobs:
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered_filtered.json
           make multicore_parallel_run_config_filtered_filtered_2domains.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.0.0+trunk.bench
+          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.1.0+trunk.bench
           ls _results
           cat _results/*
           

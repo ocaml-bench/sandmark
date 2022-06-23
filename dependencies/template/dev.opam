@@ -13,6 +13,7 @@ depends: [
   "astring" {= "0.8.5"}
   "base64" {= "3.4.0"}
   "bigstringaf" {= "0.6.1"}
+  "camlp-streams" {="5.0"}
   "checkseum" {= "0.2.1"}
   "conf-findutils" {= "1"}
   "conf-gmp" {= "1"}

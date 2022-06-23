@@ -1,4 +1,4 @@
-[![Build Status](http://cloud.drone.io/api/badges/ocaml-bench/sandmark/status.svg?branch=main)](http://cloud.drone.io/ocaml-bench/sandmark)
+[![Build Status](https://github.com/ocaml-bench/sandmark/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/ocaml-bench/sandmark/actions/workflows/main.yml/badge.svg?branch=main)
 
 # Sandmark
 
@@ -13,7 +13,7 @@ at [sandmark.ocamllabs.io](https://sandmark.ocamllabs.io).
 On Ubuntu 18.04.4 LTS you can try the following commands:
 
 ```bash
-$ sudo apt-get install curl git libgmp-dev libdw-dev python3-pip jq bubblewrap \
+$ sudo apt-get install curl git libgmp-dev libdw-dev python3-pip jq jo bubblewrap \
 	pkg-config m4 unzip
 $ pip3 install jupyter seaborn pandas intervaltree
 
@@ -21,12 +21,20 @@ $ pip3 install jupyter seaborn pandas intervaltree
 $ sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 $ opam init
 
-$ opam install dune.2.9.0
-
 $ git clone https://github.com/ocaml-bench/sandmark.git
 $ cd sandmark
-$ make ocaml-versions/5.0.0+trunk.bench
+
+## For 4.14.0+domains
+
 $ make ocaml-versions/4.14.0+domains.bench
+
+## For 5.1.0+trunk
+
+$ opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+$ opam install dune
+
+$ TAG='"run_in_ci"' make run_config_filtered.json
+$ USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+trunk.bench
 ```
 
 You can now find the results in the `_results/` folder.
