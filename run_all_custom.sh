@@ -115,7 +115,7 @@ while [ $i -lt ${COUNT} ]; do
                                  SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
                                  SANDMARK_OVERRIDE_PACKAGES="`echo ${CONFIG_OVERRIDE_PACKAGES}`" \
                                  SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
-                                 make ocaml-versions/5.0.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
+                                 make ocaml-versions/5.1.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
             else
                 USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
                                  RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
@@ -127,7 +127,7 @@ while [ $i -lt ${COUNT} ]; do
                                  SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
                                  RUN_BENCH_TARGET=run_orunchrt \
                                  BUILD_BENCH_TARGET=multibench_parallel \
-                                 make ocaml-versions/5.0.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
+                                 make ocaml-versions/5.1.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
             fi
 
             # Copy results
