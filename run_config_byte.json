@@ -60,7 +60,7 @@
       "name": "zarith_pi.bc",
       "runs": [
         {
-          "params": "5000"
+          "params": "10_000"
         }
       ]
     },
@@ -684,7 +684,7 @@
       "name": "hamming.bc",
       "runs": [
         {
-           "params": ""
+           "params": "10_000"
         }
       ]
     },

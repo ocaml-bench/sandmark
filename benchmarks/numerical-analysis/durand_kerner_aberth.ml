@@ -176,6 +176,8 @@ let cs =
   Array.sub cs 0 (Array.length cs * len / 100)
 
 let main () =
-  roots cs
+  for i=1 to 10 do
+    roots cs |> ignore
+  done
 
-let () = main () |> ignore
+let () = main ()

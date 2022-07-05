@@ -5,6 +5,8 @@
    int64 is a bit short, so we roll our own 37-digit numbers...
 *)
 
+
+
 let n0 = Int64.of_int 0;;
 let n1 = Int64.of_int 1;;
 let n2 = Int64.of_int 2;;
@@ -91,4 +93,7 @@ let rec hamming = lazy (Cons (nn1, merge cmp ham2 (merge cmp ham3 ham5)))
     and ham5 = lazy (force (map x5 hamming))
 ;;
 
-iter_interval pr hamming (88000, 88100);;
+let n = try int_of_string Sys.argv.(1) with _ -> 200
+;;
+
+iter_interval pr hamming (88000, Stdlib.(+) 88000 n);;
