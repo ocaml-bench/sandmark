@@ -194,6 +194,29 @@
         { "params": "24 15", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
       ]
     },
+    {
+      "executable": "benchmarks/multicore-numerical/count_change_iter.exe",
+      "name": "count_change_iter",
+      "tags": ["10s_100s", "macro_bench"],
+      "runs": [
+        { "params": "2200", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/count_change_iter_multicore.exe",
+      "name": "count_change_iter_multicore",
+      "tags": ["macro_bench","10s_100s"],
+      "runs": [
+        { "params": "1 2200", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 2200", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 2200", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 2200", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 2200", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 2200", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 2200", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 2200", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
 
     {
       "executable": "benchmarks/multicore-numerical/quicksort.exe",
