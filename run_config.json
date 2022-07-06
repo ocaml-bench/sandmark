@@ -293,12 +293,12 @@
       "executable": "benchmarks/multicore-numerical/count_change_iter.exe",
       "name": "count_change_iter",
       "tags": [
-        "1s_10s",
+        "10s_100s",
         "macro_bench"
       ],
       "runs": [
         {
-          "params": "1600"
+          "params": "400"
         }
       ]
     },

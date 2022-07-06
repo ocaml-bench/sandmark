@@ -75,13 +75,12 @@ let cc_par pool amt (coins : ((int * int) list)) arr =
     let curr  = fun (_, _, x, _) -> x in
     let stack = fun (_, _, _, x) -> x in
     T.parallel_for pool ~start:0 ~finish:(len-1) ~body:(fun i ->
-        Printf.printf "%d\n" i;
         arr.(i) <- des (amt setup.(i)) (c setup.(i)) (curr setup.(i)) [] (stack setup.(i));
     ) 
 
 let coins_input : (int * int) list =
-  let cs = [250 ; 100 ; 25 ; 10 ; 5 ; 1] in
-  let qs = [55 ; 88 ; 88 ; 99 ; 122 ; 177] in
+  let cs = [500 ; 250 ; 150; 100 ; 75 ; 50 ; 25 ; 20 ; 10 ; 5 ; 2 ; 1] in
+  let qs = [22; 55 ; 88 ; 88 ; 99 ; 99 ; 122; 122; 122 ; 122; 177; 177] in  
   L.combine cs qs
 
 let arr = A.init (L.length coins_input) (fun _ -> [])

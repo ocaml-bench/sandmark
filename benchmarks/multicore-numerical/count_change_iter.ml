@@ -56,8 +56,8 @@ let cc amt (coins : ((int * int) list)) =
     aux coins []
 
 let coins_input : (int * int) list =
-  let cs = [250 ; 100 ; 25 ; 10 ; 5 ; 1] in
-  let qs = [55 ; 88 ; 88 ; 99 ; 122 ; 177] in
+  let cs = [500 ; 250 ; 150; 100 ; 75 ; 50 ; 25 ; 20 ; 10 ; 5 ; 2 ; 1] in
+  let qs = [22; 55 ; 88 ; 88 ; 99 ; 99 ; 122; 122; 122 ; 122; 177; 177] in  
   L.combine cs qs
 
 let () = 

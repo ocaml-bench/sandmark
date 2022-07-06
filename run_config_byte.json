@@ -222,7 +222,7 @@
       "name": "count_change_iter.bc",
       "runs": [
         {
-          "params": "2200"
+          "params": "400"
         }
       ]
     },
