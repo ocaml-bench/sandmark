@@ -40,8 +40,8 @@ USE_SYS_DUNE_HACK ?= 0
 
 # benchmark run target type:
 #  run_<wrapper> where wrapper is one of the wrappers defined in
-#  RUN_CONFIG_JSON. The default RUN_CONFIG_JSON defines two wrappers: perf and
-#  orun
+#  RUN_CONFIG_JSON. The default RUN_CONFIG_JSON defines two wrappers: perfstat
+#  and orun
 RUN_BENCH_TARGET ?= run_orun
 
 # Dry run test without executing benchmarks
@@ -57,7 +57,7 @@ PRE_BENCH_EXEC ?=
 # option to allow benchmarks to continue even if the opam package install errored
 CONTINUE_ON_OPAM_INSTALL_ERROR ?= true
 
-# option to wait for loadavg to settle down once the dependencies are installed and 
+# option to wait for loadavg to settle down once the dependencies are installed and
 # before the benchmarks are executed
 OPT_WAIT ?= 1
 
