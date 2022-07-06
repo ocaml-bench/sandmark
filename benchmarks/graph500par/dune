@@ -1,0 +1,40 @@
+; Generates a graph as an array of edges and mashals it to a file.
+(executable
+  (name gen)
+  (modules gen)
+  (libraries generate kernel1Par unix)
+)
+
+(library
+  (name generate)
+  (modules generate)
+  (libraries types domainslib)
+)
+
+(library
+  (name types)
+  (modules types)
+  (modules_without_implementation types)
+)
+
+(library
+  (name sparseGraph)
+  (modules sparseGraph)
+  (libraries types lockfree)
+)
+
+(library
+  (name kernel1Par)
+  (modules kernel1Par)
+  (libraries generate sparseGraph unix domainslib)
+)
+
+(executable
+  (name kernel1Par_run)
+  (modules kernel1Par_run)
+  (libraries types generate kernel1Par unix domainslib)
+)
+
+(alias
+  (name multibench_parallel)
+  (deps gen.exe kernel1Par_run.exe))
