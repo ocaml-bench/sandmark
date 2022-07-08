@@ -53,10 +53,3 @@ let () =
         (Array.sort (fun x y -> x - y) c) in 
     print_endline ((c = a) |>  Bool.to_string);
     print_endline (string_of_int n);
-
-
-
-(*let () =
-  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
-  sort pool a;
-  T.teardown_pool pool *)
