@@ -289,7 +289,18 @@
         }
       ]
     },
-
+    {
+      "executable": "benchmarks/multicore-numerical/nqueens.exe",
+      "name": "mergesort",
+      "tags": [
+        "1s_10s",
+        "macro_bench"
+      ], "runs": [
+        {
+          "params": "67108864"
+        }
+      ]
+    },
     {
       "executable": "benchmarks/multicore-grammatrix/grammatrix.exe",
       "name": "grammatrix",

@@ -45,11 +45,5 @@ let sort a =
   let b = Array.copy a in
    merge_sort false a b 0 (Array.length a)
 
-let () = 
-    let c = Array.copy a in 
-    let () =  
-        (sort a) in 
-    let () = 
-        (Array.sort (fun x y -> x - y) c) in 
-    print_endline ((c = a) |>  Bool.to_string);
-    print_endline (string_of_int n);
+let () =
+    (sort a)
