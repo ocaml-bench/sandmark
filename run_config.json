@@ -51,18 +51,6 @@
       ]
     },
     {
-      "executable": "benchmarks/graph500seq/kernel1.exe",
-      "name": "kernel1",
-      "tags": [
-        "1s_10s"
-      ],
-      "runs": [
-	{
-	  "params": "12 10"
-	}
-      ]
-    },
-    {
       "executable": "benchmarks/graph500seq/kernel2.exe",
       "name": "kernel2",
       "tags": [
@@ -83,6 +71,26 @@
       "runs": [
 	{
 	  "params": "12 10 2"
+	}
+      ]
+    },
+    {
+      "executable": "benchmarks/graph500seq/gen.exe",
+      "name": "graph500_seq_gen",
+      "tags": [ "10s_100s" ],
+      "runs": [
+	{
+	  "params": "-scale 21 -edgefactor 16 edges.data"
+	}
+      ]
+    },
+    {
+      "executable": "benchmarks/graph500seq/kernel1Seq_run.exe",
+      "name": "graph500_seq_kernel1",
+      "tags": [ "10s_100s", "macro_bench" ],
+      "runs": [
+	{
+	  "params": "edges.data"
 	}
       ]
     },
