@@ -32,9 +32,6 @@ SANDMARK_REMOVE_PACKAGES ?= ""
 # Default list of packages to override
 SANDMARK_OVERRIDE_PACKAGES ?= ""
 
-# Override orun with custom name
-SANDMARK_CUSTOM_NAME ?= ""
-
 # Flag to select whether to use sys_dune_hack
 USE_SYS_DUNE_HACK ?= 0
 
@@ -235,6 +232,7 @@ blah:
 	@echo ${PACKAGES}
 
 ocaml-versions/%.bench: depend check-parallel/% filter/% override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
+	$(eval SANDMARK_CUSTOM_NAME ?= $*)
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))

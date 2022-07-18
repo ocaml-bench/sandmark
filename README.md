@@ -381,6 +381,7 @@ work on OS X is to install GNU sed with homebrew and then update the
 | PRE_BENCH_EXEC | Any specific commands that needed to be executed before the benchmark. For eg. `PRE_BENCH_EXEC='taskset --cpu-list 3 setarch uname -m --addr-no-randomize'` | null string | executing benchmark | RUN_BENCH_TARGET | The executable to be used to run the benchmarks | `run_orun` | executing benchmark |
 | RUN_BENCH_TARGET | The executable to be used to run the benchmarks | `run_orun` | executing benchmark |
 | RUN_CONFIG_JSON | Input file selection that contains the list of benchmarks | `run_config.json` | executing benchmark |
+| SANDMARK_CUSTOM_NAME | Custom name to use for the bench output file | variant from the `ocaml-version/<variant>.json` file name | executing benchmark |
 | SANDMARK_DUNE_VERSION | Default dune version to be used | 2.9.0 | building compiler and its dependencies |
 | SANDMARK_OVERRIDE_PACKAGES | A list of dependency packages with versions that can be overrided (optional) | "" | building compiler and its dependencies |
 | SANDMARK_REMOVE_PACKAGES | A list of dependency packages to be dynamically removed (optional) | "" | building compiler and its dependencies |
