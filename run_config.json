@@ -290,7 +290,7 @@
       ]
     },
     {
-      "executable": "benchmarks/multicore-numerical/nqueens.exe",
+      "executable": "benchmarks/multicore-numerical/mergersort.exe",
       "name": "mergesort",
       "tags": [
         "1s_10s",
