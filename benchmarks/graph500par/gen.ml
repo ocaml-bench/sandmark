@@ -15,7 +15,8 @@ let () =
   Random.self_init ();
   Arg.parse speclist
     (fun s -> filename := s)
-    "gen.exe [-scale SCALE] [-edgefactor EDGE_FACTOR] OUTPUT_FILENAME";
+    "gen.exe [-scale SCALE] [-edgefactor EDGE_FACTOR] [-ndomains NUM_DOMAINS] \
+      OUTPUT_FILENAME";
   if !filename = "" then begin
     Printf.eprintf "Must provide graph file argument.\n"; exit 1
   end;
