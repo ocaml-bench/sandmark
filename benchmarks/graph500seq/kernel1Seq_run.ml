@@ -9,7 +9,7 @@ let () =
   end;
   Printf.printf "Reading edge list from %s...\n%!" !filename;
   let t0 = Unix.gettimeofday () in
-  let edges = Generate.from_file !filename in
+  let edges = GenerateSeq.from_file !filename in
   let t1 = Unix.gettimeofday () in
   Printf.printf "Done. Time: %f s.\nBuilding sparse representation...\n%!" (t1 -. t0);
   let t0 = Unix.gettimeofday () in

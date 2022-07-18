@@ -8,15 +8,15 @@
 ;;;;; Newer implementations ;;;;;
 
 (library
-  (name generate)
-  (modules generate)
+  (name generateSeq)
+  (modules generateSeq)
   (libraries graphTypes)
 )
 
 (executable
   (name gen)
   (modules gen)
-  (libraries unix generate)
+  (libraries unix generateSeq)
 )
 
 (library
@@ -28,13 +28,13 @@
 (library
   (name kernel1Seq)
   (modules kernel1Seq)
-  (libraries generate sparseGraph unix)
+  (libraries generateSeq sparseGraphSeq unix)
 )
 
 (executable
   (name kernel1Seq_run)
   (modules kernel1Seq_run)
-  (libraries graphTypes generate kernel1Seq unix)
+  (libraries graphTypes generateSeq kernel1Seq unix)
 )
 
 (alias
