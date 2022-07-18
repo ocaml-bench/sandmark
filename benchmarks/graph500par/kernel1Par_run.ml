@@ -1,10 +1,8 @@
-let run_prop_test = ref true
 let num_domains = ref 1
 let filename = ref ""
 
 let speclist =
-  [ ("-nocheck", Arg.Clear run_prop_test, "Run property-based checks");
-    ("-ndomains", Arg.Set_int num_domains, "number of domains");
+  [ ("-ndomains", Arg.Set_int num_domains, "number of domains");
   ]
 
 module T = Domainslib.Task
@@ -12,7 +10,7 @@ module T = Domainslib.Task
 let () =
   Random.self_init ();
   Arg.parse speclist (fun s -> filename := s)
-    "kernel1Par.exe [-nocheck] EDGE_LIST_FILE";
+    "kernel1Par.exe [-ndomains NUM_DOMAINS] EDGE_LIST_FILE";
   if !filename = "" then begin
     Printf.eprintf "Must provide graph file argument.\n"; exit 1
   end;

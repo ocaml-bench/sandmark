@@ -125,13 +125,13 @@
       "name": "graph500_par_kernel1",
       "tags": [ "10s_100s", "macro_bench" ],
       "runs": [
-	{ "params": "-ndomains 2 -nocheck edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 4 -nocheck edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 8 -nocheck edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 12 -nocheck edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 16 -nocheck edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-ndomains 20 -nocheck edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-ndomains 24 -nocheck edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+	{ "params": "-ndomains 2 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+	{ "params": "-ndomains 4 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+	{ "params": "-ndomains 8 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+	{ "params": "-ndomains 12 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+	{ "params": "-ndomains 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+	{ "params": "-ndomains 20 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+	{ "params": "-ndomains 24 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
       ]
     },
 
