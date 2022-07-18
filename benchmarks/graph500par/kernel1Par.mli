@@ -1,4 +1,4 @@
-open Types
+open GraphTypes
 
 module T = Domainslib.Task
 

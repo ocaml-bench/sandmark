@@ -27,7 +27,7 @@
 	Here, the labels are from 0 to N-1.
 *)
 
-open Types
+open GraphTypes
 
 (* [twopow x] is 2 to the power [x]. *)
 let twopow x = 1 lsl x

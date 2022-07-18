@@ -1,4 +1,4 @@
-open Types
+open GraphTypes
 
 val go : scale:int -> edge_factor:int -> edge array
 val to_file : filename:string -> edge array -> unit

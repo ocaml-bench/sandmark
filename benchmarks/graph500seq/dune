@@ -8,15 +8,9 @@
 ;;;;; Newer implementations ;;;;;
 
 (library
-  (name types)
-  (modules types)
-  (modules_without_implementation types)
-)
-
-(library
   (name generate)
   (modules generate)
-  (libraries types)
+  (libraries graphTypes)
 )
 
 (executable
@@ -26,9 +20,9 @@
 )
 
 (library
-  (name sparseGraph)
-  (modules sparseGraph)
-  (libraries types)
+  (name sparseGraphSeq)
+  (modules sparseGraphSeq)
+  (libraries graphTypes)
 )
 
 (library
@@ -40,7 +34,7 @@
 (executable
   (name kernel1Seq_run)
   (modules kernel1Seq_run)
-  (libraries types generate kernel1Seq unix)
+  (libraries graphTypes generate kernel1Seq unix)
 )
 
 (alias

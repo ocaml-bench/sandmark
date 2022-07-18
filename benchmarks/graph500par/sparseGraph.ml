@@ -1,4 +1,4 @@
-open Types
+open GraphTypes
 
 type t = (vertex * weight) list Atomic.t array
 

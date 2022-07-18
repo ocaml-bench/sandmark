@@ -2,7 +2,7 @@
    graphs which corresponds to a sparse graph implementation.
    INPUTS : an array of edges as (start vertex, end vertex, weight) tuples. *)
 
-open Types
+open GraphTypes
 
 (* Ensure that for every edge (start, end), start > end, swapping start and
    end if necessary. Remove self-loops. Also returns the maximum edge label. *)

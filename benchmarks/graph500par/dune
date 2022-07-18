@@ -8,19 +8,19 @@
 (library
   (name generate)
   (modules generate)
-  (libraries types domainslib)
+  (libraries graphTypes domainslib)
 )
 
 (library
-  (name types)
-  (modules types)
-  (modules_without_implementation types)
+  (name graphTypes)
+  (modules graphTypes)
+  (modules_without_implementation graphTypes)
 )
 
 (library
   (name sparseGraph)
   (modules sparseGraph)
-  (libraries types lockfree)
+  (libraries graphTypes lockfree)
 )
 
 (library
@@ -32,7 +32,7 @@
 (executable
   (name kernel1Par_run)
   (modules kernel1Par_run)
-  (libraries types generate kernel1Par unix domainslib)
+  (libraries graphTypes generate kernel1Par unix domainslib)
 )
 
 (alias

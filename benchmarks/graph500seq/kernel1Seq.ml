@@ -7,12 +7,12 @@ let max_vertex_label edges =
 
 let build_sparse ar =
   let max_vertex_label = max_vertex_label ar in
-  let g = SparseGraph.create ~max_vertex_label in
+  let g = SparseGraphSeq.create ~max_vertex_label in
   for i = 0 to Array.length ar - 1 do
     let (s,e,w) = ar.(i) in
     if not (s = e) then begin (* We remove self-loops *)
-      SparseGraph.add_edge (s,e,w) g;
-      SparseGraph.add_edge (e,s,w) g;
+      SparseGraphSeq.add_edge (s,e,w) g;
+      SparseGraphSeq.add_edge (e,s,w) g;
     end;
   done;
   g
