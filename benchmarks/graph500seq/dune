@@ -39,6 +39,6 @@
 
 (alias
   (name buildbench)
-  (deps kronecker.exe kernel1.exe kernel2.exe kernel3.exe
+  (deps kronecker.exe kernel2.exe kernel3.exe
         gen.exe kernel1Seq_run.exe)
 )
