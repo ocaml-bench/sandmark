@@ -28,7 +28,7 @@ check_not_expired () {
     else
         return 1
     fi
-}         
+}
 
 find_commit () {
     URL=$1
@@ -44,7 +44,7 @@ find_commit () {
         echo "Error: Unable to find commit for ${URL}"
         COMMIT=""
     fi
-    echo "${COMMIT}" 
+    echo "${COMMIT}"
 }
 
 # Override with raw GitHub configuration file (if provided)
@@ -69,9 +69,9 @@ while [ $i -lt ${COUNT} ]; do
 
         if [ $j -eq 0 ]; then
             CONFIG_RUN_JSON="run_config_filtered.json"
-	    CONFIG_NAME="${CONFIG_NAME}+sequential"
+            CONFIG_NAME="${CONFIG_NAME}+sequential"
         else
-	    CONFIG_NAME="${CONFIG_NAME}+parallel"
+            CONFIG_NAME="${CONFIG_NAME}+parallel"
             if [ "${HOSTNAME}" == "navajo" ]; then
                 CONFIG_RUN_JSON="multicore_parallel_navajo_run_config_filtered.json"
             else
@@ -141,7 +141,7 @@ while [ $i -lt ${COUNT} ]; do
         fi
         j=$((j+1))
     done
-    
+
     # Next custom variant
     i=$((i+1))
 done
