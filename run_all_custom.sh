@@ -11,14 +11,6 @@ TMP_DIR="/tmp"
 HOSTNAME=`hostname`
 
 # Functions
-check_sequential_parallel () {
-    if [[ $1 == *"multicore"* ]]; then
-        echo "parallel"
-    else
-        echo "sequential"
-    fi
-}
-
 check_not_expired () {
     EXPIRY_DATE=$(date -d $1 +%s)
     TODAY=`date +%Y-%m-%d`
@@ -59,19 +51,17 @@ COUNT=`jq '. | length' "${CUSTOM_FILE}"`
 # Iterate through each variant
 i=0
 while [ $i -lt ${COUNT} ]; do
-    j=0
-    while [ $j -lt 2 ]; do
+    for SEQPAR in "sequential" "parallel"; do
         # Obtain configuration options
         CONFIG_URL=`jq -r '.['$i'].url' "${CUSTOM_FILE}"`
         CONFIG_NAME=`jq -r '.['$i'].name' "${CUSTOM_FILE}"`
         CONFIG_EXPIRY=`jq -r '.['$i'].expiry // empty' "${CUSTOM_FILE}"`
         CONFIG_TAG=`jq -r '.['$i'].tag // "macro_bench"' "${CUSTOM_FILE}"`
+        CONFIG_NAME="${CONFIG_NAME}+${SEQPAR}"
 
-        if [ $j -eq 0 ]; then
+        if [ $SEQPAR = "sequential" ]; then
             CONFIG_RUN_JSON="run_config_filtered.json"
-            CONFIG_NAME="${CONFIG_NAME}+sequential"
         else
-            CONFIG_NAME="${CONFIG_NAME}+parallel"
             if [ "${HOSTNAME}" == "navajo" ]; then
                 CONFIG_RUN_JSON="multicore_parallel_navajo_run_config_filtered.json"
             else
@@ -87,7 +77,6 @@ while [ $i -lt ${COUNT} ]; do
         TAG_STRING=`echo \"${CONFIG_TAG}\"`
 
         TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-        SEQPAR=$(check_sequential_parallel ${CONFIG_RUN_JSON})
         COMMIT=$(find_commit ${CONFIG_URL})
         NOT_EXPIRED=$(check_not_expired ${CONFIG_EXPIRY})
 
@@ -139,7 +128,6 @@ while [ $i -lt ${COUNT} ]; do
         else
             echo "WARNING: ${TIMESTAMP}: Not running URL=${CONFIG_URL}, CONFIG_TAG=${CONFIG_TAG}, CONFIG_RUN_JSON=${CONFIG_RUN_JSON} for COMMIT=${COMMIT} and EXPIRY=${CONFIG_EXPIRY}"
         fi
-        j=$((j+1))
     done
 
     # Next custom variant
