@@ -113,9 +113,14 @@
  (modules evolutionary_algorithm_multicore)
  (libraries domainslib))
 
+(executable
+ (name fannkuchredux_multicore)
+ (modules fannkuchredux_multicore)
+ (libraries domainslib))
+
 (alias
   (name multibench_parallel)
-  (deps mandelbrot6_multicore.exe spectralnorm2_multicore.exe quicksort.exe
+  (deps fannkuchredux.exe mandelbrot6_multicore.exe spectralnorm2_multicore.exe quicksort.exe
         quicksort_multicore.exe binarytrees5_multicore.exe
 	game_of_life.exe game_of_life_multicore.exe
 	matrix_multiplication.exe matrix_multiplication_multicore.exe

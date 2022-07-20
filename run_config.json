@@ -304,19 +304,6 @@
       ]
     },
     {
-      "executable": "benchmarks/benchmarksgame/fannkuchredux2.exe",
-      "name": "fannkuchredux2",
-      "tags": [
-        "10s_100s",
-        "macro_bench"
-      ],
-      "runs": [
-        {
-          "params": "12"
-        }
-      ]
-    },
-    {
       "executable": "benchmarks/benchmarksgame/fannkuchredux.exe",
       "name": "fannkuchredux",
       "tags": [

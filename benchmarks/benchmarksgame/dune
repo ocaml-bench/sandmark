@@ -1,8 +1,17 @@
-(executables (names binarytrees5 fannkuchredux fannkuchredux2 fasta3 fasta6
+(executables (names binarytrees5 fasta3 fasta6
                     knucleotide knucleotide3 mandelbrot6 nbody pidigits5
                     regexredux2 revcomp2 spectralnorm2)
-                    (modes native byte)
-              (libraries unix str zarith))
+             (modules binarytrees5 fasta3 fasta6
+                      knucleotide knucleotide3 mandelbrot6 nbody pidigits5
+                      regexredux2 revcomp2 spectralnorm2) 
+             (modes native byte)
+             (libraries unix str zarith))
+
+(executable (names fannkuchredux)
+            (modules fannkuchredux) 
+            (modes native byte)
+            (libraries domainslib)
+            (ocamlopt_flags -noassert -unsafe))
 
 (rule
      (targets input25000000.txt)
@@ -15,16 +24,16 @@
      (action (with-stdout-to %{targets} (run %{prog} 5_000_000 > %{targets}))))
 
 (alias (name buildbench)
-       (deps binarytrees5.exe fannkuchredux.exe fannkuchredux2.exe fasta3.exe
-             fasta6.exe knucleotide.exe knucleotide3.exe mandelbrot6.exe
+       (deps binarytrees5.exe fasta3.exe
+             fasta6.exe fannkuchredux.exe knucleotide.exe knucleotide3.exe mandelbrot6.exe
              nbody.exe pidigits5.exe regexredux2.exe revcomp2.exe
              spectralnorm2.exe input25000000.txt input5000000.txt))
 
 (alias (name bytebench)
-       (deps binarytrees5.bc fannkuchredux.bc fannkuchredux2.bc fasta3.bc
+       (deps binarytrees5.bc fannkuchredux.bc fannkuchredux_multicore.bc fasta3.bc
              fasta6.bc knucleotide.bc knucleotide3.bc mandelbrot6.bc
              nbody.bc pidigits5.bc regexredux2.bc revcomp2.bc
              spectralnorm2.bc input25000000.txt input5000000.txt))
 
 (alias (name multibench_parallel)
-       (deps binarytrees5.exe mandelbrot6.exe spectralnorm2.exe))
+       (deps fannkuchredux_multicore.exe binarytrees5.exe mandelbrot6.exe spectralnorm2.exe))
