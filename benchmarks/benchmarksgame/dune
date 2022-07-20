@@ -7,7 +7,7 @@
              (modes native byte)
              (libraries unix str zarith))
 
-(executable (names fannkuchredux)
+(executable (name fannkuchredux)
             (modules fannkuchredux) 
             (modes native byte)
             (libraries domainslib)
