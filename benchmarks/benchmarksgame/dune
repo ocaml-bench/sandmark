@@ -29,10 +29,10 @@
              spectralnorm2.exe input25000000.txt input5000000.txt))
 
 (alias (name bytebench)
-       (deps binarytrees5.bc fannkuchredux.bc fannkuchredux_multicore.bc fasta3.bc
+       (deps binarytrees5.bc fannkuchredux.bc fasta3.bc
              fasta6.bc knucleotide.bc knucleotide3.bc mandelbrot6.bc
              nbody.bc pidigits5.bc regexredux2.bc revcomp2.bc
              spectralnorm2.bc input25000000.txt input5000000.txt))
 
 (alias (name multibench_parallel)
-       (deps fannkuchredux_multicore.exe binarytrees5.exe mandelbrot6.exe spectralnorm2.exe))
+       (deps binarytrees5.exe mandelbrot6.exe spectralnorm2.exe))
