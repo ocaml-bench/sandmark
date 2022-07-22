@@ -4,7 +4,7 @@
 
 type peg = Out | Empty | Peg
 
-let board = [|
+let initial_board = [|
  [| Out; Out; Out; Out; Out; Out; Out; Out; Out|];
  [| Out; Out; Out; Peg; Peg; Peg; Out; Out; Out|];
  [| Out; Out; Out; Peg; Peg; Peg; Out; Out; Out|];
@@ -16,12 +16,10 @@ let board = [|
  [| Out; Out; Out; Out; Out; Out; Out; Out; Out|]
 |]
 
-
 let print_peg = function
     Out -> print_string "."
   | Empty -> print_string " "
   | Peg -> print_string "$"
-
 
 let print_board board =
  for i=0 to 8 do
@@ -45,13 +43,13 @@ let counter = ref 0
 
 exception Found
 
-let rec solve m =
+let rec solve board m =
   counter := !counter + 1;
   if m = 31 then
     begin match board.(4).(4) with Peg -> true | _ -> false end
   else
     try
-      if !counter mod 500 = 0 then begin
+      if !counter mod 1_000_000 = 0 then begin
         print_int !counter; print_newline()
       end;
       for i=1 to 7 do
@@ -69,15 +67,10 @@ let rec solve m =
                 Peg ->
                   begin match board.(i2).(j2) with
                     Empty ->
-(*
-                      print_int i; print_string ", ";
-                      print_int j; print_string ") dir ";
-                      print_int k; print_string "\n";
-*)
                       board.(i).(j) <- Empty;
                       board.(i1).(j1) <- Empty;
                       board.(i2).(j2) <- Peg;
-                      if solve(m+1) then begin
+                      if solve board (m+1) then begin
                         moves.(m) <- { x1=i; y1=j; x2=i2; y2=j2 };
                         raise Found
                       end;
@@ -96,5 +89,19 @@ let rec solve m =
     with Found ->
       true
 
+let rec runbench n =
+  let board = Array.map Array.copy initial_board in
+  if n > 1 then begin
+    ignore (solve board 0);
+    runbench (n - 1)
+  end else begin
+    if solve board 0 then (print_string "\n"; print_board board)
+  end
 
-let _ = if solve 0 then (print_string "\n"; print_board board)
+let _ =
+  let nruns =
+    if Array.length Sys.argv >= 2
+    then int_of_string Sys.argv.(1)
+    else 1 in
+  runbench nruns
+

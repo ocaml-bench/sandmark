@@ -693,7 +693,7 @@
       "name": "soli.bc",
       "runs": [
              {
-               "params": ""
+               "params": "200"
              }
       ]
     }
