@@ -232,7 +232,7 @@ blah:
 	@echo ${PACKAGES}
 
 ocaml-versions/%.bench: depend check-parallel/% filter/% override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
-	$(eval SANDMARK_CUSTOM_NAME ?= $*)
+	$(eval VARIANT_NAME ?= $*)
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
@@ -262,8 +262,8 @@ ocaml-versions/%.bench: depend check-parallel/% filter/% override_packages/% log
 			fi; \
 			done; \
 			header_entry=`jo -p $${s} | jq -c`; \
-			echo "$${header_entry}" > _results/$(SANDMARK_CUSTOM_NAME)_$$i.$(WRAPPER).summary.bench; \
-			find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat >> _results/$(SANDMARK_CUSTOM_NAME)_$$i.$(WRAPPER).summary.bench;		\
+			echo "$${header_entry}" > _results/$(VARIANT_NAME)_$$i.$(WRAPPER).summary.bench; \
+			find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat >> _results/$(VARIANT_NAME)_$$i.$(WRAPPER).summary.bench;		\
 		done;															\
 		exit $$ex;														\
 	   else																\

@@ -155,7 +155,7 @@ for i in $(seq 0 $((${COUNT} - 1))); do
                 ENVIRONMENT="`echo ${CONFIG_ENVIRONMENT}`" \
                 OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
                 OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
-                SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
+                VARIANT_NAME="`echo ${CONFIG_NAME}`" \
                 SANDMARK_OVERRIDE_PACKAGES="`echo ${CONFIG_OVERRIDE_PACKAGES}`" \
                 SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
                 RUN_BENCH_TARGET="`echo ${CONFIG_RUN_BENCH_TARGET}`" \
