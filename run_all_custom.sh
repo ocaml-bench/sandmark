@@ -57,7 +57,8 @@ is_old_commit () {
     # NOTE: git ls-files doesn't change the exit code whether or not any files
     # are found. So, we grep for files with summary.bench in their name, and
     # use its exit code.
-    OLD=$(git -C "${REPO_DIR}" ls-files "${BENCH_PATH}"|grep -o "summary.bench" > /dev/null)
+    git -C "${REPO_DIR}" ls-files "${BENCH_PATH}"|grep -o "summary.bench" > /dev/null
+    OLD=$?
     git -C "${REPO_DIR}" checkout -B testing origin/testing
     return $OLD
 }
