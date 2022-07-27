@@ -1,5 +1,4 @@
-{
-  "wrappers": [
+{ "wrappers": [
     {
       "name": "orun",
       "command": "orun -o %{output} -- taskset --cpu-list 5 %{command}"
@@ -18,6 +17,16 @@
     }
   ],
   "benchmarks": [
+    {
+      "executable": "benchmarks/owl/test_owl.exe",
+      "name": "test_owl",
+      "tags": [
+        "buildbench"
+      ],
+      "runs": [
+        { "params": "8192" }
+      ]
+    },
     {
       "executable": "benchmarks/irmin/layers.exe",
       "name": "irmin_pack_layered_1",

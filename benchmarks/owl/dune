@@ -1,0 +1,8 @@
+(executable
+ (name test_owl)
+ (libraries owl owl-base))
+
+(alias 
+  (name buildbench) 
+  (deps test_owl.exe))
+
