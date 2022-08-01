@@ -1,0 +1,28 @@
+{
+  "url" : "https://github.com/ocaml/ocaml/archive/refs/tags/4.14.0.zip",
+  "package_remove": [
+    "camlpdf",
+    "cpdf",
+    "coq",
+    "coq-core",
+    "coq-stdlib",
+    "ctypes",
+    "frama-c",
+    "fraplib",
+    "index",
+    "integers",
+    "irmin",
+    "irmin-layers",
+    "irmin-pack",
+    "js_of_ocaml-compiler",
+    "ppx_derivers",
+    "ppx_deriving",
+    "ppx_deriving_yojson",
+    "ppx_irmin",
+    "ppx_repr",
+    "ppxfind",
+    "ppxlib",
+    "ppxtools",
+    "stdio"
+  ]
+}
