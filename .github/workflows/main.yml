@@ -10,7 +10,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build-5.1:
+  build-5-1:
     strategy:
       matrix:
         os:
@@ -118,7 +118,7 @@ jobs:
           sudo chmod 777 .
           jupyter nbconvert --to html --execute parallel.ipynb
 
-  build-4.14:
+  build-4-14:
     strategy:
       matrix:
         os:
