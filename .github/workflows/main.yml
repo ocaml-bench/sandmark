@@ -10,7 +10,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
+  build-5.1:
     strategy:
       matrix:
         os:
@@ -105,6 +105,40 @@ jobs:
           ls _results
           cat _results/*
 
+      - name: test_notebooks
+        run: |
+          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip jo
+          python3 -m pip install markupsafe==2.0.1
+          export PATH=$PATH:/home/opam/.local/bin
+          pip3 install jupyter nbconvert seaborn pandas
+          cd notebooks/sequential
+          sudo chmod 777 .
+          jupyter nbconvert --to html --execute sequential.ipynb
+          cd ../parallel
+          sudo chmod 777 .
+          jupyter nbconvert --to html --execute parallel.ipynb
+
+  build-4.14:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+        ocaml-compiler:
+          - 4.13.x
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Use OCaml ${{ matrix.ocaml-compiler }}
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+
+      - run: opam install . --deps-only --with-test
+
       - name: 4.14.0+serial
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo
@@ -137,16 +171,3 @@ jobs:
           OPT_WAIT=0 USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/4.14.0.bench
           ls _results
           cat _results/*
-
-      - name: test_notebooks
-        run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip jo
-          python3 -m pip install markupsafe==2.0.1
-          export PATH=$PATH:/home/opam/.local/bin
-          pip3 install jupyter nbconvert seaborn pandas
-          cd notebooks/sequential
-          sudo chmod 777 .
-          jupyter nbconvert --to html --execute sequential.ipynb
-          cd ../parallel
-          sudo chmod 777 .
-          jupyter nbconvert --to html --execute parallel.ipynb
