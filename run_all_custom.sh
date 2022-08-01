@@ -20,7 +20,7 @@ check_not_expired () {
     else
         return 1
     fi
-}         
+}
 
 find_commit () {
     URL=$1
@@ -36,7 +36,7 @@ find_commit () {
         echo "Error: Unable to find commit for ${URL}"
         COMMIT=""
     fi
-    echo "${COMMIT}" 
+    echo "${COMMIT}"
 }
 
 is_old_commit () {
@@ -72,19 +72,20 @@ while [ $i -lt ${COUNT} ]; do
         # Obtain configuration options
         CONFIG_URL=`jq -r '.['$i'].url' "${CUSTOM_FILE}"`
         CONFIG_NAME=`jq -r '.['$i'].name' "${CUSTOM_FILE}"`
+        CONFIG_VARIANT="$(cut -d '+' -f 1 <<< "$CONFIG_NAME")"
         CONFIG_EXPIRY=`jq -r '.['$i'].expiry // empty' "${CUSTOM_FILE}"`
         CONFIG_TAG=`jq -r '.['$i'].tag // "macro_bench"' "${CUSTOM_FILE}"`
 
         if [ $j -eq 0 ]; then
             CONFIG_RUN_JSON="run_config_filtered.json"
-	    CONFIG_NAME="${CONFIG_NAME}+sequential"
+            CONFIG_NAME="${CONFIG_NAME}+sequential"
             SEQPAR="sequential"
         elif [ $j -eq 2 ]; then
             CONFIG_RUN_JSON="run_config_filtered.json"
-	    CONFIG_NAME="${CONFIG_NAME}+perfstat"
+            CONFIG_NAME="${CONFIG_NAME}+perfstat"
             SEQPAR="perfstat"
         else
-	    CONFIG_NAME="${CONFIG_NAME}+parallel"
+            CONFIG_NAME="${CONFIG_NAME}+parallel"
             if [ "${HOSTNAME}" == "navajo" ]; then
                 CONFIG_RUN_JSON="multicore_parallel_navajo_run_config_filtered.json"
             else
@@ -118,7 +119,6 @@ while [ $i -lt ${COUNT} ]; do
             # Prepare run JSON
             TAG=`echo "${TAG_STRING}"` make `echo ${CONFIG_RUN_JSON}`
 
-            # Don't run failing benchmarks on 5.1.0
             # Build and execute benchmarks
             if [[ ${SEQPAR} == "sequential" ]]; then
                 USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
@@ -129,8 +129,8 @@ while [ $i -lt ${COUNT} ]; do
                                  SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
                                  SANDMARK_OVERRIDE_PACKAGES="`echo ${CONFIG_OVERRIDE_PACKAGES}`" \
                                  SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
-                                 make ocaml-versions/5.1.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
-            elif [[ $j -eq 2 ]]; then
+                                 make ocaml-versions/"${CONFIG_VARIANT}".bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
+            elif [[ ${SEQPAR} == "perfstat" ]]; then
                 USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
                                  RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
                                  RUN_BENCH_TARGET="run_perfstat" \
@@ -140,7 +140,7 @@ while [ $i -lt ${COUNT} ]; do
                                  SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
                                  SANDMARK_OVERRIDE_PACKAGES="`echo ${CONFIG_OVERRIDE_PACKAGES}`" \
                                  SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
-                                 make ocaml-versions/5.1.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
+                                 make ocaml-versions/"${CONFIG_VARIANT}".bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
             else
                 USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
                                  RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
@@ -152,7 +152,7 @@ while [ $i -lt ${COUNT} ]; do
                                  SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
                                  RUN_BENCH_TARGET=run_orunchrt \
                                  BUILD_BENCH_TARGET=multibench_parallel \
-                                 make ocaml-versions/5.1.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
+                                 make ocaml-versions/"${CONFIG_VARIANT}".bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
             fi
 
             # Copy results
@@ -166,7 +166,7 @@ while [ $i -lt ${COUNT} ]; do
         fi
         j=$((j+1))
     done
-    
+
     # Next custom variant
     i=$((i+1))
 done

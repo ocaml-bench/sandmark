@@ -153,8 +153,9 @@ override_packages/%: setup_sys_dune/%
 	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
 	# Retrieve set of version constraints for chosen OCaml version
 	@{ case "$*" in \
-		*5.1.0*) echo "Using new template" && cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
-		*) echo "Using old template" && cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
+		*5.1.0*) echo "Using template/dev-5.1.0+trunk.opam" && cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
+		*4.14*) echo "Using template/dev-4.14.0.opam" && cp dependencies/template/dev-4.14.0.opam $(DEV_OPAM) ;; \
+		*) echo "Using template/dev.opam" && cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
 	esac };
 	# Conditionally install runtime_events_tools for olly (pausetimes)
 	@{ case "$*" in \
@@ -230,7 +231,7 @@ log_sandmark_hash:
 blah:
 	@echo ${PACKAGES}
 
-ocaml-versions/%.bench: depend filter/% override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
+ocaml-versions/%.bench: depend check-parallel/% filter/% override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
@@ -347,16 +348,28 @@ filter/%:
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_VARIANT = $(shell echo $(CONFIG_SWITCH_NAME) | grep -oP '([0-9]|\.)*'  ))
 	@echo $(CONFIG_VARIANT)
-	if [ $(CONFIG_VARIANT) = "5.1.0" ]; then \
-		echo "Filtering some benchmarks for OCaml v5.1.0"; \
-		jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
-		mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
-		echo "(data_only_dirs irmin cpdf frama-c)" > benchmarks/dune; \
-	fi;
+	@{ case $(CONFIG_VARIANT) in \
+		*5.1.0*) echo "Filtering some benchmarks for OCaml ${CONFIG_VARIANT}"; \
+			jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
+			mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
+			echo "(data_only_dirs irmin cpdf frama-c)" > benchmarks/dune;; \
+		*4.14*) echo "Filtering some benchmarks for OCaml ${CONFIG_VARIANT}"; \
+			jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
+			mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
+			echo "(data_only_dirs irmin cpdf frama-c)" > benchmarks/dune;; \
+		*) echo "Not filtering benchmarks for OCaml ${CONFIG_VARIANT}";; \
+	esac };
 
 depend: check_url load_check
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
 	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
+
+check-parallel/%:
+	$(eval CONFIG_SWITCH_NAME = $*)
+	@{ if [[ $(BUILD_BENCH_TARGET) =~ multibench* && $(CONFIG_SWITCH_NAME) =~ 4.14* ]]; then \
+		echo "Not running parallel tests for ${CONFIG_SWITCH_NAME}"; \
+		exit 1; \
+	fi };
 
 benchclean:
 	rm -rf _build/
