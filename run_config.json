@@ -302,6 +302,7 @@
         }
       ]
     },
+    {
       "executable": "benchmarks/multicore-numerical/mergersort.exe",
       "name": "mergesort",
       "tags": [
