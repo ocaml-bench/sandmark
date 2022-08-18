@@ -47,6 +47,22 @@ find_commit () {
     echo "${COMMIT}" 
 }
 
+is_old_commit () {
+    SEQPAR=$1
+    HOSTNAME=$2
+    COMMIT=$3
+    REPO_DIR="${SANDMARK_NIGHTLY_DIR}/sandmark-nightly"
+    git -C "${REPO_DIR}" checkout -B main origin/main
+    BENCH_PATH="${SEQPAR}/${HOSTNAME}/*/${COMMIT}/*.summary.bench"
+    # NOTE: git ls-files doesn't change the exit code whether or not any files
+    # are found. So, we grep for files with summary.bench in their name, and
+    # use its exit code.
+    git -C "${REPO_DIR}" ls-files "${BENCH_PATH}"|grep -o "summary.bench" > /dev/null
+    OLD=$?
+    git -C "${REPO_DIR}" checkout -B testing origin/testing
+    return $OLD
+}
+
 # Override with raw GitHub configuration file (if provided)
 if [[ ${CUSTOM_FILE} == *"github"* ]]; then
     wget -O "${TMP_CUSTOM_FILE}" "${CUSTOM_FILE}"
@@ -93,7 +109,7 @@ while [ $i -lt ${COUNT} ]; do
 
         echo "INFO: ${TIMESTAMP} Running benchmarks for URL=${CONFIG_URL}, CONFIG_TAG=${CONFIG_TAG}, CONFIG_RUN_JSON=${CONFIG_RUN_JSON} for COMMIT=${COMMIT}"
 
-        if [[ ! -z "${COMMIT}" ]] && check_not_expired ${CONFIG_EXPIRY} ; then
+        if [[ ! -z "${COMMIT}" ]] && check_not_expired ${CONFIG_EXPIRY} && ! is_old_commit "${SEQPAR}" "${HOSTNAME}" "${COMMIT}"; then
             # Create results directory
             RESULTS_DIR="${SANDMARK_NIGHTLY_DIR}/sandmark-nightly/${SEQPAR}/${HOSTNAME}/${TIMESTAMP}/${COMMIT}"
             mkdir -p "${RESULTS_DIR}"

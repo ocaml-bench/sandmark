@@ -661,6 +661,57 @@
           "paramwrapper": "taskset --cpu-list 4-63,68-127"
         }
       ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/mergesort.exe",
+      "name": "mergesort",
+      "tags": [
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": "134217728",
+          "paramwrapper": "taskset --cpu-list 4"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/mergesort_multicore.exe",
+      "name": "mergesort_multicore",
+      "tags": [
+        "macro_bench",
+        "run_in_ci"
+      ],
+      "runs": [
+        {
+          "params": "1 134217728",
+          "paramwrapper": "taskset --cpu-list 4"
+        },
+        {
+          "params": "8 134217728",
+          "paramwrapper": "taskset --cpu-list 4-11"
+        },
+        {
+          "params": "16 134217728",
+          "paramwrapper": "taskset --cpu-list 4-19"
+        },
+        {
+          "params": "32 134217728",
+          "paramwrapper": "taskset --cpu-list 4-35"
+        },
+        {
+          "params": "64 134217728",
+          "paramwrapper": "taskset --cpu-list 4-63,68-71"
+        },
+        {
+          "params": "96 134217728",
+          "paramwrapper": "taskset --cpu-list 4-63,68-103"
+        },
+        {
+          "params": "120 134217728",
+          "paramwrapper": "taskset --cpu-list 4-63,68-127"
+        }
+      ]
     }
   ]
 }

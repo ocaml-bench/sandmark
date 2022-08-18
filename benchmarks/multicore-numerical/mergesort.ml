@@ -1,42 +1,49 @@
-let rec take n = function
-  | [] -> []
-  | x::xs -> if (n > 0) then x :: (take (n-1) xs) else []
+let n = try int_of_string @@ Sys.argv.(1) with _ -> 1024
 
-let rec drop n = function
-  | [] -> []
-  | x::xs -> if (n = 0) then x::xs
-    else if (n > 0) then (drop (n-1) xs)
-    else []
+let bubble_sort_threshold = 32
 
-let rec merge x y =
-  match x, y with
-    | [], l -> l
-    | l, [] -> l
-    | x :: xs , y :: ys ->
-      if x < y
-          then x :: merge xs (y :: ys)
-          else y :: merge (x::xs) ys
+let _ = Random.init 42
+let a = Array.init n (fun _ -> Random.int n)
 
-let rec msort l =
-  match l with
-  | [] -> []
-  | [x] -> [x]
-  | _ ->
-    let left = take (List.length l/2) l in
-    let right = drop (List.length l/2) l in
-    (* Printf.printf "I'm merging\n"; *)
-    merge (msort left) (msort right)
+let bubble_sort (a : int array) start limit =
+  for i = start to limit - 2 do
+    for j = i + 1 to limit - 1 do
+      if a.(j) < a.(i) then
+        let t = a.(i) in
+        a.(i) <- a.(j);
+        a.(j) <- t;
+    done
+  done
 
- let rec gen size l =
-  if size = 0 then
-     l
-  else
-    let n = Random.int 1000000 in
-    let list = n :: l in
-    gen (size - 1) list
+let merge (src : int array) dst start split limit =
+  let rec loop dst_pos i j =
+    if i = split then
+      Array.blit src j dst dst_pos (limit - j)
+    else if j = limit then
+      Array.blit src i dst dst_pos (split - i)
+    else if src.(i) <= src.(j) then begin
+      dst.(dst_pos) <- src.(i);
+      loop (dst_pos + 1) (i + 1) j;
+    end else begin
+      dst.(dst_pos) <- src.(j);
+      loop (dst_pos + 1) i (j + 1);
+    end in
+  loop start start split
 
-let n = try int_of_string(Array.get Sys.argv 1) with _ ->  100000
+let rec merge_sort move a b start limit =
+  if move || limit - start > bubble_sort_threshold then
+    let split = (start + limit) / 2 in
+    let () = merge_sort (not move) a b start split in
+    let () = merge_sort (not move) a b split limit in
+    if move then 
+        merge a b start split limit 
+    else 
+        merge b a start split limit
+  else bubble_sort a start limit
 
-let _ =
-   let lst = gen n [] in
-   msort lst |> ignore;
+let sort a =
+  let b = Array.copy a in
+   merge_sort false a b 0 (Array.length a)
+
+let () =
+    (sort a)

@@ -219,6 +219,29 @@
     },
 
     {
+      "executable": "benchmarks/multicore-numerical/mergesort.exe",
+      "name": "mergesort",
+      "tags": ["10s_100s", "macro_bench"],
+      "runs": [
+        { "params": "134217728", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/mergesort_multicore.exe",
+      "name": "mergesort_multicore",
+      "tags": ["macro_bench","10s_100s"],
+      "runs": [
+        { "params": "1 134217728", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 134217728", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 134217728", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 134217728", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 134217728", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 134217728", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 134217728", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 134217728", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+    {
       "executable": "benchmarks/multicore-numerical/quicksort.exe",
       "name": "quicksort",
       "tags": ["1s_10s"],
