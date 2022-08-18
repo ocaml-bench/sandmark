@@ -1,92 +1,84 @@
+let n = try int_of_string @@ Sys.argv.(1) with _ -> 120
 let num_domains = try int_of_string @@ Sys.argv.(1) with _ ->  1 
-let n = try int_of_string @@ Sys.argv.(2) with _ -> 960
 
 module A = Array
 module L = List
 module T = Domainslib.Task
 
-(* Selectors for tuples *)
-let get_1 (x,_,_) = x 
+type coins = (int * int) list
 
-let get_2 (_,y,_) = y
+type frame = { amt : int; coins : coins; current_enum : int list  }
 
-let get_3 (_,_,z) = z
+let top = L.hd
 
-let rec des amt coins curr acc stack =
-    (* Descends down the left branch *)
-    match amt, coins, stack with
-    | _, _, [] -> acc 
-    | 0, _, _ -> begin 
-        let stack_top = L.hd stack in
-        let stack_rest = L.tl stack in
-        let get_amt = get_1 in 
-        let get_coins = get_2 in
-        let get_curr = get_3 in
-        des (get_amt stack_top) (get_coins stack_top) (get_curr stack_top) (curr::acc) stack_rest 
-    end
-    | _, [], _ -> begin
-        let stack_top = L.hd stack in
-        let stack_rest = L.tl stack in
-        let get_amt = get_1 in 
-        let get_coins = get_2 in
-        let get_curr = get_3 in
-        des (get_amt stack_top) (get_coins stack_top) (get_curr stack_top) acc stack_rest 
-    end
-    | _, (den, qty)::rst, _ -> begin 
-        let new_amt = amt - den in 
-        let new_coins = (den, qty -1)::rst in 
-        if den > amt then 
-            des amt rst curr acc stack
-        else if qty = 1 then 
-            des new_amt rst (den::curr) acc stack 
-        else if (L.tl coins) = [] || curr = [] then
-            des new_amt new_coins (den::curr) acc stack
-        else
-            des new_amt new_coins (den::curr) acc ((amt, rst, curr)::stack)
-    end
+let rest = L.tl
 
-let setup_stacks amt coins =
-    (* Assumes that the that qty for each den in coins is greater than or equal to 2 *)
-    let a = A.init (L.length coins) (fun _ -> (0,[], [], [])) in
-    let rec aux count c = 
-        match c with 
-        | [] -> a
-        | (den, qty)::rst -> begin 
-            let new_amt = amt - den in 
-            let new_c = (den, qty-1)::rst in
-            if den > amt then 
-                aux count (L.tl c)
-            else if qty = 1 then begin
-                a.(count) <- (new_amt, (L.tl c), (den::[]), [(new_amt, rst, den::[])]);
-                aux (count+1) (L.tl c)
-            end else begin
-                a.(count) <- (new_amt, new_c, (den::[]), [(new_amt, rst, den::[])]);
-                aux (count+1) (L.tl c) 
-            end
-    end 
+let rec run_cc first_call (acc: int list list) (f : frame) (stack : frame list) : (int list list) =
+    match f.amt, f.coins, stack with 
+    | 0, _, []             -> acc
+    | 0, _, _              -> run_cc false (f.current_enum::acc) (top stack) (rest stack)
+    | _, [], []            -> acc
+    | _, [], _             -> run_cc false acc (top stack) (rest stack)
+    | _, (den,qty)::rst ,_ -> 
+        if den > f.amt then
+            let new_f = { amt = f.amt; coins = (rest f.coins); current_enum = f.current_enum } in
+            run_cc false acc new_f stack
+        else 
+            let new_coins = if qty == 1 then
+                         rst 
+                         else (den, qty-1)::rst in
+            let left = { amt = (f.amt-den); coins = new_coins; current_enum = (den :: f.current_enum) } in
+            let right = { amt = f.amt; coins = rst; current_enum = f.current_enum } in
+            if not first_call then run_cc false acc left (right::stack)
+            else
+                run_cc false acc left stack
+
+let cc amt (coins : (int * int) list) = 
+    run_cc true [] { amt = amt; coins = coins; current_enum = [] } []
+
+let rec get_deductibles amt coins = 
+    let den = fst @@ L.hd coins in
+    match (den > amt) with
+    | false -> coins
+    | true  -> get_deductibles amt (L.tl coins)
+
+let setup_frames amt coins =
+    let coins = get_deductibles amt coins in
+    let clen = L.length coins in
+    let a = Array.make clen { amt = 0; coins = []; current_enum = [] } in
+    let rec aux count coins = 
+        match count = clen with 
+        | true -> a
+        | false -> begin  
+            let f = {
+                amt = amt;
+                coins = coins;
+                current_enum = []
+            } in
+            a.(count) <- f; 
+            aux (count+1) (L.tl coins)
+        end
     in
     aux 0 coins
 
-let cc_par pool amt (coins : ((int * int) list)) arr = 
-    let setup = setup_stacks amt coins in 
+let sum_lengths arr = A.fold_left (+) 0 (A.map L.length arr)
+
+let cc_par pool amt (coins : ((int * int) list)) = 
+    let stacks = setup_frames amt coins in 
+    let arr = A.init (A.length stacks) (fun _ -> []) in
     let len   = A.length arr in
-    let amt   = fun (x, _, _, _) -> x in 
-    let c     = fun (_, x, _, _) -> x in
-    let curr  = fun (_, _, x, _) -> x in
-    let stack = fun (_, _, _, x) -> x in
     T.parallel_for pool ~start:0 ~finish:(len-1) ~body:(fun i ->
-        arr.(i) <- des (amt setup.(i)) (c setup.(i)) (curr setup.(i)) [] (stack setup.(i));
-    ) 
+        let f = stacks.(i) in
+        arr.(i) <- cc f.amt f.coins
+    );
+    Printf.printf "possibilites = %d\n" (sum_lengths arr)
 
 let coins_input : (int * int) list =
-  let cs = [500 ; 250 ; 150; 100 ; 75 ; 50 ; 25 ; 20 ; 10 ; 5 ; 2 ; 1] in
-  let qs = [22; 55 ; 88 ; 88 ; 99 ; 99 ; 122; 122; 122 ; 122; 177; 177] in  
-  L.combine cs qs
-
-let arr = A.init (L.length coins_input) (fun _ -> [])
+    let den = [500 ; 250 ; 150; 100 ; 75 ; 50 ; 25 ; 20 ; 10 ; 5 ; 2 ; 1] in
+    let qty = [22; 55 ; 88 ; 88 ; 99 ; 99 ; 122; 122; 122 ; 122; 177; 177] in  
+  L.combine den qty
 
 let _ = 
     let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
-    T.run pool (fun () -> cc_par pool n coins_input arr);
-    Printf.printf "possibilites = %d\n" (A.fold_left (+) 0 (A.map L.length arr));
+    T.run pool (fun () -> cc_par pool n coins_input);
     T.teardown_pool pool

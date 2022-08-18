@@ -1,64 +1,40 @@
+let n = try int_of_string @@ Sys.argv.(1) with _ -> 120
 
-(*************************************************************************************
-* The main procudure cc enumerates all possible ways to distribute change for a      *
-* given set of different denominations of coins of certain quantities for some given *
-* amount.                                                                            *
-*************************************************************************************)
-
-let n = try int_of_string @@ Sys.argv.(1) with _ -> 960
 module L = List
 
-(* Selectors for tuples *)
-let get_1 (x,_,_) = x 
+type coins = (int * int) list
 
-let get_2 (_,y,_) = y
+type frame = { amt : int; coins : coins; current_enum : int list  }
 
-let get_3 (_,_,z) = z
+let top = L.hd
 
+let rest = L.tl
 
-let rec des amt coins curr acc stack =
-    match amt, coins, stack with
-    | _, _, [] -> acc 
-    | 0, _, _ -> begin 
-        let stack_top = L.hd stack in
-        let stack_rest = L.tl stack in
-        let get_amt = get_1 in 
-        let get_coins = get_2 in
-        let get_curr = get_3 in
-        des (get_amt stack_top) (get_coins stack_top) (get_curr stack_top) (curr::acc) stack_rest 
-    end
-    | _, [], _ -> begin
-        let stack_top = L.hd stack in
-        let stack_rest = L.tl stack in
-        let get_amt = get_1 in 
-        let get_coins = get_2 in
-        let get_curr = get_3 in
-        des (get_amt stack_top) (get_coins stack_top) (get_curr stack_top) acc stack_rest 
-    end
-    | _, (den, qty)::rst, _ -> begin 
-        let new_amt = amt - den in 
-        let new_coins = (den, qty -1)::rst in 
-        if den > amt then 
-            des amt rst curr acc stack
-        else if qty = 1 then 
-            des new_amt rst (den::curr) acc stack 
-        else if (L.tl coins) = [] || curr = [] then
-            des new_amt new_coins (den::curr) acc stack
-        else
-            des new_amt new_coins (den::curr) acc ((amt, rst, curr)::stack)
-    end
+let rec run_cc (acc: int list list) (f : frame) (stack : frame list) : (int list list) =
+    match f.amt, f.coins, stack with 
+    | 0, _, []             -> acc
+    | 0, _, _              -> run_cc (f.current_enum::acc) (top stack) (rest stack)
+    | _, [], []            -> acc
+    | _, [], _             -> run_cc acc (top stack) (rest stack)
+    | _, (den,qty)::rst ,_ -> 
+        if den > f.amt then
+            let new_f = { amt = f.amt; coins = (rest f.coins); current_enum = f.current_enum } in
+            run_cc acc new_f stack
+        else 
+            let new_coins = if qty == 1 then
+                         rst 
+                         else (den, qty-1)::rst in
+            let left = { amt = (f.amt-den); coins = new_coins; current_enum = (den :: f.current_enum) } in
+            let right = { amt = f.amt; coins = rst; current_enum = f.current_enum } in
+            run_cc acc left (right::stack)
 
-let cc amt (coins : ((int * int) list)) = 
-    let rec aux c stack =
-        match c with 
-        | [] -> des amt coins [] [] stack
-        | _ -> aux (L.tl c) (((amt, c, []))::stack) in 
-    aux coins []
+let cc amt (coins : (int * int) list) = 
+    run_cc [] { amt = amt; coins = coins; current_enum = [] } []
 
 let coins_input : (int * int) list =
-  let cs = [500 ; 250 ; 150; 100 ; 75 ; 50 ; 25 ; 20 ; 10 ; 5 ; 2 ; 1] in
-  let qs = [22; 55 ; 88 ; 88 ; 99 ; 99 ; 122; 122; 122 ; 122; 177; 177] in  
-  L.combine cs qs
+    let den = [500 ; 250 ; 150; 100 ; 75 ; 50 ; 25 ; 20 ; 10 ; 5 ; 2 ; 1] in
+    let qty = [22; 55 ; 88 ; 88 ; 99 ; 99 ; 122; 122; 122 ; 122; 177; 177] in  
+  L.combine den qty
 
 let () = 
     let x = cc n coins_input in
