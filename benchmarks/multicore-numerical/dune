@@ -116,7 +116,8 @@
 (executable
  (name fannkuchredux_multicore)
  (modules fannkuchredux_multicore)
- (libraries domainslib))
+ (libraries domainslib)
+ (ocamlopt_flags -noassert -unsafe))
 
 (alias
   (name multibench_parallel)
