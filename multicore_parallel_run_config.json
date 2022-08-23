@@ -134,7 +134,7 @@
       ]
     },
     {
-      "executable": "benchmarks/graph500seq/kernel1Seq_run.exe",
+      "executable": "benchmarks/graph500seq/kernel1_run.exe",
       "name": "graph500_seq_kernel1",
       "tags": ["macro_bench"],
       "runs": [
@@ -142,7 +142,7 @@
       ]
     },
     {
-      "executable": "benchmarks/graph500par/kernel1Par_run.exe",
+      "executable": "benchmarks/graph500par/kernel1_run_multicore.exe",
       "name": "graph500_par_kernel1",
       "tags": [ "10s_100s", "macro_bench" ],
       "runs": [

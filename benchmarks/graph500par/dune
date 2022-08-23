@@ -30,11 +30,11 @@
 )
 
 (executable
-  (name kernel1Par_run)
-  (modules kernel1Par_run)
+  (name kernel1_run_multicore)
+  (modules kernel1_run_multicore)
   (libraries graphTypes generate kernel1Par unix domainslib)
 )
 
 (alias
   (name multibench_parallel)
-  (deps gen.exe kernel1Par_run.exe))
+  (deps gen.exe kernel1_run_multicore.exe))

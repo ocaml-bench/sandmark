@@ -32,13 +32,13 @@
 )
 
 (executable
-  (name kernel1Seq_run)
-  (modules kernel1Seq_run)
+  (name kernel1_run)
+  (modules kernel1_run)
   (libraries graphTypes generateSeq kernel1Seq unix)
 )
 
 (alias
   (name buildbench)
   (deps kronecker.exe kernel2.exe kernel3.exe
-        gen.exe kernel1Seq_run.exe)
+        gen.exe kernel1_run.exe)
 )
