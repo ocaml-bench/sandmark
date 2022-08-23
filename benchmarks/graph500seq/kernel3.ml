@@ -106,7 +106,7 @@ let main adjMatrix startVertex n =
   (distanceArray, parentArray)
 
 let linkKernel1 () =
-  let ans = Kernel1.linkKronecker () in
+  let ans = Kernel1Old.linkKronecker () in
   main (fst ans) startVertex (snd ans)
 
 

@@ -91,7 +91,7 @@ let main adjMatrixHash n =
   (bfsTree, parentArray)
 
 let linkKernel1 () =
-  let ans = Kernel1.linkKronecker () in
+  let ans = Kernel1Old.linkKronecker () in
   main (fst ans) (snd ans)
 
 let _ = linkKernel1 ()

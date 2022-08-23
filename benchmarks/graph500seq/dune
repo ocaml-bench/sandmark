@@ -1,4 +1,44 @@
-(executables
-	(names kronecker kernel1 kernel2 kernel3))
+; kernel1 and kronecker have been replaced with new, more optimized
+; implementations.
+(executable (name kronecker) (modules kronecker))
+(library (name kernel1Old) (modules kernel1Old))
+(executable (name kernel2) (modules kernel2) (libraries kernel1Old))
+(executable (name kernel3) (modules kernel3) (libraries kernel1Old))
 
-(alias (name buildbench) (deps kronecker.exe kernel1.exe kernel2.exe kernel3.exe))
+;;;;; Newer implementations ;;;;;
+
+(library
+  (name generateSeq)
+  (modules generateSeq)
+  (libraries graphTypes)
+)
+
+(executable
+  (name gen)
+  (modules gen)
+  (libraries unix generateSeq)
+)
+
+(library
+  (name sparseGraphSeq)
+  (modules sparseGraphSeq)
+  (libraries graphTypes)
+)
+
+(library
+  (name kernel1Seq)
+  (modules kernel1Seq)
+  (libraries generateSeq sparseGraphSeq unix)
+)
+
+(executable
+  (name kernel1_run)
+  (modules kernel1_run)
+  (libraries graphTypes generateSeq kernel1Seq unix)
+)
+
+(alias
+  (name buildbench)
+  (deps kronecker.exe kernel2.exe kernel3.exe
+        gen.exe kernel1_run.exe)
+)
