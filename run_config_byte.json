@@ -218,6 +218,15 @@
       ]
     },
     {
+      "executable": "benchmarks/multicore-numerical/count_change_iter.bc",
+      "name": "count_change_iter.bc",
+      "runs": [
+        {
+          "params": "400"
+        }
+      ]
+    },
+    {
       "executable": "benchmarks/valet/test_lwt.bc",
       "name": "test_lwt.bc",
       "runs": [
