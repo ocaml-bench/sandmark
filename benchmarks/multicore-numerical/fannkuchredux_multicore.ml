@@ -6,10 +6,12 @@
  *
  * (Based on the Java version by Oleg Mazurov)
  *)
+module T = Domainslib.Task
 
-let n = try int_of_string Sys.argv.(1) with _ -> 7
-
-let workers = 32
+let workers = try int_of_string @@ Sys.argv.(1) with _ -> 10
+let n = try int_of_string Sys.argv.(2) with _ -> 7
+let num_domains = workers
+let workers = 10
 
 module Perm =
   struct
@@ -102,17 +104,17 @@ let fr n lo hi =
     done;
     (!c, !m)
 
-let main s_n =
+let main pool s_n =
     let n = s_n in
     let chunk_size = Perm.facts.(n) / workers
     and rem = Perm.facts.(n) mod workers in
     let w = ref (Array.init workers (fun _ -> (0, 0))) in
-    for i = 0 to (workers-1) do
-      Printf.printf "%d" i;
+   T.run pool (fun () -> T.parallel_for pool ~start:0 ~finish:(workers-1) ~body:(fun i ->
+      Printf.printf "par_iter: %d\n" i;
       let lo = i * chunk_size + min i rem in
       let hi = lo + chunk_size + if i < rem then 1 else 0 in
       !w.(i) <- fr s_n lo hi
-    done;
+    ) );
     let c = ref 0 and m = ref 0 in
     Array.iter
       (fun (nc, nm) ->
@@ -122,4 +124,6 @@ let main s_n =
     Printf.printf "%d\nPfannkuchen(%d) = %d\n" !c n !m
 
 let _ =
-  main n;
+  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
+  main pool n;
+  T.teardown_pool pool

@@ -182,6 +182,29 @@
     },
 
     {
+      "executable": "benchmarks/benchmarksgame/fannkuchredux_multicore.exe",
+      "name": "mandelbrot6",
+      "tags": ["macro_bench"],
+      "runs": [
+        { "params": "12", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
+      "executable": "benchmarks/multicore-numerical/fannkuchredux_multicore.exe",
+      "name": "fannkuchredux_multicore",
+      "tags": ["macro_bench"],
+      "runs": [
+        { "params": "1 12", "paramwrapper": "taskset --cpu-list 2-13"},
+        { "params": "2 12", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "4 12", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "8 12", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "12 12", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "16 12", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "20 12", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "24 12", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+      ]
+    },
+    {
       "executable": "benchmarks/multicore-numerical/matrix_multiplication.exe",
       "name": "matrix_multiplication",
       "tags": ["1s_10s", "macro_bench"],

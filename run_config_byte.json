@@ -92,15 +92,6 @@
       ]
     },
     {
-      "executable": "benchmarks/benchmarksgame/fannkuchredux2.bc",
-      "name": "fannkuchredux2.bc",
-      "runs": [
-        {
-          "params": "12"
-        }
-      ]
-    },
-    {
       "executable": "benchmarks/benchmarksgame/fasta3.bc",
       "name": "fasta3.bc",
       "runs": [
