@@ -553,8 +553,8 @@
       ],
       "runs": [
         {
-          "params": "--disable=check-magic-number %{bin:frama-c.byte}",
-          "short_name": "frama-c_byte"
+          "params": "--disable=check-magic-number %{bin:frankenstein.byte}",
+          "short_name": "frankenstein_byte"
         }
       ]
     },

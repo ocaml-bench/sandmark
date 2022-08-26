@@ -138,6 +138,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	opam pin add -n --yes --switch $* base.v0.14.3 https://github.com/janestreet/base.git#v0.14.3
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
+	opam pin add -n --yes --switch $* dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
 	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
 
 override_packages/%: setup_sys_dune/%
