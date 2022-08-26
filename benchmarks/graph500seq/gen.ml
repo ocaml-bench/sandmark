@@ -18,9 +18,9 @@ let () =
     Printf.eprintf "Must provide graph file argument.\n"; exit 1
   end;
   let scale = !scale and edge_factor = !edge_factor in
-  Printf.printf "Generating edge list...\n%!";
+  Printf.printf "Generating edge list of scale %d...\n%!" scale;
   let t0 = Unix.gettimeofday () in
   let edges = GenerateSeq.go ~scale ~edge_factor in
   let t1 = Unix.gettimeofday () in
   Printf.printf "Generated. Time: %f s.\n" (t1 -. t0);
-  GenerateSeq.to_file ~filename:!filename edges;
+  FileHandler.to_file ~filename:!filename edges;

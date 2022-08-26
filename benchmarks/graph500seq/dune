@@ -1,44 +1,121 @@
-; kernel1 and kronecker have been replaced with new, more optimized
-; implementations.
-(executable (name kronecker) (modules kronecker))
-(library (name kernel1Old) (modules kernel1Old))
-(executable (name kernel2) (modules kernel2) (libraries kernel1Old))
-(executable (name kernel3) (modules kernel3) (libraries kernel1Old))
 
-;;;;; Newer implementations ;;;;;
+(library
+  (name graphTypes)
+  (modules graphTypes)
+  (modules_without_implementation graphTypes)
+  (ocamlc_flags -g)
+)
 
 (library
   (name generateSeq)
   (modules generateSeq)
-  (libraries graphTypes)
+  (libraries graphTypes fileHandler)
+  (ocamlc_flags -g)
+)
+
+(library
+  (name fileHandler)
+  (modules fileHandler)
+  (ocamlc_flags -g)
 )
 
 (executable
   (name gen)
   (modules gen)
-  (libraries unix generateSeq)
+  (libraries unix generateSeq fileHandler)
+  (ocamlc_flags -g)
 )
 
 (library
   (name sparseGraphSeq)
   (modules sparseGraphSeq)
   (libraries graphTypes)
+  ;(preprocess; (pps ppx_inline_test ppx_assert))
+  ;(inline_tests)
+  (ocamlc_flags -g)
 )
 
 (library
   (name kernel1Seq)
   (modules kernel1Seq)
   (libraries generateSeq sparseGraphSeq unix)
+  (ocamlc_flags -g)
+)
+
+(library
+  (name kernel2Seq)
+  (modules kernel2Seq)
+  (libraries generateSeq sparseGraphSeq unix)
+  ;(preprocess; (pps ppx_inline_test ppx_assert))
+  ;(inline_tests)
+  (ocamlc_flags -g)
+)
+
+(library
+  (name kernel3Seq)
+  (modules kernel3Seq)
+  (libraries graphTypes generateSeq sparseGraphSeq unix)
+  ;(preprocess; (pps ppx_inline_test ppx_assert))
+  ;(inline_tests)
+  (ocamlc_flags -g)
+)
+
+(executable
+  (name sampleSearchKeys)
+  (modules sampleSearchKeys)
+  (libraries graphTypes generateSeq sparseGraphSeq unix)
+  (ocamlc_flags -g)
+)
+
+(executable
+  (name print_sparse)
+  (modules print_sparse)
+  (modes byte exe)
+  (libraries sparseGraphSeq graphTypes fileHandler kernel1Seq unix)
+  (ocamlc_flags -g)
 )
 
 (executable
   (name kernel1_run)
   (modules kernel1_run)
-  (libraries graphTypes generateSeq kernel1Seq unix)
+  (libraries sparseGraphSeq graphTypes fileHandler kernel1Seq unix)
+  (ocamlc_flags -g)
 )
 
-(alias
-  (name buildbench)
-  (deps kronecker.exe kernel2.exe kernel3.exe
-        gen.exe kernel1_run.exe)
+(executable
+  (name kernel2_run)
+  (modules kernel2_run)
+  (modes byte exe)
+  (libraries sparseGraphSeq graphTypes fileHandler kernel2Seq unix)
+  (ocamlc_flags -g)
 )
+
+(executable
+  (name kernel2_run_multicore)
+  (modules kernel2_run_multicore)
+  (modes byte exe)
+  (libraries domainslib sparseGraphSeq graphTypes fileHandler kernel2Seq unix)
+  (ocamlc_flags -g)
+)
+
+(executable
+  (name kernel3_run)
+  (modules kernel3_run)
+  (modes byte exe)
+  (libraries sparseGraphSeq graphTypes fileHandler kernel3Seq unix)
+  (ocamlc_flags -g)
+)
+
+(executable
+  (name kernel3_run_multicore)
+  (modules kernel3_run_multicore)
+  (modes byte exe)
+  (libraries domainslib sparseGraphSeq graphTypes fileHandler kernel3Seq unix)
+  (ocamlc_flags -g)
+)
+
+;(alias
+;  (name buildbench)
+;  (deps kronecker.exe kernel2.exe kernel3.exe
+;        gen.exe kernel1_run.exe)
+;)
