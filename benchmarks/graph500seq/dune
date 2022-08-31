@@ -1,29 +1,19 @@
 
 (library
-  (name graphTypes)
-  (modules graphTypes)
-  (modules_without_implementation graphTypes)
-  (ocamlc_flags -g)
-)
-
-(library
   (name generateSeq)
   (modules generateSeq)
   (libraries graphTypes fileHandler)
-  (ocamlc_flags -g)
 )
 
 (library
   (name fileHandler)
   (modules fileHandler)
-  (ocamlc_flags -g)
 )
 
 (executable
   (name gen)
   (modules gen)
   (libraries unix generateSeq fileHandler)
-  (ocamlc_flags -g)
 )
 
 (library
@@ -32,14 +22,12 @@
   (libraries graphTypes)
   ;(preprocess; (pps ppx_inline_test ppx_assert))
   ;(inline_tests)
-  (ocamlc_flags -g)
 )
 
 (library
   (name kernel1Seq)
   (modules kernel1Seq)
   (libraries generateSeq sparseGraphSeq unix)
-  (ocamlc_flags -g)
 )
 
 (library
@@ -48,7 +36,6 @@
   (libraries generateSeq sparseGraphSeq unix)
   ;(preprocess; (pps ppx_inline_test ppx_assert))
   ;(inline_tests)
-  (ocamlc_flags -g)
 )
 
 (library
@@ -57,14 +44,12 @@
   (libraries graphTypes generateSeq sparseGraphSeq unix)
   ;(preprocess; (pps ppx_inline_test ppx_assert))
   ;(inline_tests)
-  (ocamlc_flags -g)
 )
 
 (executable
   (name sampleSearchKeys)
   (modules sampleSearchKeys)
   (libraries graphTypes generateSeq sparseGraphSeq unix)
-  (ocamlc_flags -g)
 )
 
 (executable
@@ -72,14 +57,12 @@
   (modules print_sparse)
   (modes byte exe)
   (libraries sparseGraphSeq graphTypes fileHandler kernel1Seq unix)
-  (ocamlc_flags -g)
 )
 
 (executable
   (name kernel1_run)
   (modules kernel1_run)
   (libraries sparseGraphSeq graphTypes fileHandler kernel1Seq unix)
-  (ocamlc_flags -g)
 )
 
 (executable
@@ -87,7 +70,6 @@
   (modules kernel2_run)
   (modes byte exe)
   (libraries sparseGraphSeq graphTypes fileHandler kernel2Seq unix)
-  (ocamlc_flags -g)
 )
 
 (executable
@@ -95,7 +77,6 @@
   (modules kernel2_run_multicore)
   (modes byte exe)
   (libraries domainslib sparseGraphSeq graphTypes fileHandler kernel2Seq unix)
-  (ocamlc_flags -g)
 )
 
 (executable
@@ -103,7 +84,6 @@
   (modules kernel3_run)
   (modes byte exe)
   (libraries sparseGraphSeq graphTypes fileHandler kernel3Seq unix)
-  (ocamlc_flags -g)
 )
 
 (executable
@@ -111,7 +91,6 @@
   (modules kernel3_run_multicore)
   (modes byte exe)
   (libraries domainslib sparseGraphSeq graphTypes fileHandler kernel3Seq unix)
-  (ocamlc_flags -g)
 )
 
 ;(alias
