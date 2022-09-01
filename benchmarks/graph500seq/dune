@@ -53,13 +53,6 @@
 )
 
 (executable
-  (name print_sparse)
-  (modules print_sparse)
-  (modes byte exe)
-  (libraries sparseGraphSeq graphTypes fileHandler kernel1Seq unix)
-)
-
-(executable
   (name kernel1_run)
   (modules kernel1_run)
   (libraries sparseGraphSeq graphTypes fileHandler kernel1Seq unix)
