@@ -327,9 +327,11 @@ check_url: check_jq
 	};
 
 load_irmin_data:
-ifeq (,$(wildcard $(IRMIN_DATA_DIR)/data4_100066commits.repr))
-	wget http://data.tarides.com/irmin/data4_100066commits.repr -P $(IRMIN_DATA_DIR)
-endif
+	mkdir -p /tmp/irmin_trace_replay_artefacts;
+	if [ ! -f $(IRMIN_DATA_DIR)/data4_100066commits.repr ]; then \
+		wget http://data.tarides.com/irmin/data4_100066commits.repr -P $(IRMIN_DATA_DIR); \
+	fi;
+
 
 load_check:
 	$(eval START_TIME = $(shell date +%s))
