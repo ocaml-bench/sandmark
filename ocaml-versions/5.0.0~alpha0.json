@@ -1,0 +1,19 @@
+{
+  "url" : "https://github.com/ocaml/ocaml/archive/5.0.0-alpha0.tar.gz",
+  "package_overrides": [
+    "fmt.0.9.0",
+    "ocamlfind.1.9.3.git"
+  ],
+  "package_remove": [
+    "camlpdf",
+    "cpdf",
+    "coq",
+    "coq-core",
+    "coq-stdlib",
+    "ctypes",
+    "fraplib",
+    "integers",
+    "js_of_ocaml-compiler",
+    "stdio"
+  ]
+}

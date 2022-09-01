@@ -138,24 +138,18 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 		*5.1*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore; \
 	esac };
 	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
-	opam pin add -n --yes --switch $* eqaf.0.8.1~alpha-repo https://github.com/kit-ty-kate/eqaf/archive/500.tar.gz
-	opam pin add -n --yes --switch $* lru.0.3.0.1~alpha-repo git+https://github.com/samoht/lru#500
-	opam pin add -n --yes --switch $* lwt.5.5.1~alpha-repo https://github.com/kit-ty-kate/lwt/archive/500-again.tar.gz
-	opam pin add -n --yes --switch $* memtrace.0.2.2.1~alpha-repo git+https://github.com/samoht/memtrace#500
-	opam pin add -n --yes --switch $* ocplib-endian.1.2.1~alpha-repo https://github.com/kit-ty-kate/ocplib-endian/archive/500.tar.gz
-	opam pin add -n --yes --switch $* ppx_deriving.5.2.1.1~alpha-repo https://github.com/kit-ty-kate/ppx_deriving/archive/500.tar.gz
-	opam pin add -n --yes --switch $* ppxlib.0.25.0~5.00preview git+https://github.com/kit-ty-kate/ppxlib.git#500+sexp
-	opam pin add -n --yes --switch $* sexplib0.v0.15.1~alpha-repo https://github.com/kit-ty-kate/sexplib0/archive/500.tar.gz;
 	opam pin add -n --yes --switch $* base.v0.14.3 https://github.com/janestreet/base.git#v0.14.3
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
-	opam pin add -n --yes --switch $* biniou.1.2.1.1~alpha-repo https://github.com/kit-ty-kate/biniou/archive/500.tar.gz
 
 override_packages/%: setup_sys_dune/%
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
 	opam repo add upstream "git+https://github.com/ocaml/opam-repository.git" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
-	# opam repo add alpha git+https://github.com/kit-ty-kate/opam-alpha-repository.git --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
+	opam repo add alpha git+https://github.com/kit-ty-kate/opam-alpha-repository.git --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
+	opam exec --switch $(CONFIG_SWITCH_NAME) -- opam update
+	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "lru" "psq"
+	opam exec --switch $(CONFIG_SWITCH_NAME) -- opam list
 	cp dependencies/template/dev.opam $(DEV_OPAM)
 ifeq (0, $(USE_SYS_DUNE_HACK))
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)" "dune-private-libs.$(SANDMARK_DUNE_VERSION)" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)

@@ -14,7 +14,7 @@ depends: [
   "base64" {= "3.4.0"}
   "bigstringaf" {= "0.6.1"}
   "camlp-streams" {="5.0"}
-  "checkseum" {= "0.2.1"}
+  "checkseum" {= "0.3.4"}
   "conf-findutils" {= "1"}
   "conf-gmp" {= "1"}
   "conf-m4" {= "1"}
@@ -24,22 +24,22 @@ depends: [
   "decompress" {= "1.1.0"}
   "digestif" {= "1.0.0"}
   "fmt" {= "0.9.0"}
-  "irmin"
-  "irmin-pack" {= "3.2.1"}
-  "irmin-bench" {="3.2.1"}
-  "irmin-tezos" {="3.2.1"}
+  "irmin" {= "3.3.2"}
+  "irmin-pack" {= "3.3.2"}
+  "irmin-bench" {="3.3.2"}
+  "irmin-tezos" {="3.3.2"}
   "logs" {= "0.7.0"}
-  "lwt"
+  "lwt" {= "5.6.1"}
   "menhir" {= "20200612"}
   "menhirLib" {= "20200612"}
   "menhirSdk" {= "20200612"}
   "mtime" {= "1.2.0"}
   "num" {= "1.3"}
-  "ocaml-config"
+  "ocaml-config" {= "3"}
   "ocamlgraph" {= "2.0.0"}
-  "optint"
-  "psmt2-frontend"
-  "repr"
+  "ppxlib"  # {= "0.27.0"}
+  "psmt2-frontend" {= "0.4.0"}
+  "repr" {= "0.6.0"}
   "rresult" {= "0.6.0"}
   "stdlib-shims" {= "0.1.0"}
   "topkg" {= "1.0.3"}
