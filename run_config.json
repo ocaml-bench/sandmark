@@ -113,6 +113,7 @@
       "name": "yojson_ydump",
       "tags": [
         "lt_1s",
+        "macro_bench",
         "run_in_ci"
       ],
       "runs": [
@@ -247,7 +248,8 @@
       "executable": "benchmarks/multicore-numerical/floyd_warshall.exe",
       "name": "floyd_warshall",
       "tags": [
-        "1s_10s"
+        "1s_10s",
+        "macro_bench"
       ],
       "runs": [
         {
@@ -649,6 +651,7 @@
       "name": "zarith_pi",
       "tags": [
         "1s_10s",
+        "macro_bench",
         "run_in_ci"
       ],
       "runs": [
@@ -1431,7 +1434,8 @@
       "executable": "benchmarks/numerical-analysis/durand_kerner_aberth.exe",
       "name": "durand-kerner-aberth",
       "tags": [
-        "lt_1s"
+        "lt_1s",
+        "macro_bench"
       ],
       "runs": [
         {
@@ -1540,7 +1544,8 @@
       "executable": "benchmarks/soli/soli.exe",
       "name": "soli",
       "tags": [
-        "1s_10s"
+        "1s_10s",
+        "macro_bench"
       ],
       "runs": [
         {
@@ -1552,7 +1557,8 @@
       "executable": "benchmarks/hamming/hamming.exe",
       "name": "hamming",
       "tags": [
-        "1s_10s"
+        "1s_10s",
+        "macro_bench"
       ],
       "runs": [
         {
