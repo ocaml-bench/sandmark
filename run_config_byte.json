@@ -14,7 +14,7 @@
     },
     {
       "name": "pausetimes_multicore",
-      "command": "olly latency -o %{output} --json 'taskset --cpu-list 5 %{command}'"
+      "command": "bash pausetimes_multicore %{output} taskset --cpu-list 5 %{command}"
     }
   ],
   "benchmarks": [
