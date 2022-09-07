@@ -35,4 +35,4 @@
              spectralnorm2.bc input25000000.txt input5000000.txt))
 
 (alias (name multibench_parallel)
-       (deps binarytrees5.exe mandelbrot6.exe spectralnorm2.exe))
+       (deps binarytrees5.exe mandelbrot6.exe spectralnorm2.exe fannkuchredux.exe))

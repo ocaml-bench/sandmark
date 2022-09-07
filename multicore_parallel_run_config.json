@@ -182,8 +182,8 @@
     },
 
     {
-      "executable": "benchmarks/benchmarksgame/fannkuchredux_multicore.exe",
-      "name": "mandelbrot6",
+      "executable": "benchmarks/benchmarksgame/fannkuchredux.exe",
+      "name": "fannkuchredux",
       "tags": ["macro_bench"],
       "runs": [
         { "params": "12", "paramwrapper": "taskset --cpu-list 2-13" }
