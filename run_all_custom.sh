@@ -11,14 +11,6 @@ TMP_DIR="/tmp"
 HOSTNAME=`hostname`
 
 # Functions
-check_sequential_parallel () {
-    if [[ $1 == *"multicore"* ]]; then
-        echo "parallel"
-    else
-        echo "sequential"
-    fi
-}
-
 check_not_expired () {
     EXPIRY_DATE=$(date -d $1 +%s)
     TODAY=`date +%Y-%m-%d`
@@ -76,7 +68,7 @@ COUNT=`jq '. | length' "${CUSTOM_FILE}"`
 i=0
 while [ $i -lt ${COUNT} ]; do
     j=0
-    while [ $j -lt 2 ]; do
+    while [ $j -lt 3 ]; do
         # Obtain configuration options
         CONFIG_URL=`jq -r '.['$i'].url' "${CUSTOM_FILE}"`
         CONFIG_NAME=`jq -r '.['$i'].name' "${CUSTOM_FILE}"`
@@ -86,6 +78,11 @@ while [ $i -lt ${COUNT} ]; do
         if [ $j -eq 0 ]; then
             CONFIG_RUN_JSON="run_config_filtered.json"
 	    CONFIG_NAME="${CONFIG_NAME}+sequential"
+            SEQPAR="sequential"
+        elif [ $j -eq 2 ]; then
+            CONFIG_RUN_JSON="run_config_filtered.json"
+	    CONFIG_NAME="${CONFIG_NAME}+perfstat"
+            SEQPAR="perfstat"
         else
 	    CONFIG_NAME="${CONFIG_NAME}+parallel"
             if [ "${HOSTNAME}" == "navajo" ]; then
@@ -93,6 +90,7 @@ while [ $i -lt ${COUNT} ]; do
             else
                 CONFIG_RUN_JSON="multicore_parallel_run_config_filtered.json"
             fi
+            SEQPAR="parallel"
         fi
 
         CONFIG_OPTIONS=`jq -r '.['$i'].configure // empty' "${CUSTOM_FILE}"`
@@ -103,7 +101,6 @@ while [ $i -lt ${COUNT} ]; do
         TAG_STRING=`echo \"${CONFIG_TAG}\"`
 
         TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-        SEQPAR=$(check_sequential_parallel ${CONFIG_RUN_JSON})
         COMMIT=$(find_commit ${CONFIG_URL})
         NOT_EXPIRED=$(check_not_expired ${CONFIG_EXPIRY})
 
@@ -125,6 +122,17 @@ while [ $i -lt ${COUNT} ]; do
             if [[ ${SEQPAR} == "sequential" ]]; then
                 USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
                                  RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
+                                 ENVIRONMENT="`echo ${CONFIG_ENVIRONMENT}`" \
+                                 OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
+                                 OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
+                                 SANDMARK_CUSTOM_NAME="`echo ${CONFIG_NAME}`" \
+                                 SANDMARK_OVERRIDE_PACKAGES="`echo ${CONFIG_OVERRIDE_PACKAGES}`" \
+                                 SANDMARK_REMOVE_PACKAGES="`echo ${CONFIG_REMOVE_PACKAGES}`" \
+                                 make ocaml-versions/5.1.0+stable.bench > "${RESULTS_DIR}/${CONFIG_NAME}.${TIMESTAMP}.${COMMIT}.log" 2>&1
+            elif [[ $j -eq 2 ]]; then
+                USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
+                                 RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
+                                 RUN_BENCH_TARGET="run_perfstat" \
                                  ENVIRONMENT="`echo ${CONFIG_ENVIRONMENT}`" \
                                  OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
                                  OCAML_RUN_PARAM="`echo ${CONFIG_RUN_PARAMS}`" \
