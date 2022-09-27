@@ -1,5 +1,5 @@
 {
-  "url" : "https://github.com/ocaml/ocaml/archive/trunk.tar.gz",
+  "url" : "https://github.com/ocaml/ocaml/archive/5.0.0-alpha0.tar.gz",
   "package_overrides": [
     "fmt.0.9.0",
     "ocamlfind.1.9.3.git"
@@ -12,14 +12,8 @@
     "coq-stdlib",
     "ctypes",
     "fraplib",
-    "index",
     "integers",
     "js_of_ocaml-compiler",
-    "ppx_derivers",
-    "ppx_deriving",
-    "ppx_deriving_yojson",
-    "ppx_irmin",
-    "ppx_repr",
     "stdio"
   ]
 }
