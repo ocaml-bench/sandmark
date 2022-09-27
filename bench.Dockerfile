@@ -1,6 +1,6 @@
 FROM ocaml/opam:ubuntu-20.04-ocaml-4.12
 
-ENV BENCHCMD="TAG='\"run_in_ci\"' $(MAKE) run_config_filtered.json; RUN_CONFIG_JSON=run_config_filtered.json $(MAKE) ocaml-versions/4.14.0+domains.bench"
+ENV BENCHCMD="TAG='\"run_in_ci\"' $(MAKE) run_config_filtered.json; RUN_CONFIG_JSON=run_config_filtered.json $(MAKE) ocaml-versions/5.1.0+trunk.bench"
 
 WORKDIR /app
 

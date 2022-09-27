@@ -39,7 +39,7 @@ depends: [
   "menhir" {= "20200612"}
   "menhirLib" {= "20200612"}
   "menhirSdk" {= "20200612"}
-  "mtime" {= "1.2.0"}
+  "mtime" {= "1.4.0"}
   "num" {= "1.3"}
   "ocaml-config" {= "1"}
   "ocamlgraph" {= "2.0.0"}
