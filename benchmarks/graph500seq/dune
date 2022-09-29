@@ -37,8 +37,12 @@
   (libraries graphTypes generateSeq kernel1Seq unix)
 )
 
+(rule
+  (targets edges.data)
+  (deps (:prog gen.exe))
+  (action (run %{prog} -scale 21 -edgefactor 16 %{targets})))
+
 (alias
   (name buildbench)
-  (deps kronecker.exe kernel2.exe kernel3.exe
-        gen.exe kernel1_run.exe)
+  (deps kronecker.exe kernel2.exe kernel3.exe kernel1_run.exe edges.data)
 )
