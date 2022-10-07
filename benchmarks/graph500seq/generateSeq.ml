@@ -85,16 +85,5 @@ let kronecker ~scale ~edge_factor : (vertex * vertex * weight) array =
 let go ~scale ~edge_factor =
   kronecker ~scale ~edge_factor
 
-let to_file ~filename (edges : edge array) =
-  let out = open_out filename in
-  Marshal.to_channel out edges [];
-  close_out out
-
-let from_file filename =
-  let in_ = open_in filename in
-  let res : edge array = Marshal.from_channel in_ in
-  close_in in_;
-  res
-
 let generate_to_file ~scale ~edge_factor ~filename =
-  go ~scale ~edge_factor |> to_file ~filename
+  go ~scale ~edge_factor |> FileHandler.to_file ~filename
