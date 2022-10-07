@@ -1,3 +1,5 @@
+(* Kernel 3 performs a Si*)
+
 let is_intree intree v = 
     intree.(v)
 

@@ -20,9 +20,6 @@ let from s g =
 let num_vertices g = 
     Array.length g
 
-(* Takes a sparse graph g and a vertex v and returns the next edgenode 
-   res in the edgenode list of v and changes the state of g with res removed
-   from the edgenode list of v. *)
 let get_next_edgenode g v =
     let res = List.hd g.(v) in
     let rest_edgelist = List.tl g.(v) in
@@ -72,70 +69,3 @@ let print_sparse_graph g =
     done
 
 let print_vertex v = print_int v
-
-let gr = [|
-    [1;3];
-    [0];
-    [3;4];
-    [0;2];
-    [2]
-|]
-
-let gr2 = [|
-    [];
-    [2;3;7;4;8];
-    [1;6];
-    [1;7];
-    [1];
-    [6];
-    [2;5;8];
-    [1;3];
-    [1;6];
-|]
-
-let graph = 
-    Array.map 
-        (fun x -> 
-            List.map (fun y -> (y, 0.)) x
-        ) 
-    gr
-
-let graph2 = 
-    Array.map 
-        (fun x -> 
-            List.map (fun y -> (y, 0.)) x
-        ) 
-    gr2
-
-let graph3 = [|
-    [(1, 3.); (2, 1.)];
-    [(0, 3.); (2, 7.); (4, 1.); (3, 5.)];
-    [(1, 7.); (0, 1.); (3, 2.)];
-    [(2, 2.); (1, 5.); (4, 7.)];
-    [(1, 1.); (3,7.)]
-|]
-
-let graph4 = [|
-    [(1, 5.); (2, 3.)];
-    [(0, 5.); (2, 1.)];
-    [(0, 3.); (1, 1.)];
-|]
-
-(*let graph5 = [|
-    [(0, 3.); (2, 1.)];
-    [(1, 3.); (2, 7.); (4, 1.); (3, 5.)];
-    [(2, 7.); (0, 1.); (3, 2.)];
-    [(3, 2.); (1, 5.); (4, 7.)];
-    [(4, 1.); (3, 7.)]
-|]*)
-
-
-(*open Base
-let%test_unit "has_selfloop_1" =
-    [%test_eq: bool] (has_selfloop 2 [(1, 0.); (2, 0.)]) true 
-
-let%test_unit "has_selfloop_2" = 
-    [%test_eq: bool] (has_selfloop 3 [(0, 3.); (2, 7.); (4, 1.); (3, 5.)]) true
-
-
-*)

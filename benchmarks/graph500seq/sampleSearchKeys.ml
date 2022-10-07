@@ -1,5 +1,6 @@
-(* Returns a list that contains all non-isolated vertices *)
-let get_candidates g = 
+(** Returns a list vertices of vertices that have at least one 
+    out-going edge *)
+let get_sinks g = 
     let glen = Array.length g in
     let rec aux count xs = 
         match (count = glen) with 
@@ -12,8 +13,8 @@ let get_candidates g =
     in
     aux 0 []
 
-(* Returns a list of n random vetices from the list of candidates *)
-let extract_samples n candidates =
+(** Returns a list of n random vetices from the list of sinks *)
+let extract_samples n sinks =
     let rec aux count cands xs = 
         match count with 
         | 0 -> xs 
@@ -22,11 +23,13 @@ let extract_samples n candidates =
             aux (count-1) (List.filter (fun x -> if x = sample then false else true) cands) ((List.nth cands sample)::xs)
         end
     in
-    aux n candidates [] 
+    aux n sinks [] 
 
+(** Returns an array of n samples from g that don't contain 
+    self-loops *)
 let get_samples n g = 
-    let candidates = get_candidates (Array.mapi (fun i x -> if (SparseGraphSeq.has_selfloop i x) then [] else x) g) in
-    let samples_list = extract_samples n candidates in
+    let sinks = get_sinks (Array.mapi (fun i x -> if (SparseGraphSeq.has_selfloop i x) then [] else x) g) in
+    let samples_list = extract_samples n sinks in
     Array.of_list samples_list
 
 let usage_msg = "sampleSearchKeys.exe <sparse_graph_input_file> -o <sample_array_output_file"
@@ -51,17 +54,3 @@ let () =
   let t1 = Unix.gettimeofday () in
   Printf.printf "Done. Time: %f\n" (t1 -. t0);
   FileHandler.to_file ~filename:!sample_array_output_filename sample_array;
-
-(*open Base
-let%test_unit "get_candidates_1" = 
-    [%test_eq: int list list] (get_candidates [| [12]; [14]; []; [16] |]) [[16]; [14]; [12]] 
-
-let%test_unit "get_candidates_2" = 
-    [%test_eq: int list list] (get_candidates [| []; []; []; [] |]) []
-
-let%test_unit "extract_samples_1" = 
-    [%test_eq: int ] (Array.length (extract_samples 4 [1;2;3;4;5;6;7;8])) 4
-    
-let%test_unit "extract_samples_2" = 
-    [%test_eq: bool] (( (extract_samples 2 [1;2;3])= [|1;2|]) || ((extract_samples 2 [1;2;3]) = [|1;3|]) || ((extract_samples 2 [1;2;3]) = [|2;1|]) || ((extract_samples 2 [1;2;3]) = [|2;3|]) || ((extract_samples 2 [1;2;3]) = [|3;1|]) || ((extract_samples 2 [1;2;3]) = [|3;2|]) )  true
-*)
