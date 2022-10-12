@@ -22,7 +22,7 @@ let () =
   end;
   let scale = !scale and edge_factor = !edge_factor in
   Printf.printf "Generating edge list...\n%!";
-  let pool = T.setup_pool ~num_additional_domains:(!num_domains-1) () in
+  let pool = T.setup_pool ~num_domains:(!num_domains-1) () in
   let t0 = Unix.gettimeofday () in
   let edges = T.run pool (fun () -> Generate.go ~pool ~scale ~edge_factor) in
   let t1 = Unix.gettimeofday () in
