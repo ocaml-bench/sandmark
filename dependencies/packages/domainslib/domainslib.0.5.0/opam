@@ -9,7 +9,7 @@ dev-repo: "git+https://github.com/ocaml-multicore/domainslib.git"
 bug-reports: "https://github.com/ocaml-multicore/domainslib/issues"
 depends: [
   "ocaml" {>= "5.00"}
-  "dune" {>= "3.0"}
+  "dune" {>= "2.9"}
   "lockfree" { >= "0.2.0"}
   "mirage-clock-unix" {with-test}
 ]

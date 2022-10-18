@@ -1,6 +1,0 @@
-(executable
-  (name replay)
-  (libraries lwt irmin-pack irmin-tezos irmin-bench.traces irmin-pack.unix))
-
-(alias (name buildbench)
-       (deps replay.exe))
