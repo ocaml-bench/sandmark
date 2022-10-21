@@ -68,16 +68,6 @@
       ]
     },
     {
-      "executable": "benchmarks/graph500seq/gen.exe",
-      "name": "graph500_seq_gen",
-      "tags": [ "10s_100s" ],
-      "runs": [
-	{
-	  "params": "-scale 21 -edgefactor 16 edges.data"
-	}
-      ]
-    },
-    {
       "executable": "benchmarks/graph500seq/kernel1_run.exe",
       "name": "graph500_seq_kernel1",
       "tags": [ "10s_100s", "macro_bench" ],
