@@ -295,26 +295,18 @@
       ]
     },
     {
-      "executable": "benchmarks/graph500par/generateSeq.exe",
-      "name": "spectralnorm2",
-      "tags": ["macro_bench"],
-      "runs": [
-        { "params": "-scale 21 -edgefactor 16 edges.data" , "paramwrapper": "taskset --cpu-list 2-13"}
-      ]
-    },
-    {
       "executable": "benchmarks/graph500par/gen.exe",
       "name": "graph500_par_gen",
       "tags": [ "macro_bench", "10s_100s" ],
       "runs": [
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 1 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 2 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 4 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 8 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 12 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 20 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 24 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+	{ "params": "-scale 21 -edgefactor 16 -ndomains 1 /dev/null", "paramwrapper": "taskset --cpu-list 2-13" },
+	{ "params": "-scale 21 -edgefactor 16 -ndomains 2 /dev/null", "paramwrapper": "taskset --cpu-list 2-13" },
+	{ "params": "-scale 21 -edgefactor 16 -ndomains 4 /dev/null", "paramwrapper": "taskset --cpu-list 2-13" },
+	{ "params": "-scale 21 -edgefactor 16 -ndomains 8 /dev/null", "paramwrapper": "taskset --cpu-list 2-13" },
+	{ "params": "-scale 21 -edgefactor 16 -ndomains 12 /dev/null", "paramwrapper": "taskset --cpu-list 2-13" },
+	{ "params": "-scale 21 -edgefactor 16 -ndomains 16 /dev/null", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+	{ "params": "-scale 21 -edgefactor 16 -ndomains 20 /dev/null", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+	{ "params": "-scale 21 -edgefactor 16 -ndomains 24 /dev/null", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
       ]
     },
     {

@@ -25,33 +25,9 @@
  (modes native))
 
 (executable
- (name game_of_life)
- (libraries cla domainslib unix benchmark)
- (modules game_of_life)
- (modes native))
-
-(executable
- (name lu_decomp)
- (libraries cla domainslib unix benchmark)
- (modules lu_decomp)
- (modes native))
-
-(executable
- (name binarytrees5)
- (libraries cla domainslib unix benchmark)
- (modules binarytrees5)
- (modes native))
-
-(executable
  (name raytracer)
  (libraries cla domainslib unix benchmark)
  (modules raytracer)
- (modes native))
-
-(executable
- (name nbody)
- (libraries cla domainslib unix benchmark)
- (modules nbody)
  (modes native))
 
 (alias

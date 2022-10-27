@@ -35,6 +35,11 @@
   (libraries graphTypes generate kernel1Par unix domainslib)
 )
 
+(rule
+  (targets edges.data)
+  (deps (:prog gen.exe))
+  (action (run %{prog} -scale 21 -edgefactor 16 -ndomains 16 %{targets})))
+
 (alias
   (name multibench_parallel)
-  (deps gen.exe kernel1_run_multicore.exe))
+  (deps kernel1_run_multicore.exe edges.data))
