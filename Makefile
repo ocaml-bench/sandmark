@@ -145,12 +145,15 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 override_packages/%: setup_sys_dune/%
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
+	@{ case "$*" in \
+		*5.1.0*) cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
+		*) cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
+	esac };
 	opam repo add upstream "git+https://github.com/ocaml/opam-repository.git" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	opam repo add alpha git+https://github.com/kit-ty-kate/opam-alpha-repository.git --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- opam update
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "lru" "psq"
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- opam list
-	cp dependencies/template/dev.opam $(DEV_OPAM)
 ifeq (0, $(USE_SYS_DUNE_HACK))
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)" "dune-private-libs.$(SANDMARK_DUNE_VERSION)" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 endif
