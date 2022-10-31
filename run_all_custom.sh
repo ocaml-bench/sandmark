@@ -118,6 +118,13 @@ while [ $i -lt ${COUNT} ]; do
             # Prepare run JSON
             TAG=`echo "${TAG_STRING}"` make `echo ${CONFIG_RUN_JSON}`
 
+            # Don't run failing benchmarks on 5.1.0
+            if [[ $CONFIG_NAME =~ 5.1+ ]];
+            then
+                jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $name | ["irmin_replay", "cpdf", "frama-c", "mergesort", "js_of_ocaml"] | index($name) | not )]}' "${CONFIG_RUN_JSON}" > "${CONFIG_RUN_JSON}.tmp"
+                mv "${CONFIG_RUN_JSON}.tmp" "${CONFIG_RUN_JSON}"
+            fi
+
             # Build and execute benchmarks
             if [[ ${SEQPAR} == "sequential" ]]; then
                 USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
