@@ -121,7 +121,7 @@ while [ $i -lt ${COUNT} ]; do
             # Don't run failing benchmarks on 5.1.0
             if [[ $CONFIG_NAME =~ 5.1+ ]];
             then
-                jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $name | ["irmin_replay", "cpdf", "frama-c", "mergesort", "js_of_ocaml"] | index($name) | not )]}' "${CONFIG_RUN_JSON}" > "${CONFIG_RUN_JSON}.tmp"
+                jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $name | ["irmin_replay", "cpdf", "frama-c", "mergesort", "js_of_ocaml", "graph500_par_gen"] | index($name) | not )]}' "${CONFIG_RUN_JSON}" > "${CONFIG_RUN_JSON}.tmp"
                 mv "${CONFIG_RUN_JSON}.tmp" "${CONFIG_RUN_JSON}"
             fi
 
