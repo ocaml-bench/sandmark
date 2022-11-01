@@ -19,7 +19,191 @@
   ],
 
   "benchmarks": [
-
+    {
+      "executable": "benchmarks/mpl/msort_ints.exe",
+      "name": "msort_ints",
+      "tags": ["gt_100s", "mpl"], 
+      "runs": [
+        {
+          "short_name": "1",
+          "params": "-procs 1 -repeat 10 -N 20000000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "2",
+          "params": "-procs 2 -repeat 10 -N 20000000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "4",
+          "params": "-procs 4 -repeat 10 -N 20000000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "8",
+          "params": "-procs 8 -repeat 10 -N 20000000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "16",
+          "params": "-procs 16 -repeat 10 -N 20000000",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "short_name": "24",
+          "params": "-procs 24 -repeat 10 -N 20000000",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/mpl/msort_strings.exe",
+      "name": "msort_strings",
+      "tags": ["gt_100s", "mpl"], 
+      "runs": [
+        {
+          "short_name": "1",
+          "params": "-procs 1 -repeat 10 -f inputs/words64.txt",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "2",
+          "params": "-procs 2 -repeat 10 -f inputs/words64.txt",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "4",
+          "params": "-procs 4 -repeat 10 -f inputs/words64.txt",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "8",
+          "params": "-procs 8 -repeat 10 -f inputs/words64.txt",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "16",
+          "params": "-procs 16 -repeat 10 -f inputs/words64.txt",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "short_name": "24",
+          "params": "-procs 24 -repeat 10 -f inputs/words64.txt",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/mpl/primes.exe",
+      "name": "primes",
+      "tags": ["gt_100s", "mpl"], 
+      "runs": [
+        {
+          "short_name": "1",
+          "params": "-procs 1 -repeat 10 -N 100000000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "2",
+          "params": "-procs 2 -repeat 10 -N 100000000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "4",
+          "params": "-procs 4 -repeat 10 -N 100000000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "8",
+          "params": "-procs 8 -repeat 10 -N 100000000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "16",
+          "params": "-procs 16 -repeat 10 -N 100000000",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "short_name": "24",
+          "params": "-procs 24 -repeat 10 -N 100000000",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/mpl/tokens.exe",
+      "name": "tokens",
+      "tags": ["gt_100s", "mpl"], 
+      "runs": [
+        {
+          "short_name": "1",
+          "params": "-procs 1 -repeat 10 -f inputs/words64.txt --no-output",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "2",
+          "params": "-procs 2 -repeat 10 -f inputs/words64.txt --no-output",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "4",
+          "params": "-procs 4 -repeat 10 -f inputs/words64.txt --no-output",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "8",
+          "params": "-procs 8 -repeat 10 -f inputs/words64.txt --no-output",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "16",
+          "params": "-procs 16 -repeat 10 -f inputs/words64.txt --no-output",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "short_name": "24",
+          "params": "-procs 24 -repeat 10 -f inputs/words64.txt --no-output",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/mpl/raytracer.exe",
+      "name": "raytracer",
+      "tags": ["gt_100s", "mpl"], 
+      "runs": [
+        {
+          "short_name": "1",
+          "params": "-procs 1 -repeat 10 -n 1000 -m 1000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "2",
+          "params": "-procs 2 -repeat 10 -n 1000 -m 1000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "4",
+          "params": "-procs 4 -repeat 10 -n 1000 -m 1000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "8",
+          "params": "-procs 8 -repeat 10 -n 1000 -m 1000",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "short_name": "16",
+          "params": "-procs 16 -repeat 10 -n 1000 -m 1000",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "short_name": "24",
+          "params": "-procs 24 -repeat 10 -n 1000 -m 1000",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
+      ]
+    },
     {
       "executable": "benchmarks/multicore-minilight/sequential/minilight.exe",
       "name": "minilight",

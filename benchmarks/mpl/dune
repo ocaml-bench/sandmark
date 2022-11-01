@@ -1,0 +1,36 @@
+(include_subdirs unqualified)
+
+(executable
+ (name msort_ints)
+ (libraries cla seq merge benchmark util quicksort)
+ (modules msort_ints)
+ (modes native))
+
+(executable
+ (name msort_strings)
+ (libraries cla seq merge benchmark util quicksort readfile tokenize)
+ (modules msort_strings)
+ (modes native))
+
+(executable
+ (name primes)
+ (libraries cla seqbasis benchmark)
+ (modules primes)
+ (modes native))
+
+(executable
+ (name tokens)
+ (libraries util cla benchmark readfile bytes tokenize)
+ (modules tokens)
+ (modes native))
+
+(executable
+ (name raytracer)
+ (libraries cla domainslib unix benchmark)
+ (modules raytracer)
+ (modes native))
+
+(alias
+  (name multibench_parallel)
+  (deps msort_ints.exe msort_strings.exe primes.exe tokens.exe raytracer.exe
+        inputs/words64.txt inputs/words.txt))
