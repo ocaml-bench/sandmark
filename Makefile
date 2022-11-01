@@ -221,7 +221,7 @@ log_sandmark_hash:
 blah:
 	@echo ${PACKAGES}
 
-ocaml-versions/%.bench: depend override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
+ocaml-versions/%.bench: depend filter/% override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
@@ -333,6 +333,16 @@ load_irmin_data:
 load_check:
 	$(eval START_TIME = $(shell date +%s))
 	@./loadavg.sh $(OPT_WAIT) $(START_TIME)
+
+filter/%:
+	$(eval CONFIG_SWITCH_NAME = $*)
+	$(eval CONFIG_VARIANT = $(shell echo $(CONFIG_SWITCH_NAME) | grep -oP '([0-9]|\.)*'  ))
+	@echo $(CONFIG_VARIANT)
+	if [ $(CONFIG_VARIANT) = "5.1.0" ]; then \
+		echo "Filtering some benchmarks for OCaml v5.1.0"; \
+		jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "mergesort", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
+		mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
+	fi;
 
 depend: check_url load_check
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
