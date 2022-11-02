@@ -1,7 +1,7 @@
 ;; Adapted from OCamlPro's ocamlbench-repo
 ;; See https://github.com/OCamlPro/ocamlbench-repo
 (executable (name durand_kerner_aberth) (modes native byte) (modules durand_kerner_aberth))
-(executable (name fft) (modes native byte) (modules fft))
+(executable (name fft) (modes native byte) (modules fft) (libraries unix))
 (executable (name crout_decomposition) (modes native byte) (modules crout_decomposition))
 (executable (name qr_decomposition) (modes native byte) (modules qr_decomposition))
 

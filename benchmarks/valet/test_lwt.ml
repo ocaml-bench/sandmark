@@ -26,7 +26,7 @@ end = struct
       | n ->
         let r = readers.(Random.int len) in
         QRReader.use r t.qrcode;
-        Lwt_main.yield () >>= fun () ->
+        Lwt.pause () >>= fun () ->
         run @@ pred n
     in run n
 end

@@ -232,7 +232,7 @@ let least_squares
       let call_back =
         match feedback with
         | None -> fun _ _ -> ()
-        | Some f -> (fun evals dist -> Printf.kprintf f "Global Optimizer   Evals: %5i   RMS: %12.8g%%" evals (rms_of_error dist))
+        | Some f -> (fun evals dist -> Printf.ksprintf f "Global Optimizer   Evals: %5i   RMS: %12.8g%%" evals (rms_of_error dist))
       in
       let f x =
         pricer (parameters_of_active_vars x) prices;
