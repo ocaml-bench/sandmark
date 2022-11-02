@@ -4,7 +4,7 @@
 CUSTOM_FILE=${CUSTOM_FILE:-"ocaml-versions/custom.json"}
 SANDMARK_NIGHTLY_DIR=${SANDMARK_NIGHTLY_DIR:-/tmp}
 SANDMARK_REPO="https://github.com/ocaml-bench/sandmark.git"
-TMP_CUSTOM_FILE="/tmp/custom.json"
+TMP_CUSTOM_FILE=$(mktemp --tmpdir custom.XXXXXXXX.json)
 TMP_DIR="/tmp"
 
 # Host
