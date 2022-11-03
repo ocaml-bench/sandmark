@@ -118,7 +118,7 @@ module Chameneos = struct
         t.meetings <- t.meetings + 1;
         if t.id = other.id then t.meetings_with_self <- t.meetings_with_self + 1;
         t.color <- Color.complement t.color other.color;
-        Lwt_main.yield () >>= fun () ->
+        Lwt.pause () >>= fun () ->
         loop ()
     in
     loop ()
