@@ -40,7 +40,7 @@
 (rule
   (targets edges.data)
   (deps (:prog gen.exe))
-  (action (run %{prog} -scale 19 -edgefactor 16 %{targets})))
+  (action (run %{prog} -scale 21 -edgefactor 16 %{targets})))
 
 (alias
   (name buildbench)
