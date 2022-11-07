@@ -42,7 +42,6 @@ depends: [
   "repr" {= "0.6.0"}
   "rresult" {= "0.6.0"}
   "stdlib-shims" {= "0.1.0"}
-  "topkg" {= "1.0.3"}
   "uri" {= "4.1.0"}
   "zarith" {= "1.10"}
 ]
