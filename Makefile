@@ -158,10 +158,6 @@ ifeq (0, $(USE_SYS_DUNE_HACK))
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)" "dune-private-libs.$(SANDMARK_DUNE_VERSION)" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 endif
 	opam update --switch=$(CONFIG_SWITCH_NAME)
-	@{ case "$*" in \
-		*5.1*) sed 's/(alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/; (alias (name buildbench) (deps layers.exe irmin_mem_rw.exe))/g' ./benchmarks/irmin/dune > ./benchmarks/irmin/dune ; \
-			sed 's/(alias (name buildbench) (deps metro_geo.pdf PDFReference16.pdf_toobig))/; (alias (name buildbench) (deps metro_geo.pdf PDFReference16.pdf_toobig))/g' ./benchmarks/cpdf/dune ;; \
-	esac };
 	@{	for i in ${PACKAGES}; do \
 			sed -i "/^]/i \ \ \"$${i}\"" $(DEV_OPAM); \
 		done; \
@@ -342,6 +338,7 @@ filter/%:
 		echo "Filtering some benchmarks for OCaml v5.1.0"; \
 		jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "mergesort", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
 		mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
+		echo "(data_only_dirs irmin cpdf frama-c)" > benchmarks/dune; \
 	fi;
 
 depend: check_url load_check
@@ -362,8 +359,8 @@ clean:
 	rm -rf _results
 	rm -rf *filtered.json
 	rm -rf *~
+	rm -rf benchmarks/dune
 	git clean -fd dependencies/packages/ocaml-base-compiler dependencies/packages/ocaml
-	git restore ./benchmarks/cpdf/dune
 
 list:
 	@echo $(ocamls)
