@@ -16,7 +16,7 @@ end = struct
 
   let create () =
       {
-        id = Uuidm.create `V4;
+        id = Uuidm.v `V4;
         handler = Handler.create_sensor ();
       }
 
@@ -43,7 +43,7 @@ end = struct
 
   let create db =
     {
-      id = Uuidm.create `V4;
+      id = Uuidm.v `V4;
       handler = Handler.create
           (fun evt -> match Event.event evt with
              | `QRCode qr ->
@@ -80,7 +80,7 @@ end = struct
     }
 
   let create ~readers ~action =
-    let id = Uuidm.create `V4 in
+    let id = Uuidm.v `V4 in
       {
         id;
         readers;

@@ -1,0 +1,71 @@
+(include_subdirs unqualified)
+
+(library
+ (name tokenize)
+ (libraries benchmark seqbasis seq forkjoin)
+ (modules Tokenize)
+ (modes native))
+
+(library
+ (name readfile)
+ (libraries unix)
+ (modules Readfile)
+ (modes native))
+
+(library
+ (name hashset)
+ (libraries seqbasis forkjoin)
+ (modules Hashset)
+ (modes native))
+
+(library
+ (name util)
+ (modules Util)
+ (modes native))
+
+(library
+ (name quicksort)
+ (libraries seq forkjoin)
+ (modules Quicksort)
+ (modes native))
+
+(library
+ (name benchmark)
+ (libraries unix)
+ (modules Benchmark)
+ (modes native))
+
+(library
+ (name cla)
+ (modules Cla)
+ (modes native))
+
+(library
+ (name forkjoin)
+ (libraries domainslib cla)
+ (modules Forkjoin)
+ (modes native))
+
+(library
+ (name seqbasis)
+ (libraries benchmark forkjoin)
+ (modules Seqbasis)
+ (modes native))
+
+(library
+ (name seq)
+ (libraries seqbasis)
+ (modules Seq)
+ (modes native))
+
+(library
+ (name merge)
+ (libraries seq binarysearch)
+ (modules Merge)
+ (modes native))
+
+(library
+ (name binarysearch)
+ (libraries seq)
+ (modules Binarysearch)
+ (modes native))

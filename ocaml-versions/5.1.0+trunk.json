@@ -18,10 +18,12 @@
     "irmin-layers",
     "irmin-pack",
     "js_of_ocaml-compiler",
+    "ocaml-migrate-parsetree",
     "ppx_derivers",
     "ppx_deriving",
     "ppx_deriving_yojson",
     "ppx_irmin",
+    "ppxlib",
     "ppx_repr",
     "stdio"
   ]

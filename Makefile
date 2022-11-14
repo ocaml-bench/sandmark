@@ -64,6 +64,8 @@ OPT_WAIT ?= 1
 # The time when the wait for the loadavg to decrease begins
 START_TIME ?=
 
+IRMIN_DATA_DIR=/tmp/irmin-data
+
 WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
 PACKAGES = sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen
@@ -90,8 +92,8 @@ SYS_DUNE_BASE_DIR ?= $(subst /bin/dune,,$(shell which dune))
 setup_sys_dune/%: _opam/%
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval OVERRIDE_DUNE = $(shell sed -n 's/.*dune\.\([0-9]\.[0-9]\.[0-9]\).*/\1/p' ocaml-versions/$*.json))
-	$(if $(strip $(OVERRIDE_DUNE)), 				\
-		$(eval SANDMARK_DUNE_VERSION = "$(OVERRIDE_DUNE)") 	\
+	$(if $(strip $(OVERRIDE_DUNE)),					\
+		$(eval SANDMARK_DUNE_VERSION = "$(OVERRIDE_DUNE)")	\
 		@echo "Overriding dune with "$(SANDMARK_DUNE_VERSION),	\
 		@echo "Using default dune.$(SANDMARK_DUNE_VERSION)")
 ifeq (1, $(USE_SYS_DUNE_HACK))
@@ -136,16 +138,23 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 		*5.1*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore; \
 	esac };
 	opam pin add -n --yes --switch $* runtime_events_tools https://github.com/sadiqj/runtime_events_tools.git
+	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
 	opam pin add -n --yes --switch $* base.v0.14.3 https://github.com/janestreet/base.git#v0.14.3
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
-	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
 
 override_packages/%: setup_sys_dune/%
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
-	opam repo add upstream "https://opam.ocaml.org" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
-	cp dependencies/template/dev.opam $(DEV_OPAM)
+	@{ case "$*" in \
+		*5.1.0*) cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
+		*) cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
+	esac };
+	opam repo add upstream "git+https://github.com/ocaml/opam-repository.git" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
+	opam repo add alpha git+https://github.com/kit-ty-kate/opam-alpha-repository.git --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
+	opam exec --switch $(CONFIG_SWITCH_NAME) -- opam update
+	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "lru" "psq"
+	opam exec --switch $(CONFIG_SWITCH_NAME) -- opam list
 ifeq (0, $(USE_SYS_DUNE_HACK))
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)" "dune-private-libs.$(SANDMARK_DUNE_VERSION)" || $(CONTINUE_ON_OPAM_INSTALL_ERROR)
 endif
@@ -158,7 +167,7 @@ endif
 			sed -i "/^]/i \ \ \"$${i}\"" $(DEV_OPAM); \
 		done; \
 	};
-	@{	declare -A OVERRIDE=( ["ocaml-config"]="\"ocaml-config\" {= \"1\"}" ); 	\
+	@{	declare -A OVERRIDE=( ["ocaml-config"]="\"ocaml-config\" {= \"1\"}" );	\
 		if [ -z "$(SANDMARK_OVERRIDE_PACKAGES)" ]; then \
 			do_overrides=`jq '.package_overrides' ocaml-versions/$*.json`; \
 			if [ "$${do_overrides}" != null ]; then \
@@ -167,7 +176,7 @@ endif
 					package_name=`cut -d '.' -f 1 <<< "$$package"`; \
 					package_version=`cut -d '.' -f 2- <<< "$$package"`; \
 					OVERRIDE["$${package_name}"]="\"$${package_name}\" {= \"$${package_version}\" }";	\
-				done; 	\
+				done;	\
 			fi; \
 		else \
 			for p in ${SANDMARK_OVERRIDE_PACKAGES}; do \
@@ -177,8 +186,8 @@ endif
 				OVERRIDE["$${package_name}"]="\"$${package_name}\" {= \"$${package_version}\" }"; \
 			done; \
 		fi; \
-		for key in "$${!OVERRIDE[@]}"; do 						\
-                        sed -i "/\"$${key}\"/s/.*/  $${OVERRIDE[$${key}]}/" $(DEV_OPAM); \
+		for key in "$${!OVERRIDE[@]}"; do						\
+			sed -i "/\"$${key}\"/s/.*/  $${OVERRIDE[$${key}]}/" $(DEV_OPAM); \
 		done; \
 		if [ -z "$(SANDMARK_REMOVE_PACKAGES)" ]; then \
 			do_removal=`jq '.package_remove' ocaml-versions/$*.json`; \
@@ -198,7 +207,7 @@ endif
 			done; \
 		fi; \
 		sed -i '/^\s*$$/d' $(DEV_OPAM); \
-	        opam install $(DEV_OPAM) --switch=$(CONFIG_SWITCH_NAME) --yes --deps-only;	\
+		opam install $(DEV_OPAM) --switch=$(CONFIG_SWITCH_NAME) --yes --deps-only;	\
 		opam list --switch=$(CONFIG_SWITCH_NAME); \
 	};
 
@@ -213,7 +222,7 @@ log_sandmark_hash:
 blah:
 	@echo ${PACKAGES}
 
-ocaml-versions/%.bench: depend override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
+ocaml-versions/%.bench: depend filter/% override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
@@ -225,14 +234,14 @@ ocaml-versions/%.bench: depend override_packages/% log_sandmark_hash ocaml-versi
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- rungen _build/$(CONFIG_SWITCH_NAME)_1 $(RUN_CONFIG_JSON) > runs_dune.inc
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- dune build --profile=release --workspace=ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME) @$(BUILD_BENCH_TARGET);
 	@{ if [ "$(BUILD_ONLY)" -eq 0 ]; then												\
-	        echo "Executing benchmarks with:"; 											\
-	        echo "  RUN_CONFIG_JSON=${RUN_CONFIG_JSON}"; 										\
-	        echo "  RUN_BENCH_TARGET=${RUN_BENCH_TARGET}  (WRAPPER=${WRAPPER})"; 							\
-	        echo "  PRE_BENCH_EXEC=${PRE_BENCH_EXEC}"; 										\
-	        $(PRE_BENCH_EXEC) $(ENVIRONMENT) opam exec --switch $(CONFIG_SWITCH_NAME) -- dune build -j 1 --profile=release				\
+		echo "Executing benchmarks with:";											\
+		echo "  RUN_CONFIG_JSON=${RUN_CONFIG_JSON}";										\
+		echo "  RUN_BENCH_TARGET=${RUN_BENCH_TARGET}  (WRAPPER=${WRAPPER})";							\
+		echo "  PRE_BENCH_EXEC=${PRE_BENCH_EXEC}";										\
+		$(PRE_BENCH_EXEC) $(ENVIRONMENT) opam exec --switch $(CONFIG_SWITCH_NAME) -- dune build -j 1 --profile=release				\
 		  --workspace=ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME) @$(RUN_BENCH_TARGET); ex=$$?;						\
-		mkdir -p _results/;	  											\
-	        for i in `seq 1 $(ITER)`; do \
+		mkdir -p _results/;												\
+		for i in `seq 1 $(ITER)`; do \
 			declare -A META=( ["arch"]="uname -m" ["hostname"]="hostname" ["kernel"]="uname -s" ["version"]="uname -r" ); \
 			s=""; for key in "$${!META[@]}"; do \
 			result=`$${META[$${key}]}`; \
@@ -245,10 +254,10 @@ ocaml-versions/%.bench: depend override_packages/% log_sandmark_hash ocaml-versi
 			header_entry=`jo -p $${s} | jq -c`; \
 			echo "$${header_entry}" > _results/$(SANDMARK_CUSTOM_NAME)_$$i.$(WRAPPER).summary.bench; \
 			find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat >> _results/$(SANDMARK_CUSTOM_NAME)_$$i.$(WRAPPER).summary.bench;		\
-	        done; 															\
-		exit $$ex; 														\
-	   else 															\
-		exit 0; 														\
+		done;															\
+		exit $$ex;														\
+	   else																\
+		exit 0;															\
 	   fi };
 
 json:
@@ -260,7 +269,7 @@ json:
 				echo "$${line}" | jq '. | {config: ., results: []}' > "$${output}"; \
 				count=1; \
 			else \
-                                bench=`echo "$${line}" | jq '. | {name: .name, command: .command, metrics: {time_secs: .time_secs, maxrss_kB: .maxrss_kB, user_time_secs: .user_time_secs, sys_time_secs: .sys_time_secs, "ocaml.version": .ocaml.version, "ocaml.c_compiler": .ocaml.c_compiler, "ocaml.architecture": .ocaml.architecture, "ocaml.word_size": .ocaml.word_size, "ocaml.system": .ocaml.system, "ocaml.stats": .ocaml.stats, "ocaml.function_sections": .ocaml.function_sections, "ocaml.supports_shared_libraries": .ocaml.supports_shared_libraries, "gc.supports_shared_libraries": .gc.allocated_words, "gc.minor_words": .gc.minor_words, "gc.promoted_words": .gc.promoted_words, "gc.major_words": .gc.major_words, "gc.minor_collections": .gc.minor_collections, "gc.major_collections": .gc.major_collections, "gc.heap_words": .gc.heap_words, "gc.top_heap_words": .gc.top_heap_words, "gc.mean_space_overhead": .gc.mean_space_overhead, codesize: .codesize, ocaml_url: .ocaml_url}}'`; \
+				bench=`echo "$${line}" | jq '. | {name: .name, command: .command, metrics: {time_secs: .time_secs, maxrss_kB: .maxrss_kB, user_time_secs: .user_time_secs, sys_time_secs: .sys_time_secs, "ocaml.version": .ocaml.version, "ocaml.c_compiler": .ocaml.c_compiler, "ocaml.architecture": .ocaml.architecture, "ocaml.word_size": .ocaml.word_size, "ocaml.system": .ocaml.system, "ocaml.stats": .ocaml.stats, "ocaml.function_sections": .ocaml.function_sections, "ocaml.supports_shared_libraries": .ocaml.supports_shared_libraries, "gc.supports_shared_libraries": .gc.allocated_words, "gc.minor_words": .gc.minor_words, "gc.promoted_words": .gc.promoted_words, "gc.major_words": .gc.major_words, "gc.minor_collections": .gc.minor_collections, "gc.major_collections": .gc.major_collections, "gc.heap_words": .gc.heap_words, "gc.top_heap_words": .gc.top_heap_words, "gc.mean_space_overhead": .gc.mean_space_overhead, codesize: .codesize, ocaml_url: .ocaml_url}}'`; \
 				string=".results += [$${bench}]"; \
 				jq "$${string}" "$${output}" > "$${tmp}" && mv "$${tmp}" "$${output}"; \
 			fi; \
@@ -268,7 +277,7 @@ json:
 	};
 
 prep_bench:
-	@{ 	$(BENCH_COMMAND); \
+	@{	$(BENCH_COMMAND); \
 		$(MAKE) json; \
 	};
 
@@ -281,43 +290,60 @@ define check_dependency
 endef
 
 check_jq:
-	@{ for f in `find ocaml-versions/*.json`; do    	\
+	@{ for f in `find ocaml-versions/*.json`; do		\
 		RESULT=`jq . $$f > /dev/null 2>&1; echo $$?`;	\
-                if [ "$${RESULT}" != 0 ]; then			\
-			echo "Error: jq parsing error in $$f"; 	\
-			exit 1; 				\
-                fi;                                           	\
-	    done; 						\
+		if [ "$${RESULT}" != 0 ]; then			\
+			echo "Error: jq parsing error in $$f";	\
+			exit 1;					\
+		fi;						\
+	    done;						\
 	};
 
 check_url: check_jq
-	@{ for f in `find ocaml-versions/*.json`; do    				\
-		HEAD=`head -1 $$f`; 							\
-		if [ "$$HEAD" == "{" ]; then 						\
-			URL=`jq -r '.url' $$f`;                  			\
-			if [ -z "$$URL" ] ; then                  			\
-				echo "No URL (mandatory) for $$f";   			\
-			else 								\
+	@{ for f in `find ocaml-versions/*.json`; do					\
+		HEAD=`head -1 $$f`;							\
+		if [ "$$HEAD" == "{" ]; then						\
+			URL=`jq -r '.url' $$f`;						\
+			if [ -z "$$URL" ] ; then					\
+				echo "No URL (mandatory) for $$f";			\
+			else								\
 				URL_EXISTS=`wget --spider $$URL 2>/dev/null; echo $$?`; \
-				if [ "$${URL_EXISTS}" != 0 ]; then 			\
-					echo "Error: URL $$URL does not exist"; 	\
-				fi; 							\
-			fi;                                       			\
-		else 									\
-			URLS=`jq -r .[].url $$f`; 					\
-			for u in "$$URLS"; do 						\
-				URL_EXISTS=`wget --spider $$u 2>/dev/null; echo $$?`; 	\
-				if [ "$${URL_EXISTS}" != 0 ]; then 			\
-					echo "Error: URL $$u does not exist"; 		\
-				fi; 							\
-			done; 								\
-		fi; 									\
-	    done;                                        				\
+				if [ "$${URL_EXISTS}" != 0 ]; then			\
+					echo "Error: URL $$URL does not exist";		\
+				fi;							\
+			fi;								\
+		else									\
+			URLS=`jq -r .[].url $$f`;					\
+			for u in "$$URLS"; do						\
+				URL_EXISTS=`wget --spider $$u 2>/dev/null; echo $$?`;	\
+				if [ "$${URL_EXISTS}" != 0 ]; then			\
+					echo "Error: URL $$u does not exist";		\
+				fi;							\
+			done;								\
+		fi;									\
+	    done;									\
 	};
+
+load_irmin_data:
+	mkdir -p /tmp/irmin_trace_replay_artefacts;
+	if [ ! -f $(IRMIN_DATA_DIR)/data4_100066commits.repr ]; then \
+		wget http://data.tarides.com/irmin/data4_100066commits.repr -P $(IRMIN_DATA_DIR); \
+	fi;
+
 
 load_check:
 	$(eval START_TIME = $(shell date +%s))
 	@./loadavg.sh $(OPT_WAIT) $(START_TIME)
+
+filter/%:
+	$(eval CONFIG_SWITCH_NAME = $*)
+	$(eval CONFIG_VARIANT = $(shell echo $(CONFIG_SWITCH_NAME) | grep -oP '([0-9]|\.)*'  ))
+	@echo $(CONFIG_VARIANT)
+	if [ $(CONFIG_VARIANT) = "5.1.0" ]; then \
+		echo "Filtering some benchmarks for OCaml v5.1.0"; \
+		jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "mergesort", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
+		mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
+	fi;
 
 depend: check_url load_check
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
@@ -337,9 +363,7 @@ clean:
 	rm -rf _results
 	rm -rf *filtered.json
 	rm -rf *~
-	git checkout -- dependencies
 	git clean -fd dependencies/packages/ocaml-base-compiler dependencies/packages/ocaml
-	git restore ./benchmarks/irmin/dune
 	git restore ./benchmarks/cpdf/dune
 
 list:

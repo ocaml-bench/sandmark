@@ -1,0 +1,22 @@
+diff --git a/src/core.ml b/src/core.ml
+index 1814f7b..8e340d7 100644
+--- a/src/core.ml
++++ b/src/core.ml
+@@ -239,7 +239,7 @@ module Make
+             let re, im = info.value in
+             let comp_status = re_computed_status_of_info info in
+             Format.fprintf fmt
+-              "%a   [ %a == (%4a , %4a) ]   %a   (computed %s) (flag %s)@."
++              "%a   [ %a == (%a , %a) ]   %a   (computed %s) (flag %s)@."
+               print_min_bound info
+               Var.print x
+               R.print re
+@@ -296,7 +296,7 @@ module Make
+ 
+       let print_matrix fmt env =
+         MX.iter
+-          (fun x (_, p) ->fprintf fmt "%4a = %a@." Var.print x P.print p)
++          (fun x (_, p) ->fprintf fmt "%a = %a@." Var.print x P.print p)
+           env.basic
+ 
+         let print result fmt env =
