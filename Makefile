@@ -106,6 +106,7 @@ ifeq (1, $(USE_SYS_DUNE_HACK))
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/dune $(CURDIR)/_opam/sys_dune/bin/dune
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/jbuilder $(CURDIR)/_opam/sys_dune/bin/jbuilder
 	ln -s $(SYS_DUNE_BASE_DIR)/lib/dune $(CURDIR)/_opam/sys_dune/lib/dune
+	opam install --switch=$(CONFIG_SWITCH_NAME) --yes ocamlfind
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)"
 	opam pin add --switch=$(CONFIG_SWITCH_NAME) --yes -n dune "$(SANDMARK_DUNE_VERSION)"
 endif
@@ -153,8 +154,8 @@ override_packages/%: setup_sys_dune/%
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
 	@{ case "$*" in \
-		*5.1.0*) cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
-		*) cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
+		*5.1.0*) echo "Using new template" && cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
+		*) echo "Using old template" && cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
 	esac };
 	opam repo add upstream "git+https://github.com/ocaml/opam-repository.git" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	opam repo add alpha git+https://github.com/kit-ty-kate/opam-alpha-repository.git --on-switch=$(CONFIG_SWITCH_NAME) --rank 2

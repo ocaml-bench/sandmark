@@ -38,7 +38,7 @@ jobs:
           pip3 install intervaltree
           eval $(opam env)
           opam update
-          opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+          opam pin add -n --yes dune 3.5.0
           opam install dune
           eval $(opam env)
           export ITER=1
@@ -55,7 +55,7 @@ jobs:
           pip3 install intervaltree
           eval $(opam env)
           opam update
-          opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+          opam pin add -n --yes dune 3.5.0
           opam install dune
           eval $(opam env)
           export ITER=1
@@ -74,7 +74,7 @@ jobs:
           pip3 install intervaltree
           eval $(opam env)
           opam update
-          opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+          opam pin add -n --yes dune 3.5.0
           opam install dune
           eval $(opam env)
           export ITER=1
@@ -91,7 +91,7 @@ jobs:
           pip3 install intervaltree
           eval $(opam env)
           opam update
-          opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+          opam pin add -n --yes dune 3.5.0
           opam install dune
           eval $(opam env)
           export ITER=1
