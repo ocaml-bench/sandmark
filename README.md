@@ -30,7 +30,7 @@ $ make ocaml-versions/4.14.0+domains.bench
 
 ## For 5.1.0+trunk
 
-$ opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+$ opam pin add -n --yes dune 3.5.0
 $ opam install dune
 
 $ TAG='"run_in_ci"' make run_config_filtered.json

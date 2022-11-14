@@ -8,7 +8,7 @@ RUN sudo apt-get update
 RUN sudo apt-get -y install libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf gnuplot
 
 RUN opam update
-RUN opam pin add -n --yes dune https://github.com/dra27/dune/archive/2.9.3-5.0.0.tar.gz
+RUN opam pin add -n --yes dune 3.5.0
 RUN opam install dune
 
 COPY . .
