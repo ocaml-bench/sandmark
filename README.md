@@ -219,7 +219,7 @@ latency results, we can set the environment variable `RUN_BENCH_TARGET` to
 `run_pausetimes`, which will run the benchmarks with
 [olly](https://github.com/sadiqj/runtime_events_tools) and collect the GC tail
 latency profile of the runs (see the script `pausetimes/pausetimes`).
-The results will be files in `results` with the `.pausetimes.bench` suffix.
+The results will be files in the `_results` directory with a `.pausetimes.*.bench` suffix.
 
 ### Results
 
