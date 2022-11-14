@@ -107,6 +107,7 @@ ifeq (1, $(USE_SYS_DUNE_HACK))
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/jbuilder $(CURDIR)/_opam/sys_dune/bin/jbuilder
 	ln -s $(SYS_DUNE_BASE_DIR)/lib/dune $(CURDIR)/_opam/sys_dune/lib/dune
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)"
+	opam pin add --switch=$(CONFIG_SWITCH_NAME) --yes -n dune "$(SANDMARK_DUNE_VERSION)"
 endif
 
 ocamls=$(wildcard ocaml-versions/*.json)
