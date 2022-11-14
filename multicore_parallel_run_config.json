@@ -14,7 +14,7 @@
     },
     {
       "name": "pausetimes",
-      "command": "bash pausetimes %{output} -- %{paramwrapper} chrt -r 1 %{command}"
+      "command": "%{dep:pausetimes/pausetimes} %{output} -- %{paramwrapper} chrt -r 1 %{command}"
     }
   ],
 

@@ -10,7 +10,7 @@
     },
     {
       "name": "pausetimes",
-      "command": "bash pausetimes %{output} taskset --cpu-list 5 %{command}"
+      "command": "%{dep:pausetimes/pausetimes} %{output} taskset --cpu-list 5 %{command}"
     }
   ],
   "benchmarks": [

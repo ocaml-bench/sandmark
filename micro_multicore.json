@@ -14,7 +14,7 @@
     },
     {
       "name": "pausetimes",
-      "command": "bash pausetimes %{output} %{command}"
+      "command": "%{dep:pausetimes/pausetimes} %{output} %{command}"
     }
   ],
   "benchmarks": [
