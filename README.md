@@ -214,11 +214,12 @@ $ USE_SYS_DUNE_HACK=1 SANDMARK_CUSTOM_NAME=5.0.0 BUILD_BENCH_TARGET=bytebench \
     RUN_CONFIG_JSON=run_config_byte.json make ocaml-versions/5.0.0+stable.bench
 ```
 
-We can obtain throughput and latency results for the benchmarks. For obtaining
-latency results, we can adjust the environment variable `RUN_BENCH_TARGET`.
-The scripts for latencies are present in the `pausetimes/` directory. The
-`pausetimes_trunk` Bash script obtains the latencies for stock OCaml and the
-`pausetimes_multicore` Bash script for Multicore OCaml.
+We can obtain throughput and latency results for the benchmarks. To obtain
+latency results, we can set the environment variable `RUN_BENCH_TARGET` to
+`run_pausetimes`, which will run the benchmarks with
+[olly](https://github.com/sadiqj/runtime_events_tools) and collect the GC tail
+latency profile of the runs (see the script `pausetimes/pausetimes`).
+The results will be files in `results` with the `.pausetimes.bench` suffix.
 
 ### Results
 
