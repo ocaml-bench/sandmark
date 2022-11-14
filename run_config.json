@@ -9,12 +9,8 @@
       "command": "perf stat -o %{output} -- taskset --cpu-list 5 %{command}"
     },
     {
-      "name": "pausetimes_trunk",
-      "command": "bash pausetimes_trunk %{output} taskset --cpu-list 5 %{command}"
-    },
-    {
-      "name": "pausetimes_multicore",
-      "command": "bash pausetimes_multicore %{output} taskset --cpu-list 5 %{command}"
+      "name": "pausetimes",
+      "command": "bash pausetimes %{output} taskset --cpu-list 5 %{command}"
     }
   ],
   "benchmarks": [

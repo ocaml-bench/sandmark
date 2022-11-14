@@ -2,7 +2,7 @@
 
 TMP=$(mktemp)
 OUTFILE=$1
-BENCH_NAME=$(basename $OUTFILE .pausetimes_multicore.bench)
+BENCH_NAME=$(basename $OUTFILE .pausetimes.bench)
 shift
 eval "olly latency -o $TMP --json '$@'"
 cat $TMP | jq "{name: \"$BENCH_NAME\"} + ." >"$OUTFILE"

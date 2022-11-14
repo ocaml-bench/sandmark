@@ -13,8 +13,8 @@
       "command": "perf stat -o %{output} -- %{paramwrapper} %{command}"
     },
     {
-      "name": "pausetimes_multicore",
-      "command": "bash pausetimes_multicore %{output} -- %{paramwrapper} chrt -r 1 %{command}"
+      "name": "pausetimes",
+      "command": "bash pausetimes %{output} -- %{paramwrapper} chrt -r 1 %{command}"
     }
   ],
 
