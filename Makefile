@@ -336,7 +336,7 @@ filter/%:
 	@echo $(CONFIG_VARIANT)
 	if [ $(CONFIG_VARIANT) = "5.1.0" ]; then \
 		echo "Filtering some benchmarks for OCaml v5.1.0"; \
-		jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "mergesort", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
+		jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
 		mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
 		echo "(data_only_dirs irmin cpdf frama-c)" > benchmarks/dune; \
 	fi;
