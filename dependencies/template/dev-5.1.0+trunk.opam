@@ -39,5 +39,4 @@ depends: [
   "stdlib-shims" {= "0.1.0"}
   "uri" {= "4.1.0"}
   "zarith" {= "1.10"}
-  "runtime_events_tools"
 ]
