@@ -1,5 +1,5 @@
 {
-  "url" : "https://github.com/ocaml/ocaml/archive/trunk.tar.gz",
+  "url" : "https://github.com/ocaml/ocaml/archive/refs/heads/5.0.tar.gz",
   "package_overrides": [
     "fmt.0.9.0",
     "ocamlfind.1.9.3.git"
