@@ -46,3 +46,7 @@
   (name buildbench)
   (deps kronecker.exe kernel2.exe kernel3.exe kernel1_run.exe edges.data)
 )
+
+(alias
+  (name multibench_parallel)
+  (deps kernel1_run.exe edges.data))
