@@ -106,7 +106,10 @@ ifeq (1, $(USE_SYS_DUNE_HACK))
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/dune $(CURDIR)/_opam/sys_dune/bin/dune
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/jbuilder $(CURDIR)/_opam/sys_dune/bin/jbuilder
 	ln -s $(SYS_DUNE_BASE_DIR)/lib/dune $(CURDIR)/_opam/sys_dune/lib/dune
+	opam install --switch=$(CONFIG_SWITCH_NAME) --yes ocamlfind
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)"
+	# Pin the version so it doesn't change when installing packages
+	opam pin add --switch=$(CONFIG_SWITCH_NAME) --yes -n dune "$(SANDMARK_DUNE_VERSION)"
 endif
 
 ocamls=$(wildcard ocaml-versions/*.json)
@@ -137,6 +140,12 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	@{ case "$*" in \
 		*5.1*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore; \
 	esac };
+	# TODO remove when switching to dune 3
+	opam pin add -n --yes --switch $* hdr_histogram https://github.com/Firobe/hdr_histogram_ocaml.git
+	# TODO remove when switching to dune 3
+	opam pin add -n --yes --switch $* runtime_events_tools https://github.com/Firobe/runtime_events_tools.git
+	# TODO remove pin when a new orun version is released on opam
+	opam pin add -n --yes --switch $* orun https://github.com/ocaml-bench/orun.git
 	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
 	opam pin add -n --yes --switch $* base.v0.14.3 https://github.com/janestreet/base.git#v0.14.3
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
@@ -145,9 +154,17 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 override_packages/%: setup_sys_dune/%
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
+	# Retrieve set of version constraints for chosen OCaml version
 	@{ case "$*" in \
-		*5.1.0*) cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
-		*) cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
+		*5.1.0*) echo "Using new template" && cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
+		*) echo "Using old template" && cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
+	esac };
+	# Conditionally install runtime_events_tools for olly (pausetimes)
+	@{ case "$*" in \
+		5.*) \
+			echo "Enabling pausetimes for OCaml >= 5"; \
+			$(eval PACKAGES += runtime_events_tools) ;; \
+	    *) echo "Pausetimes unavailable for OCaml < 5" ;; \
 	esac };
 	opam repo add upstream "git+https://github.com/ocaml/opam-repository.git" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	opam repo add alpha git+https://github.com/kit-ty-kate/opam-alpha-repository.git --on-switch=$(CONFIG_SWITCH_NAME) --rank 2

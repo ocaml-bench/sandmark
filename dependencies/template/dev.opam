@@ -7,9 +7,9 @@ homepage: "https://github.com/ocaml-bench/sandmark"
 bug-reports: "https://github.com/ocaml-bench/sandmark/issues"
 license: "CC 1.0 Universal"
 depends: [
-  "alt-ergo" {= "2.3.2"}
-  "alt-ergo-lib" {= "2.3.2"}
-  "alt-ergo-parsers" {= "2.3.2"}
+  "alt-ergo" {= "2.4.2"}
+  "alt-ergo-lib" {= "2.4.2"}
+  "alt-ergo-parsers" {= "2.4.2"}
   "astring" {= "0.8.5"}
   "base64" {= "3.4.0"}
   "bigstringaf" {= "0.6.1"}
