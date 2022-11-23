@@ -40,10 +40,6 @@ jobs:
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
           pip3 install intervaltree
           eval $(opam env)
-          opam update
-          opam pin add -n --yes dune 3.5.0
-          opam install dune
-          eval $(opam env)
           export ITER=1
           export OPAM_DISABLE_SANDBOXING=true
           TAG='"run_in_ci"' make run_config_filtered.json
@@ -57,10 +53,6 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
           pip3 install intervaltree
-          eval $(opam env)
-          opam update
-          opam pin add -n --yes dune 3.5.0
-          opam install dune
           eval $(opam env)
           export ITER=1
           export OPAM_DISABLE_SANDBOXING=true
@@ -78,10 +70,6 @@ jobs:
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
           pip3 install intervaltree
           eval $(opam env)
-          opam update
-          opam pin add -n --yes dune 3.5.0
-          opam install dune
-          eval $(opam env)
           export ITER=1
           export OPAM_DISABLE_SANDBOXING=true
           TAG='"run_in_ci"' make run_config_filtered.json
@@ -95,10 +83,6 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo gnuplot-x11 libgmp-dev
           pip3 install intervaltree
-          eval $(opam env)
-          opam update
-          opam pin add -n --yes dune 3.5.0
-          opam install dune
           eval $(opam env)
           export ITER=1
           export OPAM_DISABLE_SANDBOXING=true
