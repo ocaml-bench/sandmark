@@ -21,7 +21,7 @@ BUILD_BENCH_TARGET ?= buildbench
 RUN_CONFIG_JSON ?= run_config.json
 
 # Default dune version to be used
-SANDMARK_DUNE_VERSION ?= 2.9.0
+SANDMARK_DUNE_VERSION ?= 3.5.0
 
 # Default URL
 SANDMARK_URL ?= ""
@@ -106,6 +106,7 @@ ifeq (1, $(USE_SYS_DUNE_HACK))
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/dune $(CURDIR)/_opam/sys_dune/bin/dune
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/jbuilder $(CURDIR)/_opam/sys_dune/bin/jbuilder
 	ln -s $(SYS_DUNE_BASE_DIR)/lib/dune $(CURDIR)/_opam/sys_dune/lib/dune
+	opam repo add upstream "git+https://github.com/ocaml/opam-repository.git" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes ocamlfind
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)"
 	# Pin the version so it doesn't change when installing packages
@@ -166,7 +167,6 @@ override_packages/%: setup_sys_dune/%
 			$(eval PACKAGES += runtime_events_tools) ;; \
 	    *) echo "Pausetimes unavailable for OCaml < 5" ;; \
 	esac };
-	opam repo add upstream "git+https://github.com/ocaml/opam-repository.git" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	opam repo add alpha git+https://github.com/kit-ty-kate/opam-alpha-repository.git --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- opam update
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "lru" "psq"
