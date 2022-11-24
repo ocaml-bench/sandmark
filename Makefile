@@ -141,10 +141,6 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	@{ case "$*" in \
 		*5.1*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore; \
 	esac };
-	# TODO remove when switching to dune 3
-	opam pin add -n --yes --switch $* hdr_histogram https://github.com/Firobe/hdr_histogram_ocaml.git
-	# TODO remove when switching to dune 3
-	opam pin add -n --yes --switch $* runtime_events_tools https://github.com/Firobe/runtime_events_tools.git
 	# TODO remove pin when a new orun version is released on opam
 	opam pin add -n --yes --switch $* orun https://github.com/ocaml-bench/orun.git
 	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
