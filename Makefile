@@ -154,6 +154,7 @@ override_packages/%: setup_sys_dune/%
 	# Retrieve set of version constraints for chosen OCaml version
 	@{ case "$*" in \
 		*5.1.0*) echo "Using template/dev-5.1.0+trunk.opam" && cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
+		*5.0.0*) echo "Using template/dev-5.0.0+trunk.opam" && cp dependencies/template/dev-5.0.0+trunk.opam $(DEV_OPAM) ;; \
 		*4.14*) echo "Using template/dev-4.14.0.opam" && cp dependencies/template/dev-4.14.0.opam $(DEV_OPAM) ;; \
 		*) echo "Using template/dev.opam" && cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
 	esac };
