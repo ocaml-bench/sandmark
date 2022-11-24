@@ -1,28 +1,33 @@
 {
-  "url" : "https://github.com/ocaml/ocaml/archive/refs/heads/5.0.tar.gz",
-  "package_overrides": [
-    "fmt.0.9.0",
-    "ocamlfind.1.9.3.git"
-  ],
+  "url" : "https://github.com/ocaml/ocaml/archive/refs/tags/4.14.0.zip",
   "package_remove": [
     "camlpdf",
-    "cpdf",
     "coq",
     "coq-core",
     "coq-stdlib",
+    "cpdf",
     "ctypes",
+    "domainslib",
+    "frama-c",
     "fraplib",
+    "hdr_histogram",
     "index",
     "integers",
     "irmin",
     "irmin-layers",
     "irmin-pack",
     "js_of_ocaml-compiler",
+    "kcas",
+    "lockfree",
     "ppx_derivers",
     "ppx_deriving",
     "ppx_deriving_yojson",
     "ppx_irmin",
     "ppx_repr",
+    "ppxfind",
+    "ppxlib",
+    "ppxtools",
+    "runtime_events_tools",
     "stdio"
   ]
 }

@@ -7,10 +7,6 @@ WORKDIR /app
 RUN sudo apt-get update
 RUN sudo apt-get -y install libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf gnuplot libffi-dev cmake
 
-RUN opam update
-RUN opam pin add -n --yes dune 3.5.0
-RUN opam install dune
-
 COPY . .
 
 RUN sudo chown -R opam /app

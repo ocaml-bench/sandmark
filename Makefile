@@ -21,7 +21,7 @@ BUILD_BENCH_TARGET ?= buildbench
 RUN_CONFIG_JSON ?= run_config.json
 
 # Default dune version to be used
-SANDMARK_DUNE_VERSION ?= 2.9.0
+SANDMARK_DUNE_VERSION ?= 3.5.0
 
 # Default URL
 SANDMARK_URL ?= ""
@@ -106,6 +106,7 @@ ifeq (1, $(USE_SYS_DUNE_HACK))
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/dune $(CURDIR)/_opam/sys_dune/bin/dune
 	ln -s $(SYS_DUNE_BASE_DIR)/bin/jbuilder $(CURDIR)/_opam/sys_dune/bin/jbuilder
 	ln -s $(SYS_DUNE_BASE_DIR)/lib/dune $(CURDIR)/_opam/sys_dune/lib/dune
+	opam repo add upstream "git+https://github.com/ocaml/opam-repository.git" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes ocamlfind
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)"
 	# Pin the version so it doesn't change when installing packages
@@ -140,10 +141,6 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	@{ case "$*" in \
 		*5.1*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore; \
 	esac };
-	# TODO remove when switching to dune 3
-	opam pin add -n --yes --switch $* hdr_histogram https://github.com/Firobe/hdr_histogram_ocaml.git
-	# TODO remove when switching to dune 3
-	opam pin add -n --yes --switch $* runtime_events_tools https://github.com/Firobe/runtime_events_tools.git
 	# TODO remove pin when a new orun version is released on opam
 	opam pin add -n --yes --switch $* orun https://github.com/ocaml-bench/orun.git
 	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
@@ -156,8 +153,10 @@ override_packages/%: setup_sys_dune/%
 	$(eval DEV_OPAM = $(OPAMROOT)/$(CONFIG_SWITCH_NAME)/share/dev.opam)
 	# Retrieve set of version constraints for chosen OCaml version
 	@{ case "$*" in \
-		*5.1.0*) echo "Using new template" && cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
-		*) echo "Using old template" && cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
+		*5.1.0*) echo "Using template/dev-5.1.0+trunk.opam" && cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
+		*5.0.0*) echo "Using template/dev-5.0.0+trunk.opam" && cp dependencies/template/dev-5.0.0+trunk.opam $(DEV_OPAM) ;; \
+		*4.14*) echo "Using template/dev-4.14.0.opam" && cp dependencies/template/dev-4.14.0.opam $(DEV_OPAM) ;; \
+		*) echo "Using template/dev.opam" && cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
 	esac };
 	# Conditionally install runtime_events_tools for olly (pausetimes)
 	@{ case "$*" in \
@@ -166,7 +165,6 @@ override_packages/%: setup_sys_dune/%
 			$(eval PACKAGES += runtime_events_tools) ;; \
 	    *) echo "Pausetimes unavailable for OCaml < 5" ;; \
 	esac };
-	opam repo add upstream "git+https://github.com/ocaml/opam-repository.git" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	opam repo add alpha git+https://github.com/kit-ty-kate/opam-alpha-repository.git --on-switch=$(CONFIG_SWITCH_NAME) --rank 2
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- opam update
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "lru" "psq"
@@ -234,7 +232,7 @@ log_sandmark_hash:
 blah:
 	@echo ${PACKAGES}
 
-ocaml-versions/%.bench: depend filter/% override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
+ocaml-versions/%.bench: depend check-parallel/% filter/% override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
@@ -351,16 +349,32 @@ filter/%:
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_VARIANT = $(shell echo $(CONFIG_SWITCH_NAME) | grep -oP '([0-9]|\.)*'  ))
 	@echo $(CONFIG_VARIANT)
-	if [ $(CONFIG_VARIANT) = "5.1.0" ]; then \
-		echo "Filtering some benchmarks for OCaml v5.1.0"; \
-		jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
-		mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
-		echo "(data_only_dirs irmin cpdf frama-c)" > benchmarks/dune; \
-	fi;
+	@{ case $(CONFIG_VARIANT) in \
+		*5.1.0*) echo "Filtering some benchmarks for OCaml ${CONFIG_VARIANT}"; \
+			jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
+			mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
+			echo "(data_only_dirs irmin cpdf frama-c)" > benchmarks/dune;; \
+		*5.0.0*) echo "Filtering some benchmarks for OCaml ${CONFIG_VARIANT}"; \
+			jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
+			mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
+			echo "(data_only_dirs irmin cpdf frama-c)" > benchmarks/dune;; \
+		*4.14*) echo "Filtering some benchmarks for OCaml ${CONFIG_VARIANT}"; \
+			jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "js_of_ocaml", "graph500_par_gen"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
+			mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
+			echo "(data_only_dirs irmin cpdf frama-c)" > benchmarks/dune;; \
+		*) echo "Not filtering benchmarks for OCaml ${CONFIG_VARIANT}";; \
+	esac };
 
 depend: check_url load_check
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
 	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
+
+check-parallel/%:
+	$(eval CONFIG_SWITCH_NAME = $*)
+	@{ if [[ $(BUILD_BENCH_TARGET) =~ multibench* && $(CONFIG_SWITCH_NAME) =~ 4.14* ]]; then \
+		echo "Not running parallel tests for ${CONFIG_SWITCH_NAME}"; \
+		exit 1; \
+	fi };
 
 benchclean:
 	rm -rf _build/
