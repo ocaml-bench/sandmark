@@ -10,6 +10,7 @@ RUN sudo apt-get -y install libgmp-dev libdw-dev jq jo python3-pip pkg-config m4
 COPY . .
 
 RUN sudo chown -R opam /app
+RUN sudo setcap cap_sys_nice=ep /usr/bin/chrt
 RUN eval $(opam env)
 
 RUN export ITER=1
