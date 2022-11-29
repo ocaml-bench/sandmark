@@ -55,6 +55,24 @@ is_old_commit () {
     return $OLD
 }
 
+# Set build and run parameters for either sequential or parallel benchmarks
+
+config_sequential () {
+    CONFIG_BUILD_BENCH_TARGET="buildbench"
+    CONFIG_RUN_JSON="run_config_filtered.json"
+    return 0
+}
+
+config_parallel () {
+    CONFIG_BUILD_BENCH_TARGET="multibench_parallel"
+    if [ "${HOSTNAME}" == "navajo" ]; then
+        CONFIG_RUN_JSON="multicore_parallel_navajo_run_config_filtered.json"
+    else
+        CONFIG_RUN_JSON="multicore_parallel_run_config_filtered.json"
+    fi
+    return 0
+}
+
 # Override with raw GitHub configuration file (if provided)
 if [[ ${CUSTOM_FILE} == *"github"* ]]; then
     wget -O "${TMP_CUSTOM_FILE}" "${CUSTOM_FILE}"
@@ -64,10 +82,11 @@ fi
 # Number of Custom variants
 COUNT=`jq '. | length' "${CUSTOM_FILE}"`
 
+
 # Iterate through each variant
 for i in $(seq 0 $((${COUNT} - 1))); do
     # Iterate through each kind of benchmark
-    for KIND in "sequential" "parallel" "perfstat" "pausetimes"; do
+    for KIND in "sequential" "parallel" "perfstat" "pausetimes_seq" "pausetimes_par" ; do
         # Obtain configuration options
         CONFIG_URL=`jq -r '.['$i'].url' "${CUSTOM_FILE}"`
         CONFIG_NAME=`jq -r '.['$i'].name' "${CUSTOM_FILE}"`
@@ -80,28 +99,24 @@ for i in $(seq 0 $((${COUNT} - 1))); do
         # running
         case ${KIND} in
             sequential)
-                CONFIG_RUN_JSON="run_config_filtered.json"
                 CONFIG_RUN_BENCH_TARGET="run_orun"
-                CONFIG_BUILD_BENCH_TARGET="buildbench"
+                config_sequential
                 ;;
             parallel)
                 CONFIG_RUN_BENCH_TARGET="run_orunchrt"
-                CONFIG_BUILD_BENCH_TARGET="multibench_parallel"
-                if [ "${HOSTNAME}" == "navajo" ]; then
-                    CONFIG_RUN_JSON="multicore_parallel_navajo_run_config_filtered.json"
-                else
-                    CONFIG_RUN_JSON="multicore_parallel_run_config_filtered.json"
-                fi
+                config_parallel
                 ;;
             perfstat)
-                CONFIG_RUN_JSON="run_config_filtered.json"
                 CONFIG_RUN_BENCH_TARGET="run_perfstat"
-                CONFIG_BUILD_BENCH_TARGET="buildbench"
+                config_sequential
                 ;;
-            pausetimes)
-                CONFIG_RUN_JSON="run_config_filtered.json"
+            pausetimes_seq)
                 CONFIG_RUN_BENCH_TARGET="run_pausetimes"
-                CONFIG_BUILD_BENCH_TARGET="buildbench"
+                config_sequential
+                ;;
+            pausetimes_par)
+                CONFIG_RUN_BENCH_TARGET="run_pausetimes"
+                config_parallel
                 ;;
             *)
                 echo "Unknown kind ${KIND}! Skipping"
