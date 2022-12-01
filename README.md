@@ -221,6 +221,17 @@ latency results, we can set the environment variable `RUN_BENCH_TARGET` to
 latency profile of the runs (see the script `pausetimes/pausetimes`).
 The results will be files in the `_results` directory with a `.pausetimes.*.bench` suffix.
 
+The perf stat output results can be obtained by setting the
+environment variable `RUN_BENCH_TARGET` to `run_perfstat`. In order to
+use the `perf` command, the `kernel.perf_event_paranoid` parameter
+should be set to -1 using the sysctl command. For example:
+
+```bash
+$ sudo sysctl -w kernel.perf_event_paranoid=-1
+```
+
+You can also set it permanently in the /etc/sysctl.conf file.
+
 ### Results
 
 After a run is complete, the results will be available in the `_results`
