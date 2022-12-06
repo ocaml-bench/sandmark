@@ -409,5 +409,8 @@ bash:
 %_filtered.json: %.json
 	jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select(.tags | index($(TAG)) != null)]}' < $< > $@
 
+set-bench-cpu/%:
+	sed -i "s/cpu-list 5/cpu-list ${BENCH_CPU}/g" $*
+
 %_2domains.json: %.json
 	jq '{wrappers : .wrappers, benchmarks : [.benchmarks | .[] | {executable : .executable, name: .name, tags: .tags, runs : [.runs | .[] as $$item | if ($$item | .params | split(" ") | .[0] ) == "2" then $$item | .paramwrapper |= "" else empty end ] } ] }' < $< > $@
