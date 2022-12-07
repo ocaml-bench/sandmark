@@ -22,7 +22,7 @@
     {
       "executable": "benchmarks/mpl/msort_ints.exe",
       "name": "msort_ints",
-      "tags": ["gt_100s", "mpl"], 
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1",
@@ -59,7 +59,7 @@
     {
       "executable": "benchmarks/mpl/msort_strings.exe",
       "name": "msort_strings",
-      "tags": ["gt_100s", "mpl"], 
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1",
@@ -96,7 +96,7 @@
     {
       "executable": "benchmarks/mpl/primes.exe",
       "name": "primes",
-      "tags": ["gt_100s", "mpl"], 
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1",
@@ -133,7 +133,7 @@
     {
       "executable": "benchmarks/mpl/tokens.exe",
       "name": "tokens",
-      "tags": ["gt_100s", "mpl"], 
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1",
@@ -170,7 +170,7 @@
     {
       "executable": "benchmarks/mpl/raytracer.exe",
       "name": "raytracer",
-      "tags": ["gt_100s", "mpl"], 
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1",
@@ -219,7 +219,7 @@
     {
       "executable": "benchmarks/multicore-minilight/parallel/minilight_multicore.exe",
       "name": "minilight_multicore",
-      "tags": ["macro_bench", "run_in_ci","gt_100s"], 
+      "tags": ["macro_bench", "run_in_ci","gt_100s"],
       "runs": [
         {
           "params": "1 roomfront.ml.txt",
@@ -299,14 +299,14 @@
       "name": "graph500_par_gen",
       "tags": [ "macro_bench", "10s_100s" ],
       "runs": [
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 1 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 2 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 4 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 8 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 12 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 20 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 24 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+        { "params": "-scale 21 -edgefactor 16 -ndomains 1 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 2 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 4 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 8 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 12 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 20 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 24 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
       ]
     },
     {
@@ -322,14 +322,14 @@
       "name": "graph500_par_kernel1",
       "tags": [ "10s_100s", "macro_bench" ],
       "runs": [
-	{ "params": "-ndomains 1 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 2 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 4 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 8 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 12 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-ndomains 20 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-ndomains 24 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+        { "params": "-ndomains 1 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-ndomains 2 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-ndomains 4 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-ndomains 8 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-ndomains 12 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-ndomains 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "-ndomains 20 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "-ndomains 24 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
       ]
     },
 
