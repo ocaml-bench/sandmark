@@ -5,7 +5,8 @@ ENV BENCHCMD="TAG='\"run_in_ci\"' $(MAKE) run_config_filtered.json; USE_SYS_DUNE
 WORKDIR /app
 
 RUN sudo apt-get update
-RUN sudo apt-get -y install libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf gnuplot libffi-dev cmake
+# TODO: Add gnuplot-x11 when irmin benchmarks are enabled
+RUN sudo apt-get -y install libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf libffi-dev cmake libcap2-bin
 
 COPY . .
 
