@@ -21,7 +21,7 @@
     {
       "executable": "benchmarks/mpl/msort_ints.exe",
       "name": "msort_ints",
-      "tags": ["gt_100s", "mpl"], 
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1",
@@ -73,7 +73,7 @@
     {
       "executable": "benchmarks/mpl/msort_strings.exe",
       "name": "msort_strings",
-      "tags": ["gt_100s", "mpl"], 
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1",
@@ -125,7 +125,7 @@
     {
       "executable": "benchmarks/mpl/primes.exe",
       "name": "primes",
-      "tags": ["gt_100s", "mpl"], 
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1",
@@ -177,7 +177,7 @@
     {
       "executable": "benchmarks/mpl/tokens.exe",
       "name": "tokens",
-      "tags": ["gt_100s", "mpl"], 
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1",
@@ -229,7 +229,7 @@
     {
       "executable": "benchmarks/mpl/raytracer.exe",
       "name": "raytracer",
-      "tags": ["gt_100s", "mpl"], 
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1",
@@ -359,7 +359,7 @@
       "runs": [
         {
           "params": "1 32_768",
-	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         },
         {
           "params": "8 32_768",
@@ -372,7 +372,7 @@
         {
           "params": "32 32_768",
           "paramwrapper": "taskset --cpu-list 4-35"
-	},
+        },
         {
           "params": "64 32_768",
           "paramwrapper": "taskset --cpu-list 4-63,68-71"
@@ -392,19 +392,19 @@
       "name": "graph500_par_gen",
       "tags": [ "macro_bench", "10s_100s" ],
       "runs": [
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 1 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 2 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 4 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 8 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 12 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 20 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-scale 21 -edgefactor 16 -ndomains 24 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+        { "params": "-scale 21 -edgefactor 16 -ndomains 1 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 2 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 4 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 8 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 12 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 20 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "-scale 21 -edgefactor 16 -ndomains 24 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
       ]
     },
     {
       "executable": "benchmarks/graph500seq/kernel1_run.exe",
-      "name": "graph500_seq_kernel1",
+      "name": "graph500_kernel1",
       "tags": ["macro_bench"],
       "runs": [
         { "params": "edges.data" , "paramwrapper": "taskset --cpu-list 2-13"}
@@ -412,17 +412,17 @@
     },
     {
       "executable": "benchmarks/graph500par/kernel1_run_multicore.exe",
-      "name": "graph500_par_kernel1",
+      "name": "graph500_kernel1_multicore",
       "tags": [ "10s_100s", "macro_bench" ],
       "runs": [
-	{ "params": "-ndomains 1 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 2 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 4 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 8 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 12 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-	{ "params": "-ndomains 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-ndomains 20 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-	{ "params": "-ndomains 24 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+        { "params": "-ndomains 1 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-ndomains 2 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-ndomains 4 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-ndomains 8 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-ndomains 12 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
+        { "params": "-ndomains 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "-ndomains 20 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
+        { "params": "-ndomains 24 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
       ]
     },
     {
@@ -550,11 +550,11 @@
       "runs": [
         {
           "params": "1 2048",
-  	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         },
         {
           "params": "8 2048",
-	  "paramwrapper": "taskset --cpu-list 4-11"
+          "paramwrapper": "taskset --cpu-list 4-11"
         },
         {
           "params": "16 2048",
@@ -574,7 +574,7 @@
         },
         {
           "params": "120 2048",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-127"
+          "paramwrapper": "taskset --cpu-list 4-63,68-127"
         }
       ]
     },
@@ -587,7 +587,7 @@
       "runs": [
         {
           "params": "24",
-   	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         }
       ]
     },
@@ -604,27 +604,27 @@
         },
         {
           "params": "8 24",
-	  "paramwrapper": "taskset --cpu-list 4-11"
+          "paramwrapper": "taskset --cpu-list 4-11"
         },
         {
           "params": "16 24",
-	  "paramwrapper": "taskset --cpu-list 4-19"
+          "paramwrapper": "taskset --cpu-list 4-19"
         },
         {
           "params": "32 24",
- 	  "paramwrapper": "taskset --cpu-list 4-35"
+          "paramwrapper": "taskset --cpu-list 4-35"
         },
         {
           "params": "64 24",
-   	  "paramwrapper": "taskset --cpu-list 4-63,68-71"
+          "paramwrapper": "taskset --cpu-list 4-63,68-71"
         },
         {
           "params": "96 24",
-   	  "paramwrapper": "taskset --cpu-list 4-63,68-103"
+          "paramwrapper": "taskset --cpu-list 4-63,68-103"
         },
         {
           "params": "120 24",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-127"
+          "paramwrapper": "taskset --cpu-list 4-63,68-127"
         }
       ]
     },
@@ -659,7 +659,7 @@
       "runs": [
         {
           "params": "4096",
- 	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         }
       ]
     },
@@ -672,31 +672,31 @@
       "runs": [
         {
           "params": "1 4096",
- 	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         },
         {
           "params": "8 4096",
-	  "paramwrapper": "taskset --cpu-list 4-11"
+          "paramwrapper": "taskset --cpu-list 4-11"
         },
         {
           "params": "16 4096",
-	  "paramwrapper": "taskset --cpu-list 4-19"
+          "paramwrapper": "taskset --cpu-list 4-19"
         },
         {
           "params": "32 4096",
-	  "paramwrapper": "taskset --cpu-list 4-35"
+          "paramwrapper": "taskset --cpu-list 4-35"
         },
         {
           "params": "64 4096",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-71"
+          "paramwrapper": "taskset --cpu-list 4-63,68-71"
         },
         {
           "params": "96 4096",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-103"
+          "paramwrapper": "taskset --cpu-list 4-63,68-103"
         },
         {
           "params": "120 4096",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-127"
+          "paramwrapper": "taskset --cpu-list 4-63,68-127"
         }
       ]
     },
@@ -709,7 +709,7 @@
       "runs": [
         {
           "params": "2048",
-	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         }
       ]
     },
@@ -722,31 +722,31 @@
       "runs": [
         {
           "params": "1 2048",
-	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         },
         {
           "params": "8 2048",
-	  "paramwrapper": "taskset --cpu-list 4-11"
+          "paramwrapper": "taskset --cpu-list 4-11"
         },
         {
           "params": "16 2048",
-	  "paramwrapper": "taskset --cpu-list 4-19"
+          "paramwrapper": "taskset --cpu-list 4-19"
         },
         {
           "params": "32 2048",
-	  "paramwrapper": "taskset --cpu-list 4-35"
+          "paramwrapper": "taskset --cpu-list 4-35"
         },
         {
           "params": "64 2048",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-71"
+          "paramwrapper": "taskset --cpu-list 4-63,68-71"
         },
         {
           "params": "96 2048",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-103"
+          "paramwrapper": "taskset --cpu-list 4-63,68-103"
         },
         {
           "params": "120 2048",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-127"
+          "paramwrapper": "taskset --cpu-list 4-63,68-127"
         }
       ]
     },
@@ -759,7 +759,7 @@
       "runs": [
         {
           "params": "128 8192",
-	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         }
       ]
     },
@@ -772,31 +772,31 @@
       "runs": [
         {
           "params": "1 128 8192",
-	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         },
         {
           "params": "8 128 8192",
-	  "paramwrapper": "taskset --cpu-list 4-11"
+          "paramwrapper": "taskset --cpu-list 4-11"
         },
         {
           "params": "16 128 8192",
-	  "paramwrapper": "taskset --cpu-list 4-19"
+          "paramwrapper": "taskset --cpu-list 4-19"
         },
         {
           "params": "32 128 8192",
-	  "paramwrapper": "taskset --cpu-list 4-35"
+          "paramwrapper": "taskset --cpu-list 4-35"
         },
         {
           "params": "64 128 8192",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-71"
+          "paramwrapper": "taskset --cpu-list 4-63,68-71"
         },
         {
           "params": "96 128 8192",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-103"
+          "paramwrapper": "taskset --cpu-list 4-63,68-103"
         },
         {
           "params": "120 128 8192",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-127"
+          "paramwrapper": "taskset --cpu-list 4-63,68-127"
         }
       ]
     },
@@ -809,7 +809,7 @@
       "runs": [
         {
           "params": "20000 20000",
-	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         }
       ]
     },
@@ -823,31 +823,31 @@
       "runs": [
         {
           "params": "1 20000 20000",
-	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         },
         {
           "params": "8 20000 20000",
-	  "paramwrapper": "taskset --cpu-list 4-11"
+          "paramwrapper": "taskset --cpu-list 4-11"
         },
         {
           "params": "16 20000 20000",
-	  "paramwrapper": "taskset --cpu-list 4-19"
+          "paramwrapper": "taskset --cpu-list 4-19"
         },
         {
           "params": "32 20000 20000",
-	  "paramwrapper": "taskset --cpu-list 4-35"
+          "paramwrapper": "taskset --cpu-list 4-35"
         },
         {
           "params": "64 20000 20000",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-71"
+          "paramwrapper": "taskset --cpu-list 4-63,68-71"
         },
         {
           "params": "96 20000 20000",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-103"
+          "paramwrapper": "taskset --cpu-list 4-63,68-103"
         },
         {
           "params": "120 20000 20000",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-127"
+          "paramwrapper": "taskset --cpu-list 4-63,68-127"
         }
       ]
     },
@@ -860,7 +860,7 @@
       "runs": [
         {
           "params": "256 1_048_576",
-	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         }
       ]
     },
@@ -874,31 +874,31 @@
       "runs": [
         {
           "params": "1 256 1_048_576",
- 	  "paramwrapper": "taskset --cpu-list 4"
+          "paramwrapper": "taskset --cpu-list 4"
         },
         {
           "params": "8 256 1_048_576",
-	  "paramwrapper": "taskset --cpu-list 4-11"
+          "paramwrapper": "taskset --cpu-list 4-11"
         },
         {
           "params": "16 256 1_048_576",
-	  "paramwrapper": "taskset --cpu-list 4-19"
+          "paramwrapper": "taskset --cpu-list 4-19"
         },
         {
           "params": "32 256 1_048_576",
-	  "paramwrapper": "taskset --cpu-list 4-35"
+          "paramwrapper": "taskset --cpu-list 4-35"
         },
         {
           "params": "64 256 1_048_576",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-71"
+          "paramwrapper": "taskset --cpu-list 4-63,68-71"
         },
         {
           "params": "96 256 1_048_576",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-103"
+          "paramwrapper": "taskset --cpu-list 4-63,68-103"
         },
         {
           "params": "120 256 1_048_576",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-127"
+          "paramwrapper": "taskset --cpu-list 4-63,68-127"
         }
       ]
     },
@@ -911,8 +911,8 @@
       "runs": [
         {
           "params": "",
-	  "short_name": "0",
- 	  "paramwrapper": "taskset --cpu-list 4"
+          "short_name": "0",
+          "paramwrapper": "taskset --cpu-list 4"
         }
       ]
     },
@@ -925,38 +925,38 @@
       "runs": [
         {
           "params": "1",
-	  "short_name": "1_0",
-	  "paramwrapper": "taskset --cpu-list 4"
+          "short_name": "1_0",
+          "paramwrapper": "taskset --cpu-list 4"
         },
         {
           "params": "8",
-	  "short_name": "8_0",
-	  "paramwrapper": "taskset --cpu-list 4-11"
+          "short_name": "8_0",
+          "paramwrapper": "taskset --cpu-list 4-11"
         },
         {
           "params": "16",
-	  "short_name": "16_0",
-	  "paramwrapper": "taskset --cpu-list 4-19"
+          "short_name": "16_0",
+          "paramwrapper": "taskset --cpu-list 4-19"
         },
         {
           "params": "32",
-	  "short_name": "32_0",
-	  "paramwrapper": "taskset --cpu-list 4-35"
+          "short_name": "32_0",
+          "paramwrapper": "taskset --cpu-list 4-35"
         },
         {
           "params": "64",
-	  "short_name": "64_0",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-71"
+          "short_name": "64_0",
+          "paramwrapper": "taskset --cpu-list 4-63,68-71"
         },
         {
           "params": "96",
-	  "short_name": "96_0",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-103"
+          "short_name": "96_0",
+          "paramwrapper": "taskset --cpu-list 4-63,68-103"
         },
         {
           "params": "120",
-	  "short_name": "120_0",
-	  "paramwrapper": "taskset --cpu-list 4-63,68-127"
+          "short_name": "120_0",
+          "paramwrapper": "taskset --cpu-list 4-63,68-127"
         }
       ]
     },
