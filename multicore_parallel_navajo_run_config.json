@@ -388,6 +388,14 @@
       ]
     },
     {
+      "executable": "benchmarks/graph500seq/gen.exe",
+      "name": "graph500_gen",
+      "tags": [ "macro_bench", "10s_100s" ],
+      "runs": [
+        { "params": "-scale 21 -edgefactor 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13" }
+      ]
+    },
+    {
       "executable": "benchmarks/graph500par/gen.exe",
       "name": "graph500_gen_multicore",
       "tags": [ "macro_bench", "10s_100s" ],
