@@ -34,33 +34,9 @@
         "10s_100s"
       ],
       "runs": [
-	{
-	  "params": "12 10"
-	}
-      ]
-    },
-    {
-      "executable": "benchmarks/graph500seq/kernel2.exe",
-      "name": "kernel2",
-      "tags": [
-        "10s_100s"
-      ],
-      "runs": [
-	{
-	  "params": "12 10"
-	}
-      ]
-    },
-    {
-      "executable": "benchmarks/graph500seq/kernel3.exe",
-      "name": "kernel3",
-      "tags": [
-        "10s_100s"
-      ],
-      "runs": [
-	{
-	  "params": "12 10 2"
-	}
+        {
+          "params": "12 10"
+        }
       ]
     },
     {

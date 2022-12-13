@@ -1,11 +1,4 @@
-; kernel1 and kronecker have been replaced with new, more optimized
-; implementations.
 (executable (name kronecker) (modules kronecker))
-(library (name kernel1Old) (modules kernel1Old))
-(executable (name kernel2) (modules kernel2) (libraries kernel1Old))
-(executable (name kernel3) (modules kernel3) (libraries kernel1Old))
-
-;;;;; Newer implementations ;;;;;
 
 (library
   (name generateSeq)
@@ -44,7 +37,7 @@
 
 (alias
   (name buildbench)
-  (deps kronecker.exe kernel2.exe kernel3.exe kernel1_run.exe edges.data)
+  (deps kronecker.exe kernel1_run.exe edges.data)
 )
 
 (alias
