@@ -97,19 +97,6 @@ jobs:
           cat _results/*
           make json
 
-      - name: test_notebooks
-        run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip jo libgmp-dev
-          python3 -m pip install markupsafe==2.0.1
-          export PATH=$PATH:/home/opam/.local/bin
-          pip3 install jupyter nbconvert seaborn pandas
-          cd notebooks/sequential
-          sudo chmod 777 .
-          jupyter nbconvert --to html --execute sequential.ipynb
-          cd ../parallel
-          sudo chmod 777 .
-          jupyter nbconvert --to html --execute parallel.ipynb
-
   build-5-0:
     strategy:
       matrix:
@@ -210,3 +197,28 @@ jobs:
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered_filtered.json
           make multicore_parallel_run_config_filtered_filtered_2domains.json
           OPT_WAIT=0 USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/4.14.0.bench || echo "Expected failure: Can't run parallel tests on 4.14.0"
+
+  test-notebooks:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: test_notebooks
+        run: |
+          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip jo libgmp-dev
+          python3 -m pip install markupsafe==2.0.1
+          export PATH=$PATH:/home/opam/.local/bin
+          pip3 install jupyter nbconvert seaborn pandas
+          cd notebooks/sequential
+          sudo chmod 777 .
+          jupyter nbconvert --to html --execute sequential.ipynb
+          cd ../parallel
+          sudo chmod 777 .
+          jupyter nbconvert --to html --execute parallel.ipynb
