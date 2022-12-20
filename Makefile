@@ -144,7 +144,7 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 	# TODO remove pin when a new orun version is released on opam
 	opam pin add -n --yes --switch $* orun https://github.com/ocaml-bench/orun.git
 	# TODO remove pin when a new runtime_events_tools is released on opam
-	opam pin add -n --yes --switch $* runtime_events_tools https://github.com/sadiqj/runtime_events_tools.git
+	opam pin add -n --yes --switch $* runtime_events_tools https://github.com/sadiqj/runtime_events_tools.git#09630b67b82f7d3226736793dd7bfc33999f4b25
 	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
 	opam pin add -n --yes --switch $* base.v0.14.3 https://github.com/janestreet/base.git#v0.14.3
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
@@ -156,7 +156,7 @@ override_packages/%: setup_sys_dune/%
 	# Retrieve set of version constraints for chosen OCaml version
 	@{ case "$*" in \
 		*5.1.0*) echo "Using template/dev-5.1.0+trunk.opam" && cp dependencies/template/dev-5.1.0+trunk.opam $(DEV_OPAM) ;; \
-		*5.0.0*) echo "Using template/dev-5.0.0+trunk.opam" && cp dependencies/template/dev-5.0.0+trunk.opam $(DEV_OPAM) ;; \
+		*5.0.1*) echo "Using template/dev-5.0.1+trunk.opam" && cp dependencies/template/dev-5.0.0+trunk.opam $(DEV_OPAM) ;; \
 		*4.14*) echo "Using template/dev-4.14.0.opam" && cp dependencies/template/dev-4.14.0.opam $(DEV_OPAM) ;; \
 		*) echo "Using template/dev.opam" && cp dependencies/template/dev.opam $(DEV_OPAM) ;; \
 	esac };
@@ -356,7 +356,7 @@ filter/%:
 			jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "js_of_ocaml", "graph500_kernel1", "graph500_kernel1_multicore"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
 			mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
 			echo "(data_only_dirs irmin cpdf frama-c)" > benchmarks/dune;; \
-		*5.0.0*) echo "Filtering some benchmarks for OCaml ${CONFIG_VARIANT}"; \
+		*5.0.1*) echo "Filtering some benchmarks for OCaml ${CONFIG_VARIANT}"; \
 			jq '{wrappers : .wrappers, benchmarks: [.benchmarks | .[] | select( .name as $$name | ["irmin_replay", "cpdf", "frama-c", "js_of_ocaml", "graph500_kernel1", "graph500_kernel1_multicore"] | index($$name) | not )]}' $(RUN_CONFIG_JSON) > $(RUN_CONFIG_JSON).tmp; \
 			mv $(RUN_CONFIG_JSON).tmp $(RUN_CONFIG_JSON); \
 			echo "(data_only_dirs irmin cpdf frama-c)" > benchmarks/dune;; \
