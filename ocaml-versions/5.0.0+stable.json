@@ -1,5 +1,5 @@
 {
-  "url": "https://github.com/ocaml/ocaml/archive/f652c02139bc471f6f317035709ee6285dad1b58.zip",
+  "url": "https://github.com/ocaml/ocaml/archive/refs/tags/5.0.0.zip",
   "package_overrides": [
     "fmt.0.9.0",
     "ocamlfind.1.9.3.git"
