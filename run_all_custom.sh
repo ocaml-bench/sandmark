@@ -90,7 +90,7 @@ for i in $(seq 0 $((${COUNT} - 1))); do
         # Obtain configuration options
         CONFIG_URL=`jq -r '.['$i'].url' "${CUSTOM_FILE}"`
         CONFIG_NAME=`jq -r '.['$i'].name' "${CUSTOM_FILE}"`
-        CONFIG_VARIANT=$(grep -oP "(\\d|\.)+(\\+(trunk|stable))*" <<< "${CONFIG_NAME}")
+        CONFIG_VARIANT=$(grep -oP "^(\\d|\.)+(\\+(trunk|stable))*" <<< "${CONFIG_NAME}")
         CONFIG_EXPIRY=`jq -r '.['$i'].expiry // empty' "${CUSTOM_FILE}"`
         CONFIG_TAG=`jq -r '.['$i'].tag // "macro_bench"' "${CUSTOM_FILE}"`
         CONFIG_NAME="${CONFIG_NAME}+${KIND}"
