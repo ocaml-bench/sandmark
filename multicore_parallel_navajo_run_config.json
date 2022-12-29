@@ -10,7 +10,7 @@
     },
     {
       "name": "perfstat",
-      "command": "perf stat -o %{output} -- %{paramwrapper} %{command}"
+      "command": "perf stat -o %{output} -- %{paramwrapper} chrt -r 1 %{command}"
     },
     {
       "name": "pausetimes",
