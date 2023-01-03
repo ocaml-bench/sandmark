@@ -253,6 +253,7 @@ ocaml-versions/%.bench: depend check-parallel/% filter/% override_packages/% log
 		$(PRE_BENCH_EXEC) $(ENVIRONMENT) opam exec --switch $(CONFIG_SWITCH_NAME) -- dune build -j 1 --profile=release				\
 		  --workspace=ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME) @$(RUN_BENCH_TARGET); ex=$$?;						\
 		mkdir -p _results/;												\
+		cp ${RUN_CONFIG_JSON} _results/;										\
 		for i in `seq 1 $(ITER)`; do \
 			declare -A META=( ["arch"]="uname -m" ["hostname"]="hostname" ["kernel"]="uname -s" ["version"]="uname -r" ); \
 			s=""; for key in "$${!META[@]}"; do \
