@@ -313,16 +313,22 @@ check_jq:
 	};
 
 check_url: check_jq
-	@{ for f in `find ocaml-versions/*.json`; do					\
+	@{  if [ -z "$$(which wget)" ]; then							\
+		    echo "wget wasn't installed!";							\
+			exit 1;													\
+		fi;															\
+		for f in `find ocaml-versions/*.json`; do					\
 		HEAD=`head -1 $$f`;							\
 		if [ "$$HEAD" == "{" ]; then						\
 			URL=`jq -r '.url' $$f`;						\
 			if [ -z "$$URL" ] ; then					\
 				echo "No URL (mandatory) for $$f";			\
+				exit 1;												\
 			else								\
 				URL_EXISTS=`wget --spider $$URL 2>/dev/null; echo $$?`; \
 				if [ "$${URL_EXISTS}" != 0 ]; then			\
 					echo "Error: URL $$URL does not exist";		\
+					exit 1;											\
 				fi;							\
 			fi;								\
 		else									\
@@ -331,6 +337,7 @@ check_url: check_jq
 				URL_EXISTS=`wget --spider $$u 2>/dev/null; echo $$?`;	\
 				if [ "$${URL_EXISTS}" != 0 ]; then			\
 					echo "Error: URL $$u does not exist";		\
+					exit 1;											\
 				fi;							\
 			done;								\
 		fi;									\
