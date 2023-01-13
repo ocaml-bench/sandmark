@@ -175,7 +175,8 @@ onto CPU 5.
 The benchmarks also have associated tags which classify the benchmarks. The
 current tags are:
 
-* `macro_bench` - A macro benchmark.
+* `macro_bench` - A macro benchmark. Benchmarks with this tag are automatically
+    run nightly.
 * `run_in_ci` - This benchmark is run in the CI.
 * `lt_1s` - running time is less than 1s on the `turing` machine.
 * `1s_10s` - running time is between 1s and 10s on the `turing` machine.
@@ -283,6 +284,17 @@ You can add new benchmarks as follows:
     Add an entry for your benchmark run to the appropriate config file;
     `run_config.json` for sequential benchmarks and
     `multicore_parallel_run_config.json` for parallel benchmarks.
+
+    If you want the benchmark to be run nightly, make sure it has the
+    `macro_bench` tag. Additionally if you want to be able to correctly
+    visualize the results of the benchmark, it should follow a few conventions:
+    1. Its name should be `foo` for the serial version and `foo_multicore` for the
+       parallel version (a parallel version running on a single core is still
+       `_multicore`)
+    2. The first argument in `params` should be the number of domains, followed
+       possibly by other parameters. If that is not feasible, add a `short_name`
+       field with the format `<num_domains>_<other_arg>` with an `_` separating
+       the number of domains and other arguments.
 
 ### Config files
 
