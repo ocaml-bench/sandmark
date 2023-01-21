@@ -32,9 +32,6 @@ SANDMARK_REMOVE_PACKAGES ?= ""
 # Default list of packages to override
 SANDMARK_OVERRIDE_PACKAGES ?= ""
 
-# Override orun with custom name
-SANDMARK_CUSTOM_NAME ?= ""
-
 # Flag to select whether to use sys_dune_hack
 USE_SYS_DUNE_HACK ?= 0
 
@@ -235,6 +232,7 @@ blah:
 	@echo ${PACKAGES}
 
 ocaml-versions/%.bench: depend check-parallel/% filter/% override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
+	$(eval VARIANT_NAME ?= $*)
 	$(eval CONFIG_SWITCH_NAME = $*)
 	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
 	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
@@ -244,7 +242,7 @@ ocaml-versions/%.bench: depend check-parallel/% filter/% override_packages/% log
 	     echo "(context (opam (switch $(CONFIG_SWITCH_NAME)) (name $(CONFIG_SWITCH_NAME)_$$i)))"; \
 	   done } > ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME)
 	opam exec --switch $(CONFIG_SWITCH_NAME) -- rungen _build/$(CONFIG_SWITCH_NAME)_1 $(RUN_CONFIG_JSON) > runs_dune.inc
-	opam exec --switch $(CONFIG_SWITCH_NAME) -- dune build --profile=release --workspace=ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME) @$(BUILD_BENCH_TARGET);
+	opam exec --switch $(CONFIG_SWITCH_NAME) -- dune build --verbose --profile=release --workspace=ocaml-versions/.workspace.$(CONFIG_SWITCH_NAME) @$(BUILD_BENCH_TARGET);
 	@{ if [ "$(BUILD_ONLY)" -eq 0 ]; then												\
 		echo "Executing benchmarks with:";											\
 		echo "  RUN_CONFIG_JSON=${RUN_CONFIG_JSON}";										\
@@ -265,8 +263,8 @@ ocaml-versions/%.bench: depend check-parallel/% filter/% override_packages/% log
 			fi; \
 			done; \
 			header_entry=`jo -p $${s} | jq -c`; \
-			echo "$${header_entry}" > _results/$(SANDMARK_CUSTOM_NAME)_$$i.$(WRAPPER).summary.bench; \
-			find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat >> _results/$(SANDMARK_CUSTOM_NAME)_$$i.$(WRAPPER).summary.bench;		\
+			echo "$${header_entry}" > _results/$(VARIANT_NAME)_$$i.$(WRAPPER).summary.bench; \
+			find _build/$(CONFIG_SWITCH_NAME)_$$i -name '*.$(WRAPPER).bench' | xargs cat >> _results/$(VARIANT_NAME)_$$i.$(WRAPPER).summary.bench;		\
 		done;															\
 		exit $$ex;														\
 	   else																\

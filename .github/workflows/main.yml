@@ -49,6 +49,7 @@ jobs:
           ls _results
           cat _results/*
           make json
+          make clean
 
       - name: 5.1.0+stable+parallel
         run: |
@@ -65,6 +66,7 @@ jobs:
           ls _results
           cat _results/*
           make json
+          make clean
 
       - name: 5.1.0+trunk+serial
         run: |
@@ -79,6 +81,7 @@ jobs:
           ls _results
           cat _results/*
           make json
+          make clean
 
       - name: 5.1.0+trunk+parallel
         run: |
@@ -96,6 +99,7 @@ jobs:
           ls _results
           cat _results/*
           make json
+          make clean
 
   build-5-0:
     strategy:

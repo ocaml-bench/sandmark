@@ -210,7 +210,7 @@ benchmarks in byte mode:
 
 ```bash
 $ opam install dune.2.9.0
-$ USE_SYS_DUNE_HACK=1 SANDMARK_CUSTOM_NAME=5.0.0 BUILD_BENCH_TARGET=bytebench \
+$ USE_SYS_DUNE_HACK=1 VARIANT_NAME=5.0.0 BUILD_BENCH_TARGET=bytebench \
     RUN_CONFIG_JSON=run_config_byte.json make ocaml-versions/5.0.0+stable.bench
 ```
 
@@ -387,4 +387,5 @@ work on OS X is to install GNU sed with homebrew and then update the
 | SANDMARK_URL | OCaml compiler source code URL used to build the benchmarks | "" | building compiler and its dependencies |
 | SYS_DUNE_BASE_DIR | Function that returns the path of the system installed dune for use with benchmarking | dune package present in the local opam switch | building compiler and its dependencies |
 | USE_SYS_DUNE_HACK | If the value is 1 then use system installed dune | 0 | building compiler and its dependencies |
+| VARIANT_NAME | Custom name to use for the bench output file | variant from the `ocaml-version/<variant>.json` file name | executing benchmark |
 | WRAPPER | Function to get the wrapper out of `run_<wrapper-name>` | run_orun | executing benchmark |
