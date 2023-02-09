@@ -14,7 +14,7 @@ On Ubuntu 18.04.4 LTS you can try the following commands:
 
 ```bash
 $ sudo apt-get install curl git libgmp-dev libdw-dev python3-pip jq jo bubblewrap \
-	pkg-config m4 unzip
+    pkg-config m4 unzip
 $ pip3 install jupyter seaborn pandas intervaltree
 
 # Install OPAM if not available already
@@ -250,6 +250,15 @@ with
 ```
 $ jupyter notebook
 ```
+
+### Logs
+
+The logs for nightly runs are available at
+[here](https://github.com/ocaml-bench/sandmark-nightly/commits/testing). Runs
+which are considered successful are copied to the [main branch of the
+repo](https://github.com/ocaml-bench/sandmark-nightly/commits/main), so that
+they can be visualized using the [sandmark nightly
+UI](https://sandmark.tarides.com/)
 
 ### Adding benchmarks
 
