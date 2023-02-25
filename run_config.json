@@ -1520,6 +1520,19 @@
           "params": "1_000_000"
         }
       ]
+    },
+    {
+      "executable": "benchmarks/zdd/zdd.exe",
+      "name": "zdd",
+      "tags": [
+        "10s_100s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": "words.txt"
+        }
+      ]
     }
   ]
 }

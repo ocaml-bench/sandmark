@@ -1,0 +1,5 @@
+(executable
+ (name zdd)
+ (modes native))
+
+(alias (name buildbench) (deps zdd.exe words.txt))
