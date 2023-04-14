@@ -7,3 +7,4 @@ runs_dune.inc
 *.swp
 *_filtered.json
 .ipynb_checkpoints
+.DS_Store
