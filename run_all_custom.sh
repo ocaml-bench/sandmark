@@ -135,7 +135,7 @@ for i in $(seq 0 $((${COUNT} - 1))); do
         COMMIT=$(find_commit ${CONFIG_URL})
         NOT_EXPIRED=$(check_not_expired ${CONFIG_EXPIRY})
 
-        echo "INFO: ${TIMESTAMP} Running benchmarks for URL=${CONFIG_URL}, CONFIG_TAG=${CONFIG_TAG}, CONFIG_RUN_JSON=${CONFIG_RUN_JSON} for COMMIT=${COMMIT}"
+        echo "INFO: ${TIMESTAMP} Running benchmarks for URL=${CONFIG_URL}, CONFIG_TAG=${CONFIG_TAG}, CONFIG_RUN_JSON=${CONFIG_RUN_JSON}, KIND=${KIND} for COMMIT=${COMMIT}"
 
         if [[ ! -z "${COMMIT}" ]] && check_not_expired ${CONFIG_EXPIRY} && ! is_old_commit "${KIND}" "${HOSTNAME}" "${COMMIT}"; then
             # Create results directory
