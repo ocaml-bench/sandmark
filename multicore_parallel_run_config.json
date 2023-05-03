@@ -22,7 +22,7 @@
     {
       "executable": "benchmarks/mpl/msort_ints.exe",
       "name": "msort_ints_multicore",
-      "tags": ["macro_bench", "gt_100s", "mpl"],
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1_10_20000000",
@@ -59,7 +59,7 @@
     {
       "executable": "benchmarks/mpl/msort_strings.exe",
       "name": "msort_strings_multicore",
-      "tags": ["macro_bench", "gt_100s", "mpl"],
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1_10_words64",
@@ -96,7 +96,7 @@
     {
       "executable": "benchmarks/mpl/primes.exe",
       "name": "primes_multicore",
-      "tags": ["macro_bench", "gt_100s", "mpl"],
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1_10_100000000",
@@ -133,7 +133,7 @@
     {
       "executable": "benchmarks/mpl/tokens.exe",
       "name": "tokens_multicore",
-      "tags": ["macro_bench", "gt_100s", "mpl"],
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1_10_words64",
@@ -170,7 +170,7 @@
     {
       "executable": "benchmarks/mpl/raytracer.exe",
       "name": "raytracer_multicore",
-      "tags": ["macro_bench", "gt_100s", "mpl"],
+      "tags": ["gt_100s", "mpl"],
       "runs": [
         {
           "short_name": "1_10_1000_1000",
@@ -305,16 +305,48 @@
     {
       "executable": "benchmarks/graph500par/gen.exe",
       "name": "graph500_gen_multicore",
-      "tags": [ "macro_bench", "10s_100s" ],
+      "tags": ["macro_bench", "10s_100s"],
       "runs": [
-        { "params": "-ndomains 1 -scale 21 -edgefactor 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-        { "params": "-ndomains 2 -scale 21 -edgefactor 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-        { "params": "-ndomains 4 -scale 21 -edgefactor 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-        { "params": "-ndomains 8 -scale 21 -edgefactor 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-        { "params": "-ndomains 12 -scale 21 -edgefactor 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-        { "params": "-ndomains 16 -scale 21 -edgefactor 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-        { "params": "-ndomains 20 -scale 21 -edgefactor 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-        { "params": "-ndomains 24 -scale 21 -edgefactor 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+        {
+          "params": "-ndomains 1 -scale 21 -edgefactor 16 edges.data",
+          "short_name": "1_graph500_gen",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "-ndomains 2 -scale 21 -edgefactor 16 edges.data",
+          "short_name": "2_graph500_gen",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "-ndomains 4 -scale 21 -edgefactor 16 edges.data",
+          "short_name": "4_graph500_gen",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "-ndomains 8 -scale 21 -edgefactor 16 edges.data",
+          "short_name": "8_graph500_gen",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "-ndomains 12 -scale 21 -edgefactor 16 edges.data",
+          "short_name": "12_graph500_gen",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "-ndomains 16 -scale 21 -edgefactor 16 edges.data",
+          "short_name": "16_graph500_gen",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "-ndomains 20 -scale 21 -edgefactor 16 edges.data",
+          "short_name": "20_graph500_gen",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "-ndomains 24 -scale 21 -edgefactor 16 edges.data",
+          "short_name": "24_graph500_gen",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
       ]
     },
     {
@@ -328,16 +360,48 @@
     {
       "executable": "benchmarks/graph500par/kernel1_run_multicore.exe",
       "name": "graph500_kernel1_multicore",
-      "tags": [ "10s_100s", "macro_bench" ],
+      "tags": ["10s_100s", "macro_bench"],
       "runs": [
-        { "params": "-ndomains 1 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-        { "params": "-ndomains 2 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-        { "params": "-ndomains 4 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-        { "params": "-ndomains 8 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-        { "params": "-ndomains 12 edges.data", "paramwrapper": "taskset --cpu-list 2-13" },
-        { "params": "-ndomains 16 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-        { "params": "-ndomains 20 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" },
-        { "params": "-ndomains 24 edges.data", "paramwrapper": "taskset --cpu-list 2-13,16-27" }
+        {
+          "params": "-ndomains 1 edges.data",
+          "short_name": "1_graph500_kernel1",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "-ndomains 2 edges.data",
+          "short_name": "2_graph500_kernel1",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "-ndomains 4 edges.data",
+          "short_name": "4_graph500_kernel1",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "-ndomains 8 edges.data",
+          "short_name": "8_graph500_kernel1",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "-ndomains 12 edges.data",
+          "short_name": "12_graph500_kernel1",
+          "paramwrapper": "taskset --cpu-list 2-13"
+        },
+        {
+          "params": "-ndomains 16 edges.data",
+          "short_name": "16_graph500_kernel1",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "-ndomains 20 edges.data",
+          "short_name": "20_graph500_kernel1",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        },
+        {
+          "params": "-ndomains 24 edges.data",
+          "short_name": "24_graph500_kernel1",
+          "paramwrapper": "taskset --cpu-list 2-13,16-27"
+        }
       ]
     },
 
