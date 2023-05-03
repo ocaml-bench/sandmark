@@ -1,0 +1,22 @@
+---
+name: Validate Multicore Config
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'multicore_*_run_config.json'
+  push:
+    paths:
+      - 'multicore_*_run_config.json'
+
+jobs:
+  validate_multicore_config:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run validation script
+        run: python validate_multicore_config.py
