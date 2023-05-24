@@ -1,0 +1,6 @@
+(executable
+ (name markbench)
+ (libraries unix)
+ (modes native))
+
+(alias (name buildbench) (deps markbench.exe))

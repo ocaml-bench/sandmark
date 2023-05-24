@@ -1533,6 +1533,19 @@
           "params": "words.txt"
         }
       ]
+    },
+    {
+      "executable": "benchmarks/markbench/markbench.exe",
+      "name": "markbench",
+      "tags": [
+        "10s_100s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": "20"
+        }
+      ]
     }
   ]
 }
