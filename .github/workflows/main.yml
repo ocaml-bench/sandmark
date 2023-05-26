@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Check Valid ocaml-version/*.json and URLs
-        run: make check_url
+        run: scripts/check_json_url.sh
 
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
         uses: ocaml/setup-ocaml@v2
@@ -44,10 +44,10 @@ jobs:
           export OPAM_DISABLE_SANDBOXING=true
           TAG='"run_in_ci"' make run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' run_config_filtered.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.2.0+trunk.bench
+          OPT_WAIT=false USE_SYS_DUNE_HACK=true RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.2.0+trunk.bench
           ls _results
           cat _results/*
-          make json
+          make data.json
 
       - name: 5.2.0+trunk+parallel
         run: |
@@ -61,10 +61,10 @@ jobs:
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered_filtered.json
           make multicore_parallel_run_config_filtered_filtered_2domains.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.2.0+trunk.bench
+          OPT_WAIT=false USE_SYS_DUNE_HACK=true BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.2.0+trunk.bench
           ls _results
           cat _results/*
-          make json
+          make data.json
 
   build-5-1:
     strategy:
@@ -81,7 +81,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Check Valid ocaml-version/*.json and URLs
-        run: make check_url
+        run: scripts/check_json_url.sh
 
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
         uses: ocaml/setup-ocaml@v2
@@ -101,10 +101,10 @@ jobs:
           export OPAM_DISABLE_SANDBOXING=true
           TAG='"run_in_ci"' make run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' run_config_filtered.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+stable.bench
+          OPT_WAIT=false USE_SYS_DUNE_HACK=true RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+stable.bench
           ls _results
           cat _results/*
-          make json
+          make data.json
 
       - name: 5.1.0+stable+parallel
         run: |
@@ -117,10 +117,10 @@ jobs:
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered.json
           TAG='"macro_bench"' make multicore_parallel_run_config_filtered_filtered.json
           make multicore_parallel_run_config_filtered_filtered_2domains.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.1.0+stable.bench
+          OPT_WAIT=false USE_SYS_DUNE_HACK=true BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.1.0+stable.bench
           ls _results
           cat _results/*
-          make json
+          make data.json
 
       - name: 5.1.0+trunk+serial
         run: |
@@ -131,10 +131,10 @@ jobs:
           export OPAM_DISABLE_SANDBOXING=true
           TAG='"run_in_ci"' make run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' run_config_filtered.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+trunk.bench
+          OPT_WAIT=false USE_SYS_DUNE_HACK=true RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+trunk.bench
           ls _results
           cat _results/*
-          make json
+          make data.json
 
       - name: 5.1.0+trunk+parallel
         run: |
@@ -148,10 +148,10 @@ jobs:
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered_filtered.json
           make multicore_parallel_run_config_filtered_filtered_2domains.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.1.0+trunk.bench
+          OPT_WAIT=false USE_SYS_DUNE_HACK=true BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.1.0+trunk.bench
           ls _results
           cat _results/*
-          make json
+          make data.json
 
   build-5-0:
     strategy:
@@ -168,7 +168,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Check Valid ocaml-version/*.json and URLs
-        run: make check_url
+        run: scripts/check_json_url.sh
 
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
         uses: ocaml/setup-ocaml@v2
@@ -186,7 +186,7 @@ jobs:
           export OPAM_DISABLE_SANDBOXING=true
           TAG='"run_in_ci"' make run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' run_config_filtered.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.0.1+trunk.bench
+          OPT_WAIT=false USE_SYS_DUNE_HACK=true RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.0.1+trunk.bench
           ls _results
           cat _results/*
 
@@ -202,7 +202,7 @@ jobs:
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered_filtered.json
           make multicore_parallel_run_config_filtered_filtered_2domains.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.0.1+trunk.bench
+          OPT_WAIT=false USE_SYS_DUNE_HACK=true BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/5.0.1+trunk.bench
           ls _results
           cat _results/*
 
@@ -236,7 +236,7 @@ jobs:
           export OPAM_DISABLE_SANDBOXING=true
           TAG='"run_in_ci"' make run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' run_config_filtered.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/4.14.0.bench
+          OPT_WAIT=false USE_SYS_DUNE_HACK=true RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/4.14.0.bench
           ls _results
           cat _results/*
 
@@ -252,7 +252,7 @@ jobs:
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered.json
           sed -i 's/--cpu-list 5/--cpu-list 1/g' multicore_parallel_run_config_filtered_filtered.json
           make multicore_parallel_run_config_filtered_filtered_2domains.json
-          OPT_WAIT=0 USE_SYS_DUNE_HACK=1 BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/4.14.0.bench || echo "Expected failure: Can't run parallel tests on 4.14.0"
+          OPT_WAIT=false USE_SYS_DUNE_HACK=true BUILD_BENCH_TARGET=multibench_parallel RUN_CONFIG_JSON=multicore_parallel_run_config_filtered_filtered_2domains.json make ocaml-versions/4.14.0.bench || echo "Expected failure: Can't run parallel tests on 4.14.0"
 
   test-notebooks:
     strategy:
