@@ -1,9 +1,9 @@
 #!/bin/bash
 
-TMP=$(mktemp)
-OUTFILE=$1
-BENCH_NAME=$(basename $OUTFILE .pausetimes.bench)
+tmp=$(mktemp)
+output=$1
+bench_name=$(basename "$output" .pausetimes.bench)
 shift
-eval "olly latency -o $TMP --json '$@'"
-cat $TMP | jq -c "{name: \"$BENCH_NAME\"} + ." >"$OUTFILE"
-rm $TMP
+olly latency -o "$tmp" --json "$@"
+jq -c "{name: \"$bench_name\"} + ." "$tmp" >"$output"
+rm "$tmp"
