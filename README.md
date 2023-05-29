@@ -9,7 +9,9 @@ Sandmark includes both sequential and parallel benchmarks. The results from the
 nightly benchmark runs are available at
 [sandmark.ocamllabs.io](https://sandmark.ocamllabs.io).
 
-If you are interested in running the sandmark benchmarks on your compiler
+## 📣 Attention Users 🫵
+
+If you are interested in only running the sandmark benchmarks on your compiler
 branch, please add your branch to [sandmark nightly
 config](https://github.com/ocaml-bench/sandmark-nightly-config#adding-your-compiler-branch-to-the-nightly-runs). Read
 on if you are interested in setting up your own instance of Sandmark for local
