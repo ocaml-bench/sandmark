@@ -6,9 +6,8 @@ sys_deps=$1
 pip_deps=$2
 
 check_sys_deps () {
-    installed=$(dpkg -l)
     for d in $sys_deps; do
-        if ! echo "$installed" | grep -q "$d"; then
+        if ! dpkg-query -W "$d" >/dev/null 2>&1; then
             echo "$d is not installed. Install using your distribution's package manager."
         fi
     done

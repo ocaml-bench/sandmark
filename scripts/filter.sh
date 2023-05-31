@@ -5,7 +5,7 @@
 config_switch_name=$1
 run_config_json=$2
 
-recognized=$(echo "$config_switch_name" | grep -E '.*(4\.14|5\.0\.1|5\.1\.0|5\.2\.0).*')
+recognized=$(echo "$config_switch_name" | grep -E '.*(4\.14|5\.0\.1|5\.1\.0|5\.2\.0).*' -)
 
 if [ -n "$recognized" ]; then
     # Recognized compiler variant (4.14, 5.0.1, 5.1.0, 5.2.0)
