@@ -14,5 +14,6 @@ fill_dune_file () {
 }
 
 fill_dune_file > ocaml-versions/.workspace."$config_switch_name"
+echo "Building the benchmarks!"
 opam exec --switch "$config_switch_name" -- rungen _build/"$config_switch_name"_1 "$run_config_json" > runs_dune.inc
 opam exec --switch "$config_switch_name" -- dune build --profile=release --workspace=ocaml-versions/.workspace."$config_switch_name" @"$build_bench_target";

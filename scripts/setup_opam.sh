@@ -5,6 +5,8 @@
 config_switch_name=$1
 sandmark_url=$2
 
+echo "Setting up the opam switch"
+
 # Clean up dependencies/packages by restoring the template
 rm -rf dependencies/packages/ocaml/ocaml."$config_switch_name"
 rm -rf dependencies/packages/ocaml-base-compiler/ocaml-base-compiler."$config_switch_name"

@@ -39,6 +39,8 @@ check_url_from_file () {
     fi
 }
 
+echo "Checking urls in json files"
+
 if [ -z "$config_switch_name" ]; then
     # Checking all files in ocaml-versions
     for f in ocaml-versions/*.json; do

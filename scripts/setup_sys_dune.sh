@@ -8,6 +8,8 @@ config_switch_name=$1
 sandmark_dune_version=$2
 use_sys_dune_hack=$3
 
+echo "Setting up (sys) dune"
+
 sys_dune_base_dir=$(which dune | sed -n 's|\(.*\)/bin/dune|\1|p' -)
 
 override_dune=$(sed -n 's/.*dune\.\([0-9]\.[0-9]\.[0-9]\).*/\1/p' ocaml-versions/"$config_switch_name".json)
