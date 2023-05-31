@@ -29,7 +29,7 @@ esac
 # Conditionally install runtime_events_tools for olly (pausetimes)
 if [[ $config_switch_name =~ 5.* ]]; then
     echo "Enabling pausetimes for OCaml >= 5";
-    packages+="runtime_events_tools"
+    packages+=" runtime_events_tools"
 else
     echo "Pausetimes unavailable for OCaml < 5"
 fi
