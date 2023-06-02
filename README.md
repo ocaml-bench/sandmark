@@ -43,7 +43,7 @@ $ opam pin add -n --yes dune 3.5.0
 $ opam install dune
 
 $ TAG='"run_in_ci"' make run_config_filtered.json
-$ USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+trunk.bench
+$ USE_SYS_DUNE_HACK=true RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+trunk.bench
 ```
 
 You can now find the results in the `_results/` folder.
@@ -220,7 +220,7 @@ benchmarks in byte mode:
 
 ```bash
 $ opam install dune.2.9.0
-$ USE_SYS_DUNE_HACK=1 SANDMARK_CUSTOM_NAME=5.0.0 BUILD_BENCH_TARGET=bytebench \
+$ USE_SYS_DUNE_HACK=true SANDMARK_CUSTOM_NAME=5.0.0 BUILD_BENCH_TARGET=bytebench \
     RUN_CONFIG_JSON=run_config_byte.json make ocaml-versions/5.0.0+stable.bench
 ```
 
