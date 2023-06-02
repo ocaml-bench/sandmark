@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eux
 # Script called before we run the benchmarks.
 
 config_switch_name=$1
