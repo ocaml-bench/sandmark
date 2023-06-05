@@ -238,8 +238,6 @@ blah:
 
 ocaml-versions/%.bench: depend check-parallel/% filter/% override_packages/% log_sandmark_hash ocaml-versions/%.json .FORCE
 	$(eval CONFIG_SWITCH_NAME = $*)
-	$(eval CONFIG_OPTIONS      = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
-	$(eval CONFIG_RUN_PARAMS   = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
 	$(eval ENVIRONMENT         = $(shell jq -r '.wrappers[] | select(.name=="$(WRAPPER)") | .environment // empty' "$(RUN_CONFIG_JSON)" ))
 	@{ echo '(lang dune 1.0)'; \
 	   for i in `seq 1 $(ITER)`; do \
