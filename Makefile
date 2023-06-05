@@ -134,8 +134,20 @@ _opam/%: _opam/opam-init/init.sh ocaml-versions/%.json
 		fi; \
 		echo "url { src: \"$$url\" }"; echo "setenv: [ [ ORUN_CONFIG_ocaml_url = \"$$url\" ] ]"; } \
 	>> dependencies/packages/ocaml-base-compiler/ocaml-base-compiler.$*/opam;
+	# Read OCAML_CONFIG_OPTION from the ocaml-version/$*.json file if env
+	# variable is not set already.  The variable is read even if the
+	# environment variable is set to be empty. `run_all_custom.sh` always
+	# sets the OCAML_CONFIG_OPTION -- it is empty if no "configure" key is
+	# present in the sandmark nightly config file.
+ifeq ($(OCAML_CONFIG_OPTION),)
 	$(eval OCAML_CONFIG_OPTION = $(shell jq -r '.configure // empty' ocaml-versions/$*.json))
+endif
+	# Read OCAML_RUN_PARAM from the ocaml-version/$*.json file if env
+	# variable is not set already. See comment above for
+	# OCAML_CONFIG_OPTION.
+ifeq ($(OCAML_RUN_PARAM),)
 	$(eval OCAML_RUN_PARAM     = $(shell jq -r '.runparams // empty' ocaml-versions/$*.json))
+endif
 	opam update
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
 	@{ case "$*" in \
