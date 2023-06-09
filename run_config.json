@@ -1546,6 +1546,24 @@
           "params": "20"
         }
       ]
+    },
+    {
+      "executable": "benchmarks/idle-domain/sorttest.exe",
+      "name": "sorttest",
+      "tags": [
+        "gt_100s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": "-default",
+          "short_name": "sequential"
+        },
+        {
+          "params": "-spawn 1",
+          "short_name": "idle-domain"
+        }
+      ]
     }
   ]
 }

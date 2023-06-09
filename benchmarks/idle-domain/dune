@@ -1,0 +1,6 @@
+(executable
+ (name sorttest)
+ (libraries unix domainslib)
+ (modes native))
+
+(alias (name buildbench) (deps sorttest.exe))
