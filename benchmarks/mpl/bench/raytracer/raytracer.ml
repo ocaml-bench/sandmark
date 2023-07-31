@@ -489,7 +489,7 @@ let () =
   (*Note: Unix module was not implemented in Multicore OCaml,
     .. and Sys.time times all threads time accumulated?*)
 
-  let pool = Task.setup_pool ~num_additional_domains:(num_domains - 1) () in
+  let pool = Task.setup_pool ~num_domains:(num_domains - 1) () in
   log "BVH construction";
   (* let t = seconds() in *)
   let ((objs, cam), tm) =

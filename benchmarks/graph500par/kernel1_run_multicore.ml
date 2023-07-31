@@ -19,7 +19,7 @@ let () =
   let edges = Generate.from_file !filename in
   let t1 = Unix.gettimeofday () in
   Printf.printf "Done. Time: %f s.\nBuilding sparse representation...\n%!" (t1 -. t0);
-  let pool = T.setup_pool ~num_additional_domains:(!num_domains-1) () in
+  let pool = T.setup_pool ~num_domains:(!num_domains-1) () in
   let t0 = Unix.gettimeofday () in
   ignore @@ Sys.opaque_identity @@ T.run pool (fun () ->
     Kernel1Par.kernel1 ~pool edges);

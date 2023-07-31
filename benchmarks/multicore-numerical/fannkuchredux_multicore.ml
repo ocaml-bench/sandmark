@@ -124,6 +124,6 @@ let main pool s_n =
     Printf.printf "%d\nPfannkuchen(%d) = %d\n" !c n !m
 
 let _ =
-  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
+  let pool = T.setup_pool ~num_domains:(num_domains - 1) () in
   main pool n;
   T.teardown_pool pool
