@@ -87,7 +87,7 @@ let evolutionary_algorithm
 
   =
 
-  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
+  let pool = T.setup_pool ~num_domains:(num_domains - 1) () in
   let adam = random_individual n fitness in
   let init_pop = multicore_init pool num_domains adam in
   let pop0 = init_pop lambda (fun _ -> random_individual n fitness) in

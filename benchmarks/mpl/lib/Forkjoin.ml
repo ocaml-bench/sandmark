@@ -3,7 +3,7 @@ module T = Domainslib.Task
 type grain = int
 
 let num_domains = Cla.parse_int "procs" 1
-let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) ()
+let pool = T.setup_pool ~num_domains:(num_domains - 1) ()
 let _ = at_exit (fun () -> T.teardown_pool pool)
 
 let run f =

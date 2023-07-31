@@ -12,4 +12,5 @@ USE_SYS_DUNE_HACK=1 \
                  RUN_BENCH_TARGET=run_orunchrt \
                  BUILD_BENCH_TARGET=multibench_parallel \
                  RUN_CONFIG_JSON=multicore_parallel_run_config_filtered.json \
-                 make ocaml-versions/5.0.0+stable.bench
+                 OPT_WAIT=0 \
+                 make ocaml-versions/5.2.0+trunk.bench

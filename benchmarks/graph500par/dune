@@ -20,7 +20,7 @@
 (library
   (name sparseGraph)
   (modules sparseGraph)
-  (libraries graphTypes lockfree)
+  (libraries graphTypes)
 )
 
 (library

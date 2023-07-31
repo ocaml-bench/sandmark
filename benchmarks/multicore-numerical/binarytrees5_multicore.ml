@@ -60,7 +60,7 @@ let loop_depths d pool =
   done
 
 let () =
-  let pool = T.setup_pool ~num_additional_domains:(num_domains - 1) () in
+  let pool = T.setup_pool ~num_domains:(num_domains - 1) () in
   T.run pool (fun _ -> loop_depths min_depth pool);
   let _ = max_depth in
   let _ = (check long_lived_tree) in
