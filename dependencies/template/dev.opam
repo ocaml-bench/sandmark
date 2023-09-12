@@ -29,7 +29,7 @@ depends: [
   "irmin-bench" {="3.3.2"}
   "irmin-tezos" {="3.3.2"}
   "logs" {= "0.7.0"}
-  "lwt" {= "5.6.1"}
+  "lwt" {= "5.7.0"}
   "menhir" {= "20200612"}
   "menhirLib" {= "20200612"}
   "menhirSdk" {= "20200612"}
