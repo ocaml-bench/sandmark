@@ -28,7 +28,7 @@ find_commit () {
         COMMIT=`git ls-remote https://github.com/ocaml/ocaml.git refs/heads/trunk | awk -F' ' '{print $1}'`
     elif [[ ${URL} == *"refs/head"* || ${URL} == *"refs/pull"* ]]; then
         GIT_SOURCE=`echo ${URL} | awk -F'/archive/' '{print $1}'`
-        REFS_PATH=`echo ${URL} | awk -F'/archive/' '{print $2}' | awk -F'.' '{print $1}'`
+        REFS_PATH=`echo ${URL} | awk -F'/archive/' '{print $2}' | sed 's/.tar.gz//g'`
         COMMIT=`git ls-remote ${GIT_SOURCE} ${REFS_PATH} | awk -F' ' '{print $1}'`
     elif [[ ${URL} == *"archive"* ]]; then
         COMMIT=`echo ${URL##*/} | awk -F'.' '{print $1}'`
