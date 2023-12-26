@@ -187,7 +187,7 @@ jobs:
           sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip jo libgmp-dev
           python3 -m pip install markupsafe==2.0.1
           export PATH=$PATH:/home/opam/.local/bin
-          pip3 install jupyter nbconvert seaborn pandas==1.5.3 numpy==1.23.5
+          pip3 install jupyter nbconvert seaborn==0.11.2 pandas==1.5.3 numpy==1.23.5
           cd notebooks/sequential
           sudo chmod 777 .
           jupyter nbconvert --to html --execute sequential.ipynb
