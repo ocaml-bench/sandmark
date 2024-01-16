@@ -1546,6 +1546,19 @@
           "params": "20"
         }
       ]
+    },
+    {
+      "executable": "benchmarks/owl/owl_gc.exe",
+      "name": "owl_gc",
+      "tags": [
+        "1s_10s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
     }
   ]
 }

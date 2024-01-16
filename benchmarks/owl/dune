@@ -1,0 +1,6 @@
+(executable
+ (name owl_gc)
+ (libraries owl unix)
+ (modes native))
+
+(alias (name buildbench) (deps owl_gc.exe))
