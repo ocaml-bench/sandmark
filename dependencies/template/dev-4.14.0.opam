@@ -37,6 +37,8 @@ depends: [
   "ocaml-config" {= "1"}
   "ocamlgraph" {= "2.0.0"}
   "optint" {= "0.0.4"}
+  "owl" {= "1.1"}
+  "owl-base" {= "1.1"}
   "psmt2-frontend" {= "0.2"}
   "repr" {= "0.2.1"}
   "rresult" {= "0.6.0"}

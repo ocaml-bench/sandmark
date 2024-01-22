@@ -76,7 +76,7 @@ else
 	PACKAGES += ctypes js_of_ocaml-compiler
 endif
 
-DEPENDENCIES = libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf # Ubuntu
+DEPENDENCIES = libgmp-dev libdw-dev libopenblas-dev liblapacke-dev zlib1g-dev jq jo python3-pip pkg-config m4 autoconf # Ubuntu
 PIP_DEPENDENCIES = intervaltree
 
 .SECONDARY:

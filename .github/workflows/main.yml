@@ -36,7 +36,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo libgmp-dev
+          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo libgmp-dev libopenblas-dev liblapacke-dev zlib1g-dev
           pip3 install intervaltree
 
       # Runs a set of commands using the runners shell
@@ -93,7 +93,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo libgmp-dev
+          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo libgmp-dev libopenblas-dev liblapacke-dev zlib1g-dev
           pip3 install intervaltree
 
       # Runs a set of commands using the runners shell
@@ -147,7 +147,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo libgmp-dev
+          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo libgmp-dev libopenblas-dev liblapacke-dev zlib1g-dev
           pip3 install intervaltree
 
       - name: 4.14.0+serial
