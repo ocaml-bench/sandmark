@@ -150,9 +150,6 @@ ifeq ($(OCAML_RUN_PARAM),)
 endif
 	opam update
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
-	@{ case "$*" in \
-		*5.*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore;; \
-	esac };
 	# TODO remove pin when a new orun version is released on opam
 	opam pin add -n --yes --switch $* orun https://github.com/ocaml-bench/orun.git
 	# TODO remove pin when a new runtime_events_tools is released on opam
