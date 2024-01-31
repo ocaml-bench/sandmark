@@ -150,15 +150,11 @@ ifeq ($(OCAML_RUN_PARAM),)
 endif
 	opam update
 	OCAMLRUNPARAM="$(OCAML_RUN_PARAM)" OCAMLCONFIGOPTION="$(OCAML_CONFIG_OPTION)" opam switch create --keep-build-dir --yes $* ocaml-base-compiler.$*
-	@{ case "$*" in \
-		*5.*) opam pin add -n --yes --switch $* sexplib0.v0.15.0 https://github.com/shakthimaan/sexplib0.git#multicore;; \
-	esac };
 	# TODO remove pin when a new orun version is released on opam
 	opam pin add -n --yes --switch $* orun https://github.com/ocaml-bench/orun.git
 	# TODO remove pin when a new runtime_events_tools is released on opam
 	opam pin add -n --yes --switch $* runtime_events_tools https://github.com/sadiqj/runtime_events_tools.git#09630b67b82f7d3226736793dd7bfc33999f4b25
 	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
-	opam pin add -n --yes --switch $* base.v0.14.3 https://github.com/janestreet/base.git#v0.14.3
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 
