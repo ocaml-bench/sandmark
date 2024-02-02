@@ -17,6 +17,8 @@ config](https://github.com/ocaml-bench/sandmark-nightly-config#adding-your-compi
 on if you are interested in setting up your own instance of Sandmark for local
 runs.
 
+# FAQ
+
 ## How do I run the benchmarks locally?
 
 On Ubuntu 20.04.4 LTS or newer, you can run the following commands:
@@ -41,7 +43,36 @@ $ bash run_all_parallel.sh   # Run all parallel benchmarks
 
 You can now find the results in the `_results/` folder.
 
-## Overview
+## How do I add new benchmarks?
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+## How do I visualize the benchmark results?
+
+### Local runs
+
+1. To visualize the local results, there are a handful of IPython notebooks
+   available in [notebooks/](./notebooks/), which are maintained on a
+   best-effort basis.  See the [README](./notebooks/README.md) for more
+   information on how to use them.
+
+2. You can run
+   [sandmark-nightly](https://github.com/ocaml-bench/sandmark-nightly?tab=readme-ov-file#how-to-run-the-webapp-locally)
+   locally and visualize the local results directory using the local Sandmark
+   nighly app.
+
+### Nightly production runs
+
+Sandmark benchmarks are configured to run nightly on [navajo](./nightly_navajo.sh) and
+[turing](./nightly_turing.sh). The results for these benchmark runs are available at
+[sandmark.tarides.com](https://sandmark.tarides.com).
+
+## How are the machines tuned for the benchmarking?
+
+You can find detailed notes on the OS settings for the benchmarking servers
+[here](https://github.com/ocaml-bench/ocaml_bench_scripts/?tab=readme-ov-file#notes-on-hardware-and-os-settings-for-linux-benchmarking)
+
+# Overview
 
 Sandmark uses opam, with a static local repository, to build external
 libraries and applications. It then builds any sandmark OCaml
@@ -50,11 +81,11 @@ benchmarks as defined in the `run_config.json`
 
 These stages are implemented in:
 
- - Opam setup: the `Makefile` handles the creation of an opam switch
-   that builds a custom compiler as specified in the
-   `ocaml-versions/<version>.var` file.  It then installs all the
-   required packages; these packages are statically defined by their
-   opam files in the `dependencies` directory.
+ - Opam setup: the `Makefile` handles the creation of an opam switch that
+   builds a custom compiler as specified in the `ocaml-versions/<version>.json`
+   file.  It then installs all the required packages; the packages versions are
+   defined in `dependencies/template/*.opam` files. The dependencies can be
+   patched or tweaked using `dependencies` directory.
 
  - Runplan: the list of benchmarks which will run along with the
    measurement wrapper (e.g. orun or perf) is specified in
@@ -68,6 +99,7 @@ These stages are implemented in:
    the runplan using the benchmark wrapper defined in
    `run_config.json` and specified via the `RUN_BENCH_TARGET` variable
    passed to the makefile.
+
 
 ## Configuration of the compiler build
 
@@ -99,11 +131,12 @@ The various options are described below:
 
 ### orun
 
-The orun wrapper is packaged in `orun/`, it collects runtime and OCaml
-garbage collector statistics producing output in a JSON format. You
-can use orun independently of the sandmark benchmarking suite, by
-installing it as an opam pin (e.g. `opam install .` from within
-`orun/`).
+The orun wrapper is packaged as a separate package
+[here](https://opam.ocaml.org/packages/orun/).  It collects runtime and OCaml
+garbage collector statistics producing output in a JSON format.
+
+You can use orun independently of the sandmark benchmarking suite, by
+installing it, e.g. using `opam install orun`.
 
 ### Using a directory different than /home
 
@@ -252,10 +285,6 @@ which are considered successful are copied to the [main branch of the
 repo](https://github.com/ocaml-bench/sandmark-nightly/commits/main), so that
 they can be visualized using the [sandmark nightly
 UI](https://sandmark.tarides.com/)
-
-### Adding benchmarks
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ### Config files
 
