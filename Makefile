@@ -380,6 +380,9 @@ depend: check_url load_check
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
 	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
 
+install-depends:
+	sudo apt-get install --no-install-recommends --assume-yes $(DEPENDENCIES)
+
 check-parallel/%:
 	$(eval CONFIG_SWITCH_NAME = $*)
 	@{ if [[ $(BUILD_BENCH_TARGET) =~ multibench* && $(CONFIG_SWITCH_NAME) =~ 4.14* ]]; then \
