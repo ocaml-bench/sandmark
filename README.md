@@ -24,7 +24,6 @@ On Ubuntu 18.04.4 LTS you can try the following commands:
 ```bash
 $ sudo apt-get install curl git libgmp-dev libdw-dev python3-pip jq jo bubblewrap \
     pkg-config m4 unzip
-$ pip3 install jupyter seaborn pandas intervaltree
 
 # Install OPAM if not available already
 $ sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
@@ -366,7 +365,6 @@ work on OS X is to install GNU sed with homebrew and then update the
 | OCAML_CONFIG_OPTION | Function that gets the runtime parameters `configure` in `ocaml-versions/*.json` | null string | building compiler and its dependencies |
 | OCAML_RUN_PARAM | Function that gets the runtime parameters `run_param` in `ocaml-versions/*.json` | null string | building compiler and its dependencies |
 | PACKAGES | List of all the benchmark dependencies in sandmark | ```cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib menhir minilight base stdio dune-private-libs dune-configurator camlimages yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum sexplib0 eventlog-tools irmin cubicle conf-findutils index logs mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack ``` | building benchmark |
-| PIP_DEPENDENCIES | List of Python dependencies | ```intervaltree``` | building compiler and its dependencies |
 | PRE_BENCH_EXEC | Any specific commands that needed to be executed before the benchmark. For eg. `PRE_BENCH_EXEC='taskset --cpu-list 3 setarch uname -m --addr-no-randomize'` | null string | executing benchmark | RUN_BENCH_TARGET | The executable to be used to run the benchmarks | `run_orun` | executing benchmark |
 | RUN_BENCH_TARGET | The executable to be used to run the benchmarks | `run_orun` | executing benchmark |
 | RUN_CONFIG_JSON | Input file selection that contains the list of benchmarks | `run_config.json` | executing benchmark |

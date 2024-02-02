@@ -77,7 +77,7 @@ else
 endif
 
 DEPENDENCIES = libgmp-dev libdw-dev libopenblas-dev liblapacke-dev zlib1g-dev jq jo python3-pip pkg-config m4 autoconf # Ubuntu
-PIP_DEPENDENCIES = intervaltree
+PIP_DEPENDENCIES =
 
 .SECONDARY:
 export OPAMROOT=$(CURDIR)/_opam
