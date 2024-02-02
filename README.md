@@ -7,7 +7,7 @@ different compiler variants, run and visualise the results.
 
 Sandmark includes both sequential and parallel benchmarks. The results from the
 nightly benchmark runs are available at
-[sandmark.ocamllabs.io](https://sandmark.ocamllabs.io).
+[sandmark.tarides.com](https://sandmark.tarides.com).
 
 ## 📣 Attention Users 🫵
 
@@ -17,47 +17,62 @@ config](https://github.com/ocaml-bench/sandmark-nightly-config#adding-your-compi
 on if you are interested in setting up your own instance of Sandmark for local
 runs.
 
-## Quick Start
+# FAQ
 
-On Ubuntu 18.04.4 LTS you can try the following commands:
+## How do I run the benchmarks locally?
+
+On Ubuntu 20.04.4 LTS or newer, you can run the following commands:
 
 ```bash
-$ sudo apt-get install curl git libgmp-dev libdw-dev python3-pip jq jo bubblewrap \
-    pkg-config m4 unzip
-$ pip3 install jupyter seaborn pandas intervaltree
+# Clone the repository
+$ git clone https://github.com/ocaml-bench/sandmark.git && cd sandmark
+
+# Install dependencies
+$ make install-depends
 
 # Install OPAM if not available already
 $ sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 $ opam init
 
-$ git clone https://github.com/ocaml-bench/sandmark.git
-$ cd sandmark
+## You can run all the serial or parallel benchmarks using the respective run_all_*.sh scripts
+## You can edit the scripts to change the ocaml-version for which to run the benchmarks
 
-## For 4.14.0+domains
-
-$ make ocaml-versions/4.14.0+domains.bench
-
-## For 5.1.0+trunk
-
-$ opam pin add -n --yes dune 3.5.0
-$ opam install dune
-
-$ TAG='"run_in_ci"' make run_config_filtered.json
-$ USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+trunk.bench
+$ bash run_all_serial.sh   # Run all serial benchmarks
+$ bash run_all_parallel.sh   # Run all parallel benchmarks
 ```
 
 You can now find the results in the `_results/` folder.
 
-## Pre-requisites
+## How do I add new benchmarks?
 
-On GNU/Linux you need to have `libgmp-dev` installed for several of
-the benchmarks to work. You also need to have `libdw-dev` installed
-for the profiling functionality of orun to work on Linux.
+See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
-You can run `make depend` that will check for any missing
-dependencies.
+## How do I visualize the benchmark results?
 
-## Overview
+### Local runs
+
+1. To visualize the local results, there are a handful of IPython notebooks
+   available in [notebooks/](./notebooks/), which are maintained on a
+   best-effort basis.  See the [README](./notebooks/README.md) for more
+   information on how to use them.
+
+2. You can run
+   [sandmark-nightly](https://github.com/ocaml-bench/sandmark-nightly?tab=readme-ov-file#how-to-run-the-webapp-locally)
+   locally and visualize the local results directory using the local Sandmark
+   nighly app.
+
+### Nightly production runs
+
+Sandmark benchmarks are configured to run nightly on [navajo](./nightly_navajo.sh) and
+[turing](./nightly_turing.sh). The results for these benchmark runs are available at
+[sandmark.tarides.com](https://sandmark.tarides.com).
+
+## How are the machines tuned for the benchmarking?
+
+You can find detailed notes on the OS settings for the benchmarking servers
+[here](https://github.com/ocaml-bench/ocaml_bench_scripts/?tab=readme-ov-file#notes-on-hardware-and-os-settings-for-linux-benchmarking)
+
+# Overview
 
 Sandmark uses opam, with a static local repository, to build external
 libraries and applications. It then builds any sandmark OCaml
@@ -66,11 +81,11 @@ benchmarks as defined in the `run_config.json`
 
 These stages are implemented in:
 
- - Opam setup: the `Makefile` handles the creation of an opam switch
-   that builds a custom compiler as specified in the
-   `ocaml-versions/<version>.var` file.  It then installs all the
-   required packages; these packages are statically defined by their
-   opam files in the `dependencies` directory.
+ - Opam setup: the `Makefile` handles the creation of an opam switch that
+   builds a custom compiler as specified in the `ocaml-versions/<version>.json`
+   file.  It then installs all the required packages; the packages versions are
+   defined in `dependencies/template/*.opam` files. The dependencies can be
+   patched or tweaked using `dependencies` directory.
 
  - Runplan: the list of benchmarks which will run along with the
    measurement wrapper (e.g. orun or perf) is specified in
@@ -84,6 +99,7 @@ These stages are implemented in:
    the runplan using the benchmark wrapper defined in
    `run_config.json` and specified via the `RUN_BENCH_TARGET` variable
    passed to the makefile.
+
 
 ## Configuration of the compiler build
 
@@ -115,11 +131,12 @@ The various options are described below:
 
 ### orun
 
-The orun wrapper is packaged in `orun/`, it collects runtime and OCaml
-garbage collector statistics producing output in a JSON format. You
-can use orun independently of the sandmark benchmarking suite, by
-installing it as an opam pin (e.g. `opam install .` from within
-`orun/`).
+The orun wrapper is packaged as a separate package
+[here](https://opam.ocaml.org/packages/orun/).  It collects runtime and OCaml
+garbage collector statistics producing output in a JSON format.
+
+You can use orun independently of the sandmark benchmarking suite, by
+installing it, e.g. using `opam install orun`.
 
 ### Using a directory different than /home
 
@@ -269,10 +286,6 @@ repo](https://github.com/ocaml-bench/sandmark-nightly/commits/main), so that
 they can be visualized using the [sandmark nightly
 UI](https://sandmark.tarides.com/)
 
-### Adding benchmarks
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md)
-
 ### Config files
 
 The `*_config.json` files used to build benchmarks
@@ -290,48 +303,6 @@ The following table marks the benchmarks that are currently not working with any
 |---|---|---|
 | 5.0.0+trunk.bench | irmin benchmarks | [sandmark#262](https://github.com/ocaml-bench/sandmark/issues/262) |
 | 4.14.0+domains.bench | irmin benchmarks | [sandmark#262](https://github.com/ocaml-bench/sandmark/issues/262) |
-
-## UI
-
-JupyterHub is a multi-user server for hosting Jupyter notebooks. The
-Littlest JupyterHub (TLJH) installation is capable of hosting 0-100
-users.
-
-The following steps can be used for installation on Ubuntu 18.04.4 LTS:
-
-```bash
-$ sudo apt install python3 python3-dev git curl
-$ curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py | \
-  sudo -E python3 - --admin adminuser
-```
-
-If you would like to run the the service on a specific port, say
-"8082", you need to update the same in /opt/tljh/state/traefix.toml
-file.
-
-You can verify that the services are running from:
-
-```bash
-$ sudo systemctl status traefik
-$ sudo systemctl status jupyterhub
-```
-
-By default, the hub login opens at hostname:15001/hub/login, which is
-used by the admin user to create user accounts. The users will be able
-to login using hostname:8082/user/username/tree.
-
-You can also setup HTTPS using Let's Encrypt with JuptyerHub using the
-following steps:
-
-```bash
-$ sudo tljh-config set https.enabled true
-$ sudo tljh-config set https.letsencrypt.email e-mail
-$ sudo tljh-config add-item https.letsencrypt.domains example.domain
-$ sudo tljh-config show
-$ sudo tljh-config reload proxy
-```
-
-Reference: https://tljh.jupyter.org/en/latest/install/custom-server.html
 
 ## Multicore Notes
 
@@ -366,7 +337,6 @@ work on OS X is to install GNU sed with homebrew and then update the
 | OCAML_CONFIG_OPTION | Function that gets the runtime parameters `configure` in `ocaml-versions/*.json` | null string | building compiler and its dependencies |
 | OCAML_RUN_PARAM | Function that gets the runtime parameters `run_param` in `ocaml-versions/*.json` | null string | building compiler and its dependencies |
 | PACKAGES | List of all the benchmark dependencies in sandmark | ```cpdf conf-pkg-config conf-zlib bigstringaf decompress camlzip menhirLib menhir minilight base stdio dune-private-libs dune-configurator camlimages yojson lwt zarith integers uuidm react ocplib-endian nbcodec checkseum sexplib0 eventlog-tools irmin cubicle conf-findutils index logs mtime ppx_deriving ppx_deriving_yojson ppx_irmin repr ppx_repr irmin-layers irmin-pack ``` | building benchmark |
-| PIP_DEPENDENCIES | List of Python dependencies | ```intervaltree``` | building compiler and its dependencies |
 | PRE_BENCH_EXEC | Any specific commands that needed to be executed before the benchmark. For eg. `PRE_BENCH_EXEC='taskset --cpu-list 3 setarch uname -m --addr-no-randomize'` | null string | executing benchmark | RUN_BENCH_TARGET | The executable to be used to run the benchmarks | `run_orun` | executing benchmark |
 | RUN_BENCH_TARGET | The executable to be used to run the benchmarks | `run_orun` | executing benchmark |
 | RUN_CONFIG_JSON | Input file selection that contains the list of benchmarks | `run_config.json` | executing benchmark |

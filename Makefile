@@ -77,7 +77,7 @@ else
 endif
 
 DEPENDENCIES = libgmp-dev libdw-dev libopenblas-dev liblapacke-dev zlib1g-dev jq jo python3-pip pkg-config m4 autoconf # Ubuntu
-PIP_DEPENDENCIES = intervaltree
+PIP_DEPENDENCIES =
 
 .SECONDARY:
 export OPAMROOT=$(CURDIR)/_opam
@@ -379,6 +379,9 @@ filter/%:
 depend: check_url load_check
 	$(foreach d, $(DEPENDENCIES),      $(call check_dependency, $(d), dpkg -l,   Install on Ubuntu using apt.))
 	$(foreach d, $(PIP_DEPENDENCIES),  $(call check_dependency, $(d), pip3 list --format=columns, Install using pip3 install.))
+
+install-depends:
+	sudo apt-get install --no-install-recommends --assume-yes $(DEPENDENCIES)
 
 check-parallel/%:
 	$(eval CONFIG_SWITCH_NAME = $*)

@@ -36,8 +36,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo libgmp-dev libopenblas-dev liblapacke-dev zlib1g-dev
-          pip3 install intervaltree
+          sudo apt-get update && make install-depends
 
       # Runs a set of commands using the runners shell
       - name: 5.3.0+trunk+serial
@@ -93,8 +92,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo libgmp-dev libopenblas-dev liblapacke-dev zlib1g-dev
-          pip3 install intervaltree
+          sudo apt-get update && make install-depends
 
       # Runs a set of commands using the runners shell
       - name: 5.2.0+trunk+serial
@@ -147,8 +145,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip autoconf jo libgmp-dev libopenblas-dev liblapacke-dev zlib1g-dev
-          pip3 install intervaltree
+          sudo apt-get update && make install-depends
 
       - name: 4.14.0+serial
         run: |
@@ -187,7 +184,7 @@ jobs:
 
       - name: test_notebooks
         run: |
-          sudo apt-get update && sudo apt-get -y install wget pkg-config libgmp-dev m4 libdw-dev jq python3-pip jo libgmp-dev
+          sudo apt-get update && make install-depends
           python3 -m pip install markupsafe==2.0.1
           export PATH=$PATH:/home/opam/.local/bin
           pip3 install jupyter nbconvert seaborn==0.11.2 pandas==1.5.3 numpy==1.23.5

@@ -3,10 +3,12 @@
 You can add new benchmarks as follows:
 
 - **Add dependencies to packages:** If there are any package dependencies your
-  benchmark has that are not already included in Sandmark, add its opam file to
-  `dependencies/packages/<package-name>/<package-version>/opam`. If the package
-  depends on other packages, repeat this step for all of those packages. Add
-  the package to `PACKAGES` variable in the Makefile.
+  benchmark has that are not already included in Sandmark, you can add it as a
+  dependency to `dependencies/template/dev-*.opam`. If you need to apply any
+  patches to the dependency, add its opam file to
+  `dependencies/packages/<package-name>/<package-version>/opam`, and the patch
+  to the `dependencies/packages/<package-name>/<package-version>/files/`
+  directory.
 
 - **Add benchmark files:** Find a relevant folder in `benchmarks/` and add your
   code to it. Feel free to create a new folder if you don't find any existing
