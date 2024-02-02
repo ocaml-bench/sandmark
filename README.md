@@ -7,7 +7,7 @@ different compiler variants, run and visualise the results.
 
 Sandmark includes both sequential and parallel benchmarks. The results from the
 nightly benchmark runs are available at
-[sandmark.ocamllabs.io](https://sandmark.ocamllabs.io).
+[sandmark.tarides.com](https://sandmark.tarides.com).
 
 ## 📣 Attention Users 🫵
 
