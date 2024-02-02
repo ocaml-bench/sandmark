@@ -304,48 +304,6 @@ The following table marks the benchmarks that are currently not working with any
 | 5.0.0+trunk.bench | irmin benchmarks | [sandmark#262](https://github.com/ocaml-bench/sandmark/issues/262) |
 | 4.14.0+domains.bench | irmin benchmarks | [sandmark#262](https://github.com/ocaml-bench/sandmark/issues/262) |
 
-## UI
-
-JupyterHub is a multi-user server for hosting Jupyter notebooks. The
-Littlest JupyterHub (TLJH) installation is capable of hosting 0-100
-users.
-
-The following steps can be used for installation on Ubuntu 18.04.4 LTS:
-
-```bash
-$ sudo apt install python3 python3-dev git curl
-$ curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py | \
-  sudo -E python3 - --admin adminuser
-```
-
-If you would like to run the the service on a specific port, say
-"8082", you need to update the same in /opt/tljh/state/traefix.toml
-file.
-
-You can verify that the services are running from:
-
-```bash
-$ sudo systemctl status traefik
-$ sudo systemctl status jupyterhub
-```
-
-By default, the hub login opens at hostname:15001/hub/login, which is
-used by the admin user to create user accounts. The users will be able
-to login using hostname:8082/user/username/tree.
-
-You can also setup HTTPS using Let's Encrypt with JuptyerHub using the
-following steps:
-
-```bash
-$ sudo tljh-config set https.enabled true
-$ sudo tljh-config set https.letsencrypt.email e-mail
-$ sudo tljh-config add-item https.letsencrypt.domains example.domain
-$ sudo tljh-config show
-$ sudo tljh-config reload proxy
-```
-
-Reference: https://tljh.jupyter.org/en/latest/install/custom-server.html
-
 ## Multicore Notes
 
 ### ctypes
