@@ -17,44 +17,29 @@ config](https://github.com/ocaml-bench/sandmark-nightly-config#adding-your-compi
 on if you are interested in setting up your own instance of Sandmark for local
 runs.
 
-## Quick Start
+## How do I run the benchmarks locally?
 
-On Ubuntu 18.04.4 LTS you can try the following commands:
+On Ubuntu 20.04.4 LTS or newer, you can run the following commands:
 
 ```bash
-$ sudo apt-get install curl git libgmp-dev libdw-dev python3-pip jq jo bubblewrap \
-    pkg-config m4 unzip
+# Clone the repository
+$ git clone https://github.com/ocaml-bench/sandmark.git && cd sandmark
+
+# Install dependencies
+$ make install-depends
 
 # Install OPAM if not available already
 $ sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 $ opam init
 
-$ git clone https://github.com/ocaml-bench/sandmark.git
-$ cd sandmark
+## You can run all the serial or parallel benchmarks using the respective run_all_*.sh scripts
+## You can edit the scripts to change the ocaml-version for which to run the benchmarks
 
-## For 4.14.0+domains
-
-$ make ocaml-versions/4.14.0+domains.bench
-
-## For 5.1.0+trunk
-
-$ opam pin add -n --yes dune 3.5.0
-$ opam install dune
-
-$ TAG='"run_in_ci"' make run_config_filtered.json
-$ USE_SYS_DUNE_HACK=1 RUN_CONFIG_JSON=run_config_filtered.json make ocaml-versions/5.1.0+trunk.bench
+$ bash run_all_serial.sh   # Run all serial benchmarks
+$ bash run_all_parallel.sh   # Run all parallel benchmarks
 ```
 
 You can now find the results in the `_results/` folder.
-
-## Pre-requisites
-
-On GNU/Linux you need to have `libgmp-dev` installed for several of
-the benchmarks to work. You also need to have `libdw-dev` installed
-for the profiling functionality of orun to work on Linux.
-
-You can run `make depend` that will check for any missing
-dependencies.
 
 ## Overview
 
