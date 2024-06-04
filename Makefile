@@ -157,6 +157,14 @@ endif
 	opam pin add -n --yes --switch $* ocamlfind https://github.com/dra27/ocamlfind/archive/lib-layout.tar.gz
 	opam pin add -n --yes --switch $* coq-core https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
 	opam pin add -n --yes --switch $* coq-stdlib https://github.com/ejgallego/coq/archive/refs/tags/multicore-2021-09-29.tar.gz
+	# TODO remove when a new version of base is released on opam
+	# See https://github.com/ocaml-bench/sandmark/issues/470
+	@{ case "$*" in \
+		5.3.*) \
+			echo "Pinning base to fixed commit for Format_doc change"; \
+			opam pin add -n --yes --switch $* base.v0.17.0 https://github.com/ocaml-bench/base.git#fix-compat-format-doc;; \
+	    	*) echo "Nothing to do here" ;; \
+	esac };
 
 override_packages/%: setup_sys_dune/%
 	$(eval CONFIG_SWITCH_NAME = $*)
