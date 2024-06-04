@@ -21,7 +21,7 @@ BUILD_BENCH_TARGET ?= buildbench
 RUN_CONFIG_JSON ?= run_config.json
 
 # Default dune version to be used
-SANDMARK_DUNE_VERSION ?= 3.5.0
+SANDMARK_DUNE_VERSION ?= 3.15.3
 
 # Default URL
 SANDMARK_URL ?= ""
