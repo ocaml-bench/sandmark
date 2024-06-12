@@ -7,6 +7,7 @@
 #
 
 TAG='"macro_bench"' make multicore_parallel_run_config_filtered.json
+#TAG='"my_bench"' make multicore_parallel_run_config_filtered.json
 
 USE_SYS_DUNE_HACK=0 \
                  RUN_BENCH_TARGET=run_orunchrt \

@@ -68,7 +68,7 @@ IRMIN_DATA_DIR=/tmp/irmin-data
 
 WRAPPER = $(patsubst run_%,%,$(RUN_BENCH_TARGET))
 
-PACKAGES = sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen
+PACKAGES = sexplib0 re yojson react uuidm cpdf nbcodec minilight cubicle orun rungen containers
 
 ifeq ($(findstring multibench,$(BUILD_BENCH_TARGET)),multibench)
 	PACKAGES += saturn domainslib ctypes

@@ -1,0 +1,7 @@
+(executable
+  (name qsort)
+  (modules qsort)
+  (libraries containers))
+(alias (name multibench_parallel)
+       (deps qsort.exe))
+ 
