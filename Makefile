@@ -111,21 +111,6 @@ ifeq (1, $(USE_SYS_DUNE_HACK))
 	opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)"
 	# Pin the version so it doesn't change when installing packages
 	opam pin add --switch=$(CONFIG_SWITCH_NAME) --yes -n dune "$(SANDMARK_DUNE_VERSION)"
-else
-	@{ case "$*" in \
-		5.3.*) \
-			opam repo add upstream "git+https://github.com/ocaml/opam-repository.git" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2; \
-			opam install --switch=$(CONFIG_SWITCH_NAME) --yes ocamlfind; \
-			echo "Pinning dune to fixed version to work around binary and native compiler options split"; \
-			opam pin add --yes -n --switch=$(CONFIG_SWITCH_NAME) dune."$(SANDMARK_DUNE_VERSION)" https://github.com/ocaml-bench/dune.git#fix-compiler-opts; \
-			opam pin add --yes -n --switch=$(CONFIG_SWITCH_NAME) dune-configurator."$(SANDMARK_DUNE_VERSION)" https://github.com/ocaml-bench/dune.git#fix-compiler-opts; \
-			opam reinstall --switch=$(CONFIG_SWITCH_NAME) --yes dune dune-configurator ;; \
-		*) \
-			opam repo add upstream "git+https://github.com/ocaml/opam-repository.git" --on-switch=$(CONFIG_SWITCH_NAME) --rank 2; \
-			opam install --switch=$(CONFIG_SWITCH_NAME) --yes ocamlfind; \
-			opam install --switch=$(CONFIG_SWITCH_NAME) --yes "dune.$(SANDMARK_DUNE_VERSION)" "dune-configurator.$(SANDMARK_DUNE_VERSION)"; \
-			opam pin add --switch=$(CONFIG_SWITCH_NAME) --yes -n dune "$(SANDMARK_DUNE_VERSION)";; \
-	esac };
 endif
 
 ocamls=$(wildcard ocaml-versions/*.json)

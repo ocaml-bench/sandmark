@@ -150,7 +150,7 @@ for i in $(seq 0 $((${COUNT} - 1))); do
             TAG=`echo "${TAG_STRING}"` make `echo ${CONFIG_RUN_JSON}`
 
             # Build and execute benchmarks
-            USE_SYS_DUNE_HACK=0 SANDMARK_URL="`echo ${CONFIG_URL}`" \
+            USE_SYS_DUNE_HACK=1 SANDMARK_URL="`echo ${CONFIG_URL}`" \
                 RUN_CONFIG_JSON="`echo ${CONFIG_RUN_JSON}`" \
                 ENVIRONMENT="`echo ${CONFIG_ENVIRONMENT}`" \
                 OCAML_CONFIG_OPTION="`echo ${CONFIG_OPTIONS}`" \
