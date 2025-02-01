@@ -2,4 +2,8 @@
  (name zdd)
  (modes native))
 
-(alias (name buildbench) (deps zdd.exe words.txt))
+(executable
+ (name zdd_queens)
+ (modes native))
+
+(alias (name buildbench) (deps zdd.exe words.txt zdd_queens.exe))

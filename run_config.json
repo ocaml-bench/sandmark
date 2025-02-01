@@ -1535,6 +1535,19 @@
       ]
     },
     {
+      "executable": "benchmarks/zdd/zdd_queens.exe",
+      "name": "zdd_queens",
+      "tags": [
+        "10s_100s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": "7"
+        }
+      ]
+    },
+    {
       "executable": "benchmarks/markbench/markbench.exe",
       "name": "markbench",
       "tags": [
