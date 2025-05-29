@@ -1,4 +1,5 @@
-FROM ocaml/opam:ubuntu-20.04-ocaml-4.12
+# syntax=docker/dockerfile:1
+FROM ocaml/opam:ubuntu-22.04-ocaml-4.14
 
 ARG BENCH_CPU
 ENV BENCH_CPU=$BENCH_CPU
@@ -7,11 +8,25 @@ ENV BENCHCMD="$(MAKE) set-bench-cpu/run_config.json; TAG='\"run_in_ci\"' $(MAKE)
 
 WORKDIR /app
 
-RUN sudo apt-get update
+RUN sudo rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' | sudo tee /etc/apt/apt.conf.d/keep-cache
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    sudo apt update && sudo apt-get --no-install-recommends install -y \
+    autoconf \
+    cmake \
+    jo \
+    jq \
+    libcap2-bin \
+    libdw-dev \
+    libffi-dev \
+    libgmp-dev \
+    m4 \
+    pkg-config \
+    python3-pip \
+    wget
 # TODO: Add gnuplot-x11 when irmin benchmarks are enabled
-RUN sudo apt-get -y install libgmp-dev libdw-dev jq jo python3-pip pkg-config m4 autoconf libffi-dev cmake libcap2-bin wget
 
-COPY . .
+COPY --link . .
 
 RUN sudo chown -R opam /app
 RUN sudo setcap cap_sys_nice=ep /usr/bin/chrt    # for parallel benchmarks
