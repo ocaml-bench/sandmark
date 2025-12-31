@@ -1,0 +1,25 @@
+(executable
+ (name htmlStream_bench)
+ (modules htmlStream_bench)
+ (libraries devkit))
+
+(executable
+ (name stre_bench)
+ (modules stre_bench)
+ (libraries devkit))
+
+(executable
+ (name network_bench)
+ (modules network_bench)
+ (libraries devkit))
+
+(executable
+ (name gzip_bench)
+ (modules gzip_bench)
+ (libraries devkit))
+
+; Add benchmarks to buildbench alias for sandmark
+
+(alias
+ (name buildbench)
+ (deps htmlStream_bench.exe stre_bench.exe network_bench.exe gzip_bench.exe))

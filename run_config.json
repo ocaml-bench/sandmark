@@ -1559,6 +1559,58 @@
           "params": ""
         }
       ]
+    },
+    {
+      "executable": "benchmarks/ahrefs-devkit/htmlStream_bench.exe",
+      "name": "devkit_htmlstream_bench",
+      "tags": [
+        "10s_100s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/ahrefs-devkit/stre_bench.exe",
+      "name": "devkit_stre_bench",
+      "tags": [
+        "10s_100s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/ahrefs-devkit/network_bench.exe",
+      "name": "devkit_network_bench",
+      "tags": [
+        "10s_100s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
+    },
+    {
+      "executable": "benchmarks/ahrefs-devkit/gzip_bench.exe",
+      "name": "devkit_gzip_bench",
+      "tags": [
+        "10s_100s",
+        "macro_bench"
+      ],
+      "runs": [
+        {
+          "params": ""
+        }
+      ]
     }
   ]
 }
